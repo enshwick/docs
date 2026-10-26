@@ -36,9 +36,8 @@ without it. The log names the mod and what went wrong.
 
 ## Mods and multiplayer
 
-Some mods change what a server and its players must agree on, such as how many
-pieces a recipe makes. When you join a server, it compares those mods with
-yours. If they differ, the game tells you which mod and version you need,
+Some mods change values that a server and its players share, like the pieces a
+recipe makes. A server compares those mods with yours as you join. If they differ, the game tells you which mod and version you need,
 instead of letting you play in a world that breaks.
 [Play on a server](/guides/play-on-a-server/) shows what each case looks like.
 
@@ -62,7 +61,7 @@ So safety comes from where a mod comes from:
 - **Never run a mod file someone sent you in a chat** without knowing where it
   was built.
 
-enshwick never changes the game's files on disk. Delete `powrprof.dll` and the
+enshwick leaves the game's files on disk as they are. Delete `powrprof.dll` and the
 game starts exactly as it did before, as
 [Remove a mod or enshwick](/guides/uninstall/) shows.
 
