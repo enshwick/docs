@@ -4,11 +4,11 @@ import siteData from '../src/data/site.json' with { type: 'json' };
 import sourcesData from '../src/data/sources.json' with { type: 'json' };
 import { languages } from '../src/site/languages.ts';
 import { Sources } from '../src/site/types.ts';
-import { ApiMap } from './lib/api-map.ts';
 import { DeveloperArea } from './lib/developer-area.ts';
-import { IdRule } from './lib/id-rule.ts';
+import { ErrorPages } from './lib/error-pages.ts';
 import { ModPages } from './lib/mod-pages.ts';
 import { PageFile } from './lib/page-file.ts';
+import { PlatformChecks } from './lib/platform-checks.ts';
 
 // Fills the generated part of the site from its sources before every build: the developer area
 // from the platform's book at each version's ref, the mod pages from each mod's newest release, and
@@ -25,6 +25,7 @@ const { platform, mods } = parsed.value;
 
 const generatedFolders = [
   DeveloperArea.folder,
+  ErrorPages.folder,
   ModPages.folder,
   ...languages.others.map((code) => `${code}/${ModPages.folder}`),
 ];
@@ -52,20 +53,14 @@ const [developerSidebar, modReleases] = await Promise.all([
   new ModPages(mods).build(),
 ]);
 
-const idRule = IdRule.of(developerArea.releases[0]?.abi ?? '');
+const apiMap = new PlatformChecks(developerArea.releases[0], developerArea.newestPages).run();
 
-if (idRule.examples.length === 0 || idRule.disagreements.length > 0) {
-  throw new Error(
-    `the site's mod id rules differ from the API crate's: ${idRule.disagreements.join('; ') || 'no examples found in abi.rs'}`,
-  );
-}
+const errors = developerArea.releases[0]?.errors;
 
-const apiMap = ApiMap.of(developerArea.releases[0]?.lib ?? '', developerArea.newestPages);
+if (errors !== undefined) {
+  const pages = ErrorPages.parse(DeveloperArea.errorsSource, errors).pages();
 
-if (apiMap.uncovered.length > 0) {
-  throw new Error(
-    `no developer page names these modules of the API crate: ${apiMap.uncovered.join(', ')}`,
-  );
+  await Promise.all(pages.map((page) => page.write()));
 }
 
 await Bun.write(
@@ -74,6 +69,6 @@ await Bun.write(
 );
 await Bun.write(
   `${generated}/compatibility.json`,
-  `${JSON.stringify({ platform: developerArea.releases.map(({ lib: _lib, abi: _abi, ...release }) => release), mods: modReleases }, null, 2)}\n`,
+  `${JSON.stringify({ platform: developerArea.releases.map(({ lib: _lib, errors: _errors, abi: _abi, ...release }) => release), mods: modReleases }, null, 2)}\n`,
 );
 await Bun.write(`${generated}/dev-sidebar.json`, `${JSON.stringify(developerSidebar, null, 2)}\n`);

@@ -37,6 +37,8 @@ export interface PlatformRelease {
   readonly lib: string | undefined;
   /** The API crate's ABI module, `abi.rs`, which documents the id rules. */
   readonly abi: string | undefined;
+  /** The loader's error codes, `errors.toml`, where the version has them. */
+  readonly errors: string | undefined;
 }
 
 /** The developer area: every version of the platform's book, the newest at `/dev/`, older ones under `/dev/<version>/`. */
@@ -50,6 +52,7 @@ export class DeveloperArea {
   private static readonly apiManifest = 'crates/enshwick/Cargo.toml';
   private static readonly apiRoot = 'crates/enshwick/src/lib.rs';
   private static readonly apiAbi = 'crates/enshwick/src/abi.rs';
+  public static readonly errorsSource = 'crates/internal/loader/src/errors.toml';
 
   /** The newest version's pages, filled by `build()`. */
   public readonly newestPages: DeveloperPage[] = [];
@@ -108,6 +111,7 @@ export class DeveloperArea {
       `/${DeveloperArea.apiManifest}`,
       `/${DeveloperArea.apiRoot}`,
       `/${DeveloperArea.apiAbi}`,
+      `/${DeveloperArea.errorsSource}`,
     ]);
     const summary = Summary.parse(await this.require(checkout, DeveloperArea.summary));
     const index = summary.chapters[0]?.chapter.path;
@@ -212,6 +216,7 @@ export class DeveloperArea {
       builds,
       lib: await checkout.read(DeveloperArea.apiRoot),
       abi: await checkout.read(DeveloperArea.apiAbi),
+      errors: await checkout.read(DeveloperArea.errorsSource),
     };
   }
 

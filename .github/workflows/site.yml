@@ -4,12 +4,8 @@
 name: site
 
 on:
+  # Every pull request, so the required check always reports.
   pull_request:
-    paths-ignore:
-      - 'README.md'
-      - 'ARCHITECTURE.md'
-      - 'LICENSE'
-      - 'renovate.json'
   push:
     branches: [main]
     paths-ignore:
