@@ -6,7 +6,8 @@ sidebar:
   order: 3
 ---
 
-Close the game or stop the server first. Then turn one mod off, delete it, or
+Your game saves stay as they are in every case. Close the game or stop the
+server first. Then turn one mod off, delete it, or
 take out enshwick with every mod.
 
 ## Turn off one mod
@@ -15,7 +16,8 @@ take out enshwick with every mod.
 2. Open `mods.toml` in a text editor such as Notepad.
 3. Find the lines for the mod, named by its id such as `game-rates`, and change
    `enabled = true` to `enabled = false`.
-4. Save the file and start the game.
+4. Save the file and start the game. The **Mods** screen no longer lists the
+   mod.
 
 The mod stays in the folder and is easy to turn back on later.
 
@@ -34,5 +36,7 @@ enshwick and without any mod. You may also delete the `mods`, `mod-configs`,
 On Linux and Steam Deck, also clear the line you added to the game's **Launch
 options**.
 
-:::caution `mod-data` holds what mods keep for each world. Keep a copy before
-you delete it, as [Back up your worlds](/guides/back-up-saves/) shows. :::
+:::caution
+`mod-data` holds what mods keep for each world. Keep a copy before you delete
+it, as [Back up your worlds](/guides/back-up-saves/) shows.
+:::
