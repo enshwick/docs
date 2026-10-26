@@ -6,19 +6,19 @@ name: site
 on:
   pull_request:
     paths-ignore:
-      - "README.md"
-      - "ARCHITECTURE.md"
-      - "LICENSE"
-      - "renovate.json"
+      - 'README.md'
+      - 'ARCHITECTURE.md'
+      - 'LICENSE'
+      - 'renovate.json'
   push:
     branches: [main]
     paths-ignore:
-      - "README.md"
-      - "ARCHITECTURE.md"
-      - "LICENSE"
-      - "renovate.json"
+      - 'README.md'
+      - 'ARCHITECTURE.md'
+      - 'LICENSE'
+      - 'renovate.json'
   schedule:
-    - cron: "41 3 * * *"
+    - cron: '41 3 * * *'
   workflow_dispatch:
 
 permissions: {}

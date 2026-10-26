@@ -26,6 +26,8 @@ export class GitSource {
 
     await rm(root, { recursive: true, force: true });
     await GitSource.git([
+      '-c',
+      'advice.detachedHead=false',
       'clone',
       '--quiet',
       '--depth=1',
