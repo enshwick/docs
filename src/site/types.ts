@@ -25,8 +25,23 @@ export class RepositoryName extends AnyString.subtype(
 /** A branch or tag a source is read at. */
 export class GitRef extends AnyString.subtype('docs.GitRef', /^[A-Za-z0-9._/-]+$/u) {}
 
-/** A mod's id, as in its manifest. */
-export class ModId extends AnyString.subtype('docs.ModId', /^[a-z0-9][a-z0-9-]*$/u) {}
+/**
+ * A mod's id as its manifest gives it: `<author>.<name>`, each part of `[a-z0-9-]`, at most 64
+ * characters in all. Mirrors `is_valid_id` of the API crate; the build checks the two agree.
+ */
+export class ModId extends AnyString.subtype(
+  'docs.ModId',
+  /^(?=.{3,64}$)[a-z0-9-]+\.[a-z0-9-]+$/u,
+) {}
+
+/**
+ * An id a mod may have had: a {@link ModId}, or 1 to 64 characters of `[a-z0-9-]`, the form ids had
+ * before they carried an author. Mirrors `is_valid_former_id` of the API crate.
+ */
+export class FormerModId extends AnyString.subtype(
+  'docs.FormerModId',
+  /^(?:(?=.{3,64}$)[a-z0-9-]+\.[a-z0-9-]+|[a-z0-9-]{1,64})$/u,
+) {}
 
 /** A text key of `src/data/texts.json`. */
 export class TextKey extends AnyString.subtype('docs.TextKey', /^[a-z0-9.-]+$/u) {}

@@ -1,6 +1,6 @@
 import { AnyString, n } from '@horizon-republic/nominal-types';
 
-import { ModId } from './types.ts';
+import { FormerModId } from './types.ts';
 
 /** Who installs a mod: every side, the server or host only, or the player who wants it. */
 export class Needs extends AnyString.subtype(
@@ -35,7 +35,8 @@ export const Screenshot = n.object({ file: AnyString, alt: AnyString });
  */
 export const PlayerPageFrontMatter = n
   .object({
-    id: ModId,
+    // An id without its author is accepted while mods move to the `<author>.<name>` form.
+    id: FormerModId,
     name: AnyString,
     summary: Summary,
     needs: Needs,
