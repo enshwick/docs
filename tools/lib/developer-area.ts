@@ -1,4 +1,5 @@
 import type { GitRef, RepositoryName } from '../../src/site/types.ts';
+import type { DeveloperPage } from './api-map.ts';
 import { ChapterConverter } from './chapter-converter.ts';
 import { Fields } from './fields.ts';
 import { GitSource } from './git-source.ts';
@@ -32,6 +33,8 @@ export interface PlatformRelease {
   readonly ref: string;
   readonly api: string | undefined;
   readonly builds: readonly GameBuild[];
+  /** The API crate's root module, `lib.rs`. */
+  readonly lib: string | undefined;
 }
 
 /** The developer area: every version of the platform's book, the newest at `/dev/`, older ones under `/dev/<version>/`. */
@@ -43,6 +46,10 @@ export class DeveloperArea {
   private static readonly mainBranch = 'main';
   private static readonly tables = 'crates/enshwick-gamedata/tables';
   private static readonly apiManifest = 'crates/enshwick/Cargo.toml';
+  private static readonly apiRoot = 'crates/enshwick/src/lib.rs';
+
+  /** The newest version's pages, filled by `build()`. */
+  public readonly newestPages: DeveloperPage[] = [];
 
   /** What each version supports, filled by `build()`, newest first. */
   public readonly releases: PlatformRelease[] = [];
@@ -96,6 +103,7 @@ export class DeveloperArea {
       `/${DeveloperArea.changelog}`,
       `/${DeveloperArea.tables}/`,
       `/${DeveloperArea.apiManifest}`,
+      `/${DeveloperArea.apiRoot}`,
     ]);
     const summary = Summary.parse(await this.require(checkout, DeveloperArea.summary));
     const index = summary.chapters[0]?.chapter.path;
@@ -142,6 +150,10 @@ export class DeveloperArea {
           ? `${this.source.repository.url}/edit/${version.ref}/${this.source.book}/${chapter.path}`
           : false;
 
+        if (prefix === DeveloperArea.folder) {
+          this.newestPages.push({ slug: slugOf(chapter.path), title: page.title, body: page.body });
+        }
+
         await new PageFile(
           chapter.path === index ? `${prefix}/index` : slugOf(chapter.path),
           {
@@ -154,6 +166,10 @@ export class DeveloperArea {
         ).write();
       }),
     );
+
+    const order = summary.chapters.map(({ chapter }) => slugOf(chapter.path));
+
+    this.newestPages.sort((a, b) => order.indexOf(a.slug) - order.indexOf(b.slug));
   }
 
   /** The API version and the game builds with a build table at the version's ref. */
@@ -185,7 +201,13 @@ export class DeveloperArea {
       }),
     );
 
-    return { name: version.name, ref: version.ref.toString(), api, builds };
+    return {
+      name: version.name,
+      ref: version.ref.toString(),
+      api,
+      builds,
+      lib: await checkout.read(DeveloperArea.apiRoot),
+    };
   }
 
   /** A file of the book that must exist at the version's ref. */

@@ -24,6 +24,10 @@ const developerSidebar: Sidebar = existsSync(developerSidebarFile)
     (JSON.parse(readFileSync(developerSidebarFile, 'utf8')) as Sidebar)
   : [];
 
+/** The API map for `llms.txt`, written by `bun tools/fetch.ts`. */
+const apiMapFile = new URL('./src/generated/api-map.md', import.meta.url);
+const apiMap = existsSync(apiMapFile) ? readFileSync(apiMapFile, 'utf8') : undefined;
+
 const group = (key: string, directory: string): Sidebar[number] => ({
   label: texts.get(key),
   translations: texts.translations(key),
@@ -121,6 +125,7 @@ export default defineConfig({
           projectName: 'enshwick',
           description:
             'enshwick is a mod loader and modding API for the game Enshrouded. Mods are Rust crates built against the `enshwick` crate; the loader runs every mod DLL in the `mods/` folder beside the game.',
+          ...(apiMap === undefined ? {} : { details: apiMap }),
           customSets: [
             {
               label: 'Mod authors',

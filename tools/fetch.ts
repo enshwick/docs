@@ -1,8 +1,10 @@
 import { mkdir, rm } from 'node:fs/promises';
 
+import siteData from '../src/data/site.json' with { type: 'json' };
 import sourcesData from '../src/data/sources.json' with { type: 'json' };
 import { languages } from '../src/site/languages.ts';
 import { Sources } from '../src/site/types.ts';
+import { ApiMap } from './lib/api-map.ts';
 import { DeveloperArea } from './lib/developer-area.ts';
 import { ModPages } from './lib/mod-pages.ts';
 import { PageFile } from './lib/page-file.ts';
@@ -49,8 +51,20 @@ const [developerSidebar, modReleases] = await Promise.all([
   new ModPages(mods).build(),
 ]);
 
+const apiMap = ApiMap.of(developerArea.releases[0]?.lib ?? '', developerArea.newestPages);
+
+if (apiMap.uncovered.length > 0) {
+  throw new Error(
+    `no developer page names these modules of the API crate: ${apiMap.uncovered.join(', ')}`,
+  );
+}
+
+await Bun.write(
+  `${generated}/api-map.md`,
+  `${apiMap.markdown(`${siteData.url}${siteData.base}`)}\n`,
+);
 await Bun.write(
   `${generated}/compatibility.json`,
-  `${JSON.stringify({ platform: developerArea.releases, mods: modReleases }, null, 2)}\n`,
+  `${JSON.stringify({ platform: developerArea.releases.map(({ lib: _lib, ...release }) => release), mods: modReleases }, null, 2)}\n`,
 );
 await Bun.write(`${generated}/dev-sidebar.json`, `${JSON.stringify(developerSidebar, null, 2)}\n`);
