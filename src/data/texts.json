@@ -31,6 +31,10 @@
     "en": "Reference",
     "uk": "Довідка"
   },
+  "group.errors": {
+    "en": "Errors",
+    "uk": "Помилки"
+  },
   "group.explanation": {
     "en": "Understand",
     "uk": "Як це працює"
