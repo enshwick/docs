@@ -9,8 +9,8 @@ sidebar:
 To join a server that runs mods, install the same enshwick build as the server,
 then join as usual. The server checks your mods when you join.
 
-1. Ask the server's owner which enshwick build it runs, or check its Mods screen
-   once you are in.
+1. Ask the server's owner which enshwick build it runs. If you join with
+   another build, the game names the mod and version you need.
 2. [Install enshwick](/guides/install/), or [update it](/guides/update/) to
    match the server.
 3. Join the server from the game's menu.

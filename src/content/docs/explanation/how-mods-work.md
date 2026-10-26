@@ -54,7 +54,9 @@ So safety comes from where a mod comes from:
 
 - **Our mods** are open source. Anyone can read every line, and each file you
   download is built from that code on our own build machines. Each download
-  comes with a record you can check that ties it to the exact code it came from.
+  comes with a record that ties it to the exact code it came from, and [our
+  security policy](https://github.com/enshwick/.github/blob/main/SECURITY.md#check-a-download)
+  shows how to check it.
 - **Other people's mods** are as safe as their authors. Prefer mods whose code
   you can read, from authors you have reason to trust.
 - **Never run a mod file someone sent you in a chat** without knowing where it
