@@ -1,0 +1,43 @@
+---
+title: Install enshwick
+description: Put enshwick and its mods into the game folder of Enshrouded or of its dedicated server.
+type: how-to
+sidebar:
+  order: 1
+---
+
+import { Steps, Tabs, TabItem } from '@astrojs/starlight/components';
+
+To install enshwick, extract one archive into the folder that holds the game.
+The archive holds the loader and every mod we make.
+
+<Steps>
+
+1. Download [enshwick.zip](https://github.com/enshwick/enshwick/releases/download/dev/enshwick.zip).
+
+2. Find the game folder. In Steam, right-click Enshrouded and select
+   **Manage**, then **Browse local files**. On a dedicated server, it is the
+   folder that holds `enshrouded_server.exe`.
+
+3. Extract the archive into that folder. You now see `powrprof.dll` and a
+   `mods` folder beside the game.
+
+4. On Linux and Steam Deck, add this line to the game's **Launch options** in
+   Steam:
+
+   ```text
+   WINEDLLOVERRIDES="powrprof=n,b" %command%
+   ```
+
+5. Start the game. The main menu shows a **Mods** entry.
+
+</Steps>
+
+The archive is a development build of the newest code. Until the first
+release, 1.0.0, it is the only one.
+
+## Next steps
+
+- [Your first modded game](/start/first-modded-game/) shows a mod at work.
+- [Run a server on Linux](/guides/run-a-linux-server/) covers dedicated
+  servers under Proton.

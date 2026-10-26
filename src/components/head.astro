@@ -1,0 +1,12 @@
+---
+import Default from '@astrojs/starlight/components/Head.astro';
+
+import { Area } from '../site/area.ts';
+
+const area = Area.of(Astro.locals.starlightRoute.id);
+---
+
+<Default />
+<script is:inline define:vars={{ area: area.toString() }}>
+  document.documentElement.dataset.area = area;
+</script>

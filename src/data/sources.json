@@ -1,0 +1,27 @@
+{
+  "platform": {
+    "repository": "enshwick/enshwick",
+    "book": "book/src",
+    "versions": [{ "name": "next", "ref": "main" }],
+    "pageTypes": {
+      "introduction.md": "explanation",
+      "getting-started.md": "tutorial",
+      "concepts.md": "explanation",
+      "concepts/": "explanation",
+      "abi-reference.md": "reference",
+      "faq.md": "reference"
+    }
+  },
+  "mods": [
+    "enshwick/mod-admin-tools",
+    "enshwick/mod-area-loot",
+    "enshwick/mod-build-camera",
+    "enshwick/mod-flame-altar-zones",
+    "enshwick/mod-game-rates",
+    "enshwick/mod-more-altars",
+    "enshwick/mod-optimizer",
+    "enshwick/mod-personal-safes",
+    "enshwick/mod-shared-experience",
+    "enshwick/mod-survivors-per-altar"
+  ]
+}

@@ -1,0 +1,40 @@
+{
+  "site.description": {
+    "en": "Install and play Enshrouded mods, or write your own with enshwick.",
+    "uk": "Встановлюйте моди для Enshrouded і грайте з ними або пишіть власні з enshwick."
+  },
+  "topic.players": { "en": "Play with mods", "uk": "Грати з модами" },
+  "topic.developers": { "en": "Make mods", "uk": "Створювати моди" },
+  "badge.developers": { "en": "Developer docs", "uk": "Для розробників" },
+  "group.start": { "en": "Start here", "uk": "Почніть тут" },
+  "group.guides": { "en": "How to", "uk": "Як зробити" },
+  "group.mods": { "en": "Mods", "uk": "Моди" },
+  "group.reference": { "en": "Reference", "uk": "Довідка" },
+  "group.explanation": { "en": "Understand", "uk": "Як це працює" },
+  "group.older": { "en": "Older versions", "uk": "Старіші версії" },
+  "mod.who.everyone": {
+    "en": "Everyone: the server and every player",
+    "uk": "Усім: серверу й кожному гравцю"
+  },
+  "mod.who.server": { "en": "Only the server or the host", "uk": "Лише серверу або хосту" },
+  "mod.who.client": {
+    "en": "Only the player who wants it",
+    "uk": "Лише гравцю, якому він потрібен"
+  },
+  "mod.needs": { "en": "Who needs it", "uk": "Кому потрібен" },
+  "mod.settings": { "en": "Settings", "uk": "Налаштування" },
+  "mod.setting.key": { "en": "Setting", "uk": "Налаштування" },
+  "mod.setting.default": { "en": "Default", "uk": "Типово" },
+  "mod.setting.range": { "en": "Range", "uk": "Межі" },
+  "mod.setting.meaning": { "en": "What it does", "uk": "Що робить" },
+  "mod.setting.applies": { "en": "Takes effect", "uk": "Діє" },
+  "mod.applies.at-once": { "en": "at once", "uk": "одразу" },
+  "mod.applies.world-load": { "en": "when the world loads", "uk": "після завантаження світу" },
+  "mod.applies.restart": { "en": "after a restart", "uk": "після перезапуску" },
+  "mod.source": { "en": "Source and issues", "uk": "Код і звіти про помилки" },
+  "mod.version": { "en": "Version on this page", "uk": "Версія на цій сторінці" },
+  "mod.ecosystem": {
+    "en": "Runs on enshwick: install it first, as the install guide shows.",
+    "uk": "Працює на enshwick: спершу встановіть його, як показує інструкція."
+  }
+}

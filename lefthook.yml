@@ -1,0 +1,42 @@
+# Nothing here builds the site: the hooks stay under ten seconds. The site's
+# own checks (types, lint, tests, build with link validation) are
+# `bun run check` and `bun run build`, which CI runs as well.
+pre-commit:
+  parallel: true
+  commands:
+    format:
+      glob: '*.{ts,astro,json}'
+      run: bunx oxfmt --check {staged_files}
+    lint:
+      glob: '*.{ts,astro}'
+      run: bunx oxlint {staged_files}
+    markdown:
+      glob: '*.md'
+      run: bunx markdownlint-cli2@0.24.0 --no-globs {staged_files}
+    typos:
+      run: typos --force-exclude {staged_files}
+
+# committed checks the header against committed.toml. Messages git writes
+# itself (merges, reverts, fixups) pass as they are. A subject starts in
+# lower case, and angle brackets would read as HTML in release notes.
+commit-msg:
+  commands:
+    conventional:
+      run: >-
+        head -n1 {1} | grep -qE '^(Merge |Revert "|fixup! |squash! |amend! )' ||
+        { committed --commit-file {1} &&
+        ! head -n1 {1} | grep -E ': [A-Z]|[<>]'; }
+
+pre-push:
+  parallel: true
+  commands:
+    format:
+      glob: '*.{ts,astro,json}'
+      run: bunx oxfmt --check {push_files}
+    typos:
+      run: typos --force-exclude {push_files}
+    commits:
+      run: >-
+        ! git rev-parse -q --verify origin/main > /dev/null ||
+        { committed origin/main..HEAD &&
+        ! git log --no-merges --format=%s origin/main..HEAD | grep -E ': [A-Z]|[<>]'; }

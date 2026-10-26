@@ -1,0 +1,44 @@
+---
+title: Встановлення enshwick
+description: Покладіть enshwick і моди в теку гри Enshrouded або її виділеного сервера.
+type: how-to
+sidebar:
+  order: 1
+---
+
+import { Steps } from '@astrojs/starlight/components';
+
+Щоб встановити enshwick, розпакуйте один архів у теку з грою. В архіві є
+завантажувач і всі наші моди.
+
+<Steps>
+
+1. Завантажте [enshwick.zip](https://github.com/enshwick/enshwick/releases/download/dev/enshwick.zip).
+
+2. Знайдіть теку гри. У Steam клацніть правою кнопкою на Enshrouded і виберіть
+   **Керування**, потім **Переглянути локальні файли** (Manage, Browse
+   local files). На виділеному сервері
+   це тека, де лежить `enshrouded_server.exe`.
+
+3. Розпакуйте архів у цю теку. Поруч із грою з'являться `powrprof.dll` і тека
+   `mods`.
+
+4. На Linux і Steam Deck додайте цей рядок у **Параметри запуску** гри в
+   Steam:
+
+   ```text
+   WINEDLLOVERRIDES="powrprof=n,b" %command%
+   ```
+
+5. Запустіть гру. У головному меню з'явиться пункт **Mods**.
+
+</Steps>
+
+В архіві збірка для розробки з найновішим кодом. До першого випуску, 1.0.0,
+інших збірок немає.
+
+## Що далі
+
+- [Ваша перша гра з модами](/uk/start/first-modded-game/) показує мод у дії.
+- [Сервер на Linux](/uk/guides/run-a-linux-server/) розповідає про виділені
+  сервери під Proton.

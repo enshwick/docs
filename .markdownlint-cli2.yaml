@@ -1,0 +1,11 @@
+config:
+  line-length: false
+  no-duplicate-heading: { siblings_only: true }
+  # Pages take their title from front matter; Starlight renders it as the heading.
+  first-line-heading: false
+globs: ['**/*.md']
+ignores:
+  - '**/node_modules/**'
+  - 'dist/**'
+  - '.cache/**'
+  - 'src/content/docs/dev/**'
