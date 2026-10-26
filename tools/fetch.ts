@@ -6,6 +6,7 @@ import { languages } from '../src/site/languages.ts';
 import { Sources } from '../src/site/types.ts';
 import { ApiMap } from './lib/api-map.ts';
 import { DeveloperArea } from './lib/developer-area.ts';
+import { IdRule } from './lib/id-rule.ts';
 import { ModPages } from './lib/mod-pages.ts';
 import { PageFile } from './lib/page-file.ts';
 
@@ -51,6 +52,14 @@ const [developerSidebar, modReleases] = await Promise.all([
   new ModPages(mods).build(),
 ]);
 
+const idRule = IdRule.of(developerArea.releases[0]?.abi ?? '');
+
+if (idRule.examples.length === 0 || idRule.disagreements.length > 0) {
+  throw new Error(
+    `the site's mod id rules differ from the API crate's: ${idRule.disagreements.join('; ') || 'no examples found in abi.rs'}`,
+  );
+}
+
 const apiMap = ApiMap.of(developerArea.releases[0]?.lib ?? '', developerArea.newestPages);
 
 if (apiMap.uncovered.length > 0) {
@@ -65,6 +74,6 @@ await Bun.write(
 );
 await Bun.write(
   `${generated}/compatibility.json`,
-  `${JSON.stringify({ platform: developerArea.releases.map(({ lib: _lib, ...release }) => release), mods: modReleases }, null, 2)}\n`,
+  `${JSON.stringify({ platform: developerArea.releases.map(({ lib: _lib, abi: _abi, ...release }) => release), mods: modReleases }, null, 2)}\n`,
 );
 await Bun.write(`${generated}/dev-sidebar.json`, `${JSON.stringify(developerSidebar, null, 2)}\n`);
