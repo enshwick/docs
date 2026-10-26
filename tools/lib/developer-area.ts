@@ -35,6 +35,8 @@ export interface PlatformRelease {
   readonly builds: readonly GameBuild[];
   /** The API crate's root module, `lib.rs`. */
   readonly lib: string | undefined;
+  /** The loader's error codes, `errors.toml`, where the version has them. */
+  readonly errors: string | undefined;
 }
 
 /** The developer area: every version of the platform's book, the newest at `/dev/`, older ones under `/dev/<version>/`. */
@@ -47,6 +49,7 @@ export class DeveloperArea {
   private static readonly tables = 'crates/enshwick-gamedata/tables';
   private static readonly apiManifest = 'crates/enshwick/Cargo.toml';
   private static readonly apiRoot = 'crates/enshwick/src/lib.rs';
+  public static readonly errorsSource = 'crates/internal/loader/src/errors.toml';
 
   /** The newest version's pages, filled by `build()`. */
   public readonly newestPages: DeveloperPage[] = [];
@@ -104,6 +107,7 @@ export class DeveloperArea {
       `/${DeveloperArea.tables}/`,
       `/${DeveloperArea.apiManifest}`,
       `/${DeveloperArea.apiRoot}`,
+      `/${DeveloperArea.errorsSource}`,
     ]);
     const summary = Summary.parse(await this.require(checkout, DeveloperArea.summary));
     const index = summary.chapters[0]?.chapter.path;
@@ -207,6 +211,7 @@ export class DeveloperArea {
       api,
       builds,
       lib: await checkout.read(DeveloperArea.apiRoot),
+      errors: await checkout.read(DeveloperArea.errorsSource),
     };
   }
 

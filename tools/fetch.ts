@@ -6,6 +6,7 @@ import { languages } from '../src/site/languages.ts';
 import { Sources } from '../src/site/types.ts';
 import { ApiMap } from './lib/api-map.ts';
 import { DeveloperArea } from './lib/developer-area.ts';
+import { ErrorPages } from './lib/error-pages.ts';
 import { ModPages } from './lib/mod-pages.ts';
 import { PageFile } from './lib/page-file.ts';
 
@@ -24,6 +25,7 @@ const { platform, mods } = parsed.value;
 
 const generatedFolders = [
   DeveloperArea.folder,
+  ErrorPages.folder,
   ModPages.folder,
   ...languages.others.map((code) => `${code}/${ModPages.folder}`),
 ];
@@ -59,12 +61,20 @@ if (apiMap.uncovered.length > 0) {
   );
 }
 
+const errors = developerArea.releases[0]?.errors;
+
+if (errors !== undefined) {
+  const pages = ErrorPages.parse(DeveloperArea.errorsSource, errors).pages();
+
+  await Promise.all(pages.map((page) => page.write()));
+}
+
 await Bun.write(
   `${generated}/api-map.md`,
   `${apiMap.markdown(`${siteData.url}${siteData.base}`)}\n`,
 );
 await Bun.write(
   `${generated}/compatibility.json`,
-  `${JSON.stringify({ platform: developerArea.releases.map(({ lib: _lib, ...release }) => release), mods: modReleases }, null, 2)}\n`,
+  `${JSON.stringify({ platform: developerArea.releases.map(({ lib: _lib, errors: _errors, ...release }) => release), mods: modReleases }, null, 2)}\n`,
 );
 await Bun.write(`${generated}/dev-sidebar.json`, `${JSON.stringify(developerSidebar, null, 2)}\n`);

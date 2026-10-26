@@ -108,6 +108,9 @@ export default defineConfig({
                 ? [group('group.mods', 'mods')]
                 : []),
               group('group.reference', 'reference'),
+              ...(existsSync(new URL('./src/content/docs/errors/', import.meta.url))
+                ? [group('group.errors', 'errors')]
+                : []),
               group('group.explanation', 'explanation'),
             ],
           },
