@@ -100,6 +100,9 @@ export default defineConfig({
             items: [
               group('group.start', 'start'),
               group('group.guides', 'guides'),
+              ...(existsSync(new URL('./src/content/docs/mods/', import.meta.url))
+                ? [group('group.mods', 'mods')]
+                : []),
               group('group.reference', 'reference'),
               group('group.explanation', 'explanation'),
             ],

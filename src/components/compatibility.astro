@@ -1,0 +1,76 @@
+---
+import raw from '../generated/compatibility.json';
+import { CompatibilityData } from '../site/compatibility.ts';
+import { languages } from '../site/languages.ts';
+import { texts } from '../site/texts.ts';
+import { LanguageCode } from '../site/types.ts';
+
+const data = CompatibilityData.parse(raw);
+
+if (!data.ok) {
+  throw new TypeError(`src/generated/compatibility.json: ${JSON.stringify(data.issues)}`);
+}
+
+const { platform, mods } = data.value;
+const parsed = LanguageCode.parse(Astro.currentLocale ?? languages.root.toString());
+const language = parsed.ok ? parsed.value : languages.root;
+const t = (key: string): string => texts.get(key, language);
+const prefix = language.equals(languages.root) ? '' : `/${language}`;
+const base = import.meta.env.BASE_URL.replace(/\/$/u, '');
+---
+
+<h2>{t('compat.platform')}</h2>
+<table>
+  <thead>
+    <tr>
+      <th>{t('compat.version')}</th>
+      <th>{t('compat.api')}</th>
+      <th>{t('compat.side')}</th>
+      <th>{t('compat.build')}</th>
+      <th>{t('compat.steam')}</th>
+    </tr>
+  </thead>
+  <tbody>
+    {
+      platform.flatMap((release) =>
+        release.builds.map((build) => (
+          <tr>
+            <td>{release.name}</td>
+            <td>{release.api ?? ''}</td>
+            <td>{t(`compat.side.${build.side}`)}</td>
+            <td>{build.name}</td>
+            <td>{build.steamBuild ?? ''}</td>
+          </tr>
+        )),
+      )
+    }
+  </tbody>
+</table>
+
+<h2>{t('compat.mods')}</h2>
+<table>
+  <thead>
+    <tr>
+      <th>{t('compat.mod')}</th>
+      <th>{t('compat.mod-version')}</th>
+      <th>{t('compat.needs-api')}</th>
+      <th>{t('mod.needs')}</th>
+      <th>{t('compat.release')}</th>
+    </tr>
+  </thead>
+  <tbody>
+    {
+      mods.map((mod) => (
+        <tr>
+          <td>{mod.page ? <a href={`${base}${prefix}/mods/${mod.slug}/`}>{mod.name}</a> : mod.name}</td>
+          <td>{mod.version ?? ''}</td>
+          <td>{mod.api ?? ''}</td>
+          <td>{mod.needs === undefined ? '' : t(`mod.who.${mod.needs.toString()}`)}</td>
+          <td>
+            <a href={`https://github.com/${mod.repository}/releases/tag/${mod.tag}`}>{mod.tag}</a>
+          </td>
+        </tr>
+      ))
+    }
+  </tbody>
+</table>

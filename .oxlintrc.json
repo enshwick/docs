@@ -43,7 +43,7 @@
       "rules": { "max-lines-per-function": "off" }
     },
     {
-      "files": ["src/site/types.ts"],
+      "files": ["src/site/types.ts", "src/site/player-page.ts"],
       // The domain's nominal types, one line each, read best side by side.
       "rules": { "max-classes-per-file": "off" }
     }

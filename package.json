@@ -5,6 +5,7 @@
   "scripts": {
     "prepare": "lefthook install",
     "fetch": "bun tools/fetch.ts",
+    "check:player-page": "bun tools/check-player-page.ts",
     "dev": "bun tools/fetch.ts && bun --bun astro dev",
     "build": "bun tools/fetch.ts && bun --bun astro build",
     "check": "bun --bun astro check && oxlint --type-aware && bun --bun vitest run",
