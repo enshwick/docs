@@ -50,7 +50,7 @@ between busy moments: `sudo cpupower frequency-set -g performance`.
 
 ## Check the result
 
-At start, the Optimizer mod writes one line into
+At start, the [Optimizer](/mods/optimizer/) mod writes one line into
 `logs/enshwick/mods/optimizer.log`. It names the Wine version and the kernel,
 the fast waits it found, the governor and the CPUs the game saw. With ntsync in place it reads
 `/dev/ntsync present`. Each missing setting gets a line of advice.
