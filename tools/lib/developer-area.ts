@@ -18,6 +18,8 @@ export interface PlatformSource {
   readonly book: string;
   readonly versions: readonly DeveloperVersion[];
   readonly pageTypes: Readonly<Record<string, PageType>>;
+  /** The platform's list of our mods, such as `tools/mods.toml`. */
+  readonly modList: string;
 }
 
 /** One game build the platform has a build table for. */
@@ -39,6 +41,8 @@ export interface PlatformRelease {
   readonly abi: string | undefined;
   /** The loader's error codes, `errors.toml`, where the version has them. */
   readonly errors: string | undefined;
+  /** The platform's list of our mods at the version's ref. */
+  readonly mods: string | undefined;
 }
 
 /** The developer area: every version of the platform's book, the newest at `/dev/`, older ones under `/dev/<version>/`. */
@@ -112,6 +116,7 @@ export class DeveloperArea {
       `/${DeveloperArea.apiRoot}`,
       `/${DeveloperArea.apiAbi}`,
       `/${DeveloperArea.errorsSource}`,
+      `/${this.source.modList}`,
     ]);
     const summary = Summary.parse(await this.require(checkout, DeveloperArea.summary));
     const index = summary.chapters[0]?.chapter.path;
@@ -136,7 +141,11 @@ export class DeveloperArea {
       sidebar.push({ slug, label: page.title });
     }
 
-    return { version, entries: sidebar, release: await DeveloperArea.release(version, checkout) };
+    return {
+      version,
+      entries: sidebar,
+      release: await DeveloperArea.release(version, checkout, this.source.modList),
+    };
   }
 
   /** Writes every chapter of the book as a page; the summary's first chapter is the area's index. */
@@ -184,6 +193,7 @@ export class DeveloperArea {
   private static async release(
     version: DeveloperVersion,
     checkout: GitSource,
+    modList: string,
   ): Promise<PlatformRelease> {
     const manifest = await checkout.read(DeveloperArea.apiManifest);
     const api =
@@ -217,6 +227,7 @@ export class DeveloperArea {
       lib: await checkout.read(DeveloperArea.apiRoot),
       abi: await checkout.read(DeveloperArea.apiAbi),
       errors: await checkout.read(DeveloperArea.errorsSource),
+      mods: await checkout.read(modList),
     };
   }
 
