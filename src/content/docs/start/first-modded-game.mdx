@@ -1,0 +1,104 @@
+---
+title: Your first modded game
+description: Install enshwick, start Enshrouded and see your first mod change the game.
+type: tutorial
+sidebar:
+  order: 1
+---
+
+import { Steps, Tabs, TabItem } from '@astrojs/starlight/components';
+
+In about ten minutes you install enshwick, start Enshrouded with it and see a
+mod change your world. You need Enshrouded from Steam and a tool that opens ZIP
+files, such as Windows Explorer.
+
+We use Game Rates as the first mod. It makes building
+recipes give twice as many pieces for the same cost, which you can see in the
+crafting menu within a minute.
+
+## Get the files
+
+enshwick comes as one archive with the loader and every mod we make.
+
+<Steps>
+
+1. Download [enshwick.zip](https://github.com/enshwick/enshwick/releases/download/dev/enshwick.zip).
+   Your browser saves it to your Downloads folder.
+
+2. Open Steam and go to your library.
+
+3. Right-click Enshrouded, then select **Manage** and **Browse local files**.
+   A window opens on the game folder, the one that holds `enshrouded.exe`.
+
+4. Open the archive and copy everything in it into that game folder.
+   The game folder now holds a file named `powrprof.dll` and a folder named
+   `mods`.
+
+</Steps>
+
+## Tell Steam about it on Linux
+
+<Tabs syncKey="os">
+<TabItem label="Windows">
+
+Nothing more to do. Windows starts enshwick with the game.
+
+</TabItem>
+<TabItem label="Linux and Steam Deck">
+
+<Steps>
+
+1. In Steam, right-click Enshrouded and select **Properties**.
+
+2. Paste this line into **Launch options**:
+
+   ```text
+   WINEDLLOVERRIDES="powrprof=n,b" %command%
+   ```
+
+</Steps>
+
+Proton now loads the `powrprof.dll` from the game folder, which starts
+enshwick.
+
+</TabItem>
+</Tabs>
+
+## Start the game
+
+<Steps>
+
+1. Start Enshrouded from Steam as usual.
+
+2. Wait for the main menu. It now has a **Mods** entry.
+
+3. Select **Mods**. The list shows every mod that loaded, Game Rates among
+   them.
+
+</Steps>
+
+If the list is empty or **Mods** is missing, see
+[Where files live](/reference/where-files-live/) to find the log that says why.
+
+## See the mod work
+
+<Steps>
+
+1. Load a world you play, or start a new one.
+
+2. Open the crafting menu at a workbench and look at a building block recipe,
+   such as a wall.
+
+3. Compare the count it makes with what you remember. Game Rates doubles it by
+   default.
+
+</Steps>
+
+Your first mod works. Every other mod in the archive is running too, each with
+its default settings.
+
+## Next steps
+
+- [Change a mod's settings](/guides/change-mod-settings/) to set your own
+  values.
+- [Play on a server](/guides/play-on-a-server/) with friends who use mods.

@@ -1,0 +1,39 @@
+# Checks and builds the site on every pull request, and publishes it to
+# GitHub Pages from main. The nightly run picks up the pages other
+# repositories feed in, such as the platform's book.
+name: site
+
+on:
+  pull_request:
+    paths-ignore:
+      - "README.md"
+      - "ARCHITECTURE.md"
+      - "LICENSE"
+      - "renovate.json"
+  push:
+    branches: [main]
+    paths-ignore:
+      - "README.md"
+      - "ARCHITECTURE.md"
+      - "LICENSE"
+      - "renovate.json"
+  schedule:
+    - cron: "41 3 * * *"
+  workflow_dispatch:
+
+permissions: {}
+
+concurrency:
+  group: site-${{ github.head_ref || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  site:
+    # main: the organization runners run only workflows from main.
+    uses: enshwick/.github/.github/workflows/docs-site.yml@main # zizmor: ignore[unpinned-uses]
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    with:
+      deploy: ${{ github.event_name != 'pull_request' }}

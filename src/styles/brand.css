@@ -1,0 +1,47 @@
+/* Starlight theme: dark is the default look, light keeps the same roles. */
+:root {
+  --sl-font: 'IBM Plex Sans', system-ui, sans-serif;
+  --sl-font-mono: 'IBM Plex Mono', ui-monospace, monospace;
+  --sl-color-accent-low: #2a2346;
+  --sl-color-accent: #8c8fd6;
+  --sl-color-accent-high: #e9e1d3;
+  --sl-color-white: #f3eee6;
+  --sl-color-gray-1: #e9e1d3;
+  --sl-color-gray-5: #4a4458;
+  --sl-color-gray-6: #241f2e;
+  --sl-color-black: #14121a;
+  --enshwick-flame: #ff8a3d;
+  --enshwick-flame-core: #ffd27a;
+}
+
+:root[data-theme='light'] {
+  --sl-color-accent-low: #e3e1f5;
+  --sl-color-accent: #3d3770;
+  --sl-color-accent-high: #14121a;
+  --sl-color-white: #14121a;
+  --sl-color-gray-1: #2a2633;
+  --sl-color-gray-5: #c9c3d6;
+  --sl-color-gray-6: #ebe5dc;
+  --sl-color-black: #f3eee6;
+}
+
+h1,
+h2,
+h3,
+.site-title {
+  font-family: 'Chakra Petch', var(--sl-font);
+  font-weight: 600;
+}
+
+/* The developer area keeps the palette and takes the flame as its accent. */
+:root[data-area='dev'] {
+  --sl-color-accent-low: #3a2418;
+  --sl-color-accent: #ff8a3d;
+  --sl-color-accent-high: #ffd27a;
+}
+
+:root[data-area='dev'][data-theme='light'] {
+  --sl-color-accent-low: #fbe3d2;
+  --sl-color-accent: #a8481a;
+  --sl-color-accent-high: #14121a;
+}
