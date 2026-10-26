@@ -44,16 +44,16 @@
     "uk": "Старіші версії"
   },
   "mod.who.everyone": {
-    "en": "Everyone: the server and every player",
-    "uk": "Усім: серверу й кожному гравцю"
+    "en": "the server and every player",
+    "uk": "серверу й кожному гравцю"
   },
   "mod.who.server": {
-    "en": "Only the server or the host",
-    "uk": "Лише серверу або хосту"
+    "en": "only the server or the host",
+    "uk": "лише серверу або хосту"
   },
   "mod.who.client": {
-    "en": "Only the player who wants it",
-    "uk": "Лише гравцю, якому він потрібен"
+    "en": "only the player who wants it",
+    "uk": "лише гравцю, якому він потрібен"
   },
   "mod.needs": {
     "en": "Who needs it",
