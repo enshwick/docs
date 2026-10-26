@@ -25,6 +25,7 @@ export class ModPages {
   public static readonly folder = 'mods';
   private static readonly docs = 'docs';
   private static readonly page = 'player';
+  private static readonly images = 'images';
   private static readonly manifest = 'Cargo.toml';
   private static readonly api = 'enshwick';
   private static readonly repositoryPrefix = /^mod-/u;
@@ -101,16 +102,27 @@ export class ModPages {
     };
 
     await mkdir(`${PageFile.contentRoot}/${ModPages.folder}`, { recursive: true });
-    await cp(checkout.path(ModPages.docs), `${PageFile.contentRoot}/${ModPages.folder}/${slug}`, {
-      recursive: true,
-      filter: (source) => !source.endsWith('.md'),
-    });
+    await ModPages.copyImages(checkout, slug);
     await this.writePage(release, languages.root, root, file);
     await Promise.all(
       languages.others.map((code) => this.writeTranslation(release, checkout, code)),
     );
 
     return release;
+  }
+
+  /** The pictures a page shows, from `docs/images/`, beside the generated page. */
+  private static async copyImages(checkout: GitSource, slug: string): Promise<void> {
+    await cp(
+      checkout.path(`${ModPages.docs}/${ModPages.images}`),
+      `${PageFile.contentRoot}/${ModPages.folder}/${slug}/${ModPages.images}`,
+      { recursive: true, force: true },
+    ).catch((error: unknown) => {
+      // A mod without pictures has no images folder.
+      if (!(error instanceof Error && 'code' in error && error.code === 'ENOENT')) {
+        throw error;
+      }
+    });
   }
 
   /** The page in another language, when the mod has its `player.<language>.md`. */
@@ -159,14 +171,18 @@ export class ModPages {
   ): string {
     const t = (key: string): string => texts.get(key, language);
     const facts = [
-      `| | |`,
-      `| --- | --- |`,
-      `| ${t('mod.needs')} | ${t(`mod.who.${source.data.needs}`)} |`,
-      `| ${t('mod.id')} | \`${source.data.id}\` |`,
-      ...(release.version === undefined ? [] : [`| ${t('mod.version')} | ${release.version} |`]),
-      `| ${t('mod.source')} | [${release.repository}](${release.repository.url}) |`,
+      `:::note[${t('mod.needs')}: ${t(`mod.who.${source.data.needs}`)}]`,
+      [
+        `${t('mod.id')}: \`${source.data.id}\``,
+        ...(release.version === undefined ? [] : [`${t('mod.version')}: ${release.version}`]),
+        `[${t('mod.source')}](${release.repository.url})`,
+      ].join(' · '),
+      ':::',
     ].join('\n');
-    const body = source.body.replaceAll('](images/', `](./${release.slug}/images/`);
+    const body = source.body.replaceAll(
+      `](${ModPages.images}/`,
+      `](./${release.slug}/${ModPages.images}/`,
+    );
     const table = ModPages.settingsTable(source.data, t);
 
     if (table === undefined) {
