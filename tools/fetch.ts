@@ -21,7 +21,7 @@ if (!parsed.ok) {
   throw new TypeError(`src/data/sources.json: ${JSON.stringify(parsed.issues)}`);
 }
 
-const { platform, mods } = parsed.value;
+const { platform } = parsed.value;
 
 const generatedFolders = [
   DeveloperArea.folder,
@@ -44,14 +44,15 @@ const developerArea = new DeveloperArea({
     name: version.name.toString(),
     ref: version.ref,
   })),
+  modList: platform.modList.toString(),
   pageTypes: Object.fromEntries(
     Object.entries(platform.pageTypes).map(([path, type]) => [path, type.value]),
   ),
 });
-const [developerSidebar, modReleases] = await Promise.all([
-  developerArea.build(),
-  new ModPages(mods).build(),
-]);
+const developerSidebar = await developerArea.build();
+const modReleases = await new ModPages(
+  ModPages.listed(platform.modList.toString(), developerArea.releases[0]?.mods),
+).build();
 
 const apiMap = new PlatformChecks(developerArea.releases[0], developerArea.newestPages).run();
 
@@ -69,6 +70,6 @@ await Bun.write(
 );
 await Bun.write(
   `${generated}/compatibility.json`,
-  `${JSON.stringify({ platform: developerArea.releases.map(({ lib: _lib, errors: _errors, abi: _abi, ...release }) => release), mods: modReleases }, null, 2)}\n`,
+  `${JSON.stringify({ platform: developerArea.releases.map(({ lib: _lib, errors: _errors, abi: _abi, mods: _mods, ...release }) => release), mods: modReleases }, null, 2)}\n`,
 );
 await Bun.write(`${generated}/dev-sidebar.json`, `${JSON.stringify(developerSidebar, null, 2)}\n`);

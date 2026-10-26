@@ -2,7 +2,7 @@ import { cp, mkdir } from 'node:fs/promises';
 
 import { languages } from '../../src/site/languages.ts';
 import { texts } from '../../src/site/texts.ts';
-import { GitRef, type LanguageCode, type RepositoryName } from '../../src/site/types.ts';
+import { GitRef, type LanguageCode, ModList, type RepositoryName } from '../../src/site/types.ts';
 import { Fields } from './fields.ts';
 import { GitSource } from './git-source.ts';
 import { PageFile } from './page-file.ts';
@@ -31,6 +31,26 @@ export class ModPages {
   private static readonly repositoryPrefix = /^mod-/u;
 
   public constructor(private readonly repositories: readonly RepositoryName[]) {}
+
+  /**
+   * The mod repositories the platform's list names, in its order.
+   *
+   * @throws {TypeError} when the list is missing or does not read, since the site would lose every
+   *   mod page.
+   */
+  public static listed(origin: string, text?: string): RepositoryName[] {
+    if (text === undefined) {
+      throw new TypeError(`the platform has no ${origin}`);
+    }
+
+    const parsed = ModList.parse(Bun.TOML.parse(text));
+
+    if (!parsed.ok) {
+      throw new TypeError(`${origin}: ${JSON.stringify(parsed.issues)}`);
+    }
+
+    return parsed.value.mod.map((mod) => mod.repository);
+  }
 
   /** Writes every mod's pages and returns what each release says about itself, in list order. */
   public async build(): Promise<ModRelease[]> {
