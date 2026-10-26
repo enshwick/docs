@@ -27,7 +27,7 @@ keeps its own copy.
 2. Open `settings.toml` in the folder of your world, in a text editor.
 3. Change the values and save the file.
 
-While the world is loaded, most changes apply about a second after you save.
+Most changes to a loaded world apply about a second after you save.
 A mod's page says when a setting waits for the world to load again or for the
 game to restart.
 
