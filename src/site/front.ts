@@ -15,6 +15,8 @@ export interface ModCard {
   name: string;
   line: string;
   needs: string;
+  /** Whether the mod has a page on the site to link to. */
+  page: boolean;
 }
 
 /** `src/data/mods.json`: one line per mod and language. */
@@ -59,7 +61,13 @@ export function frontData(compat: unknown, lines: unknown, language: string): Fr
     if (line === undefined) {
       throw new TypeError(`src/data/mods.json: no line for ${slug}`);
     }
-    return { slug, name: mod.name.toString(), line, needs: mod.needs?.toString() ?? 'everyone' };
+    return {
+      slug,
+      name: mod.name.toString(),
+      line,
+      needs: mod.needs?.toString() ?? 'everyone',
+      page: mod.page.value,
+    };
   });
 
   const version = newest?.api?.toString();

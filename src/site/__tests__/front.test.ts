@@ -74,3 +74,11 @@ describe('frontData', () => {
     );
   });
 });
+
+describe('frontData mod pages', () => {
+  it('marks a mod without a page so its card does not link', () => {
+    const noPage = { ...compat, mods: compat.mods.map((mod) => ({ ...mod, page: false })) };
+    expect(frontData(noPage, lines, 'en').mods.every((card) => !card.page)).toBe(true);
+    expect(frontData(compat, lines, 'en').mods.every((card) => card.page)).toBe(true);
+  });
+});

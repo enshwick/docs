@@ -99,11 +99,19 @@ const why = [1, 2, 6, 3, 4, 5];
       {
         data.mods.map((mod) => (
           <li>
-            <a href={`${prefix}/mods/${mod.slug}/`}>
-              <span class="ew-mods__name">{mod.name}</span>
-              <span class="ew-mods__line">{mod.line}</span>
-              <span class="ew-mods__needs">{t(`front.needs.${mod.needs === 'server' ? 'server' : 'everyone'}`)}</span>
-            </a>
+            {mod.page ? (
+              <a class="ew-mods__card" href={`${prefix}/mods/${mod.slug}/`}>
+                <span class="ew-mods__name">{mod.name}</span>
+                <span class="ew-mods__line">{mod.line}</span>
+                <span class="ew-mods__needs">{t(`front.needs.${mod.needs === 'server' ? 'server' : 'everyone'}`)}</span>
+              </a>
+            ) : (
+              <div class="ew-mods__card">
+                <span class="ew-mods__name">{mod.name}</span>
+                <span class="ew-mods__line">{mod.line}</span>
+                <span class="ew-mods__needs">{t(`front.needs.${mod.needs === 'server' ? 'server' : 'everyone'}`)}</span>
+              </div>
+            )}
           </li>
         ))
       }

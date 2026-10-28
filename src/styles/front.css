@@ -200,7 +200,7 @@
   gap: var(--space-md);
 }
 
-.ew-mods a {
+.ew-mods__card {
   display: grid;
   gap: var(--space-2xs);
   height: 100%;
@@ -212,7 +212,7 @@
   transition: border-color var(--dur-short) var(--ease-out);
 }
 
-.ew-mods a:hover {
+a.ew-mods__card:hover {
   border-color: var(--color-mist);
 }
 
@@ -283,7 +283,7 @@
 
 @media (prefers-reduced-motion: reduce) {
   .ew-button,
-  .ew-mods a {
+  .ew-mods__card {
     transition: none;
   }
 }
@@ -310,4 +310,22 @@
 
 html {
   scrollbar-color: var(--color-rule) var(--color-paper);
+}
+
+/* Light theme: the same roles on paper. */
+:root[data-theme='light'] .ew-front {
+  --color-ink: var(--color-ink-light);
+  --color-ink-2: var(--color-ink-2-light);
+  --color-muted: var(--color-ink-2-light);
+  --color-mist: var(--color-mist-light);
+  --color-rule: var(--color-rule-light);
+  --color-paper: var(--color-paper-light);
+  --color-paper-2: var(--color-paper-2-light);
+  --color-paper-3: var(--color-paper-2-light);
+  --color-mist-low: var(--color-mist-low-light);
+  --color-mist-deep: var(--color-rule-light);
+}
+
+.main-pane:has(.ew-front) .content-panel + .content-panel {
+  border-top: 0;
 }

@@ -244,8 +244,8 @@
     "uk": "Ваша мова"
   },
   "front.why.2.body": {
-    "en": "Each player sees the game’s 15 languages, their own.",
-    "uk": "Кожен гравець бачить свою мову з 15 мов гри."
+    "en": "Each player sees the game in their own language, one of its 15.",
+    "uk": "Кожен гравець бачить свою мову, одну з 15 мов гри."
   },
   "front.why.3.title": {
     "en": "Game updates",
@@ -296,8 +296,8 @@
     "uk": "Чи не зіпсує це мої збереження?"
   },
   "front.faq.saves.a": {
-    "en": "Mods keep their data beside your world, not in the save.",
-    "uk": "Моди тримають дані поруч зі світом, а не в збереженні."
+    "en": "Mods keep their data in their own folder, not in the save.",
+    "uk": "Моди тримають дані у власній теці, а не в збереженні."
   },
   "front.faq.update.q": {
     "en": "What happens when the game updates?",
