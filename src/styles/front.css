@@ -29,8 +29,16 @@
   min-height: min(70svh, 40rem);
   padding-block: var(--space-2xl);
   background:
-    radial-gradient(40rem 18rem at 70% 85%, color-mix(in oklab, var(--color-mist-deep) 50%, transparent), transparent 70%),
-    radial-gradient(18rem 10rem at 72% 30%, color-mix(in oklab, var(--color-flame) 12%, transparent), transparent 70%);
+    radial-gradient(
+      40rem 18rem at 70% 85%,
+      color-mix(in oklab, var(--color-mist-deep) 50%, transparent),
+      transparent 70%
+    ),
+    radial-gradient(
+      18rem 10rem at 72% 30%,
+      color-mix(in oklab, var(--color-flame) 12%, transparent),
+      transparent 70%
+    );
 }
 
 .ew-hero h1 {
@@ -60,7 +68,9 @@
   color: var(--color-paper);
   font-weight: 600;
   text-decoration: none;
-  transition: background-color var(--dur-short) var(--ease-out), transform var(--dur-micro) var(--ease-out);
+  transition:
+    background-color var(--dur-short) var(--ease-out),
+    transform var(--dur-micro) var(--ease-out);
 }
 
 .ew-button:hover {
@@ -328,4 +338,13 @@ html {
 
 .main-pane:has(.ew-front) .content-panel + .content-panel {
   border-top: 0;
+}
+
+.ew-seal--light,
+:root[data-theme='light'] .ew-seal--dark {
+  display: none;
+}
+
+:root[data-theme='light'] .ew-seal--light {
+  display: block;
 }

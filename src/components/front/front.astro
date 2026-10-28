@@ -3,6 +3,7 @@ import compat from '../../generated/compatibility.json';
 import modLines from '../../data/mods.json';
 import site from '../../data/site.json';
 import mark from '../../assets/mark-on-dark.svg';
+import markLight from '../../assets/mark-on-light.svg';
 import { frontData } from '../../site/front.ts';
 import { texts } from '../../site/texts.ts';
 import { languages } from '../../site/languages.ts';
@@ -50,7 +51,8 @@ const why = [1, 2, 6, 3, 4, 5];
       }
     </div>
     <div class="ew-hero__seal" aria-hidden="true">
-      <img src={mark.src} width="320" height="320" alt="" />
+      <img class="ew-seal--dark" src={mark.src} width="320" height="320" alt="" />
+      <img class="ew-seal--light" src={markLight.src} width="320" height="320" alt="" />
     </div>
   </section>
 
