@@ -30,6 +30,12 @@ describe('ApiMap', () => {
     expect(map.modules[1]?.pages.map((page) => page.slug)).toEqual(['dev/world']);
   });
 
+  it('counts a page that names the module by its crate path', () => {
+    const named = [{ slug: 'dev/luau', title: 'Luau', body: 'Read from `enshwick::weather`.' }];
+
+    expect(ApiMap.of(lib, named).modules[2]?.pages.map((page) => page.slug)).toEqual(['dev/luau']);
+  });
+
   it('names the modules no page covers', () => {
     expect(ApiMap.of(lib, pages).uncovered).toEqual(['weather']);
   });

@@ -54,11 +54,12 @@ export class ApiMap {
     ].join('\n');
   }
 
-  /** Whether a page names the module: a link to its source, or a path through it. */
+  /** Whether a page names the module: a link to its source, its crate path, or a path through it. */
   private static mentions(body: string, name: string): boolean {
     return (
       body.includes(`src/${name}.rs`) ||
       body.includes(`src/${name}/`) ||
+      new RegExp(`\\b${ApiMap.crateName}::${name}\\b`, 'u').test(body) ||
       new RegExp(`\\b${name}::`, 'u').test(body)
     );
   }
