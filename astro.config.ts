@@ -80,6 +80,8 @@ export default defineConfig({
       components: {
         Head: './src/components/head.astro',
         PageTitle: './src/components/page-title.astro',
+        ThemeProvider: './src/components/theme-provider.astro',
+        ThemeSelect: './src/components/theme-select.astro',
       },
       defaultLocale: 'root',
       locales,
