@@ -236,40 +236,40 @@
     "uk": "Екран модів у грі"
   },
   "front.why.1.body": {
-    "en": "Turn mods on and off and change their settings from the main menu, without editing files.",
-    "uk": "Вмикайте й вимикайте моди та змінюйте їхні налаштування з головного меню, без правки файлів."
+    "en": "Turn mods on, off and set them up from the main menu.",
+    "uk": "Вмикайте, вимикайте й налаштовуйте моди з головного меню."
   },
   "front.why.2.title": {
     "en": "Your language",
     "uk": "Ваша мова"
   },
   "front.why.2.body": {
-    "en": "Enshwick and its mods follow the game’s language, in all 15 of them.",
-    "uk": "Enshwick і його моди говорять мовою гри, усіма 15."
+    "en": "Enshwick and its mods follow the game’s 15 languages.",
+    "uk": "Enshwick і моди говорять 15 мовами гри."
   },
   "front.why.3.title": {
     "en": "Game updates",
     "uk": "Оновлення гри"
   },
   "front.why.3.body": {
-    "en": "After an update, Enshwick finds what it needs in the new version. What it cannot find, it turns off and tells you.",
-    "uk": "Після оновлення Enshwick сам знаходить потрібне в новій версії. Чого не знайде, те вимикає й каже вам."
+    "en": "Enshwick finds its way in a new version, or says what is off.",
+    "uk": "Enshwick знаходить потрібне в новій версії або каже, що вимкнено."
   },
   "front.why.4.title": {
     "en": "Crashes name the mod",
     "uk": "Збій називає мод"
   },
   "front.why.4.body": {
-    "en": "If the game crashes, the crash log says whose code was running.",
-    "uk": "Якщо гра впаде, журнал збою скаже, чий код у цей момент працював."
+    "en": "The crash log says whose code was running.",
+    "uk": "Журнал збою каже, чий код працював."
   },
   "front.why.5.title": {
     "en": "Code stays yours",
     "uk": "Код лише ваш"
   },
   "front.why.5.body": {
-    "en": "A server sends you data, never code. You choose every mod you run.",
-    "uk": "Сервер надсилає вам дані, а не код. Кожен мод ви ставите самі."
+    "en": "A server sends you data, never code.",
+    "uk": "Сервер надсилає дані, а не код."
   },
   "front.faq.title": {
     "en": "Questions",
@@ -280,48 +280,48 @@
     "uk": "Чи працюють моди для EML?"
   },
   "front.faq.eml.a": {
-    "en": "Not now. Enshwick takes a different approach, so EML mods do not load. We do not rule out supporting them later.",
-    "uk": "Поки що ні. Enshwick влаштований інакше, тож моди для EML не завантажуються. Підтримку згодом ми не виключаємо."
+    "en": "Not now. We do not rule it out later.",
+    "uk": "Поки що ні. Згодом не виключаємо."
   },
   "front.faq.friends.q": {
     "en": "Do my friends need the same mods?",
     "uk": "Чи треба друзям ті самі моди?"
   },
   "front.faq.friends.a": {
-    "en": "Some mods run only on the server, others are needed by everyone. Each mod’s card says which.",
-    "uk": "Деякі моди працюють лише на сервері, інші потрібні всім. На картці кожного мода це вказано."
+    "en": "Some mods run only on the server; each card says which.",
+    "uk": "Деякі моди працюють лише на сервері; на картці це вказано."
   },
   "front.faq.saves.q": {
     "en": "Will it break my saves?",
     "uk": "Чи не зіпсує це мої збереження?"
   },
   "front.faq.saves.a": {
-    "en": "Mods keep their data beside your world, not inside the game’s save. Back up your worlds before you try new mods.",
-    "uk": "Моди тримають свої дані поруч зі світом, а не в збереженні гри. Перед новими модами зробіть резервну копію світів."
+    "en": "Mods keep their data beside your world, not in the save.",
+    "uk": "Моди тримають дані поруч зі світом, а не в збереженні."
   },
   "front.faq.update.q": {
     "en": "What happens when the game updates?",
     "uk": "Що буде, коли гра оновиться?"
   },
   "front.faq.update.a": {
-    "en": "Enshwick keeps working with what it finds in the new version and turns off the rest, saying what and why. Update Enshwick when a new version is out.",
-    "uk": "Enshwick працює далі з тим, що знайде в новій версії, а решту вимикає й пояснює, що саме й чому. Оновіть Enshwick, щойно вийде нова версія."
+    "en": "Enshwick turns off only what it cannot find and says so.",
+    "uk": "Enshwick вимикає лише те, чого не знайшов, і каже про це."
   },
   "front.faq.safe.q": {
     "en": "Is it safe?",
     "uk": "Чи це безпечно?"
   },
   "front.faq.safe.a": {
-    "en": "Enshwick and our mods are open source. A mod is a program, so install mods only from authors you trust.",
-    "uk": "Enshwick і наші моди мають відкритий код. Мод — це програма, тож ставте моди лише від авторів, яким довіряєте."
+    "en": "Open source. Install mods only from authors you trust.",
+    "uk": "Код відкритий. Ставте моди лише від авторів, яким довіряєте."
   },
   "front.faq.remove.q": {
     "en": "How do I remove it?",
     "uk": "Як це прибрати?"
   },
   "front.faq.remove.a": {
-    "en": "Delete powrprof.dll and the mods folder from the game folder.",
-    "uk": "Видаліть powrprof.dll і теку mods з теки гри."
+    "en": "Delete powrprof.dll and the mods folder.",
+    "uk": "Видаліть powrprof.dll і теку mods."
   },
   "front.mods.title": {
     "en": "Mods",

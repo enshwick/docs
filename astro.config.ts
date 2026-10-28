@@ -76,7 +76,7 @@ export default defineConfig({
         },
         { tag: 'meta', attrs: { name: 'twitter:card', content: 'summary_large_image' } },
       ],
-      customCss: ['./src/styles/brand.css'],
+      customCss: ['./src/styles/brand.css', './src/styles/front.css'],
       components: { Head: './src/components/head.astro' },
       defaultLocale: 'root',
       locales,

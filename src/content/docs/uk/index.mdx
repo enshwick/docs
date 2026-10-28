@@ -2,25 +2,8 @@
 title: enshwick
 description: Встановлюйте моди для Enshrouded і грайте з ними або пишіть власні з enshwick.
 template: splash
-hero:
-  tagline: Завантажувач модів для Enshrouded і моди, що на ньому працюють.
-  image:
-    dark: ../../../assets/mark-on-dark.svg
-    light: ../../../assets/mark-on-light.svg
-    alt: Печатка enshwick, полумʼя, що виривається з різьбленого кільця.
 ---
 
-import { Card, CardGrid, LinkCard } from '@astrojs/starlight/components';
+import Front from '../../../components/front/front.astro';
 
-import site from '../../../data/site.json';
-
-<CardGrid>
-  <Card title="Хочу грати з модами" icon="rocket">
-    Встановіть завантажувач, додайте мод і побачте, як він працює у вашому світі.
-    <LinkCard title="Ваша перша гра з модами" href={`${site.base}/uk/start/first-modded-game/`} />
-  </Card>
-  <Card title="Хочу створювати моди" icon="seti:rust">
-    Пишіть мод на Rust із крейтом enshwick і перевіряйте його без гри.
-    <LinkCard title="Документація для розробників" href={`${site.base}/uk/dev/`} />
-  </Card>
-</CardGrid>
+<Front lang="uk" />
