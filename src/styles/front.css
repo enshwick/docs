@@ -734,3 +734,530 @@ html {
   min-height: calc(90dvh - var(--sl-nav-height, 4rem));
   background: var(--color-paper);
 }
+
+/* ------------------------------------------------------------------
+   The game's UI language, drawn our own way: slate panels over a
+   cloudy dark with thin circles, pale-gold lines that run past the
+   panel and end in rings, pointed bar buttons, settings-style rows.
+   ------------------------------------------------------------------ */
+
+.ew-front {
+  font-family: var(--font-body);
+  font-size: 1.0625rem;
+  background:
+    url('/docs/circles.svg') 85% -120px / 900px auto no-repeat,
+    radial-gradient(60rem 40rem at 20% 0%, color-mix(in oklab, var(--color-mist-deep) 45%, transparent), transparent 70%),
+    var(--color-paper);
+}
+
+.ew-front .ew-section,
+.ew-front .ew-band,
+.ew-front .ew-foot {
+  background: transparent;
+}
+
+.ew-front .ew-band--mist {
+  background: url('/docs/circles.svg') 10% 50% / 700px auto no-repeat;
+}
+
+.ew-hero {
+  background: transparent;
+}
+
+/* Section titles: caps with a little air, a gold rule beneath that starts in a ring. */
+.ew-front h2 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-caps);
+  font-size: var(--text-2xl);
+  padding-bottom: var(--space-md);
+  background:
+    radial-gradient(circle at 5px 50%, var(--color-gold) 0 1.5px, transparent 2px 3px, var(--color-gold) 3.5px 4.5px, transparent 5px) left bottom / 10px 10px no-repeat,
+    linear-gradient(var(--color-gold), var(--color-gold)) 12px calc(100% - 4.5px) / calc(100% - 12px) 1px no-repeat;
+}
+
+.ew-hero h1 {
+  font-family: var(--font-display);
+  font-weight: 700;
+}
+
+.ew-front h3,
+.ew-index__name,
+.ew-modlist__row {
+  font-family: var(--font-display);
+  font-weight: 700;
+}
+
+/* The panel: a slate fill, a gold line above and below that runs past the edges and ends in rings. */
+.ew-frame,
+.ew-tile,
+.ew-front .ew-code pre.ew-frame {
+  position: relative;
+  border: 0;
+  background: color-mix(in oklab, var(--color-panel) 88%, transparent);
+  padding: var(--space-xl);
+}
+
+.ew-frame::before,
+.ew-frame::after,
+.ew-tile::before,
+.ew-tile::after {
+  content: '';
+  position: absolute;
+  left: -10px;
+  right: -10px;
+  width: auto;
+  height: 9px;
+  border: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(circle, transparent 0 2.5px, var(--color-gold) 3px 4px, transparent 4.5px) left / 9px 9px no-repeat,
+    radial-gradient(circle, transparent 0 2.5px, var(--color-gold) 3px 4px, transparent 4.5px) right / 9px 9px no-repeat,
+    linear-gradient(var(--color-gold), var(--color-gold)) center / calc(100% - 18px) 1px no-repeat;
+}
+
+.ew-frame::before,
+.ew-tile::before {
+  top: -4px;
+}
+
+.ew-frame::after,
+.ew-tile::after {
+  top: auto;
+  bottom: -4px;
+}
+
+/* Buttons: long bars with pointed ends, a gold line inside the edge. */
+.ew-button {
+  position: relative;
+  isolation: isolate;
+  min-height: 3rem;
+  padding: var(--space-sm) var(--space-2xl);
+  border: 0;
+  border-radius: 0;
+  background: var(--color-gold);
+  color: var(--color-ink);
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  clip-path: polygon(14px 0, calc(100% - 14px) 0, 100% 50%, calc(100% - 14px) 100%, 14px 100%, 0 50%);
+}
+
+.ew-button::before {
+  content: '';
+  position: absolute;
+  inset: 1px;
+  z-index: -1;
+  background: var(--color-button);
+  clip-path: polygon(13px 0, calc(100% - 13px) 0, 100% 50%, calc(100% - 13px) 100%, 13px 100%, 0 50%);
+  transition: background-color var(--dur-short) var(--ease-out);
+}
+
+.ew-button--flame {
+  background: var(--color-ink);
+  color: var(--color-ink-light);
+}
+
+.ew-button--flame::before {
+  background: linear-gradient(180deg, var(--color-core), var(--color-flame));
+}
+
+.ew-button--mist {
+  background: var(--color-gold);
+  color: var(--color-ink);
+}
+
+.ew-button:hover::before {
+  background: var(--color-button-hover);
+}
+
+.ew-button--flame:hover::before {
+  background: var(--color-core);
+}
+
+/* Mods: settings rows, translucent bands two pixels apart; the focused row turns light. */
+.ew-index {
+  border: 0;
+  display: grid;
+  gap: var(--space-3xs);
+}
+
+.ew-index > li {
+  border: 0;
+}
+
+.ew-index__row,
+.ew-index > li:first-child .ew-index__row {
+  padding: var(--space-md) var(--space-lg);
+  background: color-mix(in oklab, var(--color-panel) 80%, transparent);
+  transition: background-color var(--dur-micro) var(--ease-out), color var(--dur-micro) var(--ease-out);
+}
+
+a.ew-index__row:hover,
+a.ew-index__row:focus-visible {
+  background: var(--color-row-focus);
+  color: var(--color-row-focus-ink);
+}
+
+a.ew-index__row:hover :is(.ew-index__name, .ew-index__line, .ew-index__needs),
+a.ew-index__row:focus-visible :is(.ew-index__name, .ew-index__line, .ew-index__needs) {
+  color: var(--color-row-focus-ink);
+  border-color: currentColor;
+}
+
+.ew-index__name,
+.ew-index > li:first-child .ew-index__name {
+  font-size: var(--text-lg);
+}
+
+.ew-index__needs {
+  border: 0;
+  padding: 0;
+  font-weight: 700;
+  color: var(--color-ink);
+}
+
+/* Questions: the same rows, opening in place. */
+.ew-faq {
+  border: 0;
+  display: grid;
+  gap: var(--space-3xs);
+}
+
+.ew-faq details {
+  border: 0;
+  padding: var(--space-md) var(--space-lg);
+  background: color-mix(in oklab, var(--color-panel) 80%, transparent);
+}
+
+.ew-faq details[open] {
+  background: color-mix(in oklab, var(--color-panel-2) 95%, transparent);
+}
+
+.ew-faq summary {
+  font-family: var(--font-display);
+  font-weight: 700;
+}
+
+/* The Mods screen in the lead tile: the game's toggles, green when on. */
+.ew-modlist {
+  border: 0;
+  gap: var(--space-3xs);
+  padding: 0;
+  background: transparent;
+}
+
+.ew-modlist__row {
+  border: 0;
+  background: color-mix(in oklab, var(--color-paper-2) 85%, transparent);
+}
+
+.ew-modlist__row:first-child {
+  background: var(--color-row-focus);
+  color: var(--color-row-focus-ink);
+}
+
+.ew-toggle--on {
+  background: var(--color-on);
+}
+
+.ew-bento > .ew-bento__lead {
+  background: color-mix(in oklab, var(--color-panel-2) 90%, transparent);
+}
+
+.ew-link {
+  color: var(--color-gold-bright);
+}
+
+.ew-meta {
+  color: var(--color-muted);
+}
+
+.ew-foot__line {
+  font-family: var(--font-display);
+  font-weight: 700;
+}
+
+.ew-front pre,
+.ew-front code {
+  font-family: var(--font-mono);
+}
+
+.ew-button {
+  white-space: nowrap;
+}
+
+.ew-hero {
+  align-items: center;
+}
+
+.ew-faq details {
+  padding-bottom: var(--space-lg);
+}
+
+.ew-faq details:not([open]) {
+  padding-bottom: var(--space-md);
+}
+
+/* The first screen shows the product: the in-game Mods screen, drawn in the game's own language. */
+.ew-hero__body {
+  grid-template-columns: minmax(0, 6fr) minmax(0, 5fr);
+  align-items: center;
+  gap: var(--space-3xl);
+}
+
+.ew-screen {
+  margin: 0;
+  padding: var(--space-lg);
+  justify-self: stretch;
+  max-width: 30rem;
+  box-shadow: 0 2rem 4rem color-mix(in oklab, var(--color-paper) 70%, transparent);
+}
+
+.ew-screen__head {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-md);
+  padding-bottom: var(--space-sm);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: var(--text-xl);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-caps);
+  color: var(--color-ink);
+  background: linear-gradient(var(--color-gold), var(--color-gold)) left bottom / 100% 1px no-repeat;
+}
+
+.ew-screen__head img {
+  width: 2.5rem;
+  height: auto;
+  filter: drop-shadow(0 0 0.75rem color-mix(in oklab, var(--color-flame) 45%, transparent));
+}
+
+.ew-screen .ew-modlist {
+  margin: 0;
+}
+
+.ew-screen .ew-modlist__row {
+  font-size: var(--text-md);
+  padding-block: var(--space-xs);
+}
+
+.ew-screen figcaption {
+  margin-top: var(--space-md);
+  font-size: var(--text-sm);
+  color: var(--color-muted);
+}
+
+.ew-bento > .ew-bento__lead {
+  align-content: end;
+  min-height: 24rem;
+  background:
+    url('/docs/circles.svg') 120% -40% / 560px auto no-repeat,
+    color-mix(in oklab, var(--color-panel-2) 90%, transparent);
+}
+
+.ew-bento__lead h3 {
+  font-size: var(--text-3xl);
+}
+
+.ew-bento__lead p {
+  font-size: var(--text-lead);
+  max-width: 34ch;
+}
+
+@media (max-width: 60rem) {
+  .ew-hero__body {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-2xl);
+  }
+
+  .ew-screen {
+    order: 1;
+    max-width: none;
+  }
+
+  .ew-bento > .ew-bento__lead {
+    min-height: 0;
+  }
+}
+
+.ew-modlist > *,
+.ew-screen > * {
+  margin: 0;
+}
+
+.ew-screen .ew-modlist__row {
+  padding-block: var(--space-2xs);
+}
+
+.ew-screen .ew-modlist {
+  margin-top: var(--space-md);
+}
+
+.ew-screen figcaption {
+  margin-top: var(--space-md);
+}
+
+.ew-hero__body {
+  grid-template-columns: minmax(0, 1fr) minmax(0, 28rem);
+  gap: var(--space-2xl);
+}
+
+.ew-hero h1 {
+  max-width: 13ch;
+}
+
+.ew-screen__title {
+  margin: 0;
+  padding: 0;
+  font-size: var(--text-xl);
+  background: none;
+}
+
+.ew-screen__head {
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+@media (min-width: 60rem) {
+  .ew-hero__body {
+    grid-template-columns: minmax(0, 38rem) minmax(0, 28rem);
+    justify-content: start;
+    gap: var(--space-3xl);
+  }
+}
+
+@media (max-width: 60rem) {
+  .ew-hero__body {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (min-width: 60rem) {
+  .ew-screen {
+    margin-bottom: var(--space-3xl);
+  }
+}
+
+/* Review pass: the game's indigo panels, larger heads, a tight hero, a settings demo in the lead tile. */
+:root {
+  --color-panel: color-mix(in oklab, var(--color-mist-deep) 70%, var(--color-paper));
+  --color-panel-2: color-mix(in oklab, var(--color-mist-deep) 85%, var(--color-paper));
+}
+
+.ew-front h2 {
+  font-size: var(--text-section);
+}
+
+.ew-front .ew-screen__title {
+  font-size: var(--text-xl);
+}
+
+.ew-hero {
+  min-height: 0;
+  padding-block: var(--space-2xl);
+}
+
+.ew-hero .ew-lead {
+  line-height: 1.4;
+  max-width: 44ch;
+  text-wrap: balance;
+}
+
+.ew-screen__head {
+  margin-bottom: var(--space-sm);
+  padding-bottom: var(--space-xs);
+}
+
+.ew-screen__head img {
+  width: 2rem;
+}
+
+.ew-settings {
+  display: grid;
+  gap: var(--space-3xs);
+  margin-bottom: var(--space-xl);
+}
+
+.ew-settings > * {
+  margin: 0;
+}
+
+.ew-settings__row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  align-items: center;
+  padding: var(--space-sm) var(--space-md);
+  background: color-mix(in oklab, var(--color-paper-2) 80%, transparent);
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+  color: var(--color-ink);
+}
+
+.ew-settings__row--on {
+  background: var(--color-row-focus);
+  color: var(--color-row-focus-ink);
+}
+
+.ew-settings__value {
+  justify-self: center;
+  font-weight: 700;
+}
+
+.ew-slider {
+  position: relative;
+  justify-self: stretch;
+  height: 1px;
+  margin-inline: var(--space-md);
+  background: var(--color-ink-2);
+}
+
+.ew-slider__thumb {
+  position: absolute;
+  top: 50%;
+  left: 40%;
+  width: 10px;
+  height: 10px;
+  background: var(--color-ink);
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+
+.ew-bento > .ew-bento__lead {
+  min-height: 0;
+}
+
+@media (min-width: 60rem) {
+  .ew-screen {
+    margin-bottom: 0;
+  }
+}
+
+.ew-hero {
+  padding-block: var(--space-xl);
+}
+
+.ew-screen {
+  padding: var(--space-md) var(--space-lg);
+}
+
+.ew-screen .ew-modlist__row {
+  padding-block: var(--space-3xs);
+}
+
+.ew-screen figcaption {
+  margin-top: var(--space-sm);
+}
+
+.ew-front .ew-screen__title {
+  margin: 0;
+  padding: 0;
+  background: none;
+  font-size: var(--text-xl);
+}
+
+.ew-screen__head {
+  margin-bottom: var(--space-sm);
+}
