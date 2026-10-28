@@ -164,8 +164,8 @@
     "uk": "виділений сервер"
   },
   "front.title": {
-    "en": "Mods for Enshrouded",
-    "uk": "Моди для Enshrouded"
+    "en": "The mod loader for Enshrouded",
+    "uk": "Завантажувач модів для Enshrouded"
   },
   "front.lead": {
     "en": "Install Enshwick once, and the mods you add just work.",
@@ -228,8 +228,8 @@
     "uk": "Додайте цей рядок у параметри запуску гри в Steam:"
   },
   "front.why.title": {
-    "en": "Why Enshwick",
-    "uk": "Чому Enshwick"
+    "en": "What a mod folder cannot do",
+    "uk": "Чого не вміє тека з модами"
   },
   "front.why.1.title": {
     "en": "Mods screen in the game",
@@ -336,12 +336,12 @@
     "uk": "Для всіх"
   },
   "front.makers": {
-    "en": "Make your own mods: a typed Rust API, Luau scripts and data packs without code.",
-    "uk": "Пишіть власні моди: типізоване API на Rust, скрипти на Luau і пакети даних без коду."
+    "en": "A typed Rust API, Luau scripts and data packs without code.",
+    "uk": "Типізоване API на Rust, скрипти на Luau і пакети даних без коду."
   },
   "front.makers.link": {
     "en": "Developer docs",
-    "uk": "Документація для розробників"
+    "uk": "Для розробників"
   },
   "front.not-affiliated": {
     "en": "Enshwick is a fan project, not affiliated with Keen Games. Enshrouded is a trademark of Keen Games.",
@@ -354,5 +354,25 @@
   "front.why.6.body": {
     "en": "A player with the wrong mods is told what to fix.",
     "uk": "Гравцеві з іншими модами гра каже, що виправити."
+  },
+  "front.docs": {
+    "en": "Read the guide",
+    "uk": "Читати посібник"
+  },
+  "front.install.lead": {
+    "en": "Two ways, the same result.",
+    "uk": "Два шляхи, той самий результат."
+  },
+  "front.makers.title": {
+    "en": "A mod in six lines",
+    "uk": "Мод у шість рядків"
+  },
+  "front.makers.caption": {
+    "en": "A Luau mod that greets every player who joins.",
+    "uk": "Мод на Luau, що вітає кожного гравця, який заходить."
+  },
+  "front.foot": {
+    "en": "Install once. Play with mods.",
+    "uk": "Встановіть раз. Грайте з модами."
   }
 }
