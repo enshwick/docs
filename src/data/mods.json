@@ -1,0 +1,34 @@
+{
+  "area-loot": {
+    "en": "Empty one corpse and the loot of the others around it comes along.",
+    "uk": "Обшукайте одне тіло, і здобич з усіх тіл поруч прийде разом."
+  },
+  "better-altars": {
+    "en": "More Flame Altars per Flame level, and altar zones that grow together.",
+    "uk": "Більше Вогняних вівтарів на кожен рівень полум'я, і зони вівтарів, що зростаються."
+  },
+  "build-camera": {
+    "en": "The Airborne Architect's flying build camera for every player.",
+    "uk": "Літаюча камера будівництва з навички Airborne Architect для кожного гравця."
+  },
+  "game-rates": {
+    "en": "More from recipes, loot and experience, by the rates you set.",
+    "uk": "Більше з рецептів, здобичі й досвіду, за множниками, які ви задаєте."
+  },
+  "optimizer": {
+    "en": "Less CPU for a dedicated server, with the numbers to check it.",
+    "uk": "Менше навантаження на процесор виділеного сервера, з цифрами для перевірки."
+  },
+  "personal-safes": {
+    "en": "A chest only the player who placed it can open.",
+    "uk": "Скриня, яку може відкрити лише гравець, що її поставив."
+  },
+  "shared-experience": {
+    "en": "Friends who play at different hours stay on the same level.",
+    "uk": "Друзі, що грають у різний час, лишаються на одному рівні."
+  },
+  "survivors-per-altar": {
+    "en": "Every friend's house gets its own Blacksmith, Alchemist and the rest.",
+    "uk": "У кожного друга в домі свій Коваль, Алхімік та інші."
+  }
+}
