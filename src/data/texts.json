@@ -284,8 +284,8 @@
     "uk": "Поки що ні. Згодом не виключаємо."
   },
   "front.faq.friends.q": {
-    "en": "Do my friends need the same mods?",
-    "uk": "Чи треба друзям ті самі моди?"
+    "en": "Do other players need the same mods?",
+    "uk": "Чи треба іншим гравцям ті самі моди?"
   },
   "front.faq.friends.a": {
     "en": "Some mods run only on the server; each card says which.",
@@ -352,7 +352,7 @@
     "uk": "Сервер звіряє моди"
   },
   "front.why.6.body": {
-    "en": "A friend with the wrong mods is told what to fix.",
-    "uk": "Другові з іншими модами гра каже, що виправити."
+    "en": "A player with the wrong mods is told what to fix.",
+    "uk": "Гравцеві з іншими модами гра каже, що виправити."
   }
 }
