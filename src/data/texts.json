@@ -162,5 +162,189 @@
   "compat.side.server": {
     "en": "dedicated server",
     "uk": "виділений сервер"
+  },
+  "front.title": {
+    "en": "Mods for Enshrouded",
+    "uk": "Моди для Enshrouded"
+  },
+  "front.lead": {
+    "en": "Install Enshwick once, and the mods you add just work.",
+    "uk": "Встановіть Enshwick один раз, і моди просто працюють."
+  },
+  "front.download": {
+    "en": "Download Enshwick",
+    "uk": "Завантажити Enshwick"
+  },
+  "front.version": {
+    "en": "Version",
+    "uk": "Версія"
+  },
+  "front.builds": {
+    "en": "Game builds",
+    "uk": "Збірки гри"
+  },
+  "front.install.title": {
+    "en": "Install",
+    "uk": "Встановлення"
+  },
+  "front.install.vortex.title": {
+    "en": "With Vortex",
+    "uk": "Через Vortex"
+  },
+  "front.install.vortex.body": {
+    "en": "Open Enshwick on Nexus Mods and select Mod Manager Download. Vortex puts it into the game folder.",
+    "uk": "Відкрийте Enshwick на Nexus Mods і виберіть Mod Manager Download. Vortex покладе його в теку гри."
+  },
+  "front.install.vortex.link": {
+    "en": "Enshwick on Nexus Mods",
+    "uk": "Enshwick на Nexus Mods"
+  },
+  "front.install.manual.title": {
+    "en": "By hand",
+    "uk": "Вручну"
+  },
+  "front.install.manual.1": {
+    "en": "Download the archive.",
+    "uk": "Завантажте архів."
+  },
+  "front.install.manual.2": {
+    "en": "In Steam, right-click Enshrouded, then Manage, Browse local files.",
+    "uk": "У Steam клацніть правою кнопкою на Enshrouded, потім Керування, Переглянути локальні файли."
+  },
+  "front.install.manual.3": {
+    "en": "Extract the archive into that folder.",
+    "uk": "Розпакуйте архів у цю теку."
+  },
+  "front.install.manual.4": {
+    "en": "Start the game. The main menu shows Mods.",
+    "uk": "Запустіть гру. У головному меню з’явиться пункт Mods."
+  },
+  "front.install.deck.title": {
+    "en": "Linux and Steam Deck",
+    "uk": "Linux і Steam Deck"
+  },
+  "front.install.deck.body": {
+    "en": "Add this line to the game’s launch options in Steam:",
+    "uk": "Додайте цей рядок у параметри запуску гри в Steam:"
+  },
+  "front.why.title": {
+    "en": "Why Enshwick",
+    "uk": "Чому Enshwick"
+  },
+  "front.why.1.title": {
+    "en": "Mods screen in the game",
+    "uk": "Екран модів у грі"
+  },
+  "front.why.1.body": {
+    "en": "Turn mods on and off and change their settings from the main menu, without editing files.",
+    "uk": "Вмикайте й вимикайте моди та змінюйте їхні налаштування з головного меню, без правки файлів."
+  },
+  "front.why.2.title": {
+    "en": "Your language",
+    "uk": "Ваша мова"
+  },
+  "front.why.2.body": {
+    "en": "Enshwick and its mods follow the game’s language, in all 15 of them.",
+    "uk": "Enshwick і його моди говорять мовою гри, усіма 15."
+  },
+  "front.why.3.title": {
+    "en": "Game updates",
+    "uk": "Оновлення гри"
+  },
+  "front.why.3.body": {
+    "en": "After an update, Enshwick finds what it needs in the new version. What it cannot find, it turns off and tells you.",
+    "uk": "Після оновлення Enshwick сам знаходить потрібне в новій версії. Чого не знайде, те вимикає й каже вам."
+  },
+  "front.why.4.title": {
+    "en": "Crashes name the mod",
+    "uk": "Збій називає мод"
+  },
+  "front.why.4.body": {
+    "en": "If the game crashes, the crash log says whose code was running.",
+    "uk": "Якщо гра впаде, журнал збою скаже, чий код у цей момент працював."
+  },
+  "front.why.5.title": {
+    "en": "Code stays yours",
+    "uk": "Код лише ваш"
+  },
+  "front.why.5.body": {
+    "en": "A server sends you data, never code. You choose every mod you run.",
+    "uk": "Сервер надсилає вам дані, а не код. Кожен мод ви ставите самі."
+  },
+  "front.faq.title": {
+    "en": "Questions",
+    "uk": "Питання"
+  },
+  "front.faq.eml.q": {
+    "en": "Does it run EML mods?",
+    "uk": "Чи працюють моди для EML?"
+  },
+  "front.faq.eml.a": {
+    "en": "Not now. Enshwick takes a different approach, so EML mods do not load. We do not rule out supporting them later.",
+    "uk": "Поки що ні. Enshwick влаштований інакше, тож моди для EML не завантажуються. Підтримку згодом ми не виключаємо."
+  },
+  "front.faq.friends.q": {
+    "en": "Do my friends need the same mods?",
+    "uk": "Чи треба друзям ті самі моди?"
+  },
+  "front.faq.friends.a": {
+    "en": "Some mods run only on the server, others are needed by everyone. Each mod’s card says which.",
+    "uk": "Деякі моди працюють лише на сервері, інші потрібні всім. На картці кожного мода це вказано."
+  },
+  "front.faq.saves.q": {
+    "en": "Will it break my saves?",
+    "uk": "Чи не зіпсує це мої збереження?"
+  },
+  "front.faq.saves.a": {
+    "en": "Mods keep their data beside your world, not inside the game’s save. Back up your worlds before you try new mods.",
+    "uk": "Моди тримають свої дані поруч зі світом, а не в збереженні гри. Перед новими модами зробіть резервну копію світів."
+  },
+  "front.faq.update.q": {
+    "en": "What happens when the game updates?",
+    "uk": "Що буде, коли гра оновиться?"
+  },
+  "front.faq.update.a": {
+    "en": "Enshwick keeps working with what it finds in the new version and turns off the rest, saying what and why. Update Enshwick when a new version is out.",
+    "uk": "Enshwick працює далі з тим, що знайде в новій версії, а решту вимикає й пояснює, що саме й чому. Оновіть Enshwick, щойно вийде нова версія."
+  },
+  "front.faq.safe.q": {
+    "en": "Is it safe?",
+    "uk": "Чи це безпечно?"
+  },
+  "front.faq.safe.a": {
+    "en": "Enshwick and our mods are open source. A mod is a program, so install mods only from authors you trust.",
+    "uk": "Enshwick і наші моди мають відкритий код. Мод — це програма, тож ставте моди лише від авторів, яким довіряєте."
+  },
+  "front.faq.remove.q": {
+    "en": "How do I remove it?",
+    "uk": "Як це прибрати?"
+  },
+  "front.faq.remove.a": {
+    "en": "Delete powrprof.dll and the mods folder from the game folder.",
+    "uk": "Видаліть powrprof.dll і теку mods з теки гри."
+  },
+  "front.mods.title": {
+    "en": "Mods",
+    "uk": "Моди"
+  },
+  "front.needs.server": {
+    "en": "On the server",
+    "uk": "На сервері"
+  },
+  "front.needs.everyone": {
+    "en": "For everyone",
+    "uk": "Для всіх"
+  },
+  "front.makers": {
+    "en": "Make your own mods: a typed Rust API, Luau scripts and data packs without code.",
+    "uk": "Пишіть власні моди: типізоване API на Rust, скрипти на Luau і пакети даних без коду."
+  },
+  "front.makers.link": {
+    "en": "Developer docs",
+    "uk": "Документація для розробників"
+  },
+  "front.not-affiliated": {
+    "en": "Enshwick is a fan project, not affiliated with Keen Games. Enshrouded is a trademark of Keen Games.",
+    "uk": "Enshwick — фанатський проєкт, не пов’язаний з Keen Games. Enshrouded — торгова марка Keen Games."
   }
 }
