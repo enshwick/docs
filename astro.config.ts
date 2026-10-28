@@ -77,7 +77,10 @@ export default defineConfig({
         { tag: 'meta', attrs: { name: 'twitter:card', content: 'summary_large_image' } },
       ],
       customCss: ['./src/styles/brand.css', './src/styles/front.css'],
-      components: { Head: './src/components/head.astro' },
+      components: {
+        Head: './src/components/head.astro',
+        PageTitle: './src/components/page-title.astro',
+      },
       defaultLocale: 'root',
       locales,
       social: [{ icon: 'github', label: 'GitHub', href: 'https://github.com/enshwick' }],
