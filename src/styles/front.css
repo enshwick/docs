@@ -1,0 +1,350 @@
+/* The front page: one column of player-first sections on the brand's basalt and mist. */
+@import url('./tokens.css');
+
+.ew-front {
+  --ew-measure: 68ch;
+  max-width: 72rem;
+  margin-inline: auto;
+  color: var(--color-ink-2);
+  font-family: var(--font-body);
+}
+
+.ew-front h1,
+.ew-front h2,
+.ew-front h3 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  color: var(--color-ink);
+  letter-spacing: var(--tracking-display);
+  overflow-wrap: break-word;
+  min-width: 0;
+  text-wrap: balance;
+}
+
+.ew-hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+  align-items: center;
+  gap: var(--space-2xl);
+  min-height: min(70svh, 40rem);
+  padding-block: var(--space-2xl);
+  background:
+    radial-gradient(
+      40rem 18rem at 70% 85%,
+      color-mix(in oklab, var(--color-mist-deep) 50%, transparent),
+      transparent 70%
+    ),
+    radial-gradient(
+      18rem 10rem at 72% 30%,
+      color-mix(in oklab, var(--color-flame) 12%, transparent),
+      transparent 70%
+    );
+}
+
+.ew-hero h1 {
+  font-size: var(--text-display);
+  line-height: 1.02;
+  margin: 0;
+}
+
+.ew-lead {
+  font-size: var(--text-lead);
+  max-width: 34ch;
+  margin-block: var(--space-lg) var(--space-xl);
+}
+
+.ew-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-lg);
+}
+
+.ew-button {
+  display: inline-block;
+  padding: var(--space-sm) var(--space-xl);
+  border-radius: var(--radius-card);
+  background: var(--color-flame);
+  color: var(--color-paper);
+  font-weight: 600;
+  text-decoration: none;
+  transition:
+    background-color var(--dur-short) var(--ease-out),
+    transform var(--dur-micro) var(--ease-out);
+}
+
+.ew-button:hover {
+  background: var(--color-core);
+}
+
+.ew-button:active {
+  transform: translateY(1px);
+}
+
+.ew-link {
+  color: var(--color-mist);
+  text-underline-offset: 0.2em;
+}
+
+.ew-link:hover {
+  color: var(--color-ink);
+}
+
+.ew-front a:focus-visible,
+.ew-front summary:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 3px;
+  transition: none;
+}
+
+.ew-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-lg);
+  margin-top: var(--space-xl);
+  font-size: var(--text-sm);
+  color: var(--color-muted);
+}
+
+.ew-meta dt {
+  color: var(--color-muted);
+}
+
+.ew-front .ew-meta dd {
+  margin: 0;
+  color: var(--color-ink-2);
+}
+
+.ew-hero__seal {
+  display: grid;
+  place-items: center;
+}
+
+.ew-hero__seal img {
+  width: min(100%, 14rem);
+  height: auto;
+  filter: drop-shadow(0 0 2.5rem color-mix(in oklab, var(--color-mist) 35%, transparent));
+}
+
+.ew-section {
+  padding-block: var(--section-gap-s);
+  border-top: var(--rule-hair) solid var(--color-rule);
+}
+
+.ew-section h2 {
+  font-size: var(--text-section);
+  margin: 0 0 var(--space-xl);
+}
+
+.ew-routes {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--gap-columns);
+}
+
+.ew-route {
+  padding: var(--space-xl);
+  border: var(--rule-hair) solid var(--color-rule);
+  border-radius: var(--radius-card);
+  background: var(--color-paper-2);
+}
+
+.ew-route h3,
+.ew-why h3 {
+  font-size: var(--text-title);
+  margin: 0 0 var(--space-sm);
+}
+
+.ew-route ol {
+  padding-inline-start: var(--space-lg);
+  display: grid;
+  gap: var(--space-xs);
+}
+
+.ew-route a {
+  color: var(--color-mist);
+}
+
+.ew-fold {
+  margin-top: var(--space-lg);
+}
+
+.ew-fold summary,
+.ew-faq summary {
+  cursor: pointer;
+  color: var(--color-ink);
+}
+
+.ew-fold pre {
+  overflow-x: auto;
+  padding: var(--space-sm);
+  background: var(--color-paper-3);
+  border-radius: var(--radius-card);
+  font-family: var(--font-mono);
+  color: var(--color-ink);
+}
+
+.ew-why {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr));
+  gap: var(--space-xl) var(--gap-columns);
+}
+
+.ew-why li {
+  padding-top: var(--space-md);
+  border-top: 2px solid var(--color-flame);
+}
+
+.ew-why p {
+  margin: 0;
+  max-width: var(--ew-measure);
+}
+
+.ew-mods {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
+  gap: var(--space-md);
+}
+
+.ew-mods__card {
+  display: grid;
+  gap: var(--space-2xs);
+  height: 100%;
+  padding: var(--space-lg);
+  border: var(--rule-hair) solid var(--color-rule);
+  border-radius: var(--radius-card);
+  color: inherit;
+  text-decoration: none;
+  transition: border-color var(--dur-short) var(--ease-out);
+}
+
+a.ew-mods__card:hover {
+  border-color: var(--color-mist);
+}
+
+.ew-mods__name {
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+  font-weight: 600;
+  color: var(--color-ink);
+}
+
+.ew-mods__needs {
+  font-size: var(--text-sm);
+  color: var(--color-muted);
+}
+
+.ew-faq {
+  display: grid;
+  gap: var(--space-sm);
+  max-width: var(--ew-measure);
+}
+
+.ew-faq details {
+  padding: var(--space-md) 0;
+  border-bottom: var(--rule-hair) solid var(--color-rule);
+}
+
+.ew-faq p {
+  margin: var(--space-sm) 0 0;
+}
+
+.ew-makers {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-md);
+  padding: var(--space-xl);
+  border: var(--rule-hair) solid var(--color-mist-deep);
+  border-radius: var(--radius-card);
+  background: var(--color-mist-low);
+}
+
+.ew-makers p {
+  margin: 0;
+  color: var(--color-ink);
+}
+
+.ew-legal {
+  margin-block: var(--space-2xl);
+  font-size: var(--text-sm);
+  color: var(--color-muted);
+}
+
+@media (max-width: 50rem) {
+  .ew-hero,
+  .ew-routes {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .ew-hero__seal {
+    order: -1;
+  }
+
+  .ew-hero__seal img {
+    width: 9rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ew-button,
+  .ew-mods__card {
+    transition: none;
+  }
+}
+
+/* The front page draws its own heading: Starlight's page title stays out. */
+.main-pane:has(.ew-front) .content-panel:first-child {
+  display: none;
+}
+
+.ew-front ::selection {
+  background: var(--color-mist-deep);
+  color: var(--color-ink);
+}
+
+/* Starlight spaces every block in its content; the front page sets its own rhythm. */
+.ew-front :where(.ew-routes, .ew-mods, .ew-why, .ew-meta, .ew-faq) > *,
+.ew-front .ew-meta dd {
+  margin: 0;
+}
+
+.ew-makers {
+  margin-top: var(--section-gap-s);
+}
+
+html {
+  scrollbar-color: var(--color-rule) var(--color-paper);
+}
+
+/* Light theme: the same roles on paper. */
+:root[data-theme='light'] .ew-front {
+  --color-ink: var(--color-ink-light);
+  --color-ink-2: var(--color-ink-2-light);
+  --color-muted: var(--color-ink-2-light);
+  --color-mist: var(--color-mist-light);
+  --color-rule: var(--color-rule-light);
+  --color-paper: var(--color-paper-light);
+  --color-paper-2: var(--color-paper-2-light);
+  --color-paper-3: var(--color-paper-2-light);
+  --color-mist-low: var(--color-mist-low-light);
+  --color-mist-deep: var(--color-rule-light);
+}
+
+.main-pane:has(.ew-front) .content-panel + .content-panel {
+  border-top: 0;
+}
+
+.ew-seal--light,
+:root[data-theme='light'] .ew-seal--dark {
+  display: none;
+}
+
+:root[data-theme='light'] .ew-seal--light {
+  display: block;
+}

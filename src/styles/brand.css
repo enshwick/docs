@@ -1,47 +1,136 @@
-/* Starlight theme: dark is the default look, light keeps the same roles. */
+@import url('./tokens.css');
+@import url('@fontsource/cormorant/600.css');
+@import url('@fontsource/ibm-plex-sans/400.css');
+@import url('@fontsource/ibm-plex-sans/600.css');
+@import url('@fontsource/ibm-plex-mono/400.css');
+
+/* Starlight's tokens from the brand's: dark is the default look, light keeps the same roles. */
 :root {
-  --sl-font: 'IBM Plex Sans', system-ui, sans-serif;
-  --sl-font-mono: 'IBM Plex Mono', ui-monospace, monospace;
-  --sl-color-accent-low: #2a2346;
-  --sl-color-accent: #8c8fd6;
-  --sl-color-accent-high: #e9e1d3;
-  --sl-color-white: #f3eee6;
-  --sl-color-gray-1: #e9e1d3;
-  --sl-color-gray-5: #4a4458;
-  --sl-color-gray-6: #241f2e;
-  --sl-color-black: #14121a;
-  --enshwick-flame: #ff8a3d;
-  --enshwick-flame-core: #ffd27a;
+  --sl-font: var(--font-body);
+  --sl-font-mono: var(--font-mono);
+  --sl-color-accent-low: var(--color-mist-low);
+  --sl-color-accent: var(--color-mist);
+  --sl-color-accent-high: var(--color-ink-2);
+  --sl-color-white: var(--color-ink);
+  --sl-color-gray-1: var(--color-ink-2);
+  --sl-color-gray-2: var(--color-muted);
+  --sl-color-gray-5: var(--color-rule);
+  --sl-color-gray-6: var(--color-paper-3);
+  --sl-color-black: var(--color-paper);
 }
 
 :root[data-theme='light'] {
-  --sl-color-accent-low: #e3e1f5;
-  --sl-color-accent: #3d3770;
-  --sl-color-accent-high: #14121a;
-  --sl-color-white: #14121a;
-  --sl-color-gray-1: #2a2633;
-  --sl-color-gray-5: #c9c3d6;
-  --sl-color-gray-6: #ebe5dc;
-  --sl-color-black: #f3eee6;
-}
-
-h1,
-h2,
-h3,
-.site-title {
-  font-family: 'Chakra Petch', var(--sl-font);
-  font-weight: 600;
+  --sl-color-accent-low: var(--color-mist-low-light);
+  --sl-color-accent: var(--color-mist-light);
+  --sl-color-accent-high: var(--color-ink-light);
+  --sl-color-white: var(--color-ink-light);
+  --sl-color-gray-1: var(--color-ink-2-light);
+  --sl-color-gray-5: var(--color-rule-light);
+  --sl-color-gray-6: var(--color-paper-2-light);
+  --sl-color-black: var(--color-paper-light);
 }
 
 /* The developer area keeps the palette and takes the flame as its accent. */
 :root[data-area='dev'] {
-  --sl-color-accent-low: #3a2418;
-  --sl-color-accent: #ff8a3d;
-  --sl-color-accent-high: #ffd27a;
+  --sl-color-accent-low: var(--color-flame-low);
+  --sl-color-accent: var(--color-flame);
+  --sl-color-accent-high: var(--color-core);
 }
 
 :root[data-area='dev'][data-theme='light'] {
-  --sl-color-accent-low: #fbe3d2;
-  --sl-color-accent: #a8481a;
-  --sl-color-accent-high: #14121a;
+  --sl-color-accent-low: var(--color-flame-low-light);
+  --sl-color-accent: var(--color-flame-light);
+  --sl-color-accent-high: var(--color-ink-light);
+}
+
+html,
+body {
+  overflow-x: clip;
+}
+
+/* Headings in the carved serif, one weight and one colour. */
+h1,
+h2,
+h3,
+.site-title {
+  font-family: var(--font-display);
+  font-weight: 600;
+  letter-spacing: var(--tracking-display);
+  color: var(--sl-color-white);
+  overflow-wrap: break-word;
+  min-width: 0;
+}
+
+.sl-markdown-content h2 {
+  font-size: var(--text-2xl);
+}
+
+/* The shroud's mist: a still glow behind the page head, dark theme only. */
+:root:not([data-theme='light']) .main-frame {
+  background:
+    radial-gradient(60rem 22rem at 50% -6rem, color-mix(in oklab, var(--color-mist-deep) 40%, transparent), transparent 70%),
+    var(--color-paper);
+}
+
+/* A lit seam under the page title, the flame glowing in a crack of stone. */
+.content-panel:first-child h1::after {
+  content: '';
+  display: block;
+  width: 4rem;
+  height: 2px;
+  margin-top: var(--space-sm);
+  background: linear-gradient(90deg, var(--color-flame), var(--color-core) 60%, transparent);
+}
+
+a:focus-visible,
+button:focus-visible,
+summary:focus-visible,
+input:focus-visible,
+select:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+  transition: none;
+}
+
+h1,
+h2 {
+  text-wrap: balance;
+}
+
+a:active,
+button:active,
+summary:active {
+  opacity: 0.8;
+}
+
+::selection {
+  background: var(--color-mist-deep);
+  color: var(--color-ink);
+}
+
+html {
+  scrollbar-color: var(--color-rule) var(--color-paper);
+}
+
+/* Inline code reads at full contrast on its own ground. */
+.sl-markdown-content :not(pre) > code {
+  background: var(--color-paper-3);
+  color: var(--color-ink);
+}
+
+:root[data-theme='light'] .sl-markdown-content :not(pre) > code {
+  background: var(--color-paper-2-light);
+  color: var(--color-ink-light);
+}
+
+/* The theme and language pickers keep a visible edge. */
+starlight-theme-select select,
+starlight-lang-select select {
+  border: var(--rule-hair) solid var(--color-muted);
+  border-radius: var(--radius-card);
+}
+
+/* Room for the longest guide title in the sidebar on one line. */
+:root {
+  --sl-sidebar-width: 22rem;
 }

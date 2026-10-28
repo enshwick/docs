@@ -6,7 +6,7 @@ pre-commit:
   commands:
     format:
       glob: '*.{ts,astro,json}'
-      run: bunx oxfmt --check {staged_files}
+      run: bunx oxfmt --check --no-error-on-unmatched-pattern {staged_files}
     lint:
       glob: '*.{ts,astro}'
       run: bunx oxlint {staged_files}
@@ -32,7 +32,7 @@ pre-push:
   commands:
     format:
       glob: '*.{ts,astro,json}'
-      run: bunx oxfmt --check {push_files}
+      run: bunx oxfmt --check --no-error-on-unmatched-pattern {push_files}
     typos:
       run: typos --force-exclude {push_files}
     commits:

@@ -1,0 +1,143 @@
+---
+import compat from '../../generated/compatibility.json';
+import modLines from '../../data/mods.json';
+import site from '../../data/site.json';
+import mark from '../../assets/mark-on-dark.svg';
+import markLight from '../../assets/mark-on-light.svg';
+import { frontData } from '../../site/front.ts';
+import { texts } from '../../site/texts.ts';
+import { languages } from '../../site/languages.ts';
+
+interface Props {
+  /** The page's language code; the root language has none in its path. */
+  lang: string;
+}
+
+const { lang } = Astro.props;
+const code = languages.all.find((language) => language.code.toString() === lang)?.code ?? languages.root;
+const t = (key: string): string => texts.get(key, code);
+const data = frontData(compat, modLines, lang);
+const prefix = lang === 'en' ? `${site.base}` : `${site.base}/${lang}`;
+const download = 'https://github.com/enshwick/enshwick/releases/download/dev/enshwick.zip';
+const nexus = 'https://www.nexusmods.com/site/mods/2511';
+const faq = ['eml', 'friends', 'saves', 'update', 'safe', 'remove'];
+const why = [1, 2, 6, 3, 4, 5];
+---
+
+<div class="ew-front">
+  <section class="ew-hero" aria-labelledby="ew-title">
+    <div class="ew-hero__text">
+      <h1 id="ew-title">{t('front.title')}</h1>
+      <p class="ew-lead">{t('front.lead')}</p>
+      <div class="ew-actions">
+        <a class="ew-button" href={download}>{t('front.download')}</a>
+        <a class="ew-link" href={nexus}>{t('front.install.vortex.link')}</a>
+      </div>
+      {
+        data.version !== undefined && (
+          <dl class="ew-meta">
+            <div>
+              <dt>{t('front.version')}</dt>
+              <dd>{data.version}</dd>
+            </div>
+            {data.gameBuilds.length > 0 && (
+              <div>
+                <dt>{t('front.builds')}</dt>
+                <dd>{data.gameBuilds.map((build) => build.name).join(', ')}</dd>
+              </div>
+            )}
+          </dl>
+        )
+      }
+    </div>
+    <div class="ew-hero__seal" aria-hidden="true">
+      <img class="ew-seal--dark" src={mark.src} width="320" height="320" alt="" />
+      <img class="ew-seal--light" src={markLight.src} width="320" height="320" alt="" />
+    </div>
+  </section>
+
+  <section class="ew-section" id="install" aria-labelledby="ew-install">
+    <h2 id="ew-install">{t('front.install.title')}</h2>
+    <div class="ew-routes">
+      <article class="ew-route">
+        <h3>{t('front.install.vortex.title')}</h3>
+        <p>{t('front.install.vortex.body')}</p>
+        <a class="ew-link" href={nexus}>{t('front.install.vortex.link')}</a>
+      </article>
+      <article class="ew-route">
+        <h3>{t('front.install.manual.title')}</h3>
+        <ol>
+          <li><a href={download}>{t('front.install.manual.1')}</a></li>
+          <li>{t('front.install.manual.2')}</li>
+          <li>{t('front.install.manual.3')}</li>
+          <li>{t('front.install.manual.4')}</li>
+        </ol>
+        <details class="ew-fold">
+          <summary>{t('front.install.deck.title')}</summary>
+          <p>{t('front.install.deck.body')}</p>
+          <pre><code>WINEDLLOVERRIDES="powrprof=n,b" %command%</code></pre>
+        </details>
+      </article>
+    </div>
+  </section>
+
+  <section class="ew-section" aria-labelledby="ew-why">
+    <h2 id="ew-why">{t('front.why.title')}</h2>
+    <ul class="ew-why">
+      {
+        why.map((n) => (
+          <li>
+            <h3>{t(`front.why.${n}.title`)}</h3>
+            <p>{t(`front.why.${n}.body`)}</p>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+
+  <section class="ew-section" aria-labelledby="ew-mods">
+    <h2 id="ew-mods">{t('front.mods.title')}</h2>
+    <ul class="ew-mods">
+      {
+        data.mods.map((mod) => (
+          <li>
+            {mod.page ? (
+              <a class="ew-mods__card" href={`${prefix}/mods/${mod.slug}/`}>
+                <span class="ew-mods__name">{mod.name}</span>
+                <span class="ew-mods__line">{mod.line}</span>
+                <span class="ew-mods__needs">{t(`front.needs.${mod.needs === 'server' ? 'server' : 'everyone'}`)}</span>
+              </a>
+            ) : (
+              <div class="ew-mods__card">
+                <span class="ew-mods__name">{mod.name}</span>
+                <span class="ew-mods__line">{mod.line}</span>
+                <span class="ew-mods__needs">{t(`front.needs.${mod.needs === 'server' ? 'server' : 'everyone'}`)}</span>
+              </div>
+            )}
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+
+  <section class="ew-section" aria-labelledby="ew-faq">
+    <h2 id="ew-faq">{t('front.faq.title')}</h2>
+    <div class="ew-faq">
+      {
+        faq.map((id) => (
+          <details id={`faq-${id}`}>
+            <summary>{t(`front.faq.${id}.q`)}</summary>
+            <p>{t(`front.faq.${id}.a`)}</p>
+          </details>
+        ))
+      }
+    </div>
+  </section>
+
+  <section class="ew-makers" aria-label={t('front.makers.link')}>
+    <p>{t('front.makers')}</p>
+    <a class="ew-link" href={`${prefix}/dev/`}>{t('front.makers.link')}</a>
+  </section>
+
+  <p class="ew-legal">{t('front.not-affiliated')}</p>
+</div>

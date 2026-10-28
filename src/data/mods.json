@@ -1,0 +1,34 @@
+{
+  "area-loot": {
+    "en": "Loot one corpse, take the area’s loot.",
+    "uk": "Обшукайте одне тіло, заберіть усю здобич поруч."
+  },
+  "better-altars": {
+    "en": "More Flame Altars, zones that grow together.",
+    "uk": "Більше вівтарів, зони, що зростаються."
+  },
+  "build-camera": {
+    "en": "The flying build camera for everyone.",
+    "uk": "Літаюча камера будівництва для всіх."
+  },
+  "game-rates": {
+    "en": "More from recipes, loot and experience.",
+    "uk": "Більше з рецептів, здобичі й досвіду."
+  },
+  "optimizer": {
+    "en": "Less CPU for a dedicated server.",
+    "uk": "Менше навантаження на сервер."
+  },
+  "personal-safes": {
+    "en": "A chest only its owner can open.",
+    "uk": "Скриня, яку відкриває лише власник."
+  },
+  "shared-experience": {
+    "en": "All players stay on the same level.",
+    "uk": "Усі гравці лишаються на одному рівні."
+  },
+  "survivors-per-altar": {
+    "en": "Every base gets its own survivors.",
+    "uk": "Кожна база має своїх вцілілих."
+  }
+}

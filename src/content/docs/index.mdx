@@ -2,25 +2,8 @@
 title: enshwick
 description: Install and play Enshrouded mods, or write your own with enshwick.
 template: splash
-hero:
-  tagline: A mod loader for Enshrouded, and the mods that run on it.
-  image:
-    dark: ../../assets/mark-on-dark.svg
-    light: ../../assets/mark-on-light.svg
-    alt: The enshwick seal, a flame escaping a carved ring.
 ---
 
-import { Card, CardGrid, LinkCard } from '@astrojs/starlight/components';
+import Front from '../../components/front/front.astro';
 
-import site from '../../data/site.json';
-
-<CardGrid>
-  <Card title="I want to play with mods" icon="rocket">
-    Install the loader, add a mod and see it work in your world.
-    <LinkCard title="Your first modded game" href={`${site.base}/start/first-modded-game/`} />
-  </Card>
-  <Card title="I want to make mods" icon="seti:rust">
-    Write a mod in Rust against the enshwick crate and test it without the game.
-    <LinkCard title="Developer docs" href={`${site.base}/dev/`} />
-  </Card>
-</CardGrid>
+<Front lang="en" />
