@@ -724,3 +724,13 @@ html {
   margin-top: var(--space-md);
   font-size: var(--text-md);
 }
+
+/* A clean first screen: basalt, the seal and its glow, no picture behind. */
+.ew-hero::after {
+  display: none;
+}
+
+.ew-hero {
+  min-height: calc(90dvh - var(--sl-nav-height, 4rem));
+  background: var(--color-paper);
+}
