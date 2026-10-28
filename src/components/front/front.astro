@@ -44,6 +44,7 @@ end)`;
         <a class="ew-button ew-button--flame" href={download}>{t('front.download')}</a>
         <a class="ew-button ew-button--mist" href={`${prefix}/start/first-modded-game/`}>{t('front.docs')}</a>
       </div>
+      <p class="ew-meta ew-meta--nexus"><a class="ew-link" href={nexus}>{t('front.install.vortex.link')}</a></p>
       {
         data.version !== undefined && (
           <p class="ew-meta">
@@ -57,7 +58,6 @@ end)`;
           </p>
         )
       }
-      <p class="ew-meta"><a class="ew-link" href={nexus}>{t('front.install.vortex.link')}</a></p>
       </div>
       <img class="ew-hero__seal" src={seal.src} width="352" height="352" alt="" />
     </div>

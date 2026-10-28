@@ -656,7 +656,71 @@ html {
   }
 }
 
+/* The art carries its own mist along the foot. */
 .ew-hero::before {
-  height: 45%;
-  background: linear-gradient(0deg, color-mix(in oklab, var(--color-mist-deep) 90%, transparent), transparent);
+  display: none;
+}
+
+/* Mods: an even table; the side each mod needs as a tag. */
+.ew-index > li:first-child .ew-index__row {
+  padding-block: var(--space-md);
+}
+
+.ew-index > li:first-child .ew-index__name,
+.ew-index__name {
+  font-size: var(--text-xl);
+}
+
+.ew-index__row {
+  grid-template-columns: minmax(0, 3fr) minmax(0, 6fr) minmax(0, 2fr);
+  align-items: center;
+  padding: var(--space-md) var(--space-sm);
+}
+
+.ew-index__line {
+  color: var(--color-ink-2);
+}
+
+.ew-index__needs {
+  justify-self: end;
+  padding: var(--space-3xs) var(--space-sm);
+  border: var(--rule-hair) solid var(--color-rule);
+  border-radius: var(--radius-pill);
+  white-space: nowrap;
+  color: var(--color-ink-2);
+}
+
+.ew-section--deep {
+  padding-block: var(--section-gap-s);
+}
+
+.ew-hero .ew-actions + .ew-meta,
+.ew-hero__text > .ew-meta:last-child {
+  margin-top: var(--space-md);
+}
+
+@media (max-width: 60rem) {
+  .ew-index__row {
+    grid-template-columns: minmax(0, 1fr) auto;
+    row-gap: var(--space-2xs);
+  }
+
+  .ew-index__line {
+    grid-column: 1 / -1;
+    grid-row: 2;
+  }
+
+  .ew-index__needs {
+    grid-column: 2;
+    grid-row: 1;
+  }
+
+  .ew-code pre {
+    font-size: var(--text-xs);
+  }
+}
+
+.ew-hero .ew-meta--nexus {
+  margin-top: var(--space-md);
+  font-size: var(--text-md);
 }
