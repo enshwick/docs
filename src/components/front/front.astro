@@ -1,10 +1,8 @@
 ---
-import { Image } from 'astro:assets';
 
 import compat from '../../generated/compatibility.json';
 import modLines from '../../data/mods.json';
 import site from '../../data/site.json';
-import stone from '../../assets/stone.png';
 import seal from '../../assets/mark-on-dark.svg';
 import { frontData } from '../../site/front.ts';
 import { languages } from '../../site/languages.ts';
@@ -35,7 +33,6 @@ end)`;
 
 <div class="ew-front">
   <section class="ew-hero" aria-labelledby="ew-title">
-    <Image class="ew-hero__stone" src={stone} alt="" widths={[1280, 1920, 2560]} sizes="100vw" loading="eager" fetchpriority="high" />
     <div class="ew-wrap ew-hero__body">
       <div class="ew-hero__text">
       <h1 id="ew-title">{t('front.title')}</h1>
