@@ -244,8 +244,8 @@
     "uk": "Ваша мова"
   },
   "front.why.2.body": {
-    "en": "Enshwick and its mods follow the game’s 15 languages.",
-    "uk": "Enshwick і моди говорять 15 мовами гри."
+    "en": "Each player sees the game’s 15 languages, their own.",
+    "uk": "Кожен гравець бачить свою мову з 15 мов гри."
   },
   "front.why.3.title": {
     "en": "Game updates",
@@ -346,5 +346,13 @@
   "front.not-affiliated": {
     "en": "Enshwick is a fan project, not affiliated with Keen Games. Enshrouded is a trademark of Keen Games.",
     "uk": "Enshwick — фанатський проєкт, не пов’язаний з Keen Games. Enshrouded — торгова марка Keen Games."
+  },
+  "front.why.6.title": {
+    "en": "The server checks mods",
+    "uk": "Сервер звіряє моди"
+  },
+  "front.why.6.body": {
+    "en": "A friend with the wrong mods is told what to fix.",
+    "uk": "Другові з іншими модами гра каже, що виправити."
   }
 }
