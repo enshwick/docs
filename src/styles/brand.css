@@ -1,7 +1,8 @@
 @import url('./tokens.css');
-@import url('@fontsource/cormorant/600.css');
-@import url('@fontsource/ibm-plex-sans/400.css');
-@import url('@fontsource/ibm-plex-sans/600.css');
+@import url('@fontsource/alegreya/500.css');
+@import url('@fontsource/alegreya/700.css');
+@import url('@fontsource/alegreya-sans/400.css');
+@import url('@fontsource/alegreya-sans/700.css');
 @import url('@fontsource/ibm-plex-mono/400.css');
 
 /* Starlight's tokens from the brand's: dark is the default look, light keeps the same roles. */
@@ -169,4 +170,75 @@ header.header {
   border-top: 2px solid var(--color-flame);
   border-left: 2px solid var(--color-flame);
   pointer-events: none;
+}
+
+/* The game's UI language in the docs: the serif, gold rules, settings-style rows. */
+h1,
+h2,
+h3,
+.site-title {
+  font-family: var(--font-display);
+  font-weight: 700;
+}
+
+.sl-markdown-content h2 {
+  padding-bottom: var(--space-xs);
+  background: linear-gradient(var(--color-gold), var(--color-gold)) left bottom / 100% 1px no-repeat;
+}
+
+header.header {
+  background:
+    linear-gradient(90deg, transparent, var(--color-gold) 30%, var(--color-gold) 70%, transparent) bottom / 100% 1px no-repeat,
+    var(--sl-color-bg-nav);
+}
+
+.sidebar-content a {
+  border-radius: 0;
+}
+
+.sidebar-content a[aria-current='page'] {
+  background: var(--color-row-focus);
+  color: var(--color-row-focus-ink);
+  box-shadow: none;
+  font-weight: 700;
+}
+
+.sl-markdown-content :is(.expressive-code .frame, .starlight-aside)::after {
+  display: none;
+}
+
+.sl-markdown-content .starlight-aside {
+  border: 0;
+  border-top: 1px solid var(--color-gold);
+  border-bottom: 1px solid var(--color-gold);
+  background: color-mix(in oklab, var(--color-panel) 85%, transparent);
+}
+
+:root:not([data-theme='light']) .main-frame {
+  background:
+    url('/docs/circles.svg') 100% 0 / 720px auto no-repeat fixed,
+    radial-gradient(60rem 22rem at 50% -6rem, color-mix(in oklab, var(--color-mist-deep) 40%, transparent), transparent 70%),
+    var(--color-paper);
+}
+
+.content-panel:first-child h1::after {
+  background: linear-gradient(90deg, var(--color-gold), transparent);
+  width: 6rem;
+  height: 1px;
+}
+
+/* The developer badge in the brand's colours, and the engraving kept out of the prose. */
+.sidebar-content .sl-badge,
+starlight-tabs .sl-badge,
+.sl-badge {
+  background: var(--color-mist-deep);
+  color: var(--color-ink);
+  border: 1px solid var(--color-gold);
+}
+
+:root:not([data-theme='light']) .main-frame {
+  background:
+    url('/docs/circles.svg') calc(100% + 360px) 0 / 720px auto no-repeat fixed,
+    radial-gradient(60rem 22rem at 50% -6rem, color-mix(in oklab, var(--color-mist-deep) 40%, transparent), transparent 70%),
+    var(--color-paper);
 }

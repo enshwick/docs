@@ -24,10 +24,27 @@
   --color-mist-light: #3d3770; --color-mist-low-light: #e3e1f5;
   --color-flame-light: #a8481a; --color-flame-low-light: #fbe3d2;
 
-  --font-display: "Cormorant", ui-serif, serif;
-  --font-body: "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Alegreya", ui-serif, serif;
+  --font-body: "Alegreya Sans", ui-sans-serif, system-ui, sans-serif;
   --font-mono: "IBM Plex Mono", ui-monospace, monospace;
   --font-outlier: var(--font-body);
   --radius-card: 4px; --radius-pill: 999px; --rule-hair: 1px; --shadow-card: none;
   --tracking-display: -0.01em;
+}
+
+/* The game's own UI language: cool slate panels, thin pale-gold lines, one humanist serif. */
+:root {
+  --color-paper: #1b1a26; --color-paper-2: #292838; --color-paper-3: #353245;
+  --color-panel: #37384c; --color-panel-2: #3d3e5a;
+  --color-ink: #f2ede1; --color-ink-2: #d9d3c4; --color-muted: #a8a3b8;
+  --color-rule: #4b4a63;
+  --color-gold: #dbd1b0; --color-gold-bright: #e9d57f;
+  --color-row-focus: #e8e8e8; --color-row-focus-ink: #1b1a26;
+  --color-on: #7cc47f;
+  --color-button: #504f5d; --color-button-hover: #5d5c6c;
+  --color-focus: #e9d57f;
+  --font-display: "Alegreya", ui-serif, serif;
+  --font-body: "Alegreya Sans", ui-sans-serif, system-ui, sans-serif;
+  --tracking-display: 0;
+  --tracking-caps: 0.08em;
 }

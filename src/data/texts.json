@@ -374,5 +374,29 @@
   "front.foot": {
     "en": "Install once. Play with mods.",
     "uk": "Встановіть раз. Грайте з модами."
+  },
+  "front.screen.title": {
+    "en": "Mods",
+    "uk": "Моди"
+  },
+  "front.screen.caption": {
+    "en": "The Mods screen in the game’s main menu.",
+    "uk": "Екран модів у головному меню гри."
+  },
+  "front.demo.recipes": {
+    "en": "Recipe output",
+    "uk": "Вихід рецептів"
+  },
+  "front.demo.decor": {
+    "en": "Decor and furniture",
+    "uk": "Декор і меблі"
+  },
+  "front.demo.loot": {
+    "en": "Loot",
+    "uk": "Здобич"
+  },
+  "front.demo.on": {
+    "en": "On",
+    "uk": "Увімк."
   }
 }
