@@ -1,5 +1,5 @@
 @import url('./tokens.css');
-@import url('@fontsource/alegreya/500.css');
+
 @import url('@fontsource/alegreya/700.css');
 @import url('@fontsource/alegreya-sans/400.css');
 @import url('@fontsource/alegreya-sans/700.css');
@@ -241,4 +241,238 @@ starlight-tabs .sl-badge,
     url('/docs/circles.svg') calc(100% + 360px) 0 / 720px auto no-repeat fixed,
     radial-gradient(60rem 22rem at 50% -6rem, color-mix(in oklab, var(--color-mist-deep) 40%, transparent), transparent 70%),
     var(--color-paper);
+}
+
+/* ------------------------------------------------------------------
+   The docs in the game's UI language: topic tabs, search, steps,
+   tables, code, notes, page links, the mod card.
+   ------------------------------------------------------------------ */
+
+/* The two topics as menu tabs: caps, a diamond on the current one. */
+.starlight-sidebar-topics a {
+  border-radius: 0;
+  font-family: var(--font-display);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-caps);
+  font-size: var(--text-sm);
+  color: var(--color-muted);
+}
+
+.starlight-sidebar-topics-icon {
+  display: none;
+}
+
+.starlight-sidebar-topics a.starlight-sidebar-topics-current,
+.starlight-sidebar-topics .starlight-sidebar-topics-current {
+  color: var(--color-ink);
+  background: none;
+}
+
+.starlight-sidebar-topics .starlight-sidebar-topics-current::before {
+  content: '';
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  margin-right: var(--space-sm);
+  background: var(--color-gold);
+  transform: rotate(45deg);
+}
+
+/* Search: a slate field with a gold edge. */
+site-search button[data-open-modal] {
+  border-radius: 0;
+  border: 1px solid var(--color-rule);
+  background: var(--color-paper-2);
+}
+
+site-search button[data-open-modal]:hover {
+  border-color: var(--color-gold);
+}
+
+site-search dialog {
+  border-radius: 0;
+  border: 0;
+  border-top: 1px solid var(--color-gold);
+  border-bottom: 1px solid var(--color-gold);
+  background: var(--color-paper-2);
+}
+
+/* Steps: numbers in diamonds, a hairline between them. */
+.sl-markdown-content .sl-steps > li::before {
+  border: 0;
+  border-radius: 0;
+  background:
+    linear-gradient(var(--color-paper-2), var(--color-paper-2)) padding-box,
+    var(--color-gold) border-box;
+  border: 1px solid transparent;
+  clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%);
+  font-family: var(--font-display);
+  font-weight: 700;
+  color: var(--color-ink);
+}
+
+.sl-markdown-content .sl-steps > li::after {
+  background: var(--color-rule);
+}
+
+/* Tables: settings rows, banded, the head in caps over a gold rule. */
+.sl-markdown-content table {
+  border-collapse: separate;
+  border-spacing: 0 var(--space-3xs);
+  display: table;
+  width: 100%;
+}
+
+.sl-markdown-content th {
+  border: 0;
+  border-bottom: 1px solid var(--color-gold);
+  background: none;
+  font-family: var(--font-display);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-caps);
+  font-size: var(--text-sm);
+  color: var(--color-ink);
+}
+
+.sl-markdown-content td {
+  border: 0;
+  background: color-mix(in oklab, var(--color-panel) 75%, transparent);
+}
+
+.sl-markdown-content tr:hover td {
+  background: color-mix(in oklab, var(--color-panel-2) 90%, transparent);
+}
+
+/* Code: square frames between gold lines. */
+.sl-markdown-content .expressive-code .frame {
+  border-radius: 0;
+  box-shadow: none;
+  border-top: 1px solid var(--color-gold);
+  border-bottom: 1px solid var(--color-gold);
+}
+
+.sl-markdown-content .expressive-code .frame pre {
+  border: 0;
+  border-radius: 0;
+  background: var(--color-paper-2);
+}
+
+.sl-markdown-content .expressive-code .frame .header {
+  border-radius: 0;
+}
+
+/* Notes: their icon in gold. */
+.sl-markdown-content .starlight-aside .starlight-aside__icon {
+  color: var(--color-gold);
+}
+
+.sl-markdown-content .starlight-aside__title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  color: var(--color-ink);
+}
+
+/* Previous and next: pointed bars like the front page buttons. */
+.pagination-links a {
+  border: 0;
+  border-radius: 0;
+  background: var(--color-gold);
+  box-shadow: none;
+  position: relative;
+  isolation: isolate;
+  clip-path: polygon(16px 0, calc(100% - 16px) 0, 100% 50%, calc(100% - 16px) 100%, 16px 100%, 0 50%);
+  padding-inline: var(--space-2xl);
+}
+
+.pagination-links a::before {
+  content: '';
+  position: absolute;
+  inset: 1px;
+  z-index: -1;
+  background: var(--color-paper-2);
+  clip-path: polygon(15px 0, calc(100% - 15px) 0, 100% 50%, calc(100% - 15px) 100%, 15px 100%, 0 50%);
+}
+
+.pagination-links a:hover::before {
+  background: var(--color-panel);
+}
+
+.pagination-links .link-title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  color: var(--color-ink);
+}
+
+/* A mod's page: its facts as the game's item card. */
+[data-mod] .sl-markdown-content > .starlight-aside:first-child {
+  position: relative;
+  margin-bottom: var(--space-2xl);
+  padding: var(--space-lg) var(--space-xl);
+  border: 0;
+  background: color-mix(in oklab, var(--color-panel-2) 92%, transparent);
+}
+
+[data-mod] .sl-markdown-content > .starlight-aside:first-child::before,
+[data-mod] .sl-markdown-content > .starlight-aside:first-child::after {
+  content: '';
+  display: block;
+  position: absolute;
+  left: -10px;
+  right: -10px;
+  height: 9px;
+  pointer-events: none;
+  background:
+    radial-gradient(circle, transparent 0 2.5px, var(--color-gold) 3px 4px, transparent 4.5px) left / 9px 9px no-repeat,
+    radial-gradient(circle, transparent 0 2.5px, var(--color-gold) 3px 4px, transparent 4.5px) right / 9px 9px no-repeat,
+    linear-gradient(var(--color-gold), var(--color-gold)) center / calc(100% - 18px) 1px no-repeat;
+}
+
+[data-mod] .sl-markdown-content > .starlight-aside:first-child::before {
+  top: -4px;
+}
+
+[data-mod] .sl-markdown-content > .starlight-aside:first-child::after {
+  bottom: -4px;
+}
+
+[data-mod] .sl-markdown-content > .starlight-aside:first-child .starlight-aside__title {
+  font-size: var(--text-lg);
+  color: var(--color-gold);
+}
+
+[data-mod] .sl-markdown-content > .starlight-aside:first-child .starlight-aside__icon {
+  display: none;
+}
+
+/* Section heads in the prose with the ring that opens their rule. */
+.sl-markdown-content h2 {
+  padding-bottom: var(--space-xs);
+  background:
+    radial-gradient(circle at 5px 50%, var(--color-gold) 0 1.5px, transparent 2px 3px, var(--color-gold) 3.5px 4.5px, transparent 5px) left bottom / 10px 10px no-repeat,
+    linear-gradient(var(--color-gold), var(--color-gold)) 12px calc(100% - 4.5px) / calc(100% - 12px) 1px no-repeat;
+}
+
+/* The mod card draws its lines inside its own box, so Starlight's note decorations stay out. */
+[data-mod] .sl-markdown-content > .starlight-aside:first-child::before,
+[data-mod] .sl-markdown-content > .starlight-aside:first-child::after {
+  content: none;
+}
+
+[data-mod] .sl-markdown-content > .starlight-aside:first-child {
+  border-left: 0;
+  background:
+    linear-gradient(var(--color-gold), var(--color-gold)) top / 100% 1px no-repeat,
+    linear-gradient(var(--color-gold), var(--color-gold)) bottom / 100% 1px no-repeat,
+    radial-gradient(circle, var(--color-gold) 0 2px, transparent 2.5px) left top / 10px 10px no-repeat,
+    color-mix(in oklab, var(--color-panel-2) 92%, transparent);
+}
+
+.sl-markdown-content td {
+  vertical-align: top;
+}
+
+.sl-markdown-content td code {
+  white-space: nowrap;
 }
