@@ -112,23 +112,71 @@ export default defineConfig({
             link: '/dev/',
             icon: 'seti:rust',
             badge: { text: texts.everyLanguage('badge.developers'), variant: 'note' },
-            items: developerSidebar,
+            items: [
+              ...developerSidebar,
+              {
+                label: texts.get('group.ai'),
+                translations: texts.translations('group.ai'),
+                link: '/dev/ai-assistants/',
+              },
+            ],
           },
         ]),
         starlightImageZoom(),
         starlightLinksValidator({ errorOnLocalLinks: true, errorOnFallbackPages: false }),
         starlightLlmsTxt({
-          projectName: 'enshwick',
+          projectName: 'Enshwick',
           description:
-            'enshwick is a mod loader and modding API for the game Enshrouded. Mods are Rust crates built against the `enshwick` crate; the loader runs every mod DLL in the `mods/` folder beside the game.',
-          ...(apiMap === undefined ? {} : { details: apiMap }),
+            'Enshwick is a modding API platform for the game Enshrouded. Mod makers write mods in Rust against the `enshwick` crate, in Luau, or as data packs without code. The Enshwick loader ships with it: players install it once, and it runs every mod in the `mods` folder of the game.',
+          details: [
+            `To write a mod, read [For AI assistants](${siteData.url}${siteData.base}/dev/ai-assistants/) first: the kinds of mod, \`cargo enshwick new\`, the \`unstable\` feature and tests with the fake host. The API reference of the \`enshwick\` crate is on [docs.rs](https://docs.rs/enshwick).`,
+            ...(apiMap === undefined ? [] : [apiMap]),
+          ].join('\n\n'),
           customSets: [
             {
-              label: 'Mod authors',
+              label: 'Mod makers',
               paths: ['dev/**'],
-              description: 'the modding guide and API reference for writing mods in Rust',
+              description:
+                'the guide for writing mods in Rust, in Luau and as data packs, with the notes for AI assistants first',
+            },
+            {
+              label: 'Players',
+              paths: [
+                'start/**',
+                'guides/**',
+                'mods/**',
+                'reference/**',
+                'explanation/**',
+                'errors/**',
+              ],
+              description:
+                'how to install, update and remove Enshwick, play on a server, back up worlds, every mod and its settings, where files live and the error codes',
             },
           ],
+          optionalLinks: [
+            {
+              label: 'API reference',
+              url: 'https://docs.rs/enshwick',
+              description: 'every public item of the `enshwick` crate',
+            },
+            {
+              label: 'Source and examples',
+              url: 'https://github.com/enshwick/enshwick',
+              description: 'the platform, with Rust, Luau and data pack mods in `examples/`',
+            },
+          ],
+          promote: [
+            'index*',
+            'dev/ai-assistants',
+            'dev',
+            'dev/getting-started',
+            'dev/concepts*',
+            'dev/concepts/**',
+          ],
+          demote: ['dev/changelog', 'errors/**'],
+          exclude: ['dev/changelog'],
+          // The "Section titled" links beside each heading are for screen readers on the page, not for models.
+          customSelectors: { all: ['.sl-anchor-link'] },
         }),
       ],
     }),
