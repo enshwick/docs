@@ -1522,3 +1522,14 @@ a.ew-index__row:hover .ew-index__name::before {
     transform: none;
   }
 }
+
+/* A steadier rhythm: sections closer together. */
+.ew-section,
+.ew-band,
+.ew-section--deep {
+  padding-block: var(--space-3xl);
+}
+
+.ew-foot {
+  padding-top: var(--space-3xl);
+}

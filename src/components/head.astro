@@ -3,10 +3,14 @@ import Default from '@astrojs/starlight/components/Head.astro';
 
 import { Area } from '../site/area.ts';
 
-const area = Area.of(Astro.locals.starlightRoute.id);
+const id = Astro.locals.starlightRoute.id;
+const area = Area.of(id);
+// A mod's own page, in any language, gets its facts drawn as the game's item card.
+const mod = /^([a-z-]+\/)?mods\/[a-z0-9-]+$/u.test(id);
 ---
 
 <Default />
-<script is:inline define:vars={{ area: area.toString() }}>
+<script is:inline define:vars={{ area: area.toString(), mod }}>
   document.documentElement.dataset.area = area;
+  if (mod) document.documentElement.dataset.mod = '';
 </script>
