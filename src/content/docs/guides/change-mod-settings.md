@@ -6,30 +6,30 @@ sidebar:
   order: 5
 ---
 
-Each world keeps its own copy of every mod's settings, taken when the world
-first loads. New worlds start from the values in the `mod-configs` folder.
+Each world keeps its own copy of every mod's settings. The world takes this copy
+when it first loads. New worlds start from the values in the `mod-configs`
+folder.
 
 ## Change the values new worlds start with
 
-1. Start the game once with the mod, so it writes its settings file.
+1. Start the game once with the mod. The mod then writes its settings file.
 2. Open the `mod-configs` folder in the game folder.
-3. Open the file named after the mod's id, such as `game-rates.toml`, in a
-   text editor.
+3. Open the file named after the mod's id, such as `enshwick.game-rates.toml`,
+   in a text editor.
 4. Change the values and save the file.
 
-Worlds made from then on start with your values. A world you already have
+Worlds you make from then on start with your values. A world you already have
 keeps its own copy.
 
 ## Change them for one world
 
-1. Open `mod-data/<mod id>/worlds/` in the game folder. It holds one folder
-   per world.
+1. Open `mod-data/<mod id>/worlds/` in the game folder. It holds one folder per
+   world.
 2. Open `settings.toml` in the folder of your world, in a text editor.
 3. Change the values and save the file.
 
-Most changes to a loaded world apply about a second after you save.
-A mod's page says when a setting waits for the world to load again or for the
-game to restart.
+Most changes to a loaded world apply about one second after you save. A mod's
+page says when a setting waits until the world loads again or the game restarts.
 
 ## Change them on a dedicated server
 

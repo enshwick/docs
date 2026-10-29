@@ -1,25 +1,25 @@
 ---
-title: Remove a mod or enshwick
-description: Turn one mod off, delete it, or take enshwick out of the game folder.
+title: Remove a mod or Enshwick
+description: Turn one mod off, delete it, or take Enshwick out of the game folder.
 type: how-to
 sidebar:
   order: 3
 ---
 
 Your game saves stay as they are in every case. Close the game or stop the
-server first. Then turn one mod off, delete it, or
-take out enshwick with every mod.
+server first. Then turn one mod off, delete it, or remove Enshwick with every
+mod.
 
 ## Turn off one mod
 
 1. Open the `mods/enshwick` folder inside the game folder.
 2. Open `mods.toml` in a text editor such as Notepad.
-3. Find the lines for the mod, named by its id such as `game-rates`, and change
-   `enabled = true` to `enabled = false`.
+3. Find the lines for the mod. They start with its id, such as
+   `enshwick.game-rates`. Change `enabled = true` to `enabled = false`.
 4. Save the file and start the game. The **Mods** screen no longer lists the
    mod.
 
-The mod stays in the folder and is easy to turn back on later.
+The mod stays in the folder. You can turn it back on later.
 
 ## Delete one mod
 
@@ -27,13 +27,13 @@ The mod stays in the folder and is easy to turn back on later.
 2. Delete the mod's file. Its name starts with `enshwick-` and ends in `.dll`,
    such as `enshwick-game-rates.dll`.
 
-## Remove enshwick
+## Remove Enshwick
 
 Delete `powrprof.dll` from the game folder. The game then starts without
-enshwick and without any mod. You may also delete the `mods`, `mod-configs`,
-`mod-data` and `logs/enshwick` folders, which only enshwick uses.
+Enshwick and without any mod. You may also delete the `mods`, `mod-configs`,
+`mod-data` and `logs/enshwick` folders. Only Enshwick uses them.
 
-On Linux and Steam Deck, also clear the line you added to the game's **Launch
+On Linux and Steam Deck, also remove the line you added to the game's **Launch
 options**.
 
 :::caution
