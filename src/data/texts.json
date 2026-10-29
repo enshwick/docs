@@ -168,8 +168,8 @@
     "uk": "Завантажувач модів для Enshrouded"
   },
   "front.lead": {
-    "en": "Install Enshwick once, and the mods you add just work.",
-    "uk": "Встановіть Enshwick один раз, і моди просто працюють."
+    "en": "Install Enshwick once. Then add mods and play.",
+    "uk": "Встановіть Enshwick один раз. Потім додавайте моди й грайте."
   },
   "front.download": {
     "en": "Download Enshwick",
@@ -228,48 +228,48 @@
     "uk": "Додайте цей рядок у параметри запуску гри в Steam:"
   },
   "front.why.title": {
-    "en": "What a mod folder cannot do",
-    "uk": "Чого не вміє тека з модами"
+    "en": "What you get",
+    "uk": "Що ви отримуєте"
   },
   "front.why.1.title": {
     "en": "Mods screen in the game",
     "uk": "Екран модів у грі"
   },
   "front.why.1.body": {
-    "en": "Turn mods on, off and set them up from the main menu.",
-    "uk": "Вмикайте, вимикайте й налаштовуйте моди з головного меню."
+    "en": "Turn mods on and off and change their settings in the main menu.",
+    "uk": "Вмикайте й вимикайте моди та змінюйте їхні налаштування в головному меню."
   },
   "front.why.2.title": {
     "en": "Your language",
     "uk": "Ваша мова"
   },
   "front.why.2.body": {
-    "en": "Each player sees the game in their own language, one of its 15.",
-    "uk": "Кожен гравець бачить свою мову, одну з 15 мов гри."
+    "en": "Each player sees the game in their own language. Enshwick supports all 15 languages of the game.",
+    "uk": "Кожен гравець бачить гру своєю мовою. Enshwick підтримує всі 15 мов гри."
   },
   "front.why.3.title": {
     "en": "Game updates",
     "uk": "Оновлення гри"
   },
   "front.why.3.body": {
-    "en": "Enshwick finds its way in a new version, or says what is off.",
-    "uk": "Enshwick знаходить потрібне в новій версії або каже, що вимкнено."
+    "en": "After a game update, Enshwick finds what it needs. If something is missing, Enshwick turns it off and tells you.",
+    "uk": "Після оновлення гри Enshwick знаходить потрібне. Якщо чогось бракує, Enshwick це вимикає й повідомляє вам."
   },
   "front.why.4.title": {
-    "en": "Crashes name the mod",
-    "uk": "Збій називає мод"
+    "en": "Crash logs name the mod",
+    "uk": "Журнал збою називає мод"
   },
   "front.why.4.body": {
-    "en": "The crash log says whose code was running.",
-    "uk": "Журнал збою каже, чий код працював."
+    "en": "If the game crashes, the crash log shows which mod was running.",
+    "uk": "Якщо гра впаде, журнал збою покаже, який мод працював."
   },
   "front.why.5.title": {
-    "en": "Code stays yours",
-    "uk": "Код лише ваш"
+    "en": "No code from servers",
+    "uk": "Без коду із серверів"
   },
   "front.why.5.body": {
-    "en": "A server sends you data, never code.",
-    "uk": "Сервер надсилає дані, а не код."
+    "en": "A server sends you data. It never sends code.",
+    "uk": "Сервер надсилає вам дані. Код він не надсилає ніколи."
   },
   "front.faq.title": {
     "en": "Questions",
@@ -304,8 +304,8 @@
     "uk": "Що буде, коли гра оновиться?"
   },
   "front.faq.update.a": {
-    "en": "Enshwick turns off only what it cannot find and says so.",
-    "uk": "Enshwick вимикає лише те, чого не знайшов, і каже про це."
+    "en": "Enshwick turns off only what it cannot find, and tells you.",
+    "uk": "Enshwick вимикає лише те, чого не знайшов, і повідомляє вам."
   },
   "front.faq.safe.q": {
     "en": "Is it safe?",
@@ -352,16 +352,16 @@
     "uk": "Сервер звіряє моди"
   },
   "front.why.6.body": {
-    "en": "A player with the wrong mods is told what to fix.",
-    "uk": "Гравцеві з іншими модами гра каже, що виправити."
+    "en": "If a player has the wrong mods, the game tells them what to fix.",
+    "uk": "Якщо в гравця не ті моди, гра каже, що виправити."
   },
   "front.docs": {
     "en": "Read the guide",
     "uk": "Читати посібник"
   },
   "front.install.lead": {
-    "en": "Two ways, the same result.",
-    "uk": "Два шляхи, той самий результат."
+    "en": "Two ways.",
+    "uk": "Два способи."
   },
   "front.makers.title": {
     "en": "A mod in six lines",

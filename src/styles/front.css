@@ -1261,3 +1261,264 @@ a.ew-index__row:focus-visible :is(.ew-index__name, .ew-index__line, .ew-index__n
 .ew-screen__head {
   margin-bottom: var(--space-sm);
 }
+
+/* ------------------------------------------------------------------
+   Polish: every native control dressed in the game's language,
+   and a few quiet motions.
+   ------------------------------------------------------------------ */
+
+/* Disclosure markers: a small gold diamond that turns as the row opens. */
+.ew-front summary {
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+}
+
+.ew-front summary::-webkit-details-marker {
+  display: none;
+}
+
+.ew-front summary::before {
+  content: '';
+  flex: none;
+  width: 8px;
+  height: 8px;
+  border: 1px solid var(--color-gold);
+  transform: rotate(45deg);
+  transition: transform var(--dur-short) var(--ease-out), background-color var(--dur-short) var(--ease-out);
+}
+
+.ew-front details[open] > summary::before {
+  background: var(--color-gold);
+  transform: rotate(225deg);
+}
+
+.ew-faq details p {
+  margin: var(--space-sm) 0 0 var(--space-lg);
+  color: var(--color-ink-2);
+}
+
+.ew-faq details:hover {
+  background: color-mix(in oklab, var(--color-panel-2) 95%, transparent);
+}
+
+/* Install steps: numbers in small diamonds. */
+.ew-steps {
+  list-style: none;
+  padding: 0;
+  counter-reset: ew-step;
+  gap: var(--space-sm);
+}
+
+.ew-steps > li {
+  position: relative;
+  margin: 0;
+  padding-left: calc(1.75rem + var(--space-md));
+  counter-increment: ew-step;
+}
+
+.ew-steps > li::before {
+  content: counter(ew-step);
+  position: absolute;
+  left: 0;
+  top: 0.1em;
+  display: grid;
+  place-items: center;
+  width: 1.75rem;
+  height: 1.75rem;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: var(--text-sm);
+  color: var(--color-ink);
+  background:
+    linear-gradient(var(--color-paper-2), var(--color-paper-2)) padding-box,
+    var(--color-gold) border-box;
+  border: 1px solid transparent;
+  clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%);
+}
+
+.ew-route h3,
+.ew-frame h3 {
+  margin-bottom: var(--space-md);
+}
+
+.ew-route p {
+  color: var(--color-ink-2);
+}
+
+/* The Linux fold as a settings row. */
+.ew-fold {
+  margin-top: var(--space-lg);
+  padding: var(--space-sm) var(--space-md);
+  background: color-mix(in oklab, var(--color-paper-2) 80%, transparent);
+}
+
+.ew-fold[open] {
+  background: color-mix(in oklab, var(--color-paper-2) 95%, transparent);
+}
+
+.ew-fold p {
+  margin: var(--space-sm) 0 0;
+}
+
+/* Links: gold, underline only on hover. */
+.ew-link {
+  text-decoration: none;
+  border-bottom: 1px solid color-mix(in oklab, var(--color-gold-bright) 40%, transparent);
+  transition: color var(--dur-micro) var(--ease-out), border-color var(--dur-micro) var(--ease-out);
+}
+
+.ew-link:hover {
+  color: var(--color-ink);
+  border-bottom-color: var(--color-ink);
+}
+
+/* Buttons: a brighter fill on hover and a pressed step. */
+.ew-button {
+  transition: transform var(--dur-micro) var(--ease-out);
+}
+
+.ew-button:hover {
+  transform: translateY(-1px);
+}
+
+.ew-button:active {
+  transform: translateY(1px);
+}
+
+/* The mods table: a diamond before each name, the side as a small gold-edged tag. */
+.ew-index__name {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.ew-index__name::before {
+  content: '';
+  flex: none;
+  width: 6px;
+  height: 6px;
+  background: var(--color-gold);
+  transform: rotate(45deg);
+}
+
+.ew-index__needs {
+  justify-self: end;
+  padding: var(--space-3xs) var(--space-sm);
+  border: 1px solid color-mix(in oklab, var(--color-gold) 55%, transparent);
+  font-size: var(--text-sm);
+  font-weight: 700;
+  color: var(--color-gold);
+}
+
+a.ew-index__row:hover .ew-index__name::before {
+  background: var(--color-row-focus-ink);
+}
+
+/* The code: a file tab over the panel, a few colours. */
+.ew-code__panel {
+  padding: 0;
+}
+
+.ew-code__file {
+  padding: var(--space-xs) var(--space-lg);
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  color: var(--color-gold);
+  border-bottom: 1px solid var(--color-rule);
+}
+
+.ew-code__panel pre {
+  margin: 0;
+  padding: var(--space-lg);
+  border: 0;
+  background: transparent;
+  font-size: var(--text-md);
+  line-height: 1.7;
+}
+
+.ew-tok-k {
+  color: var(--color-mist);
+}
+
+.ew-tok-s {
+  color: var(--color-core);
+}
+
+.ew-tok-n {
+  color: var(--color-gold-bright);
+}
+
+/* Footer links as a row of quiet tabs. */
+.ew-foot__links {
+  gap: var(--space-xl);
+}
+
+.ew-foot__links .ew-link {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: var(--text-lg);
+}
+
+/* Motion: the Mods screen rises in once; its toggles slide; the flame on the seal breathes. */
+@keyframes ew-rise {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+}
+
+@keyframes ew-breathe {
+  50% {
+    opacity: 0.45;
+  }
+}
+
+.ew-screen {
+  animation: ew-rise var(--dur-long) var(--ease-out) both;
+}
+
+.ew-screen__head {
+  position: relative;
+}
+
+.ew-screen__head::before {
+  content: '';
+  position: absolute;
+  left: -0.5rem;
+  top: 50%;
+  width: 3rem;
+  height: 3rem;
+  border-radius: 50%;
+  background: radial-gradient(circle, color-mix(in oklab, var(--color-flame) 45%, transparent), transparent 70%);
+  transform: translateY(-50%);
+  animation: ew-breathe 3.6s ease-in-out infinite;
+  pointer-events: none;
+}
+
+.ew-toggle::after {
+  transition: transform var(--dur-short) var(--ease-out);
+}
+
+.ew-modlist__row:hover .ew-toggle--on::after {
+  transform: translateX(-2px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ew-screen,
+  .ew-screen__head::before {
+    animation: none;
+  }
+
+  .ew-front summary::before,
+  .ew-button,
+  .ew-link,
+  .ew-toggle::after {
+    transition: none;
+  }
+
+  .ew-button:hover {
+    transform: none;
+  }
+}
