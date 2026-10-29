@@ -29,6 +29,15 @@ const snippet = `enshwick.on("PlayerJoined", function(player)
     enshwick.world.tell(joined, \`Welcome, {joined.name}\`)
   end
 end)`;
+/** The snippet with its strings, keywords and the API name marked for colour. */
+const highlighted = snippet
+  .replaceAll('&', '&amp;')
+  .replaceAll('<', '&lt;')
+  .replaceAll(/("[^"]*"|`[^`]*`)|\b(function|local|if|then|end)\b|\b(enshwick)\b/gu, (match, text, word, api) => {
+    if (text !== undefined) return `<span class="ew-tok-s">${match}</span>`;
+    if (word !== undefined) return `<span class="ew-tok-k">${match}</span>`;
+    return api === undefined ? match : `<span class="ew-tok-n">${match}</span>`;
+  });
 ---
 
 <div class="ew-front">
@@ -171,7 +180,10 @@ end)`;
         <a class="ew-button ew-button--mist" href={`${prefix}/dev/`}>{t('front.makers.link')}</a>
       </div>
       <figure class="ew-code">
-        <pre class="ew-frame"><code>{snippet}</code></pre>
+        <div class="ew-frame ew-code__panel">
+          <div class="ew-code__file">main.luau</div>
+          <pre><code set:html={highlighted} /></pre>
+        </div>
         <figcaption>{t('front.makers.caption')}</figcaption>
       </figure>
     </div>
