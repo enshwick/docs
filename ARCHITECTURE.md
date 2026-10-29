@@ -52,7 +52,5 @@ tests; `bun run build` fails on a broken internal link
 (`starlight-links-validator`). Git hooks run oxfmt, oxlint, markdownlint and
 typos on changed files.
 
-Prose is checked with [Vale](https://vale.sh) under `.vale.ini`: English
-pages with the English styles, `src/content/docs/uk/` with the Ukrainian ones.
-`.vale/styles/Enshwick/` holds this project's own rules; generated rule lists
-and dictionaries are built locally and stay out of git.
+The maintainers check the prose of English and Ukrainian pages with
+[Vale](https://vale.sh) and their own tooling, kept outside this repository.
