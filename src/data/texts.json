@@ -1,7 +1,7 @@
 {
   "site.description": {
-    "en": "Install and play Enshrouded mods, or write your own with enshwick.",
-    "uk": "Встановлюйте моди для Enshrouded і грайте з ними або пишіть власні з enshwick."
+    "en": "Install and play Enshrouded mods, or write your own with Enshwick.",
+    "uk": "Встановлюйте моди для Enshrouded і грайте з ними або пишіть власні з Enshwick."
   },
   "topic.players": {
     "en": "Play with mods",
@@ -108,16 +108,16 @@
     "uk": "Версія на цій сторінці"
   },
   "mod.ecosystem": {
-    "en": "Runs on enshwick: install it first, as the install guide shows.",
-    "uk": "Працює на enshwick: спершу встановіть його, як показує інструкція."
+    "en": "Built on Enshwick. Install Enshwick first, as the install guide shows.",
+    "uk": "Зроблено на Enshwick. Спершу встановіть Enshwick, як показує інструкція."
   },
   "compat.platform": {
-    "en": "Game builds each enshwick version supports",
-    "uk": "Збірки гри, які підтримує кожна версія enshwick"
+    "en": "Game builds each Enshwick version supports",
+    "uk": "Збірки гри, які підтримує кожна версія Enshwick"
   },
   "compat.version": {
-    "en": "enshwick version",
-    "uk": "Версія enshwick"
+    "en": "Enshwick version",
+    "uk": "Версія Enshwick"
   },
   "compat.api": {
     "en": "API",
@@ -136,8 +136,8 @@
     "uk": "Збірка Steam"
   },
   "compat.mods": {
-    "en": "Mods and the enshwick API they need",
-    "uk": "Моди і потрібний їм API enshwick"
+    "en": "Mods and the Enshwick API they need",
+    "uk": "Моди і потрібний їм API Enshwick"
   },
   "compat.mod": {
     "en": "Mod",
@@ -280,16 +280,16 @@
     "uk": "Чи працюють моди для EML?"
   },
   "front.faq.eml.a": {
-    "en": "Not now. We do not rule it out later.",
-    "uk": "Поки що ні. Згодом не виключаємо."
+    "en": "Not now. Enshwick takes a different approach. EML support may come later.",
+    "uk": "Поки що ні. Enshwick працює інакше. Підтримка EML може зʼявитися згодом."
   },
   "front.faq.friends.q": {
     "en": "Do other players need the same mods?",
     "uk": "Чи треба іншим гравцям ті самі моди?"
   },
   "front.faq.friends.a": {
-    "en": "Some mods run only on the server; each card says which.",
-    "uk": "Деякі моди працюють лише на сервері; на картці це вказано."
+    "en": "Some mods run only on the server. Each mod card says where the mod runs.",
+    "uk": "Деякі моди працюють лише на сервері. Картка мода показує, де він працює."
   },
   "front.faq.saves.q": {
     "en": "Will it break my saves?",
@@ -312,8 +312,8 @@
     "uk": "Чи це безпечно?"
   },
   "front.faq.safe.a": {
-    "en": "Open source. Install mods only from authors you trust.",
-    "uk": "Код відкритий. Ставте моди лише від авторів, яким довіряєте."
+    "en": "Enshwick is open source. Install mods only from authors you trust.",
+    "uk": "Код Enshwick відкритий. Ставте моди лише від авторів, яким довіряєте."
   },
   "front.faq.remove.q": {
     "en": "How do I remove it?",
@@ -336,8 +336,8 @@
     "uk": "Для всіх"
   },
   "front.makers": {
-    "en": "A typed Rust API, Luau scripts and data packs without code.",
-    "uk": "Типізоване API на Rust, скрипти на Luau і пакети даних без коду."
+    "en": "A modding API platform: a typed Rust API, Luau scripts, and data packs without code. The loader ships with it.",
+    "uk": "Платформа API для модів: типізоване API на Rust, скрипти на Luau і пакети даних без коду. Завантажувач іде разом із нею."
   },
   "front.makers.link": {
     "en": "Developer docs",
@@ -345,7 +345,7 @@
   },
   "front.not-affiliated": {
     "en": "Enshwick is a fan project, not affiliated with Keen Games. Enshrouded is a trademark of Keen Games.",
-    "uk": "Enshwick — фанатський проєкт, не пов’язаний з Keen Games. Enshrouded — торгова марка Keen Games."
+    "uk": "Enshwick є фанатським проєктом і не пов’язаний з Keen Games. Enshrouded є торговою маркою Keen Games."
   },
   "front.why.6.title": {
     "en": "The server checks mods",
