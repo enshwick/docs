@@ -4,7 +4,6 @@
   inset: 0;
   overflow: hidden;
   pointer-events: none;
-  view-transition-name: ew-night;
 }
 
 .ew-night svg {
@@ -242,9 +241,14 @@
 }
 
 /* A doc page: the same night, faint, fixed to the window, the ridges low at its bottom. */
+/*
+ * Only the doc pages' night has a transition name, so it stays still between doc pages; the hero's
+ * night lives in the front page's content and never morphs into it.
+ */
 .ew-night--page {
   position: fixed;
   z-index: var(--z-behind);
+  view-transition-name: ew-night;
 }
 
 .ew-night--page .ew-night__stars {
