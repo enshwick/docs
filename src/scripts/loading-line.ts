@@ -1,15 +1,11 @@
 /**
- * A thin flame line at the top of the window while the next page loads. It shows only when a
- * click on a link to another page of the site takes longer than a moment, so a prerendered page,
- * which opens at once, shows nothing.
+ * A thin flame line at the top of the window while the next page loads. The click marks the page
+ * at once; the stylesheet shows the line only after a moment, so a prerendered page, which opens
+ * at once, shows nothing. The browser stops a leaving page's timers but keeps painting it, so the
+ * wait is the stylesheet's, not a timer's.
  */
 export class LoadingLine {
   private static readonly className = 'ew-loading';
-  /** How long a click may wait before the line shows, in milliseconds. */
-  private static readonly delay = 120;
-
-  private timer: number | undefined;
-
   /** Starts listening for clicks on the page's links. */
   public static start(): void {
     new LoadingLine().listen();
@@ -18,21 +14,14 @@ export class LoadingLine {
   private listen(): void {
     document.addEventListener('click', (event) => {
       if (LoadingLine.leavesForAPage(event)) {
-        this.timer = window.setTimeout(() => {
-          document.documentElement.classList.add(LoadingLine.className);
-        }, LoadingLine.delay);
+        document.documentElement.classList.add(LoadingLine.className);
       }
     });
 
     // Back from the history cache, the page must not keep the line it had when it left.
     window.addEventListener('pageshow', () => {
-      this.stop();
+      document.documentElement.classList.remove(LoadingLine.className);
     });
-  }
-
-  private stop(): void {
-    window.clearTimeout(this.timer);
-    document.documentElement.classList.remove(LoadingLine.className);
   }
 
   /** Whether the click opens another page of the site in this tab. */
