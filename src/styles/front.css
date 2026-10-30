@@ -370,52 +370,47 @@
   color: var(--color-muted);
 }
 
-/* Install through a service: its own mark and a hint of its colour on the edge. */
-.ew-services {
+/* Install through Nexus Mods: one wide row with its mark, its name and a note, its colour on the edge. */
+.ew-front .ew-nexus {
   display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-sm);
-}
-
-.ew-front .ew-service {
-  display: inline-flex;
+  gap: var(--space-md);
   align-items: center;
-  gap: var(--space-xs);
-  min-height: 46px;
-  padding: var(--space-xs) var(--space-lg) var(--space-xs) var(--space-md);
-  border: var(--rule-hair) solid var(--color-stone);
+  padding: var(--space-lg);
+  border: var(--rule-hair) solid var(--color-nexus-edge);
   border-radius: var(--radius-control);
   background: var(--color-veil);
   box-shadow: var(--shadow-quiet);
-  color: var(--color-bone);
-  font-size: 0.9375rem;
-  font-weight: 500;
   text-decoration: none;
   transition:
     border-color var(--dur-short) var(--ease-out),
     background-color var(--dur-short) var(--ease-out);
 }
 
-.ew-front .ew-service--nexus {
-  border-color: var(--color-nexus-edge);
-}
-
-.ew-front .ew-service--vortex {
-  border-color: var(--color-vortex-edge);
-}
-
-.ew-front .ew-service--nexus:hover {
+.ew-front .ew-nexus:hover {
   border-color: var(--color-nexus);
   background: var(--color-nexus-wash);
 }
 
-.ew-front .ew-service--vortex:hover {
-  border-color: var(--color-vortex);
-  background: var(--color-vortex-wash);
+.ew-nexus .ew-service-icon {
+  width: 40px;
+  height: 40px;
 }
 
-.ew-front .ew-service:active {
-  transform: translateY(1px);
+.ew-nexus__text {
+  display: grid;
+  gap: var(--space-2xs);
+}
+
+.ew-nexus__name {
+  font-family: var(--font-display);
+  font-size: var(--text-xl);
+  font-weight: 600;
+  color: var(--color-bone);
+}
+
+.ew-nexus__note {
+  font-size: var(--text-sm);
+  color: var(--color-muted);
 }
 
 @media (min-width: 56rem) {
