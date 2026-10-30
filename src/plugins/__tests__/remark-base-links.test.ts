@@ -4,6 +4,7 @@ import { BaseLinks } from '../remark-base-links.ts';
 
 describe('BaseLinks', () => {
   const links = new BaseLinks('/docs');
+  const root = new BaseLinks('');
 
   it('puts the base in front of root-relative links only', () => {
     expect(links.rewrite('/guides/install/')).toBe('/docs/guides/install/');
@@ -11,6 +12,12 @@ describe('BaseLinks', () => {
     expect(links.rewrite('//example.com/x')).toBe('//example.com/x');
     expect(links.rewrite('https://example.com/')).toBe('https://example.com/');
     expect(links.rewrite('#anchor')).toBe('#anchor');
+  });
+
+  it('leaves links as they are when the site is served at the root', () => {
+    expect(root.rewrite('/guides/install/')).toBe('/guides/install/');
+    expect(root.rewrite('/')).toBe('/');
+    expect(root.rewrite('//example.com/x')).toBe('//example.com/x');
   });
 
   it('rewrites links anywhere in the tree', () => {

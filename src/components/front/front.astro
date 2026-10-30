@@ -20,6 +20,7 @@ const data = frontData(compat, modLines, lang);
 const prefix = lang === 'en' ? `${site.base}` : `${site.base}/${lang}`;
 const download = 'https://github.com/enshwick/enshwick/releases/download/dev/enshwick.zip';
 const nexus = 'https://www.nexusmods.com/site/mods/2511';
+const contact = 'contact@enshwick.com';
 const faq = ['eml', 'friends', 'saves', 'update', 'safe', 'remove'];
 const why = [1, 2, 6, 3, 4, 5];
 const needs = (value: string): string => t(`front.needs.${value === 'server' ? 'server' : 'everyone'}`);
@@ -46,6 +47,7 @@ const highlighted = snippet
       <div class="ew-hero__text">
       <h1 id="ew-title">{t('front.title')}</h1>
       <p class="ew-lead">{t('front.lead')}</p>
+      <p class="ew-about">{t('front.about')}</p>
       <div class="ew-actions">
         <a class="ew-button ew-button--flame" href={download}>{t('front.download')}</a>
         <a class="ew-button ew-button--mist" href={`${prefix}/start/first-modded-game/`}>{t('front.docs')}</a>
@@ -71,10 +73,9 @@ const highlighted = snippet
           <h2 class="ew-screen__title">{t('front.screen.title')}</h2>
         </div>
         <div class="ew-modlist" aria-hidden="true">
-          {data.mods.map((mod, row) => (
+          {data.mods.map((mod) => (
             <div class="ew-modlist__row">
               <span>{mod.name}</span>
-              <span class:list={['ew-toggle', { 'ew-toggle--on': row !== 3 && row !== 6 }]} />
             </div>
           ))}
         </div>
@@ -120,22 +121,6 @@ const highlighted = snippet
         {
           why.map((n, index) => (
             <li class:list={['ew-tile', { 'ew-bento__lead': index === 0 }]}>
-              {index === 0 && (
-                <div class="ew-settings" aria-hidden="true">
-                  <div class="ew-settings__row ew-settings__row--on">
-                    <span>{t('front.demo.recipes')}</span>
-                    <span class="ew-settings__value">‹ 2 ›</span>
-                  </div>
-                  <div class="ew-settings__row">
-                    <span>{t('front.demo.decor')}</span>
-                    <span class="ew-settings__value">‹ {t('front.demo.on')} ›</span>
-                  </div>
-                  <div class="ew-settings__row">
-                    <span>{t('front.demo.loot')}</span>
-                    <span class="ew-slider"><span class="ew-slider__thumb" /></span>
-                  </div>
-                </div>
-              )}
               <h3>{t(`front.why.${n}.title`)}</h3>
               <p>{t(`front.why.${n}.body`)}</p>
             </li>
@@ -213,6 +198,7 @@ const highlighted = snippet
         <a class="ew-link" href={`${prefix}/dev/`}>{t('front.makers.link')}</a>
         <a class="ew-link" href={nexus}>Nexus Mods</a>
         <a class="ew-link" href="https://github.com/enshwick">GitHub</a>
+        <a class="ew-link" href={`mailto:${contact}`}>{contact}</a>
       </nav>
       <p class="ew-legal">{t('front.not-affiliated')}</p>
     </div>

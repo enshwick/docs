@@ -387,20 +387,8 @@
     "en": "The Mods screen in the game’s main menu.",
     "uk": "Екран модів у головному меню гри."
   },
-  "front.demo.recipes": {
-    "en": "Recipe output",
-    "uk": "Вихід рецептів"
-  },
-  "front.demo.decor": {
-    "en": "Decor and furniture",
-    "uk": "Декор і меблі"
-  },
-  "front.demo.loot": {
-    "en": "Loot",
-    "uk": "Здобич"
-  },
-  "front.demo.on": {
-    "en": "On",
-    "uk": "Увімк."
+  "front.about": {
+    "en": "Enshwick is a mod loader for Enshrouded and the mods built on it. It is for players and server admins who want more from the game. Mod makers write mods for it in Rust or Luau.",
+    "uk": "Enshwick є завантажувачем модів для Enshrouded разом із модами на ньому. Він для гравців і адміністраторів серверів, яким хочеться більшого від гри. Автори модів пишуть для нього моди на Rust або Luau."
   }
 }

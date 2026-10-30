@@ -1,0 +1,10 @@
+# The Worker's own addresses, production and previews alike, stay out of search.
+https://:worker.:subdomain.workers.dev/*
+  X-Robots-Tag: noindex
+
+# Built files carry a hash of their content in the name, so they never change.
+/_astro/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/.well-known/security.txt
+  Content-Type: text/plain; charset=utf-8

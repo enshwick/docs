@@ -41,6 +41,8 @@ export interface PlatformRelease {
   readonly abi: string | undefined;
   /** The loader's error codes, `errors.toml`, where the version has them. */
   readonly errors: string | undefined;
+  /** When `errors.toml` last changed at the version's ref. */
+  readonly errorsUpdated: Date | undefined;
   /** The platform's list of our mods at the version's ref. */
   readonly mods: string | undefined;
 }
@@ -137,6 +139,7 @@ export class DeveloperArea {
         slug,
         { title: page.title, type: 'reference', editUrl: false },
         page.body,
+        await checkout.lastChanged(DeveloperArea.changelog),
       ).write();
       sidebar.push({ slug, label: page.title });
     }
@@ -180,6 +183,7 @@ export class DeveloperArea {
             editUrl,
           },
           page.body,
+          await checkout.lastChanged(`${this.source.book}/${chapter.path}`),
         ).write();
       }),
     );
@@ -227,6 +231,7 @@ export class DeveloperArea {
       lib: await checkout.read(DeveloperArea.apiRoot),
       abi: await checkout.read(DeveloperArea.apiAbi),
       errors: await checkout.read(DeveloperArea.errorsSource),
+      errorsUpdated: await checkout.lastChanged(DeveloperArea.errorsSource),
       mods: await checkout.read(modList),
     };
   }

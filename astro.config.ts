@@ -1,6 +1,7 @@
 import { existsSync, readFileSync } from 'node:fs';
 
 import { unified } from '@astrojs/markdown-remark';
+import sitemap from '@astrojs/sitemap';
 import starlight from '@astrojs/starlight';
 import type { StarlightUserConfig } from '@astrojs/starlight/types';
 import { defineConfig } from 'astro/config';
@@ -13,6 +14,7 @@ import siteData from './src/data/site.json' with { type: 'json' };
 import { BaseLinks } from './src/plugins/remark-base-links.ts';
 import { languages } from './src/site/languages.ts';
 import { texts } from './src/site/texts.ts';
+import { Translations } from './src/site/translations.ts';
 
 type Sidebar = NonNullable<StarlightUserConfig['sidebar']>;
 
@@ -41,6 +43,9 @@ const locales = Object.fromEntries(
   ]),
 );
 
+/** Which pages have a translation; `bun tools/fetch.ts` has written the generated ones by now. */
+const translations = Translations.fromContent();
+
 export default defineConfig({
   site: siteData.url,
   base: siteData.base,
@@ -49,6 +54,14 @@ export default defineConfig({
     processor: unified({ remarkPlugins: [new BaseLinks(siteData.base).plugin()] }),
   },
   integrations: [
+    // Starlight adds this one itself when it is missing; it is taken over to keep fallback pages out.
+    sitemap({
+      filter: (page) => translations.inSitemap(page),
+      i18n: {
+        defaultLocale: 'root',
+        locales: Object.fromEntries(Object.entries(locales).map(([key, { lang }]) => [key, lang])),
+      },
+    }),
     starlight({
       title: 'enshwick',
       description: texts.get('site.description'),
@@ -76,6 +89,7 @@ export default defineConfig({
         },
         { tag: 'meta', attrs: { name: 'twitter:card', content: 'summary_large_image' } },
       ],
+      routeMiddleware: './src/route-data.ts',
       customCss: ['./src/styles/brand.css', './src/styles/front.css'],
       components: {
         Head: './src/components/head.astro',

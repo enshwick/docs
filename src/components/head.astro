@@ -1,15 +1,43 @@
 ---
 import Default from '@astrojs/starlight/components/Head.astro';
 
+import compat from '../generated/compatibility.json';
+import modLines from '../data/mods.json';
 import { Area } from '../site/area.ts';
+import { frontData } from '../site/front.ts';
+import { languages } from '../site/languages.ts';
+import { type SidebarItem, StructuredData } from '../site/structured-data.ts';
 
-const id = Astro.locals.starlightRoute.id;
+const route = Astro.locals.starlightRoute;
+const id = route.id;
 const area = Area.of(id);
 // A mod's own page, in any language, gets its facts drawn as the game's item card.
 const mod = /^([a-z-]+\/)?mods\/[a-z0-9-]+$/u.test(id);
+const lang = route.lang;
+const home = ['/', ...languages.others.map((code) => `/${code}/`)].includes(Astro.url.pathname);
+const data = Astro.site === undefined ? undefined : new StructuredData(Astro.site.href);
+// A fallback page copies another and stays out of search; the 404 page is no document.
+const nodes =
+  data === undefined || route.isFallback === true || id === '404'
+    ? []
+    : home
+      ? data.home(lang, frontData(compat, modLines, lang).version)
+      : data.article(
+          {
+            path: Astro.url.pathname,
+            title: route.entry.data.title,
+            description: route.entry.data.description,
+            lang,
+            lastUpdated: route.lastUpdated,
+          },
+          // Starlight's sidebar entries carry more fields than the breadcrumbs read.
+          route.sidebar as SidebarItem[],
+          route.siteTitle,
+        );
 ---
 
 <Default />
+{nodes.length > 0 && <script is:inline type="application/ld+json" set:html={StructuredData.script(nodes)} />}
 <script is:inline define:vars={{ area: area.toString(), mod }}>
   document.documentElement.dataset.area = area;
   if (mod) document.documentElement.dataset.mod = '';

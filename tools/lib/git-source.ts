@@ -2,6 +2,7 @@ import { rm } from 'node:fs/promises';
 import { join } from 'node:path';
 
 import type { GitRef, RepositoryName } from '../../src/site/types.ts';
+import { GitHistory } from './git-history.ts';
 
 /** Files of one repository at one ref, checked out sparsely into the build cache. */
 export class GitSource {
@@ -13,7 +14,10 @@ export class GitSource {
     public readonly root: string,
   ) {}
 
-  /** Checks out only `paths` of the repository at `ref`; a fresh copy every time, since refs move. */
+  /**
+   * Checks out only `paths` of the repository at `ref`; a fresh copy every time, since refs move. The
+   * history comes along without file contents, so each file can be dated by its own last commit.
+   */
   public static async checkout(
     repository: RepositoryName,
     ref: GitRef,
@@ -30,7 +34,7 @@ export class GitSource {
       'advice.detachedHead=false',
       'clone',
       '--quiet',
-      '--depth=1',
+      '--single-branch',
       '--filter=blob:none',
       '--sparse',
       `--branch=${ref}`,
@@ -45,6 +49,11 @@ export class GitSource {
   /** The path of a file of the checkout. */
   public path(relative: string): string {
     return join(this.root, relative);
+  }
+
+  /** The date of the last commit at the ref that changed a file, or `undefined` when none did. */
+  public lastChanged(relative: string): Promise<Date | undefined> {
+    return new GitHistory(this.root).lastChanged(relative);
   }
 
   /** A file's text, or `undefined` when the ref has no such file. */

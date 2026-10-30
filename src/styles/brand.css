@@ -216,7 +216,7 @@ header.header {
 
 :root:not([data-theme='light']) .main-frame {
   background:
-    url('/docs/circles.svg') 100% 0 / 720px auto no-repeat fixed,
+    url('/circles.svg') 100% 0 / 720px auto no-repeat fixed,
     radial-gradient(60rem 22rem at 50% -6rem, color-mix(in oklab, var(--color-mist-deep) 40%, transparent), transparent 70%),
     var(--color-paper);
 }
@@ -238,7 +238,7 @@ starlight-tabs .sl-badge,
 
 :root:not([data-theme='light']) .main-frame {
   background:
-    url('/docs/circles.svg') calc(100% + 360px) 0 / 720px auto no-repeat fixed,
+    url('/circles.svg') calc(100% + 360px) 0 / 720px auto no-repeat fixed,
     radial-gradient(60rem 22rem at 50% -6rem, color-mix(in oklab, var(--color-mist-deep) 40%, transparent), transparent 70%),
     var(--color-paper);
 }
