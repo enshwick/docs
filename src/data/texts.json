@@ -223,10 +223,6 @@
     "en": "For everyone",
     "uk": "Для всіх"
   },
-  "front.makers.link": {
-    "en": "Developer docs",
-    "uk": "Для розробників"
-  },
   "front.not-affiliated": {
     "en": "Enshwick is a fan project, not affiliated with Keen Games. Enshrouded is a trademark of Keen Games.",
     "uk": "Enshwick є фанатським проєктом і не пов’язаний з Keen Games. Enshrouded є торговою маркою Keen Games."
@@ -418,5 +414,37 @@
   "front.faq.free.a": {
     "en": "Yes. Enshwick and our mods are free, and their code is open under the MIT licence.",
     "uk": "Так. Enshwick і наші моди безкоштовні, а їхній код відкритий за ліцензією MIT."
+  },
+  "mod.card": {
+    "en": "About this mod",
+    "uk": "Про цей мод"
+  },
+  "mod.release": {
+    "en": "Release notes",
+    "uk": "Нотатки до випуску"
+  },
+  "stability.stable": {
+    "en": "Stable",
+    "uk": "Стабільне"
+  },
+  "stability.unstable": {
+    "en": "Unstable",
+    "uk": "Нестабільне"
+  },
+  "stability.unstable.title": {
+    "en": "Needs the unstable feature of the enshwick crate",
+    "uk": "Потребує функції unstable крейта enshwick"
+  },
+  "error.code": {
+    "en": "Error code",
+    "uk": "Код помилки"
+  },
+  "dev.older": {
+    "en": "This page describes the API of version {version}, an older one.",
+    "uk": "Ця сторінка описує API версії {version}, старішої."
+  },
+  "dev.newest": {
+    "en": "Read the newest",
+    "uk": "Читати найновішу"
   }
 }

@@ -16,9 +16,11 @@ import starlightLlmsTxt from 'starlight-llms-txt';
 import starlightSidebarTopics from 'starlight-sidebar-topics';
 
 import siteData from './src/data/site.json' with { type: 'json' };
+import sourcesData from './src/data/sources.json' with { type: 'json' };
 import { TableFrame } from './src/plugins/rehype-table-frame.ts';
 import { BaseLinks } from './src/plugins/remark-base-links.ts';
 import { nightCodeTheme } from './src/site/code-theme.ts';
+import { DeveloperVersions } from './src/site/developer-versions.ts';
 import { languages } from './src/site/languages.ts';
 import { texts } from './src/site/texts.ts';
 import { Translations } from './src/site/translations.ts';
@@ -53,6 +55,9 @@ const locales = Object.fromEntries(
 /** Which pages have a translation; `bun tools/fetch.ts` has written the generated ones by now. */
 const translations = Translations.fromContent();
 
+/** The developer area's versions; an older minor's pages stay out of the sitemap. */
+const developerVersions = new DeveloperVersions(sourcesData);
+
 export default defineConfig({
   site: siteData.url,
   base: siteData.base,
@@ -66,7 +71,9 @@ export default defineConfig({
   integrations: [
     // Starlight adds this one itself when it is missing; it is taken over to keep fallback pages out.
     sitemap({
-      filter: (page) => translations.inSitemap(page),
+      filter: (page) =>
+        translations.inSitemap(page) &&
+        developerVersions.olderAt(new URL(page).pathname) === undefined,
       i18n: {
         defaultLocale: 'root',
         locales: Object.fromEntries(Object.entries(locales).map(([key, { lang }]) => [key, lang])),
@@ -85,13 +92,6 @@ export default defineConfig({
         {
           tag: 'link',
           attrs: { rel: 'apple-touch-icon', href: `${siteData.base}/apple-touch-icon-180.png` },
-        },
-        {
-          tag: 'meta',
-          attrs: {
-            property: 'og:image',
-            content: `${siteData.url}${siteData.base}/social-banner.png`,
-          },
         },
         { tag: 'meta', attrs: { name: 'twitter:card', content: 'summary_large_image' } },
       ],

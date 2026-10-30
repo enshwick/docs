@@ -41,7 +41,7 @@
   --sl-text-h3: var(--text-xl);
   --sl-text-h4: var(--text-lg);
   --sl-nav-height: 3.75rem;
-  --sl-sidebar-width: 18rem;
+  --sl-sidebar-width: 20rem;
   --sl-content-width: 46rem;
 }
 
@@ -57,6 +57,8 @@ body {
 
 /* The page lies on the night: a hint of indigo at the top that sinks into basalt. */
 body {
+  /* The serif sets old-style figures; codes such as E1001 read better as lining ones. */
+  font-variant-numeric: lining-nums;
   background:
     linear-gradient(180deg, var(--color-night-page) 0%, var(--color-basalt) 55%) fixed,
     var(--color-basalt);
@@ -97,6 +99,11 @@ h3,
 
 .sl-markdown-content {
   color: var(--color-text);
+}
+
+/* Bold is the body face's 600, the heaviest weight the site loads. */
+:is(strong, b) {
+  font-weight: 600;
 }
 
 .sl-markdown-content a {
@@ -148,8 +155,8 @@ header.header {
 .ew-bar__title {
   min-width: 0;
   overflow: clip;
-  padding: 0.25rem;
-  margin: -0.25rem;
+  padding: var(--space-2xs);
+  margin: calc(-1 * var(--space-2xs));
 }
 
 .ew-bar .site-title {
@@ -187,7 +194,7 @@ header.header {
 }
 
 .ew-bar a.ew-bar__download {
-  padding: 7px 14px;
+  padding: var(--space-xs) var(--space-md);
   border: var(--rule-hair) solid var(--color-stone);
   color: var(--color-bone);
 }
@@ -197,12 +204,14 @@ header.header {
 }
 
 /* A page without a menu (the front page) keeps Download in the bar on a phone. */
-:root:not([data-has-sidebar]) .ew-bar__out {
-  display: flex;
-}
+@media (max-width: 49.99rem) {
+  :root:not([data-has-sidebar]) .ew-bar__out {
+    display: flex;
+  }
 
-:root:not([data-has-sidebar]) .ew-bar__out > :not(.ew-bar__download) {
-  display: none;
+  :root:not([data-has-sidebar]) .ew-bar__out > :not(.ew-bar__download) {
+    display: none;
+  }
 }
 
 @media (min-width: 50rem) {
@@ -315,7 +324,7 @@ header.header {
   .ew-topics {
     display: flex;
     gap: var(--space-2xs);
-    padding: 3px;
+    padding: var(--space-2xs);
     margin: 0;
     list-style: none;
     border: var(--rule-hair) solid var(--color-line);
@@ -333,7 +342,7 @@ header.header {
 
 .ew-topics a {
   display: block;
-  padding: 6px var(--space-xs);
+  padding: var(--space-xs);
   border: 0;
   text-align: center;
   font-size: var(--text-xs);
@@ -409,7 +418,7 @@ header.header {
 
 .sl-markdown-content th {
   padding-top: 0;
-  padding-bottom: 10px;
+  padding-bottom: var(--space-xs);
   border-bottom-color: var(--color-line-strong);
   font-family: var(--font-body);
   font-size: var(--text-sm);
@@ -512,14 +521,14 @@ header.header {
 
 /* Search: a hairline field. */
 site-search button[data-open-modal] {
-  border: var(--rule-hair) solid var(--color-line-strong);
+  border: var(--rule-hair) solid var(--color-faint);
   border-radius: 0;
   background: none;
   color: var(--color-faint);
 }
 
 site-search button[data-open-modal]:hover {
-  border-color: var(--color-stone);
+  border-color: var(--color-muted);
   color: var(--color-bone);
 }
 
@@ -608,6 +617,120 @@ mobile-starlight-toc summary {
   text-decoration: none;
 }
 
+/* A mod's card: its facts in a hairline frame with the brand's corner ticks. */
+.ew-mod-card {
+  position: relative;
+  margin-top: var(--space-lg);
+  padding: var(--space-md) var(--space-lg);
+  border: var(--rule-hair) solid var(--color-line-strong);
+  background: var(--color-veil-deep);
+}
+
+.ew-mod-card::before,
+.ew-mod-card::after {
+  content: '';
+  position: absolute;
+  width: var(--corner-tick);
+  height: var(--corner-tick);
+  border: 0 solid var(--color-flame);
+  pointer-events: none;
+}
+
+.ew-mod-card::before {
+  top: -1px;
+  left: -1px;
+  border-width: 1px 0 0 1px;
+}
+
+.ew-mod-card::after {
+  right: -1px;
+  bottom: -1px;
+  border-width: 0 1px 1px 0;
+}
+
+.ew-mod-card dl {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-sm) var(--space-xl);
+  margin: 0;
+}
+
+.ew-mod-card dt {
+  font-size: var(--text-sm);
+  color: var(--color-muted);
+}
+
+.ew-mod-card dd {
+  margin: 0;
+  color: var(--color-bone);
+}
+
+.ew-mod-card code {
+  font-family: var(--font-mono);
+  font-size: 0.9em;
+  color: var(--color-mist);
+}
+
+.ew-mod-card__links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-xs) var(--space-lg);
+  align-items: center;
+  margin: var(--space-md) 0 0;
+  padding-top: var(--space-sm);
+  border-top: var(--rule-hair) solid var(--color-line);
+  font-size: var(--text-sm);
+}
+
+.ew-mod-card__links a {
+  color: var(--color-muted);
+  text-underline-offset: 0.2em;
+}
+
+.ew-mod-card__links a:hover {
+  color: var(--color-bone);
+}
+
+.ew-mod-card__links a.ew-mod-card__download {
+  padding: var(--space-2xs) var(--space-sm);
+  border: var(--rule-hair) solid var(--color-stone);
+  color: var(--color-bone);
+  text-decoration: none;
+}
+
+.ew-mod-card__links a.ew-mod-card__download:hover {
+  border-color: var(--color-mist);
+}
+
+/* An error page's code over its title; an API page's stability under it. */
+.ew-error-code {
+  margin: 0 0 var(--space-xs);
+  font-size: var(--text-sm);
+  color: var(--color-muted);
+}
+
+.ew-error-code code {
+  font-family: var(--font-mono);
+  color: var(--color-flame);
+}
+
+.ew-stability {
+  margin: var(--space-sm) 0 0;
+}
+
+.ew-stability__badge {
+  display: inline-block;
+  padding: var(--space-3xs) var(--space-xs);
+  border: var(--rule-hair) solid var(--color-stone);
+  font-size: var(--text-xs);
+  color: var(--color-muted);
+}
+
+.ew-stability__badge--unstable {
+  border-color: var(--color-flame);
+  color: var(--color-bone);
+}
+
 /* Report a problem: one quiet line under every doc page. */
 .ew-report {
   margin-top: var(--space-xl);
@@ -673,7 +796,7 @@ mobile-starlight-toc summary {
 
 /* Selects in the bar and the menu. */
 starlight-lang-select select {
-  border: var(--rule-hair) solid var(--color-line-strong);
+  border: var(--rule-hair) solid var(--color-faint);
   border-radius: 0;
 }
 

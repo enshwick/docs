@@ -23,6 +23,10 @@
   max-width: none;
 }
 
+.main-pane:has(.ew-front) .sl-markdown-content {
+  margin-top: 0;
+}
+
 .main-pane:has(.ew-front) .ew-foot {
   max-width: var(--container);
   margin-inline: auto;
@@ -104,7 +108,7 @@
   width: 100%;
   max-width: var(--container);
   margin-inline: auto;
-  padding: clamp(48px, 14vh, 160px) var(--gutter) var(--space-2xl);
+  padding: clamp(var(--space-xl), 14vh, var(--space-4xl)) var(--gutter) var(--space-2xl);
 }
 
 .ew-hero h1 {
@@ -273,11 +277,11 @@
   .ew-hero__body {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: var(--space-2xl);
-    padding-top: clamp(96px, 22vh, 220px);
+    padding-top: clamp(var(--space-3xl), 22vh, calc(var(--space-4xl) + var(--space-2xl)));
   }
 
   .ew-clearing {
-    margin-top: clamp(24px, 6vh, 72px);
+    margin-top: clamp(var(--space-lg), 6vh, var(--space-2xl));
   }
 }
 
