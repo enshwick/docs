@@ -5,14 +5,12 @@ import { Address, Mailbox } from './types.ts';
 
 /**
  * The places outside the site that the header, the footer and the front page link to, from
- * `src/data/links.json`. A link to a page that does not exist yet (the Vortex extension) points at
- * the nearest real page until its own appears; changing it here changes it everywhere.
+ * `src/data/links.json`; changing one there changes it everywhere.
  */
 export class Links {
   private static readonly schema = n.object({
     github: Address,
     nexus: Address,
-    vortex: Address,
     download: Address,
     license: Address,
     issues: Address,
@@ -22,7 +20,6 @@ export class Links {
 
   public readonly github: Address;
   public readonly nexus: Address;
-  public readonly vortex: Address;
   public readonly download: Address;
   public readonly license: Address;
   public readonly issues: Address;
@@ -39,7 +36,6 @@ export class Links {
     ({
       github: this.github,
       nexus: this.nexus,
-      vortex: this.vortex,
       download: this.download,
       license: this.license,
       issues: this.issues,

@@ -1,22 +1,16 @@
 ---
 import githubMark from '../assets/services/github.svg?raw';
 import nexusMark from '../assets/services/nexus-mods.svg?raw';
-import vortexMark from '../assets/services/vortex.png';
 
 interface Props {
-  /** The service whose own mark links to it: GitHub, Nexus Mods or Vortex. */
-  service: 'github' | 'nexus' | 'vortex';
+  /** The service whose own mark links to it: GitHub or Nexus Mods. */
+  service: 'github' | 'nexus';
 }
 
-// The services' own marks, shown only to link to them; the link around the mark carries the name.
+// The services' own marks, in their own colours, shown only to link to them; the link around the
+// mark carries the name.
 const { service } = Astro.props;
 const marks = { github: githubMark, nexus: nexusMark };
 ---
 
-{
-  service === 'vortex' ? (
-    <img class="ew-service-icon" src={vortexMark.src} width="20" height="20" alt="" />
-  ) : (
-    <span class="ew-service-icon" aria-hidden="true" set:html={marks[service]} />
-  )
-}
+<span class="ew-service-icon" aria-hidden="true" set:html={marks[service]} />
