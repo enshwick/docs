@@ -552,12 +552,35 @@
     );
   }
 
+  /*
+   * Its own layer near the top: a soft veil with feathered edges lets the section bands and
+   * hairlines pass behind it without cutting through the labels.
+   */
   .ew-onpage {
     position: fixed;
-    top: 33vh;
-    left: var(--space-lg);
+    top: calc(var(--sl-nav-height) + var(--space-xl));
+    left: var(--space-xs);
     z-index: var(--z-raised);
     display: block;
+    padding: var(--space-lg) var(--space-lg) var(--space-lg) var(--space-md);
+    background: var(--color-veil-map);
+    backdrop-filter: blur(3px);
+    mask-image:
+      linear-gradient(
+        to right,
+        transparent,
+        black var(--space-md),
+        black calc(100% - var(--space-md)),
+        transparent
+      ),
+      linear-gradient(
+        to bottom,
+        transparent,
+        black var(--space-md),
+        black calc(100% - var(--space-md)),
+        transparent
+      );
+    mask-composite: intersect;
   }
 }
 

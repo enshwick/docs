@@ -33,6 +33,7 @@
   --color-row-hover: rgb(140 143 214 / 0.05);
   --color-veil: rgb(20 18 26 / 0.6);
   --color-veil-deep: rgb(14 12 26 / 0.55);
+  --color-veil-map: rgb(20 18 26 / 0.92);
 
   /* Mist and flame. */
   --color-mist: #8c8fd6;
