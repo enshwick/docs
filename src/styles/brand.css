@@ -514,9 +514,10 @@ header.header {
 /* Notes: a hairline frame with the brand's corner ticks, a flame tick for cautions. */
 .sl-markdown-content .starlight-aside {
   position: relative;
-  border: var(--rule-hair) solid var(--color-line-strong);
+  border: var(--rule-hair) solid var(--color-card-edge);
   border-radius: 0;
-  background: var(--color-veil-deep);
+  background: var(--color-card);
+  box-shadow: var(--shadow-card);
   color: var(--color-text);
 }
 
@@ -687,8 +688,9 @@ mobile-starlight-toc summary .toggle {
   position: relative;
   margin-top: var(--space-lg);
   padding: var(--space-md) var(--space-lg);
-  border: var(--rule-hair) solid var(--color-line-strong);
-  background: var(--color-veil-deep);
+  border: var(--rule-hair) solid var(--color-card-edge);
+  background: var(--color-card);
+  box-shadow: var(--shadow-card);
 }
 
 .ew-mod-card::before,
@@ -722,7 +724,7 @@ mobile-starlight-toc summary .toggle {
 
 .ew-mod-card dt {
   font-size: var(--text-sm);
-  color: var(--color-muted);
+  color: var(--color-text);
 }
 
 .ew-mod-card dd {
@@ -743,12 +745,13 @@ mobile-starlight-toc summary .toggle {
   align-items: center;
   margin: var(--space-md) 0 0;
   padding-top: var(--space-sm);
-  border-top: var(--rule-hair) solid var(--color-line);
+  border-top: var(--rule-hair) solid var(--color-line-strong);
   font-size: var(--text-sm);
 }
 
 .ew-mod-card__links a {
-  color: var(--color-muted);
+  color: var(--color-bone);
+  text-decoration-color: var(--color-mist);
   text-underline-offset: 0.2em;
 }
 
@@ -907,7 +910,8 @@ header.header {
   animation: none;
 }
 
-::view-transition-old(ew-content) {
+::view-transition-old(ew-content),
+::view-transition-old(*):only-child {
   display: none;
 }
 

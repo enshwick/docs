@@ -23,7 +23,6 @@ const prefix = code.equals(languages.root) ? base : `${base}/${lang}`;
 const faq = ['safe', 'server', 'linux', 'saves', 'update', 'free'];
 const steps = [1, 2, 3, 4];
 const client = data.gameBuilds.find((build) => build.side === 'client');
-const server = data.gameBuilds.find((build) => build.side === 'server');
 const sections = [
   { id: 'top', key: 'front.nav.top' },
   { id: 'install', key: 'front.install.title' },
@@ -75,14 +74,8 @@ enshwick::declare_mod!(AltarCount);`,
                 </div>
                 {client !== undefined && (
                   <div>
-                    <dt class="sr-only">{t('front.tech.client')}</dt>
+                    <dt>{t('front.tech.client')}</dt>
                     <dd>{client.name}</dd>
-                  </div>
-                )}
-                {server !== undefined && (
-                  <div>
-                    <dt class="sr-only">{t('front.tech.server')}</dt>
-                    <dd>{server.name}</dd>
                   </div>
                 )}
               </dl>
@@ -94,7 +87,9 @@ enshwick::declare_mod!(AltarCount);`,
           <a class="ew-button ew-button--quiet" href={`${prefix}/dev/getting-started/`}>{t('front.write')}</a>
           <a class="ew-button ew-button--quiet" href={`${prefix}/start/first-modded-game/`}>{t('topic.players')}</a>
         </div>
-        <p class="ew-hero__alpha">{t('front.alpha')}</p>
+        <p class="ew-hero__mods">
+          <a href="#mods">{t('front.mods.link')}</a>
+        </p>
       </div>
       <figure class="ew-clearing" aria-labelledby="ew-clearing-caption">
         <figcaption id="ew-clearing-caption">
@@ -149,7 +144,6 @@ enshwick::declare_mod!(AltarCount);`,
   <section class="ew-section" id="mods" aria-labelledby="ew-mods">
     <div class="ew-wrap">
       <h2 id="ew-mods">{t('front.mods.title')}</h2>
-      <p class="ew-section__lead">{t('front.count').replace('{count}', data.mods.length.toString())}</p>
       <ul class="ew-mods">
         {
           data.mods.map((mod) => (

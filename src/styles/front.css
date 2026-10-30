@@ -222,11 +222,13 @@
   margin-top: var(--space-xl);
 }
 
-/* Alpha: one plain line under the actions, no warning colour. */
-.ew-hero__alpha {
-  max-width: 30em;
+/* One quiet link under the actions, to the list of mods. */
+.ew-hero__mods {
   margin-top: var(--space-md);
   font-size: var(--text-sm);
+}
+
+.ew-hero__mods a {
   color: var(--color-muted);
 }
 
@@ -336,12 +338,6 @@
   margin-bottom: var(--space-md);
   font-size: var(--text-xl);
   line-height: 1.15;
-}
-
-.ew-section__lead {
-  margin-top: calc(-1 * var(--space-lg));
-  margin-bottom: var(--space-xl);
-  color: var(--color-muted);
 }
 
 /* Install: automatic through a service, or by hand in four steps. */

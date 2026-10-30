@@ -7,6 +7,10 @@
   --color-night-page: #121020;
   --color-panel: #17151f;
   --color-band: #18162a;
+  /* A panel that stands off the night: a lighter indigo ground, a mist edge, a soft mist glow. */
+  --color-card: #221f35;
+  --color-card-edge: color-mix(in oklab, var(--color-mist) 45%, var(--color-stone));
+  --shadow-card: 0 18px 40px -22px rgb(140 143 214 / 0.45);
   --color-ridge-far: #1a1724;
   --color-ridge-mid: #17141f;
   --color-ridge-near: #0f0d14;

@@ -259,10 +259,6 @@
     "en": "Write a mod",
     "uk": "Написати мод"
   },
-  "front.count": {
-    "en": "{count} mods by the Enshwick team.",
-    "uk": "Модів від команди Enshwick: {count}."
-  },
   "front.excerpt.caption": {
     "en": "A whole mod: 16 Flame Altars at every Flame level. This is all it takes.",
     "uk": "Увесь мод: 16 вівтарів на кожному рівні полум’я. Більше нічого не треба."
@@ -276,16 +272,12 @@
     "uk": "Linux і Steam Deck потребують одного параметра запуску."
   },
   "front.tech.api": {
-    "en": "API",
-    "uk": "API"
+    "en": "Enshwick",
+    "uk": "Enshwick"
   },
   "front.tech.client": {
-    "en": "Game client",
-    "uk": "Клієнт гри"
-  },
-  "front.tech.server": {
-    "en": "Dedicated server",
-    "uk": "Виділений сервер"
+    "en": "Game build",
+    "uk": "Збірка гри"
   },
   "front.tech.link": {
     "en": "Compatibility",
@@ -347,10 +339,6 @@
     "en": "Enshwick is in alpha: version 1.0 is not out yet.",
     "uk": "Enshwick в альфа-версії: версія 1.0 ще не вийшла."
   },
-  "front.alpha": {
-    "en": "Alpha. Version 1.0 is on its way, and you can already write mods against the API.",
-    "uk": "Альфа. Версія 1.0 на підході, а писати моди під API можна вже зараз."
-  },
   "front.ways.nexus": {
     "en": "Nexus Mods",
     "uk": "Nexus Mods"
@@ -372,8 +360,8 @@
     "uk": "На цій сторінці"
   },
   "front.install.title": {
-    "en": "Install",
-    "uk": "Встановлення"
+    "en": "How to use",
+    "uk": "Як користуватися"
   },
   "front.install.auto": {
     "en": "Automatic",
@@ -398,5 +386,9 @@
   "front.install.step.4": {
     "en": "Put other mods into the mods folder there.",
     "uk": "Інші моди кладіть у теку mods там само."
+  },
+  "front.mods.link": {
+    "en": "Mods by the Enshwick team",
+    "uk": "Моди від команди Enshwick"
   }
 }
