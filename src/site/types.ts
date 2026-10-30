@@ -34,15 +34,6 @@ export class ModId extends AnyString.subtype(
   /^(?=.{3,64}$)[a-z0-9-]+\.[a-z0-9-]+$/u,
 ) {}
 
-/**
- * An id a mod may have had: a {@link ModId}, or 1 to 64 characters of `[a-z0-9-]`, the form ids had
- * before they carried an author. Mirrors `is_valid_former_id` of the API crate.
- */
-export class FormerModId extends AnyString.subtype(
-  'docs.FormerModId',
-  /^(?:(?=.{3,64}$)[a-z0-9-]+\.[a-z0-9-]+|[a-z0-9-]{1,64})$/u,
-) {}
-
 /** A text key of `src/data/texts.json`. */
 export class TextKey extends AnyString.subtype('docs.TextKey', /^[a-z0-9.-]+$/u) {}
 
