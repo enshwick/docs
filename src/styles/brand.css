@@ -812,8 +812,18 @@ mobile-starlight-toc summary .toggle {
   height: 2px;
   background: var(--color-flame);
   box-shadow: 0 0 8px var(--color-flame);
+  opacity: 0;
   transform-origin: left;
-  animation: ew-loading 2.4s var(--ease-out) forwards;
+  /* Shown only after 120 ms, so a page that opens at once never shows it. */
+  animation:
+    ew-loading-show 1ms linear 120ms forwards,
+    ew-loading 2.4s var(--ease-out) 120ms forwards;
+}
+
+@keyframes ew-loading-show {
+  to {
+    opacity: 1;
+  }
 }
 
 @keyframes ew-loading {
@@ -828,9 +838,8 @@ mobile-starlight-toc summary .toggle {
 
 @media (prefers-reduced-motion: reduce) {
   :root.ew-loading::before {
-    animation: none;
+    animation: ew-loading-show 1ms linear 120ms forwards !important;
     transform: none;
-    opacity: 0.7;
   }
 }
 
