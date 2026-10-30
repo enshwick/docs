@@ -87,20 +87,6 @@ const LAYERS: readonly Layer[] = [
     </defs>
     <rect width="2000" height="1000" fill="${FOG}" filter="url(#w)" mask="url(#m)"/>`,
   },
-  {
-    name: 'fog-page',
-    body: `<defs>
-      ${wisp('w', '0.0022 0.009', 5, 7, FRONT_MATRIX, 6)}
-      ${band('b', [
-        [0, 0],
-        [0.7, 0],
-        [0.92, 0.9],
-        [1, 0.6],
-      ])}
-      <mask id="m"><rect width="2000" height="1000" fill="url(#b)"/></mask>
-    </defs>
-    <rect width="2000" height="1000" fill="${FOG}" filter="url(#w)" mask="url(#m)"/>`,
-  },
 ];
 
 /** The rendered size: the fog is soft, so half the drawing box is plenty once stretched. */
