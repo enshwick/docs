@@ -54,7 +54,8 @@ const modReleases = await new ModPages(
   ModPages.listed(platform.modList.toString(), developerArea.releases[0]?.mods),
 ).build();
 
-const apiMap = new PlatformChecks(developerArea.releases[0], developerArea.newestPages).run();
+const platformChecks = new PlatformChecks(developerArea.releases[0], developerArea.newestPages);
+const apiMap = platformChecks.run();
 
 const errors = developerArea.releases[0]?.errors;
 const errorPages =
@@ -80,4 +81,5 @@ await Bun.write(
   `${generated}/stability.json`,
   `${JSON.stringify(apiMap.stability.badges, null, 2)}\n`,
 );
+await Bun.write(`${generated}/smallest-mod.rs`, `${platformChecks.smallestMod()}\n`);
 await Bun.write(`${generated}/dev-sidebar.json`, `${JSON.stringify(developerSidebar, null, 2)}\n`);

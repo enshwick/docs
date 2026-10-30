@@ -14,6 +14,7 @@ developer pages are versioned per API minor.
 | one page per mod | `docs/player.md` of each mod repository, and `docs/player.<language>.md` for each translation | `tools/fetch.ts` reads them at the mod's newest release tag and checks the front matter. Each page gains the settings table, and its front matter the facts of the mod card |
 | one page per error code, and `/errors.json` | the platform's `errors.toml` | `tools/fetch.ts` writes the pages and `src/generated/errors.json`, which `src/pages/errors.json.ts` serves |
 | stability badges on API pages | the book's stability chapter and the API crate's public modules | `tools/fetch.ts` writes `src/generated/stability.json` |
+| the whole mod on the front page | the example the book's getting started chapter marks with `smallest-mod` comments, compiled there as a doctest | `tools/fetch.ts` writes `src/generated/smallest-mod.rs` and fails when the chapter no longer marks it |
 | a social card per page | each page's title and description | `src/pages/og/` draws them at build time over the same night as the front page |
 | compatibility | the platform's build tables and each mod's `Cargo.toml` at its release | `tools/fetch.ts` writes `src/generated/compatibility.json`, which `src/components/compatibility.astro` renders |
 | `llms.txt` | the developer pages, with a map of the API crate's public modules | `tools/fetch.ts` fails when a public module of the API crate has no developer page that names it |
