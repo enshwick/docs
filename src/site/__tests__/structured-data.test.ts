@@ -34,7 +34,11 @@ describe('StructuredData', () => {
     const types = graph.map((node) => node['@type']);
 
     expect(types).toEqual(['Organization', 'WebSite', 'SoftwareApplication']);
-    expect(graph[0]).toMatchObject({ url: `${site}/`, email: 'contact@enshwick.com' });
+    expect(graph[0]).toMatchObject({
+      url: `${site}/`,
+      email: 'contact@enshwick.com',
+      sameAs: ['https://github.com/enshwick', 'https://www.nexusmods.com/site/mods/2511'],
+    });
     expect(graph[2]).toMatchObject({
       applicationCategory: 'GameApplication',
       operatingSystem: 'Windows',
