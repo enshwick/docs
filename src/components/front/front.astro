@@ -178,6 +178,8 @@ const smallestMod = new Snippet(smallestModSource.trimEnd(), SnippetLanguage.Rus
   import { NightFog } from '../../scripts/night-fog.ts';
   import { SectionMarker } from '../../scripts/section-marker.ts';
 
-  NightFog.start();
-  SectionMarker.start();
+  document.addEventListener('astro:page-load', () => {
+    NightFog.start();
+    SectionMarker.start();
+  });
 </script>

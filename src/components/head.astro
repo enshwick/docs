@@ -1,5 +1,6 @@
 ---
 import Default from '@astrojs/starlight/components/Head.astro';
+import { ClientRouter } from 'astro:transitions';
 
 import compat from '../generated/compatibility.json';
 import modLines from '../data/mods.json';
@@ -7,7 +8,6 @@ import { Area } from '../site/area.ts';
 import { FirstFonts } from '../site/first-fonts.ts';
 import { frontData } from '../site/front.ts';
 import { languages } from '../site/languages.ts';
-import { speculationRules } from '../site/speculation-rules.ts';
 import { type SidebarItem, StructuredData } from '../site/structured-data.ts';
 
 const route = Astro.locals.starlightRoute;
@@ -47,10 +47,17 @@ const ogImage =
 
 <Default />
 {fonts.map((href) => <link rel="preload" href={href} as="font" type="font/woff2" crossorigin />)}
-<script is:inline type="speculationrules" set:html={speculationRules} />
+<ClientRouter />
+<meta name="ew-area" content={area.toString()} />
+{mod && <meta name="ew-mod" />}
 {ogImage !== undefined && <meta property="og:image" content={ogImage} />}
 {nodes.length > 0 && <script is:inline type="application/ld+json" set:html={StructuredData.script(nodes)} />}
 <script is:inline define:vars={{ area: area.toString(), mod }}>
   document.documentElement.dataset.area = area;
   if (mod) document.documentElement.dataset.mod = '';
+</script>
+<script>
+  import { PageSwap } from '../scripts/page-swap.ts';
+
+  PageSwap.start();
 </script>
