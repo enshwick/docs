@@ -1,6 +1,6 @@
 ---
 title: Install Enshwick
-description: Put Enshwick and its mods into the game folder of Enshrouded or of its dedicated server.
+description: Put Enshwick into the game folder of Enshrouded or of its dedicated server, then add the mods you want.
 type: how-to
 sidebar:
   order: 1
@@ -8,8 +8,9 @@ sidebar:
 
 import { Steps } from '@astrojs/starlight/components';
 
-You install Enshwick once, with Vortex or by hand. Both ways put the loader
-and every mod we make into the game folder.
+Enshwick is the modding API for Enshrouded and the loader that runs its mods.
+It goes into the game folder once, with Vortex or by hand. Each mod you want
+comes after it, from its own archive.
 
 ## Install with Vortex
 
@@ -49,6 +50,13 @@ and every mod we make into the game folder.
 
 The archive is a development build of the newest code. It is the only build
 until the first release, 1.0.0.
+
+## Add mods
+
+Each mod has its own page under **Mods** in the sidebar, with a **Download**
+link to its archive. Extract the archive into the game folder. The mod's file
+goes into the `mods` folder, and Enshwick runs it the next time the game
+starts.
 
 ## Next steps
 

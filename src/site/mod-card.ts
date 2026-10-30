@@ -16,3 +16,13 @@ export const modCardSchema = z.object({
 
 /** One mod's card facts. */
 export type ModCardData = z.input<typeof modCardSchema>;
+
+/**
+ * Where a mod's own archive is: `enshwick-<name>.zip` in its release, `<name>` being its
+ * repository's name without `mod-`. Each mod ships alone; no archive holds several.
+ */
+export function modArchive(mod: Pick<ModCardData, 'repository' | 'release'>): string {
+  const name = (mod.repository.split('/').at(-1) ?? mod.repository).replace(/^mod-/u, '');
+
+  return `https://github.com/${mod.repository}/releases/download/${mod.release}/enshwick-${name}.zip`;
+}
