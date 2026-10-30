@@ -930,51 +930,22 @@ starlight-lang-select select {
 }
 
 /*
- * Moving between pages: the night, the bar and the sidebar stay exactly as they are and the content
- * swaps at once. A fade, however short, reads as a slow page.
+ * Moving between pages: the router swaps the next page in on the live page, with no snapshots, so
+ * the night, the bar and the sidebar stay exactly as they are; the new content rises into place,
+ * quickly. The first page of a visit just appears.
  */
-@view-transition {
-  navigation: auto;
+:root[data-swapped] .main-frame {
+  animation: ew-content-in 160ms var(--ease-out) backwards;
 }
 
-header.header {
-  view-transition-name: ew-bar;
-}
-
-.sidebar-pane {
-  view-transition-name: ew-sidebar;
-}
-
-.main-frame {
-  view-transition-name: ew-content;
-}
-
-::view-transition-group(*),
-::view-transition-old(root),
-::view-transition-new(root),
-::view-transition-old(ew-night),
-::view-transition-new(ew-night),
-::view-transition-old(ew-bar),
-::view-transition-new(ew-bar),
-::view-transition-old(ew-sidebar),
-::view-transition-new(ew-sidebar) {
-  animation: none;
-}
-
-::view-transition-old(ew-content),
-::view-transition-old(*):only-child {
-  display: none;
-}
-
-::view-transition-new(ew-content) {
-  animation: none;
+@keyframes ew-content-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  @view-transition {
-    navigation: none;
-  }
-
   *,
   *::before,
   *::after {

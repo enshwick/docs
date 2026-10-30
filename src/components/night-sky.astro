@@ -42,7 +42,7 @@ const fog = (image: ImageMetadata) => ({ src: image.src, width: image.width, hei
       <canvas class="ew-night__shader" data-fog-canvas hidden />
     </div>
   ) : (
-    <div class="ew-night ew-night--page" aria-hidden="true">
+    <div class="ew-night ew-night--page" aria-hidden="true" transition:persist="ew-night">
       <svg class="ew-night__stars" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice" set:html={stars} />
       <canvas class="ew-night__stars ew-night__star-canvas" data-star-canvas hidden />
       <svg class="ew-night__ridges" viewBox="0 0 1600 400" preserveAspectRatio="xMidYMax slice">
@@ -56,5 +56,7 @@ const fog = (image: ImageMetadata) => ({ src: image.src, width: image.width, hei
 <script>
   import { StarCanvas } from '../scripts/star-canvas.ts';
 
-  StarCanvas.startAll();
+  document.addEventListener('astro:page-load', () => {
+    StarCanvas.startAll();
+  });
 </script>

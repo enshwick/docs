@@ -38,17 +38,23 @@ export class StarCanvas {
     this.colour = getComputedStyle(svg.querySelector('circle') ?? svg).fill || '#e9e1d3';
   }
 
-  /** Starts a canvas for every star field on the page. */
+  /**
+   * Starts a canvas for every star field on the page that does not draw yet: after a page swap the
+   * kept night already draws, a new hero does not.
+   */
   public static startAll(): void {
     if (window.matchMedia(StarCanvas.reducedMotion).matches) {
       return;
     }
-    for (const canvas of document.querySelectorAll<HTMLCanvasElement>('[data-star-canvas]')) {
+    for (const canvas of document.querySelectorAll<HTMLCanvasElement>(
+      '[data-star-canvas]:not([data-drawing])',
+    )) {
       const svg = canvas.previousElementSibling;
       const context = canvas.getContext('2d');
       if (!(svg instanceof SVGSVGElement) || context === null) {
         continue;
       }
+      canvas.dataset['drawing'] = '';
       new StarCanvas(canvas, svg, context).start(svg);
     }
   }
@@ -80,12 +86,18 @@ export class StarCanvas {
 
   private start(svg: SVGSVGElement): void {
     this.resize();
-    new ResizeObserver(() => {
+    const sizes = new ResizeObserver(() => {
       this.resize();
-    }).observe(this.canvas.parentElement ?? this.canvas);
+    });
+    sizes.observe(this.canvas.parentElement ?? this.canvas);
     this.canvas.hidden = false;
     svg.style.display = 'none';
     const frame = (now: number): void => {
+      // A page swap that dropped this night ends its drawing.
+      if (!this.canvas.isConnected) {
+        sizes.disconnect();
+        return;
+      }
       if (now - this.last >= StarCanvas.frameGap) {
         this.last = now;
         this.draw(Date.now() / 1000);

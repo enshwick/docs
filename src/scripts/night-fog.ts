@@ -214,6 +214,12 @@ void main() {
 
   /** Asks for frames while the hero can be seen, and for none while it cannot. */
   private update(): void {
+    // A page swap that dropped the hero ends the shader for good.
+    if (!this.canvas.isConnected) {
+      this.stop();
+      return;
+    }
+
     const runs = this.gate.runs({ pageVisible: this.pageVisible, onScreen: this.onScreen });
 
     if (runs && this.frame === undefined) {
@@ -235,6 +241,12 @@ void main() {
   }
 
   private draw(now: number): void {
+    if (!this.canvas.isConnected) {
+      this.frame = undefined;
+      this.update();
+      return;
+    }
+
     if (this.clock.due(now)) {
       this.resize();
       this.gl.useProgram(this.program);
