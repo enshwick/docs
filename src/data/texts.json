@@ -372,8 +372,8 @@
     "uk": "Перенесіть його файли в теку гри, де лежить enshrouded.exe."
   },
   "front.install.step.4": {
-    "en": "Put other mods into the mods folder there.",
-    "uk": "Інші моди кладіть у теку mods там само."
+    "en": "Add each mod the same way, from its own archive.",
+    "uk": "Кожен мод додавайте так само, з його власного архіву."
   },
   "front.mods.link": {
     "en": "Mods by the Enshwick team",
