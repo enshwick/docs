@@ -21,101 +21,127 @@ const data = frontData(compat, modLines, lang);
 const base = import.meta.env.BASE_URL.replace(/\/$/u, '');
 const prefix = code.equals(languages.root) ? base : `${base}/${lang}`;
 const faq = ['safe', 'server', 'linux', 'saves', 'update', 'free'];
-const chain = [
-  { title: 'powrprof.dll', mono: true, body: t('front.how.1') },
-  { title: t('front.how.2.title'), mono: false, body: t('front.how.2') },
-  { title: t('front.how.3.title'), mono: false, body: t('front.how.3') },
-  { title: t('front.how.4.title'), mono: false, body: t('front.how.4') },
-];
+const steps = [1, 2, 3, 4];
 const client = data.gameBuilds.find((build) => build.side === 'client');
 const server = data.gameBuilds.find((build) => build.side === 'server');
-const excerptMod = 'build-camera';
-const excerptSource = `https://github.com/enshwick/mod-${excerptMod}/blob/main/src/lib.rs`;
+const sections = [
+  { id: 'top', key: 'front.nav.top' },
+  { id: 'install', key: 'front.install.title' },
+  { id: 'mods', key: 'front.mods.title' },
+  { id: 'questions', key: 'front.faq.title' },
+];
 
-// A real excerpt of the Build Camera mod's start, trimmed to the lines that show its rule.
-const excerpt = new Snippet(
-  `fn init(load: &mut Load<'_>) -> Result<Self, Off> {
-    load.on_skill(Skill::AirborneArchitect, |check| {
-        lifts(check.gate, enabled().load(Ordering::Relaxed))
-    })?;
-    Ok(Self)
-}`,
+// The guide's first mod with its settings left out: still a whole mod that loads and works.
+const smallestMod = new Snippet(
+  `use enshwick::{Load, Mod, Off};
+
+struct AltarCount;
+
+impl Mod for AltarCount {
+    fn manifest() -> &'static enshwick::abi::Manifest {
+        enshwick::manifest!(
+            id: "you.my-altar-count",
+            side: BOTH,
+            join: true,
+        )
+    }
+
+    fn init(load: &mut Load<'_>) -> Result<Self, Off> {
+        load.on_altar_limit(|limit| limit.allowed = 16)?;
+        Ok(Self)
+    }
+}
+
+enshwick::declare_mod!(AltarCount);`,
   SnippetLanguage.Rust,
 ).html();
-const newMod = new Snippet('cargo enshwick new you.my-mod --side server', SnippetLanguage.Shell).html();
-const luau = new Snippet(
-  `enshwick.on("PlayerJoined", function(player)
-  local joined = enshwick.world.player(player.entity)
-  if joined then
-    enshwick.world.tell(joined, \`Welcome, {joined.name}\`)
-  end
-end)`,
-  SnippetLanguage.Luau,
-).html();
-const needs = (side: string): string => t(`front.needs.${side}`);
 ---
 
 <div class="ew-front not-content">
-  <section class="ew-hero" aria-labelledby="ew-title">
+  <section class="ew-hero" id="top" aria-labelledby="ew-title">
     <NightSky variant="hero" />
     <div class="ew-hero__body">
       <div class="ew-hero__copy">
         <h1 id="ew-title">{t('front.title')}</h1>
         <p class="ew-hero__lead">{t('front.lead')}</p>
+        <a class="ew-button ew-button--primary" href={links.download.toString()}>{t('front.download')}</a>
+        {
+          data.version !== undefined && (
+            <div class="ew-release">
+              <dl class="ew-versions">
+                <div>
+                  <dt>{t('front.tech.api')}</dt>
+                  <dd>{data.version}</dd>
+                </div>
+                {client !== undefined && (
+                  <div>
+                    <dt class="sr-only">{t('front.tech.client')}</dt>
+                    <dd>{client.name}</dd>
+                  </div>
+                )}
+                {server !== undefined && (
+                  <div>
+                    <dt class="sr-only">{t('front.tech.server')}</dt>
+                    <dd>{server.name}</dd>
+                  </div>
+                )}
+              </dl>
+              <a href={`${prefix}/reference/compatibility/`}>{t('front.tech.link')}</a>
+            </div>
+          )
+        }
         <div class="ew-actions">
-          <a class="ew-button ew-button--flame" href={`${prefix}/dev/getting-started/`}>{t('front.write')}</a>
-          <a class="ew-button ew-button--stone" href={`${prefix}/start/first-modded-game/`}>{t('topic.players')}</a>
+          <a class="ew-button ew-button--quiet" href={`${prefix}/dev/getting-started/`}>{t('front.write')}</a>
+          <a class="ew-button ew-button--quiet" href={`${prefix}/start/first-modded-game/`}>{t('topic.players')}</a>
         </div>
-        <p class="ew-hero__alpha">
-          {data.version === undefined ? t('front.alpha.bare') : t('front.alpha').replace('{version}', data.version)}
-        </p>
-        <p class="ew-hero__count">
-          <span>{t('front.count').replace('{count}', data.mods.length.toString())}</span>
-          <a href="#mods">{t('front.count.link')}</a>
-        </p>
+        <p class="ew-hero__alpha">{t('front.alpha')}</p>
       </div>
-      <figure class="ew-clearing" aria-label={t('front.excerpt.label')}>
-        <pre><code set:html={excerpt} /></pre>
-        <figcaption>
-          {t('front.excerpt.caption')} <a href={excerptSource}>{t('front.excerpt.link')}</a>
+      <figure class="ew-clearing" aria-labelledby="ew-clearing-caption">
+        <figcaption id="ew-clearing-caption">
+          {t('front.excerpt.caption')}
+          <a href={`${prefix}/dev/getting-started/#a-first-mod`}>{t('front.excerpt.link')}</a>
         </figcaption>
+        <pre><code set:html={smallestMod} /></pre>
       </figure>
     </div>
   </section>
 
-  <section class="ew-section" aria-labelledby="ew-ways">
+  <section class="ew-section ew-section--band" id="install" aria-labelledby="ew-install">
     <div class="ew-wrap">
-      <h2 id="ew-ways">{t('front.ways.title')}</h2>
-      <div class="ew-ways">
-        <article class="ew-way">
-          <h3>{t('topic.players')}</h3>
-          <ol class="ew-steps">
-            <li><a href={links.download.toString()}>{t('front.install.manual.1')}</a></li>
-            <li>{t('front.install.manual.2')}</li>
-            <li>{t('front.install.manual.3')}</li>
-          </ol>
-          <p>{t('front.ways.screen')}</p>
-          <p>{t('front.ways.managers')}</p>
+      <h2 id="ew-install">{t('front.install.title')}</h2>
+      <div class="ew-install">
+        <div class="ew-install__way">
+          <h3>{t('front.install.auto')}</h3>
           <div class="ew-services">
-            <a class="ew-service ew-service--nexus" href={links.nexus.toString()}>
-              <ServiceIcon service="nexus" />
-              {t('front.ways.nexus')}
-            </a>
             <a class="ew-service ew-service--vortex" href={links.vortex.toString()}>
               <ServiceIcon service="vortex" />
               {t('front.ways.vortex')}
             </a>
+            <a class="ew-service ew-service--nexus" href={links.nexus.toString()}>
+              <ServiceIcon service="nexus" />
+              {t('front.ways.nexus')}
+            </a>
           </div>
-          <p><a href={`${prefix}/start/first-modded-game/`}>{t('front.ways.linux')}</a></p>
-        </article>
-        <article class="ew-way">
-          <h3>{t('topic.developers')}</h3>
-          <p>{t('front.ways.new')}</p>
-          <pre class="ew-code"><code set:html={newMod} /></pre>
-          <p>{t('front.ways.luau')}</p>
-          <pre class="ew-code"><code set:html={luau} /></pre>
-          <p><a href={`${prefix}/dev/`}>{t('front.ways.guide')}</a></p>
-        </article>
+        </div>
+        <div class="ew-install__way">
+          <h3>{t('front.install.manual')}</h3>
+          <ol class="ew-steps">
+            {
+              steps.map((step) =>
+                step === 1 ? (
+                  <li>
+                    <a href={links.download.toString()}>{t(`front.install.step.${step}`)}</a>
+                  </li>
+                ) : (
+                  <li>{t(`front.install.step.${step}`)}</li>
+                ),
+              )
+            }
+          </ol>
+          <p class="ew-install__note">
+            <a href={`${prefix}/start/first-modded-game/`}>{t('front.ways.linux')}</a>
+          </p>
+        </div>
       </div>
     </div>
   </section>
@@ -123,15 +149,22 @@ const needs = (side: string): string => t(`front.needs.${side}`);
   <section class="ew-section" id="mods" aria-labelledby="ew-mods">
     <div class="ew-wrap">
       <h2 id="ew-mods">{t('front.mods.title')}</h2>
+      <p class="ew-section__lead">{t('front.count').replace('{count}', data.mods.length.toString())}</p>
       <ul class="ew-mods">
         {
           data.mods.map((mod) => (
-            <li class="ew-mod">
-              <h3>
-                {mod.page ? <a href={`${prefix}/mods/${mod.slug}/`}>{mod.name}</a> : mod.name}
-              </h3>
-              <p>{mod.line}</p>
-              <p class="ew-mod__side">{needs(mod.needs)}</p>
+            <li>
+              {mod.page ? (
+                <a class="ew-mods__row" href={`${prefix}/mods/${mod.slug}/`}>
+                  <span class="ew-mods__name">{mod.name}</span>
+                  <span class="ew-mods__line">{mod.line}</span>
+                </a>
+              ) : (
+                <span class="ew-mods__row">
+                  <span class="ew-mods__name">{mod.name}</span>
+                  <span class="ew-mods__line">{mod.line}</span>
+                </span>
+              )}
             </li>
           ))
         }
@@ -139,53 +172,7 @@ const needs = (side: string): string => t(`front.needs.${side}`);
     </div>
   </section>
 
-  <section class="ew-section" aria-labelledby="ew-how">
-    <div class="ew-wrap">
-      <h2 id="ew-how">{t('front.how.title')}</h2>
-      <ol class="ew-chain">
-        {
-          chain.map((link) => (
-            <li class="ew-chain__link">
-              <h3 class:list={{ 'ew-chain__mono': link.mono }}>{link.title}</h3>
-              <p>{link.body}</p>
-            </li>
-          ))
-        }
-      </ol>
-      <p class="ew-how__after">{t('front.how.after')}</p>
-    </div>
-  </section>
-
-  {
-    data.version !== undefined && (
-      <section class="ew-strip" aria-labelledby="ew-tech">
-        <div class="ew-wrap ew-strip__body">
-          <h2 id="ew-tech">{t('front.tech.title')}</h2>
-          <dl>
-            <div>
-              <dt>{t('front.tech.api')}</dt>
-              <dd>{data.version}</dd>
-            </div>
-            {client !== undefined && (
-              <div>
-                <dt>{t('front.tech.client')}</dt>
-                <dd>{client.name}</dd>
-              </div>
-            )}
-            {server !== undefined && (
-              <div>
-                <dt>{t('front.tech.server')}</dt>
-                <dd>{server.name}</dd>
-              </div>
-            )}
-          </dl>
-          <a href={`${prefix}/reference/compatibility/`}>{t('front.tech.link')}</a>
-        </div>
-      </section>
-    )
-  }
-
-  <section class="ew-section" aria-labelledby="ew-faq">
+  <section class="ew-section ew-section--band" id="questions" aria-labelledby="ew-faq">
     <div class="ew-wrap ew-faq-wrap">
       <h2 id="ew-faq">{t('front.faq.title')}</h2>
       <div class="ew-faq">
@@ -200,10 +187,26 @@ const needs = (side: string): string => t(`front.needs.${side}`);
       </div>
     </div>
   </section>
+
+  <nav class="ew-onpage" aria-label={t('front.nav.label')}>
+    <ul>
+      {
+        sections.map((section, index) => (
+          <li>
+            <a href={`#${section.id}`} aria-current={index === 0 ? 'true' : undefined}>
+              {t(section.key)}
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </nav>
 </div>
 
 <script>
   import { NightFog } from '../../scripts/night-fog.ts';
+  import { SectionMarker } from '../../scripts/section-marker.ts';
 
   NightFog.start();
+  SectionMarker.start();
 </script>

@@ -30,7 +30,7 @@ pages against the same schema before they are released.
 | --- | --- |
 | languages | `src/data/languages.json`; a language is a list entry and a folder of pages, and a page missing in it falls back to the root language; `src/route-data.ts` keeps such a fallback out of search, the languages list and the sitemap |
 | the site's own short texts | `src/data/texts.json`, every key in every language (checked by a test) |
-| developer versions | `src/data/sources.json`; the newest is served at `/dev/`, each older minor under `/dev/<minor>/` with `noindex`, a banner and no sitemap entry |
+| developer versions | `src/data/sources.json` |
 | our mods | the platform's `tools/mods.toml` at the newest version's ref, which its dev bundle reads too; a renamed or retired mod follows from there. `src/data/mods.json` gives each one who needs it and a one-line summary per language; the build fails when that side differs from the mod's page |
 | links outside the site | `src/data/links.json`: GitHub, Nexus Mods, the Vortex extension, the download, the licence, the issue form and the mailboxes |
 | the site's address | `src/data/site.json`; pages link root-relative (`/guides/install/`) and `src/plugins/remark-base-links.ts` adds the base |

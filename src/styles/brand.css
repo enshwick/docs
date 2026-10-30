@@ -256,14 +256,19 @@ header.header {
   min-width: 0;
 }
 
+/* Download: the one filled button in the bar, in the flame. */
 .ew-bar a.ew-bar__download {
   padding: var(--space-xs) var(--space-md);
-  border: var(--rule-hair) solid var(--color-stone);
-  color: var(--color-bone);
+  border-radius: var(--radius-control);
+  background: var(--color-flame);
+  box-shadow: var(--shadow-primary);
+  color: var(--color-basalt);
+  font-weight: 600;
 }
 
 .ew-bar a.ew-bar__download:hover {
-  border-color: var(--color-mist);
+  background: var(--color-core);
+  color: var(--color-basalt);
 }
 
 /* A page without a menu (the front page) keeps Download in the bar on a phone. */
@@ -581,7 +586,7 @@ header.header {
 /* Search: a hairline field. */
 site-search button[data-open-modal] {
   border: var(--rule-hair) solid var(--color-faint);
-  border-radius: 0;
+  border-radius: var(--radius-control);
   background: none;
   color: var(--color-faint);
 }
@@ -637,7 +642,7 @@ starlight-toc h2,
 /* The narrow menu's button and the page's contents bar. */
 .sl-menu-button {
   border: var(--rule-hair) solid var(--color-faint);
-  border-radius: 0;
+  border-radius: var(--radius-control);
   background: none;
   box-shadow: none;
   color: var(--color-bone);
@@ -753,13 +758,17 @@ mobile-starlight-toc summary .toggle {
 
 .ew-mod-card__links a.ew-mod-card__download {
   padding: var(--space-2xs) var(--space-sm);
-  border: var(--rule-hair) solid var(--color-stone);
-  color: var(--color-bone);
+  border-radius: var(--radius-control);
+  background: var(--color-flame);
+  box-shadow: var(--shadow-primary);
+  color: var(--color-basalt);
+  font-weight: 600;
   text-decoration: none;
 }
 
 .ew-mod-card__links a.ew-mod-card__download:hover {
-  border-color: var(--color-mist);
+  background: var(--color-core);
+  color: var(--color-basalt);
 }
 
 /* An error page's code over its title; an API page's stability under it. */
@@ -857,7 +866,7 @@ mobile-starlight-toc summary .toggle {
 /* Selects in the bar and the menu. */
 starlight-lang-select select {
   border: var(--rule-hair) solid var(--color-faint);
-  border-radius: 0;
+  border-radius: var(--radius-control);
 }
 
 /* The heading badges keep the site's square shape. */
@@ -866,9 +875,51 @@ starlight-lang-select select {
   font-size: var(--text-xs);
 }
 
-/* Moving between pages: the night stays still, only the page fades. */
+/*
+ * Moving between pages: the night, the bar and the sidebar stay exactly as they are; only the
+ * content fades in, quickly. The page itself swaps at once, so nothing behind the content dims.
+ */
 @view-transition {
   navigation: auto;
+}
+
+header.header {
+  view-transition-name: ew-bar;
+}
+
+.sidebar-pane {
+  view-transition-name: ew-sidebar;
+}
+
+.main-frame {
+  view-transition-name: ew-content;
+}
+
+::view-transition-group(*),
+::view-transition-old(root),
+::view-transition-new(root),
+::view-transition-old(ew-night),
+::view-transition-new(ew-night),
+::view-transition-old(ew-bar),
+::view-transition-new(ew-bar),
+::view-transition-old(ew-sidebar),
+::view-transition-new(ew-sidebar) {
+  animation: none;
+}
+
+::view-transition-old(ew-content) {
+  display: none;
+}
+
+::view-transition-new(ew-content) {
+  animation: ew-content-in 180ms var(--ease-out) both;
+}
+
+@keyframes ew-content-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
