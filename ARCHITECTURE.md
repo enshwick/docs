@@ -11,7 +11,10 @@ developer pages are versioned per API minor.
 | --- | --- | --- |
 | player area: tutorial, how-to guides, reference, explanation | `src/content/docs/`, one folder per language beside the root language | as committed |
 | developer area | the book of [enshwick/enshwick](https://github.com/enshwick/enshwick/tree/main/book/src), where its examples compile as doctests | `tools/fetch.ts` checks out each version's ref and converts the chapters |
-| one page per mod | `docs/player.md` of each mod repository, and `docs/player.<language>.md` for each translation | `tools/fetch.ts` reads them at the mod's newest release tag, checks the front matter and adds the settings table |
+| one page per mod | `docs/player.md` of each mod repository, and `docs/player.<language>.md` for each translation | `tools/fetch.ts` reads them at the mod's newest release tag and checks the front matter. Each page gains the settings table, and its front matter the facts of the mod card |
+| one page per error code, and `/errors.json` | the platform's `errors.toml` | `tools/fetch.ts` writes the pages and `src/generated/errors.json`, which `src/pages/errors.json.ts` serves |
+| stability badges on API pages | the book's stability chapter and the API crate's public modules | `tools/fetch.ts` writes `src/generated/stability.json` |
+| a social card per page | each page's title and description | `src/pages/og/` draws them at build time over the same night as the front page |
 | compatibility | the platform's build tables and each mod's `Cargo.toml` at its release | `tools/fetch.ts` writes `src/generated/compatibility.json`, which `src/components/compatibility.astro` renders |
 | `llms.txt` | the developer pages, with a map of the API crate's public modules | `tools/fetch.ts` fails when a public module of the API crate has no developer page that names it |
 
@@ -27,8 +30,9 @@ pages against the same schema before they are released.
 | --- | --- |
 | languages | `src/data/languages.json`; a language is a list entry and a folder of pages, and a page missing in it falls back to the root language; `src/route-data.ts` keeps such a fallback out of search, the languages list and the sitemap |
 | the site's own short texts | `src/data/texts.json`, every key in every language (checked by a test) |
-| developer versions | `src/data/sources.json` |
-| our mods | the platform's `tools/mods.toml` at the newest version's ref, which its dev bundle reads too; a renamed or retired mod follows from there |
+| developer versions | `src/data/sources.json`; the newest is served at `/dev/`, each older minor under `/dev/<minor>/` with `noindex`, a banner and no sitemap entry |
+| our mods | the platform's `tools/mods.toml` at the newest version's ref, which its dev bundle reads too; a renamed or retired mod follows from there. `src/data/mods.json` gives each one who needs it and a one-line summary per language; the build fails when that side differs from the mod's page |
+| links outside the site | `src/data/links.json`: GitHub, Nexus Mods, the Vortex extension, the download, the licence, the issue form and the mailboxes |
 | the site's address | `src/data/site.json`; pages link root-relative (`/guides/install/`) and `src/plugins/remark-base-links.ts` adds the base |
 
 ## Layout
@@ -40,9 +44,11 @@ pages against the same schema before they are released.
 | `src/content/docs/` | the player pages, `uk/` and other language folders beside them |
 | `src/data/` | the data files above |
 | `src/site/` | the nominal types and the readers of the data files |
-| `src/plugins/` | the Markdown plugin that adds the base to links |
-| `src/components/` | Starlight component overrides: the head marks the area for its accent and adds the structured data |
-| `src/styles/brand.css` | the brand's colours and fonts as Starlight variables |
+| `src/plugins/` | the Markdown plugins: one adds the base to links, one puts every table in a frame that scrolls on its own |
+| `src/components/` | Starlight component overrides (the head, the bar, the page frame, the sidebar, the page title and the footer) and the site's own parts, such as the front page and the night sky |
+| `src/scripts/` | the browser code: the front page's fog shader. It runs only where WebGL works and the reader welcomes motion, and it pauses while the hero is out of sight |
+| `src/pages/` | routes beside the docs: the error index and the social cards |
+| `src/styles/` | `tokens.css` holds the brand's values, dark only; `brand.css` maps them onto Starlight and styles the docs, `night.css` the night, `front.css` the front page |
 | `src/assets/`, `public/` | the mark, favicons and the social banner; `robots.txt`, `security.txt` and `_headers` for the host |
 | `wrangler.jsonc` | the Cloudflare Worker that serves `dist/` |
 | `tools/fetch.ts`, `tools/lib/` | the build step that collects generated pages |
@@ -52,8 +58,8 @@ pages against the same schema before they are released.
 
 `bun run check` runs `astro check`, oxlint with type information, the
 tests and `tools/check-dist.ts`, which reads the built site for links outside
-the site's root, canonical addresses, fallback pages in the sitemap and pages
-on two paths. It needs `bun run build` first, which fails on a broken internal
+the site's root, canonical addresses, fallback pages in the sitemap, pages on two paths and tables
+outside their scrolling frame. It needs `bun run build` first, which fails on a broken internal
 link (`starlight-links-validator`). Git hooks run oxfmt, oxlint, markdownlint and
 typos on changed files.
 
