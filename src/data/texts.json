@@ -167,18 +167,6 @@
     "en": "dedicated server",
     "uk": "виділений сервер"
   },
-  "front.install.manual.1": {
-    "en": "Download the archive.",
-    "uk": "Завантажте архів."
-  },
-  "front.install.manual.2": {
-    "en": "In Steam, right-click Enshrouded, then Manage, Browse local files.",
-    "uk": "У Steam клацніть правою кнопкою на Enshrouded, потім Керування, Переглянути локальні файли."
-  },
-  "front.install.manual.3": {
-    "en": "Extract the archive into that folder.",
-    "uk": "Розпакуйте архів у цю теку."
-  },
   "front.faq.title": {
     "en": "Questions",
     "uk": "Питання"
@@ -208,16 +196,8 @@
     "uk": "Наші моди мають відкритий код, і кожне завантаження пов’язане з кодом, з якого його зібрано. Мод на Rust має ті самі права, що й гра, тож ставте моди лише від авторів, яким довіряєте."
   },
   "front.mods.title": {
-    "en": "The mods",
+    "en": "Mods",
     "uk": "Моди"
-  },
-  "front.needs.server": {
-    "en": "On the server",
-    "uk": "На сервері"
-  },
-  "front.needs.everyone": {
-    "en": "For everyone",
-    "uk": "Для всіх"
   },
   "front.not-affiliated": {
     "en": "Enshwick is a fan project, not affiliated with Keen Games. Enshrouded is a trademark of Keen Games.",
@@ -283,97 +263,21 @@
     "en": "{count} mods by the Enshwick team.",
     "uk": "Модів від команди Enshwick: {count}."
   },
-  "front.count.link": {
-    "en": "See the mods",
-    "uk": "Переглянути моди"
-  },
-  "front.excerpt.label": {
-    "en": "Code from the Build Camera mod",
-    "uk": "Код із мода Build Camera"
-  },
   "front.excerpt.caption": {
-    "en": "From Build Camera, trimmed.",
-    "uk": "З Build Camera, скорочено."
+    "en": "A whole mod: 16 Flame Altars at every Flame level. This is all it takes.",
+    "uk": "Увесь мод: 16 вівтарів на кожному рівні полум’я. Більше нічого не треба."
   },
   "front.excerpt.link": {
-    "en": "The whole mod",
-    "uk": "Увесь мод"
-  },
-  "front.ways.title": {
-    "en": "Two ways in",
-    "uk": "Два шляхи"
-  },
-  "front.ways.screen": {
-    "en": "Then start the game and turn mods on or off on its Mods screen.",
-    "uk": "Потім запустіть гру й вмикайте чи вимикайте моди на її екрані Mods."
-  },
-  "front.ways.managers": {
-    "en": "Or install it through:",
-    "uk": "Або встановіть через:"
+    "en": "From the developer guide",
+    "uk": "З посібника для розробників"
   },
   "front.ways.linux": {
     "en": "Linux and Steam Deck need one launch option.",
     "uk": "Linux і Steam Deck потребують одного параметра запуску."
   },
-  "front.ways.new": {
-    "en": "Start a mod with one command:",
-    "uk": "Створіть мод однією командою:"
-  },
-  "front.ways.luau": {
-    "en": "Or write a few lines of Luau:",
-    "uk": "Або напишіть кілька рядків на Luau:"
-  },
-  "front.ways.guide": {
-    "en": "Read the developer guide",
-    "uk": "Читати посібник для розробників"
-  },
-  "front.needs.client": {
-    "en": "On your computer",
-    "uk": "На вашому комп’ютері"
-  },
-  "front.how.title": {
-    "en": "How it works",
-    "uk": "Як це працює"
-  },
-  "front.how.1": {
-    "en": "Windows loads it with the game.",
-    "uk": "Windows завантажує його разом із грою."
-  },
-  "front.how.2.title": {
-    "en": "The loader",
-    "uk": "Завантажувач"
-  },
-  "front.how.2": {
-    "en": "Checks the game’s build, then starts each mod.",
-    "uk": "Перевіряє збірку гри й запускає кожен мод."
-  },
-  "front.how.3.title": {
-    "en": "Build table or patterns",
-    "uk": "Таблиця збірки або шаблони"
-  },
-  "front.how.3": {
-    "en": "Where each part of the game sits in this build.",
-    "uk": "Де лежить кожна частина гри в цій збірці."
-  },
-  "front.how.4.title": {
-    "en": "Your mods",
-    "uk": "Ваші моди"
-  },
-  "front.how.4": {
-    "en": "Ask for the parts they change.",
-    "uk": "Просять ті частини гри, які змінюють."
-  },
-  "front.how.after": {
-    "en": "After a game update, Enshwick turns off only what it cannot find, mod by mod, and its log names the reason. The game and the other mods keep running.",
-    "uk": "Після оновлення гри Enshwick вимикає лише те, чого не знаходить, мод за модом, і пише причину в журнал. Гра й інші моди працюють далі."
-  },
-  "front.tech.title": {
-    "en": "Versions",
-    "uk": "Версії"
-  },
   "front.tech.api": {
-    "en": "Enshwick API",
-    "uk": "API Enshwick"
+    "en": "API",
+    "uk": "API"
   },
   "front.tech.client": {
     "en": "Game client",
@@ -435,14 +339,6 @@
     "en": "Error code",
     "uk": "Код помилки"
   },
-  "dev.older": {
-    "en": "This page describes the API of version {version}, an older one.",
-    "uk": "Ця сторінка описує API версії {version}, старішої."
-  },
-  "dev.newest": {
-    "en": "Read the newest",
-    "uk": "Читати найновішу"
-  },
   "alpha.mark": {
     "en": "alpha",
     "uk": "альфа"
@@ -452,12 +348,8 @@
     "uk": "Enshwick в альфа-версії: версія 1.0 ще не вийшла."
   },
   "front.alpha": {
-    "en": "Alpha, API {version}. Version 1.0 is on its way. You can already write mods against the API.",
-    "uk": "Альфа, API {version}. Версія 1.0 на підході. Писати моди під API можна вже зараз."
-  },
-  "front.alpha.bare": {
-    "en": "Alpha. Version 1.0 is on its way. You can already write mods against the API.",
-    "uk": "Альфа. Версія 1.0 на підході. Писати моди під API можна вже зараз."
+    "en": "Alpha. Version 1.0 is on its way, and you can already write mods against the API.",
+    "uk": "Альфа. Версія 1.0 на підході, а писати моди під API можна вже зараз."
   },
   "front.ways.nexus": {
     "en": "Nexus Mods",
@@ -466,5 +358,45 @@
   "front.ways.vortex": {
     "en": "Vortex extension",
     "uk": "Розширення для Vortex"
+  },
+  "front.download": {
+    "en": "Download Enshwick",
+    "uk": "Завантажити Enshwick"
+  },
+  "front.nav.top": {
+    "en": "Start",
+    "uk": "Початок"
+  },
+  "front.nav.label": {
+    "en": "On this page",
+    "uk": "На цій сторінці"
+  },
+  "front.install.title": {
+    "en": "Install",
+    "uk": "Встановлення"
+  },
+  "front.install.auto": {
+    "en": "Automatic",
+    "uk": "Автоматично"
+  },
+  "front.install.manual": {
+    "en": "Manual",
+    "uk": "Вручну"
+  },
+  "front.install.step.1": {
+    "en": "Download enshwick.zip.",
+    "uk": "Завантажте enshwick.zip."
+  },
+  "front.install.step.2": {
+    "en": "Open the archive.",
+    "uk": "Відкрийте архів."
+  },
+  "front.install.step.3": {
+    "en": "Put its files into the game folder, the one with enshrouded.exe.",
+    "uk": "Перенесіть його файли в теку гри, де лежить enshrouded.exe."
+  },
+  "front.install.step.4": {
+    "en": "Put other mods into the mods folder there.",
+    "uk": "Інші моди кладіть у теку mods там само."
   }
 }
