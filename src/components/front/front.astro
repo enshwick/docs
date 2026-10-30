@@ -7,6 +7,7 @@ import { links } from '../../site/links.ts';
 import { Snippet, SnippetLanguage } from '../../site/snippet.ts';
 import { texts } from '../../site/texts.ts';
 import NightSky from '../night-sky.astro';
+import ServiceIcon from '../service-icon.astro';
 
 interface Props {
   /** The page's language code; the root language has none in its path. */
@@ -65,6 +66,9 @@ const needs = (side: string): string => t(`front.needs.${side}`);
           <a class="ew-button ew-button--flame" href={`${prefix}/dev/getting-started/`}>{t('front.write')}</a>
           <a class="ew-button ew-button--stone" href={`${prefix}/start/first-modded-game/`}>{t('topic.players')}</a>
         </div>
+        <p class="ew-hero__alpha">
+          {data.version === undefined ? t('front.alpha.bare') : t('front.alpha').replace('{version}', data.version)}
+        </p>
         <p class="ew-hero__count">
           <span>{t('front.count').replace('{count}', data.mods.length.toString())}</span>
           <a href="#mods">{t('front.count.link')}</a>
@@ -91,11 +95,17 @@ const needs = (side: string): string => t(`front.needs.${side}`);
             <li>{t('front.install.manual.3')}</li>
           </ol>
           <p>{t('front.ways.screen')}</p>
-          <p>
-            {t('front.ways.managers')}{' '}
-            <a href={links.nexus.toString()}>{t('front.install.vortex.link')}</a>,{' '}
-            <a href={links.vortex.toString()}>{t('foot.vortex')}</a>.
-          </p>
+          <p>{t('front.ways.managers')}</p>
+          <div class="ew-services">
+            <a class="ew-service ew-service--nexus" href={links.nexus.toString()}>
+              <ServiceIcon service="nexus" />
+              {t('front.ways.nexus')}
+            </a>
+            <a class="ew-service ew-service--vortex" href={links.vortex.toString()}>
+              <ServiceIcon service="vortex" />
+              {t('front.ways.vortex')}
+            </a>
+          </div>
           <p><a href={`${prefix}/start/first-modded-game/`}>{t('front.ways.linux')}</a></p>
         </article>
         <article class="ew-way">

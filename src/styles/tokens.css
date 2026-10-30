@@ -40,6 +40,14 @@
   --color-focus: #ffd27a;
   --color-danger: #f0866f;
 
+  /* The services we link to, each in its own colour, toned into the night where it frames a button. */
+  --color-nexus: #fb923c;
+  --color-vortex: #d68e44;
+  --color-nexus-edge: color-mix(in oklab, var(--color-nexus) 45%, var(--color-stone));
+  --color-vortex-edge: color-mix(in oklab, var(--color-vortex) 45%, var(--color-stone));
+  --color-nexus-wash: color-mix(in oklab, var(--color-nexus) 10%, transparent);
+  --color-vortex-wash: color-mix(in oklab, var(--color-vortex) 10%, transparent);
+
   /* Faces: a carved serif for display, a plain sans for reading, a mono for code. */
   --font-display: 'Cormorant Garamond', ui-serif, Georgia, serif;
   --font-body: 'IBM Plex Sans', ui-sans-serif, system-ui, sans-serif;
