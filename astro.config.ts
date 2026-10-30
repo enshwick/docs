@@ -77,16 +77,34 @@ export default defineConfig({
     starlight({
       title: 'enshwick',
       description: texts.get('site.description'),
-      logo: { src: './src/assets/mark-on-dark.svg', alt: 'enshwick' },
+      logo: { src: './src/assets/brand/lockup.svg', alt: 'enshwick', replacesTitle: true },
       favicon: '/favicon.svg',
       head: [
         {
           tag: 'link',
-          attrs: { rel: 'icon', href: `${siteData.base}/favicon-small.svg`, sizes: '32x32' },
+          attrs: { rel: 'icon', href: `${siteData.base}/favicon-16.svg`, sizes: '16x16' },
         },
         {
           tag: 'link',
-          attrs: { rel: 'apple-touch-icon', href: `${siteData.base}/apple-touch-icon-180.png` },
+          attrs: {
+            rel: 'icon',
+            href: `${siteData.base}/favicon-32.png`,
+            sizes: '32x32',
+            type: 'image/png',
+          },
+        },
+        {
+          tag: 'link',
+          attrs: {
+            rel: 'icon',
+            href: `${siteData.base}/favicon-16.png`,
+            sizes: '16x16',
+            type: 'image/png',
+          },
+        },
+        {
+          tag: 'link',
+          attrs: { rel: 'apple-touch-icon', href: `${siteData.base}/apple-touch-icon.png` },
         },
         { tag: 'meta', attrs: { name: 'twitter:card', content: 'summary_large_image' } },
       ],

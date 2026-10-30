@@ -108,7 +108,7 @@ ${stars}<path d="${back.path}" fill="#17141f"/><path d="${front.path}" fill="#0f
       description: this.page.description ?? '',
       bgGradient: [[...OgCard.colors.basalt]],
       bgImage: { path: backgrounds[this.kind], fit: 'cover', position: 'center' },
-      logo: { path: './public/apple-touch-icon-180.png', size: [72] },
+      logo: { path: './src/assets/brand/mark-512.png', size: [72] },
       padding: 72,
       fonts: OgCard.fonts,
       font: {
