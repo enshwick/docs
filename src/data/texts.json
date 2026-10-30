@@ -199,10 +199,6 @@
     "en": "Mods",
     "uk": "Моди"
   },
-  "front.not-affiliated": {
-    "en": "Enshwick is a fan project, not affiliated with Keen Games. Enshrouded is a trademark of Keen Games.",
-    "uk": "Enshwick є фанатським проєктом і не пов’язаний з Keen Games. Enshrouded є торговою маркою Keen Games."
-  },
   "nav.main": {
     "en": "Main",
     "uk": "Головне"
@@ -390,5 +386,9 @@
   "front.install.nexus.note": {
     "en": "Choose Mod Manager Download there, and Vortex puts Enshwick into the game folder.",
     "uk": "Виберіть там Mod Manager Download, і Vortex сам покладе Enshwick у теку гри."
+  },
+  "foot.not-affiliated": {
+    "en": "Not made by or affiliated with Keen Games. Enshrouded is their trademark.",
+    "uk": "Не створений Keen Games і не пов’язаний з ними. Enshrouded — їхня торгова марка."
   }
 }

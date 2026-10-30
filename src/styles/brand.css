@@ -851,9 +851,14 @@ mobile-starlight-toc summary .toggle {
   margin: 0;
 }
 
+/* The licence and the disclaimer: one line of small type. */
 .ew-foot__legal {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2xs) var(--space-md);
   margin: 0;
-  max-width: 60ch;
+  font-size: var(--text-xs);
+  color: var(--color-faint);
 }
 
 @media (min-width: 50rem) {
@@ -862,8 +867,14 @@ mobile-starlight-toc summary .toggle {
   }
 
   .ew-foot__language {
-    justify-self: end;
+    justify-self: start;
   }
+}
+
+/* The footer's language list shows the whole name of the language. */
+/* Room for the longest language name, Українська, in every language list. */
+starlight-lang-select label {
+  --sl-select-width: 8.5em !important;
 }
 
 /* Selects in the bar and the menu. */

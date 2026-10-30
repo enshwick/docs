@@ -21,7 +21,6 @@ const t = (key: string): string => texts.get(key, language);
       <a class="ew-foot__service" href={links.github.toString()}><ServiceIcon service="github" />GitHub</a>
       <a class="ew-foot__service" href={links.nexus.toString()}><ServiceIcon service="nexus" />Nexus Mods</a>
       <a class="ew-foot__service" href={links.vortex.toString()}><ServiceIcon service="vortex" />{t('foot.vortex')}</a>
-      <a href={links.license.toString()}>{t('foot.license')}</a>
     </nav>
     <p class="ew-foot__mail">
       <a href={links.contact.mailto()}>{links.contact.toString()}</a>
@@ -30,6 +29,9 @@ const t = (key: string): string => texts.get(key, language);
     <div class="ew-foot__language">
       <LanguageSelect />
     </div>
-    <p class="ew-foot__legal">{t('front.not-affiliated')}</p>
+    <p class="ew-foot__legal">
+      <a href={links.license.toString()}>{t('foot.license')}</a>
+      <span>{t('foot.not-affiliated')}</span>
+    </p>
   </div>
 </footer>
