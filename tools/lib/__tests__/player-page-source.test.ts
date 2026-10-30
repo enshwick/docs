@@ -6,7 +6,7 @@ import { ModPages, type ModRelease } from '../mod-pages.ts';
 import { PlayerPageSource } from '../player-page-source.ts';
 
 const page = `---
-id: game-rates
+id: enshwick.game-rates
 name: Game Rates
 summary: Building recipes make more for the same cost.
 needs: everyone
@@ -71,7 +71,7 @@ describe('ModPages.body', () => {
 
     expect(table).toBeGreaterThan(body.indexOf('## Settings'));
     expect(table).toBeLessThan(body.indexOf('## Problems'));
-    expect(body).toContain('`game-rates`');
+    expect(body).toContain('`enshwick.game-rates`');
   });
 
   it('adds a settings section at the end when the page has none', () => {
