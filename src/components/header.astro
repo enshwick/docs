@@ -1,0 +1,43 @@
+---
+import LanguageSelect from '@astrojs/starlight/components/LanguageSelect.astro';
+import Search from '@astrojs/starlight/components/Search.astro';
+import SiteTitle from '@astrojs/starlight/components/SiteTitle.astro';
+
+import { Area } from '../site/area.ts';
+import { languages } from '../site/languages.ts';
+import { links } from '../site/links.ts';
+import { texts } from '../site/texts.ts';
+import { LanguageCode } from '../site/types.ts';
+
+// One bar on every page, the front page included: where to go, search, the outside places, download.
+const route = Astro.locals.starlightRoute;
+const parsed = LanguageCode.parse(route.lang);
+const language = parsed.ok ? parsed.value : languages.root;
+const t = (key: string): string => texts.get(key, language);
+const base = import.meta.env.BASE_URL.replace(/\/$/u, '');
+const prefix = language.equals(languages.root) ? base : `${base}/${language}`;
+const area = Area.of(route.id).toString();
+---
+
+<div class="ew-bar">
+  <div class="ew-bar__title">
+    <SiteTitle />
+  </div>
+  <nav class="ew-bar__nav" aria-label={t('nav.main')}>
+    <a href={`${prefix}/start/first-modded-game/`} aria-current={area === 'players' ? 'true' : undefined}>
+      {t('topic.players')}
+    </a>
+    <a href={`${prefix}/dev/`} aria-current={area === 'dev' ? 'true' : undefined}>{t('topic.developers')}</a>
+    <a href={`${prefix}/#mods`}>{t('group.mods')}</a>
+  </nav>
+  <div class="ew-bar__search">
+    <Search />
+  </div>
+  <div class="ew-bar__out">
+    <a href={links.github.toString()}>GitHub</a>
+    <a href={links.nexus.toString()}>Nexus</a>
+    <a href={links.vortex.toString()}>Vortex</a>
+    <LanguageSelect />
+    <a class="ew-bar__download" href={links.download.toString()}>{t('nav.download')}</a>
+  </div>
+</div>

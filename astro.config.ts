@@ -4,14 +4,21 @@ import { unified } from '@astrojs/markdown-remark';
 import sitemap from '@astrojs/sitemap';
 import starlight from '@astrojs/starlight';
 import type { StarlightUserConfig } from '@astrojs/starlight/types';
+import { pluginCollapsibleSections } from '@expressive-code/plugin-collapsible-sections';
+import { pluginLineNumbers } from '@expressive-code/plugin-line-numbers';
 import { defineConfig } from 'astro/config';
+import starlightGitHubAlerts from 'starlight-github-alerts';
+import starlightHeadingBadges from 'starlight-heading-badges';
 import starlightImageZoom from 'starlight-image-zoom';
+import starlightKbd from 'starlight-kbd';
 import starlightLinksValidator from 'starlight-links-validator';
 import starlightLlmsTxt from 'starlight-llms-txt';
 import starlightSidebarTopics from 'starlight-sidebar-topics';
 
 import siteData from './src/data/site.json' with { type: 'json' };
+import { TableFrame } from './src/plugins/rehype-table-frame.ts';
 import { BaseLinks } from './src/plugins/remark-base-links.ts';
+import { nightCodeTheme } from './src/site/code-theme.ts';
 import { languages } from './src/site/languages.ts';
 import { texts } from './src/site/texts.ts';
 import { Translations } from './src/site/translations.ts';
@@ -51,7 +58,10 @@ export default defineConfig({
   base: siteData.base,
   trailingSlash: 'always',
   markdown: {
-    processor: unified({ remarkPlugins: [new BaseLinks(siteData.base).plugin()] }),
+    processor: unified({
+      remarkPlugins: [new BaseLinks(siteData.base).plugin()],
+      rehypePlugins: [new TableFrame().plugin()],
+    }),
   },
   integrations: [
     // Starlight adds this one itself when it is missing; it is taken over to keep fallback pages out.
@@ -65,11 +75,7 @@ export default defineConfig({
     starlight({
       title: 'enshwick',
       description: texts.get('site.description'),
-      logo: {
-        dark: './src/assets/mark-on-dark.svg',
-        light: './src/assets/mark-on-light.svg',
-        alt: 'enshwick',
-      },
+      logo: { src: './src/assets/mark-on-dark.svg', alt: 'enshwick' },
       favicon: '/favicon.svg',
       head: [
         {
@@ -90,12 +96,39 @@ export default defineConfig({
         { tag: 'meta', attrs: { name: 'twitter:card', content: 'summary_large_image' } },
       ],
       routeMiddleware: './src/route-data.ts',
-      customCss: ['./src/styles/brand.css', './src/styles/front.css'],
+      customCss: ['./src/styles/brand.css', './src/styles/night.css', './src/styles/front.css'],
       components: {
         Head: './src/components/head.astro',
+        Header: './src/components/header.astro',
+        PageFrame: './src/components/page-frame.astro',
+        Sidebar: './src/components/sidebar.astro',
+        MobileMenuFooter: './src/components/mobile-menu-footer.astro',
         PageTitle: './src/components/page-title.astro',
+        Footer: './src/components/footer.astro',
         ThemeProvider: './src/components/theme-provider.astro',
         ThemeSelect: './src/components/theme-select.astro',
+      },
+      expressiveCode: {
+        themes: [nightCodeTheme],
+        useStarlightUiThemeColors: false,
+        plugins: [pluginCollapsibleSections(), pluginLineNumbers()],
+        defaultProps: {
+          showLineNumbers: false,
+          overridesByLang: { 'rust,luau,lua,toml,ts,js': { showLineNumbers: true } },
+        },
+        styleOverrides: {
+          borderRadius: '0',
+          borderColor: 'var(--color-line-strong)',
+          codeFontFamily: 'var(--font-mono)',
+          uiFontFamily: 'var(--font-body)',
+          codeFontSize: '0.875rem',
+          codeLineHeight: '1.7',
+          frames: {
+            shadowColor: 'transparent',
+            editorActiveTabIndicatorTopColor: 'var(--color-flame)',
+            frameBoxShadowCssValue: 'none',
+          },
+        },
       },
       defaultLocale: 'root',
       locales,
@@ -103,6 +136,12 @@ export default defineConfig({
       editLink: { baseUrl: `https://github.com/${siteData.repository}/edit/main/` },
       lastUpdated: true,
       plugins: [
+        starlightKbd({
+          globalPicker: false,
+          types: [{ id: 'windows', label: 'Windows', default: true }],
+        }),
+        starlightHeadingBadges(),
+        starlightGitHubAlerts(),
         starlightSidebarTopics([
           {
             label: texts.everyLanguage('topic.players'),

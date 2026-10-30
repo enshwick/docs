@@ -1,50 +1,90 @@
+/* The brand's values: a night over basalt, mist for links and paths, one flame. Dark only. */
 :root {
-  --space-3xs: 2px; --space-2xs: 4px; --space-xs: 8px; --space-sm: 12px; --space-md: 16px; --space-lg: 24px; --space-xl: 40px; --space-2xl: 64px; --space-3xl: 96px; --space-4xl: 144px;
-  --text-xs: 0.8125rem; --text-sm: 0.875rem; --text-md: 1rem; --text-lg: 1.25rem; --text-xl: 1.5625rem; --text-2xl: 1.953rem; --text-3xl: 2.441rem;
-  --text-display-s: clamp(2.25rem, 4vw + 0.5rem, 3.75rem); --text-display: clamp(2.75rem, 5vw + 1rem, 5.25rem);
-  --text-section: clamp(2rem, 2.5vw + 1rem, 3.5rem); --text-title: clamp(1.25rem, 0.75vw + 0.875rem, 1.625rem); --text-lead: clamp(1.125rem, 0.35vw + 1rem, 1.375rem);
-  --ease-out: cubic-bezier(0.16, 1, 0.3, 1); --ease-in: cubic-bezier(0.7, 0, 0.84, 0); --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
-  --dur-micro: 120ms; --dur-short: 220ms; --dur-long: 420ms;
-  --color-error: oklch(52% 0.19 27); --color-success: oklch(50% 0.12 150);
-  --container: 1440px; --gutter: 64px; --gap-columns: 32px; --section-gap-s: 120px; --section-gap: 144px; --section-gap-l: 176px;
-  --z-base: 1; --z-raised: 10; --z-dropdown: 100; --z-sticky: 200; --z-sticky-nav: 300; --z-modal: 400; --z-toast: 500; --z-tooltip: 600;
+  /* The night. */
+  --color-basalt: #14121a;
+  --color-night-top: #0f0d1f;
+  --color-night-mid: #14121c;
+  --color-night-page: #121020;
+  --color-panel: #17151f;
+  --color-ridge-far: #1a1724;
+  --color-ridge-mid: #17141f;
+  --color-ridge-near: #0f0d14;
+  --color-ridge-low: #110f17;
+  --color-star: #e9e1d3;
+  --color-fog: #cccaeb;
 
-  /* The brand: basalt and mist with one flame accent. */
-  --color-paper: #14121a; --color-paper-2: #1c1826; --color-paper-3: #241f2e;
-  --color-ink: #f3eee6; --color-ink-2: #e9e1d3; --color-muted: #a9a2b8;
-  --color-rule: #4a4458;
-  --color-accent: #8c8fd6; --color-accent-ink: #14121a; --color-focus: #ffd27a;
-  --color-mist: #8c8fd6; --color-mist-deep: #3d3770; --color-mist-low: #2a2346;
-  --color-flame: #ff8a3d; --color-flame-low: #3a2418; --color-core: #ffd27a;
-  --color-glow-teal: #3fbfb0;
+  /* Ink. */
+  --color-bone: #e9e1d3;
+  --color-text: #d8d2e0;
+  --color-muted: #bdb6c9;
+  --color-faint: #8a839a;
+  --color-comment: #847d94;
 
-  /* Light keeps the same roles. */
-  --color-paper-light: #f3eee6; --color-paper-2-light: #ebe5dc;
-  --color-ink-light: #14121a; --color-ink-2-light: #2a2633; --color-rule-light: #c9c3d6;
-  --color-mist-light: #3d3770; --color-mist-low-light: #e3e1f5;
-  --color-flame-light: #a8481a; --color-flame-low-light: #fbe3d2;
+  /* Lines and grounds. */
+  --color-stone: #4a4458;
+  --color-line: rgb(233 225 211 / 0.08);
+  --color-line-strong: rgb(233 225 211 / 0.16);
+  --color-code-ground: rgb(233 225 211 / 0.06);
+  --color-row-hover: rgb(140 143 214 / 0.05);
+  --color-veil: rgb(20 18 26 / 0.6);
+  --color-veil-deep: rgb(14 12 26 / 0.55);
 
-  --font-display: "Alegreya", ui-serif, serif;
-  --font-body: "Alegreya Sans", ui-sans-serif, system-ui, sans-serif;
-  --font-mono: "IBM Plex Mono", ui-monospace, monospace;
-  --font-outlier: var(--font-body);
-  --radius-card: 4px; --radius-pill: 999px; --rule-hair: 1px; --shadow-card: none;
-  --tracking-display: -0.01em;
-}
+  /* Mist and flame. */
+  --color-mist: #8c8fd6;
+  --color-mist-wash: rgb(140 143 214 / 0.14);
+  --color-mist-deep: #3d3770;
+  --color-mist-glow: rgb(61 55 112 / 0.35);
+  --color-flame: #ff8a3d;
+  --color-flame-wash: rgb(255 138 61 / 0.12);
+  --color-core: #ffd27a;
+  --color-focus: #ffd27a;
+  --color-danger: #f0866f;
 
-/* The game's own UI language: cool slate panels, thin pale-gold lines, one humanist serif. */
-:root {
-  --color-paper: #1b1a26; --color-paper-2: #292838; --color-paper-3: #353245;
-  --color-panel: #37384c; --color-panel-2: #3d3e5a;
-  --color-ink: #f2ede1; --color-ink-2: #d9d3c4; --color-muted: #a8a3b8;
-  --color-rule: #4b4a63;
-  --color-gold: #dbd1b0; --color-gold-bright: #e9d57f;
-  --color-row-focus: #e8e8e8; --color-row-focus-ink: #1b1a26;
-  --color-on: #7cc47f;
-  --color-button: #504f5d; --color-button-hover: #5d5c6c;
-  --color-focus: #e9d57f;
-  --font-display: "Alegreya", ui-serif, serif;
-  --font-body: "Alegreya Sans", ui-sans-serif, system-ui, sans-serif;
-  --tracking-display: 0;
-  --tracking-caps: 0.08em;
+  /* Faces: a carved serif for display, a plain sans for reading, a mono for code. */
+  --font-display: 'Cormorant Garamond', ui-serif, Georgia, serif;
+  --font-body: 'IBM Plex Sans', ui-sans-serif, system-ui, sans-serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, monospace;
+
+  /* Type scale. */
+  --text-xs: 0.8125rem;
+  --text-sm: 0.875rem;
+  --text-md: 1rem;
+  --text-body: 1.03125rem;
+  --text-lead: 1.125rem;
+  --text-lg: 1.25rem;
+  --text-xl: 1.5rem;
+  --text-2xl: 2rem;
+  --text-3xl: 2.5rem;
+  --text-page-title: clamp(2.25rem, 2.2vw + 1.5rem, 3.25rem);
+  --text-section: clamp(2rem, 2.4vw + 1.2rem, 3.25rem);
+  --text-hero: clamp(2.75rem, 5.2vw, 4.75rem);
+  --leading-body: 1.7;
+  --leading-display: 1;
+
+  /* Space. */
+  --space-3xs: 2px;
+  --space-2xs: 4px;
+  --space-xs: 8px;
+  --space-sm: 12px;
+  --space-md: 16px;
+  --space-lg: 24px;
+  --space-xl: 40px;
+  --space-2xl: 64px;
+  --space-3xl: 96px;
+  --space-4xl: 144px;
+  --container: 1280px;
+  --gutter: clamp(16px, 5vw, 64px);
+  --gap-columns: 32px;
+  --section-gap: clamp(80px, 10vw, 136px);
+
+  /* Shape and motion. */
+  --rule-hair: 1px;
+  --corner-tick: 12px;
+  --hex-notch: 10px;
+  --radius-code: 2px;
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --dur-micro: 120ms;
+  --dur-short: 220ms;
+  --z-behind: -1;
+  --z-raised: 10;
 }

@@ -1,11 +1,10 @@
 ---
 import Default from '@astrojs/starlight/components/PageTitle.astro';
 
-import { languages } from '../site/languages.ts';
+import { PageId } from '../site/page-id.ts';
 
 // The front page draws its own heading, so it gets no second h1.
-const id = Astro.locals.starlightRoute.id;
-const front = id === '' || id === 'index' || languages.others.some((code) => id === code.toString() || id === `${code}/index`);
+const front = new PageId(Astro.locals.starlightRoute.id).isFront;
 ---
 
 {!front && <Default />}

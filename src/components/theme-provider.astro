@@ -1,7 +1,10 @@
 ---
-// The site has one look, the dark one the game's menus use.
+import KbdThemeProvider from 'starlight-kbd/overrides/ThemeProvider.astro';
+
+// The site has one look, the night; the keyboard plugin's provider rides along.
 ---
 
+<KbdThemeProvider />
 <script is:inline>
   document.documentElement.dataset.theme = 'dark';
   window.StarlightThemeProvider = { updatePickers() {} };
