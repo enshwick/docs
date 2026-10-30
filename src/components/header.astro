@@ -8,6 +8,7 @@ import { languages } from '../site/languages.ts';
 import { links } from '../site/links.ts';
 import { texts } from '../site/texts.ts';
 import { LanguageCode } from '../site/types.ts';
+import ServiceIcon from './service-icon.astro';
 
 // One bar on every page, the front page included: where to go, search, the outside places, download.
 const route = Astro.locals.starlightRoute;
@@ -22,6 +23,7 @@ const area = Area.of(route.id).toString();
 <div class="ew-bar">
   <div class="ew-bar__title">
     <SiteTitle />
+    <span class="ew-alpha" title={t('alpha.title')}>{t('alpha.mark')}</span>
   </div>
   <nav class="ew-bar__nav" aria-label={t('nav.main')}>
     <a href={`${prefix}/start/first-modded-game/`} aria-current={area === 'players' ? 'true' : undefined}>
@@ -34,9 +36,15 @@ const area = Area.of(route.id).toString();
     <Search />
   </div>
   <div class="ew-bar__out">
-    <a href={links.github.toString()}>GitHub</a>
-    <a href={links.nexus.toString()}>Nexus</a>
-    <a href={links.vortex.toString()}>Vortex</a>
+    <a class="ew-bar__service" href={links.github.toString()} aria-label="GitHub" title="GitHub">
+      <ServiceIcon service="github" />
+    </a>
+    <a class="ew-bar__service" href={links.nexus.toString()} aria-label="Nexus Mods" title="Nexus Mods">
+      <ServiceIcon service="nexus" />
+    </a>
+    <a class="ew-bar__service" href={links.vortex.toString()} aria-label={t('foot.vortex')} title={t('foot.vortex')}>
+      <ServiceIcon service="vortex" />
+    </a>
     <LanguageSelect />
     <a class="ew-bar__download" href={links.download.toString()}>{t('nav.download')}</a>
   </div>

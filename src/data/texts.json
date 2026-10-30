@@ -167,10 +167,6 @@
     "en": "dedicated server",
     "uk": "виділений сервер"
   },
-  "front.install.vortex.link": {
-    "en": "Enshwick on Nexus Mods",
-    "uk": "Enshwick на Nexus Mods"
-  },
   "front.install.manual.1": {
     "en": "Download the archive.",
     "uk": "Завантажте архів."
@@ -312,8 +308,8 @@
     "uk": "Потім запустіть гру й вмикайте чи вимикайте моди на її екрані Mods."
   },
   "front.ways.managers": {
-    "en": "With a mod manager:",
-    "uk": "Через менеджер модів:"
+    "en": "Or install it through:",
+    "uk": "Або встановіть через:"
   },
   "front.ways.linux": {
     "en": "Linux and Steam Deck need one launch option.",
@@ -446,5 +442,29 @@
   "dev.newest": {
     "en": "Read the newest",
     "uk": "Читати найновішу"
+  },
+  "alpha.mark": {
+    "en": "alpha",
+    "uk": "альфа"
+  },
+  "alpha.title": {
+    "en": "Enshwick is in alpha: version 1.0 is not out yet.",
+    "uk": "Enshwick в альфа-версії: версія 1.0 ще не вийшла."
+  },
+  "front.alpha": {
+    "en": "Alpha, API {version}. Version 1.0 is on its way. You can already write mods against the API.",
+    "uk": "Альфа, API {version}. Версія 1.0 на підході. Писати моди під API можна вже зараз."
+  },
+  "front.alpha.bare": {
+    "en": "Alpha. Version 1.0 is on its way. You can already write mods against the API.",
+    "uk": "Альфа. Версія 1.0 на підході. Писати моди під API можна вже зараз."
+  },
+  "front.ways.nexus": {
+    "en": "Nexus Mods",
+    "uk": "Nexus Mods"
+  },
+  "front.ways.vortex": {
+    "en": "Vortex extension",
+    "uk": "Розширення для Vortex"
   }
 }

@@ -197,6 +197,18 @@
   color: var(--color-muted);
 }
 
+/* Alpha: one plain line under the actions, no warning colour. */
+.ew-hero__alpha {
+  max-width: 30em;
+  margin-top: var(--space-lg);
+  font-size: var(--text-sm);
+  color: var(--color-muted);
+}
+
+.ew-hero__alpha + .ew-hero__count {
+  margin-top: var(--space-xs);
+}
+
 /* The clearing: a pocket of still air in the fog that holds a real mod's code. */
 .ew-clearing {
   position: relative;
@@ -330,6 +342,51 @@
   padding: var(--space-sm) var(--space-md);
   border: var(--rule-hair) solid var(--color-line-strong);
   background: var(--color-veil-deep);
+}
+
+/* Install through a service: outline buttons with the service's own mark and a hint of its colour. */
+.ew-services {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-sm);
+}
+
+.ew-front .ew-service {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  min-height: 44px;
+  padding: var(--space-xs) var(--space-md);
+  border: var(--rule-hair) solid var(--color-stone);
+  background: var(--color-veil);
+  color: var(--color-bone);
+  font-size: 0.9375rem;
+  text-decoration: none;
+  transition:
+    border-color var(--dur-short) var(--ease-out),
+    background-color var(--dur-short) var(--ease-out);
+}
+
+.ew-front .ew-service--nexus {
+  border-color: var(--color-nexus-edge);
+}
+
+.ew-front .ew-service--vortex {
+  border-color: var(--color-vortex-edge);
+}
+
+.ew-front .ew-service--nexus:hover {
+  border-color: var(--color-nexus);
+  background: var(--color-nexus-wash);
+}
+
+.ew-front .ew-service--vortex:hover {
+  border-color: var(--color-vortex);
+  background: var(--color-vortex-wash);
+}
+
+.ew-front .ew-service:active {
+  transform: translateY(1px);
 }
 
 @media (min-width: 56rem) {
