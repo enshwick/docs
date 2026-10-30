@@ -248,8 +248,8 @@
     "uk": "API для модів Enshrouded."
   },
   "front.lead": {
-    "en": "Write a mod in Rust or Luau against a typed API. Enshwick finds the game’s code. Your mod holds only its rules.",
-    "uk": "Пишіть мод на Rust або Luau з типізованим API. Enshwick сам знаходить код гри. У моді лишаються тільки його правила."
+    "en": "Write a mod in Rust against a typed API. Enshwick finds the game’s code. Your mod holds only its rules.",
+    "uk": "Пишіть мод на Rust з типізованим API. Enshwick сам знаходить код гри. У моді лишаються тільки його правила."
   },
   "front.write": {
     "en": "Write a mod",
@@ -390,5 +390,9 @@
   "foot.not-affiliated": {
     "en": "Not made by or affiliated with Keen Games. Enshrouded is their trademark.",
     "uk": "Не створений Keen Games і не пов’язаний з ними. Enshrouded — їхня торгова марка."
+  },
+  "front.luau": {
+    "en": "Luau support is in progress.",
+    "uk": "Підтримку Luau ще доробляємо."
   }
 }

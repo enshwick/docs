@@ -120,10 +120,17 @@
 
 .ew-hero__lead {
   max-width: 30em;
-  margin-bottom: var(--space-xl);
+  margin-bottom: var(--space-xs);
   font-size: var(--text-lead);
   line-height: 1.5;
   color: var(--color-muted);
+}
+
+/* A quiet note under the lead: Luau is on its way. */
+.ew-hero__luau {
+  margin-bottom: var(--space-xl);
+  font-size: var(--text-sm);
+  color: var(--color-faint);
 }
 
 /* Buttons: web-native, softly rounded; the primary glows a little in the flame. */

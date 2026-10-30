@@ -173,7 +173,7 @@ export default defineConfig({
         starlightLlmsTxt({
           projectName: 'Enshwick',
           description:
-            'Enshwick is a modding API platform for the game Enshrouded. Mod makers write mods in Rust against the `enshwick` crate, in Luau, or as data packs without code. The Enshwick loader ships with it: players install it once, and it runs every mod in the `mods` folder of the game.',
+            'Enshwick is a modding API platform for the game Enshrouded. Mod makers write mods in Rust against the `enshwick` crate, or as data packs without code. Luau support is in progress: a Luau mod hears events and works with players, chat, timers, inventories, its settings and other mods, but cannot set game rules yet. The Enshwick loader ships with it: players install it once, and it runs every mod in the `mods` folder of the game.',
           details: [
             `To write a mod, read [For AI assistants](${siteData.url}${siteData.base}/dev/ai-assistants/) first: the kinds of mod, \`cargo enshwick new\`, the \`unstable\` feature and tests with the fake host. The API reference of the \`enshwick\` crate is on [docs.rs](https://docs.rs/enshwick).`,
             ...(apiMap === undefined ? [] : [apiMap]),
@@ -183,7 +183,7 @@ export default defineConfig({
               label: 'Mod makers',
               paths: ['dev/**'],
               description:
-                'the guide for writing mods in Rust, in Luau and as data packs, with the notes for AI assistants first',
+                'the guide for writing mods in Rust and as data packs, Luau in progress, with the notes for AI assistants first',
             },
             {
               label: 'Players',
