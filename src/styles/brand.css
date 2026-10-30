@@ -202,19 +202,6 @@ header.header {
   padding: var(--space-2xs);
 }
 
-.ew-bar__service .ew-service-icon {
-  filter: grayscale(1) brightness(1.4);
-  opacity: 0.7;
-  transition:
-    opacity var(--dur-short) var(--ease-out),
-    filter var(--dur-short) var(--ease-out);
-}
-
-.ew-bar__service:is(:hover, :focus-visible) .ew-service-icon {
-  filter: none;
-  opacity: 1;
-}
-
 .ew-foot__service {
   display: inline-flex;
   align-items: center;

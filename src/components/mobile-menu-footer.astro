@@ -18,7 +18,6 @@ const t = (key: string): string => texts.get(key, language);
     <a href={links.download.toString()}>{t('nav.download')}</a>
     <a class="ew-foot__service" href={links.github.toString()}><ServiceIcon service="github" />GitHub</a>
     <a class="ew-foot__service" href={links.nexus.toString()}><ServiceIcon service="nexus" />Nexus Mods</a>
-    <a class="ew-foot__service" href={links.vortex.toString()}><ServiceIcon service="vortex" />{t('foot.vortex')}</a>
   </nav>
   <LanguageSelect />
 </div>
