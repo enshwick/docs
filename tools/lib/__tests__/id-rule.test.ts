@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { FormerModId, ModId } from '../../../src/site/types.ts';
+import { ModId } from '../../../src/site/types.ts';
 import { IdRule } from '../id-rule.ts';
 
 const abi = `
@@ -8,14 +8,11 @@ const abi = `
 /// assert!(!is_valid_id("trading-post"));
 /// assert!(!is_valid_id("you.trading.post"));
 /// assert!(!is_valid_id("You.Trading Post"));
-/// assert!(is_valid_former_id("trading-post"));
-/// assert!(is_valid_former_id("you.trading-post"));
-/// assert!(!is_valid_former_id("Trading Post"));
 `;
 
 describe('IdRule', () => {
   it("reads the API crate's examples", () => {
-    expect(IdRule.of(abi).examples).toHaveLength(7);
+    expect(IdRule.of(abi).examples).toHaveLength(4);
   });
 
   it('agrees with every example', () => {
@@ -33,6 +30,5 @@ describe('IdRule', () => {
     expect(ModId.accepts(`a.${'b'.repeat(63)}`)).toBe(false);
     expect(ModId.accepts('.name')).toBe(false);
     expect(ModId.accepts('author.')).toBe(false);
-    expect(FormerModId.accepts('a'.repeat(65))).toBe(false);
   });
 });
