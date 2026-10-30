@@ -254,11 +254,6 @@
   opacity: 0.55;
 }
 
-.ew-night--page .ew-night__fog {
-  opacity: 0.28;
-  animation: ew-drift-page 80s linear infinite alternate;
-}
-
 .ew-night--page .ew-night__ridges {
   position: absolute;
   inset: auto 0 0;
@@ -273,15 +268,6 @@
 
 .ew-night--page .ew-night__ridge--front {
   fill: var(--color-ridge-low);
-}
-
-@keyframes ew-drift-page {
-  from {
-    transform: translate3d(-5%, 0, 0);
-  }
-  to {
-    transform: translate3d(5%, -1%, 0);
-  }
 }
 
 @media (prefers-reduced-motion: reduce) {

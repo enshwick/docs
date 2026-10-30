@@ -930,8 +930,8 @@ starlight-lang-select select {
 }
 
 /*
- * Moving between pages: the night, the bar and the sidebar stay exactly as they are; only the
- * content fades in, quickly. The page itself swaps at once, so nothing behind the content dims.
+ * Moving between pages: the night, the bar and the sidebar stay exactly as they are and the content
+ * swaps at once. A fade, however short, reads as a slow page.
  */
 @view-transition {
   navigation: auto;
@@ -967,14 +967,7 @@ header.header {
 }
 
 ::view-transition-new(ew-content) {
-  animation: ew-content-in 180ms var(--ease-out) both;
-}
-
-@keyframes ew-content-in {
-  from {
-    opacity: 0;
-    transform: translateY(4px);
-  }
+  animation: none;
 }
 
 @media (prefers-reduced-motion: reduce) {
