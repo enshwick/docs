@@ -1,0 +1,33 @@
+---
+import Default from '@astrojs/starlight/components/Sidebar.astro';
+import TopicsDropdown from 'starlight-sidebar-topics-dropdown/TopicsDropdown.astro';
+
+// The two topics as a quiet segment over the sidebar, and as a dropdown in the narrow menu.
+const { hasSidebar } = Astro.locals.starlightRoute;
+const { isPageWithTopic, topics } = Astro.locals.starlightSidebarTopics;
+const shown = hasSidebar && isPageWithTopic;
+---
+
+{
+  shown && (
+    <>
+      <ul class="ew-topics">
+        {topics.map((topic) => (
+          <li>
+            <a
+              href={topic.link}
+              class:list={{ 'ew-topics__current': topic.isCurrent }}
+              aria-current={topic.isCurrent ? 'true' : undefined}
+            >
+              {topic.label}
+            </a>
+          </li>
+        ))}
+      </ul>
+      <div class="ew-topics-menu">
+        <TopicsDropdown />
+      </div>
+    </>
+  )
+}
+<Default><slot /></Default>
