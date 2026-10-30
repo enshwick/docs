@@ -57,8 +57,8 @@
 
 /*
  * Which docs the reader is in, at a glance: on a doc page the bar's bottom edge is a line in the
- * area's colour, green for playing and red for making mods, and the area's link in the bar and its
- * tab in the sidebar carry it too. The front page belongs to neither and keeps the plain hairline.
+ * area's colour, green for playing and red for making mods, the area's link in the bar is underlined
+ * in it and its tab in the sidebar tinted. The front page belongs to neither and keeps the plain hairline.
  */
 :root[data-has-sidebar] header.header {
   border-bottom-color: transparent;
@@ -433,7 +433,6 @@ header.header {
 .ew-topics a[aria-current='page'],
 .ew-topics a.ew-topics__current {
   background: color-mix(in oklab, var(--color-area) 16%, transparent);
-  box-shadow: inset 0 -2px 0 var(--color-area);
   color: var(--color-bone);
 }
 
