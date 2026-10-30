@@ -57,6 +57,8 @@ export default defineConfig({
   site: siteData.url,
   base: siteData.base,
   trailingSlash: 'always',
+  // Browsers without speculation rules fetch a page ahead when the pointer rests on its link.
+  prefetch: { prefetchAll: true, defaultStrategy: 'hover' },
   markdown: {
     processor: unified({
       remarkPlugins: [new BaseLinks(siteData.base).plugin()],
