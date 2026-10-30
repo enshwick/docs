@@ -45,6 +45,10 @@
   --color-focus: #ffd27a;
   --color-danger: #f0866f;
 
+  /* The two areas of the docs, each with its own signal: green for playing, red for making mods. */
+  --color-area-players: #5ccb8a;
+  --color-area-dev: #f0525a;
+
   /* The services we link to, each in its own colour, toned into the night where it frames a button. */
   --color-nexus: #fb923c;
   --color-nexus-edge: color-mix(in oklab, var(--color-nexus) 45%, var(--color-stone));
