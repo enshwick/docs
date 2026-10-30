@@ -68,7 +68,7 @@ export class DeveloperArea {
 
   public constructor(private readonly source: PlatformSource) {}
 
-  /** Writes every version's pages and returns the area's sidebar. */
+  /** Writes every version's pages and returns the area's sidebar, where no group opens with itself. */
   public async build(): Promise<SidebarEntry[]> {
     const built = await Promise.all(
       this.source.versions.map((version, index) =>
@@ -86,7 +86,7 @@ export class DeveloperArea {
       return [];
     }
 
-    return [
+    const sidebar = [
       ...newest.entries,
       ...older.map(({ version, entries }) => ({
         label: version.name,
@@ -94,6 +94,15 @@ export class DeveloperArea {
         items: entries,
       })),
     ];
+    const repeating = Summary.repeats(sidebar);
+
+    if (repeating.length > 0) {
+      throw new TypeError(
+        `the developer sidebar opens a group with itself: ${repeating.join(', ')}`,
+      );
+    }
+
+    return sidebar;
   }
 
   /** The page type of a chapter: its own entry, else the entry of the folder it is in, else how-to. */
