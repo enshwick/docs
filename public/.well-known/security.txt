@@ -1,0 +1,5 @@
+Contact: mailto:security@enshwick.com
+Expires: 2027-10-30T00:00:00.000Z
+Preferred-Languages: en, uk
+Canonical: https://enshwick.com/.well-known/security.txt
+Policy: https://github.com/enshwick/.github/blob/main/SECURITY.md

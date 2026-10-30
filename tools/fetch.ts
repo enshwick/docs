@@ -59,7 +59,9 @@ const apiMap = new PlatformChecks(developerArea.releases[0], developerArea.newes
 const errors = developerArea.releases[0]?.errors;
 
 if (errors !== undefined) {
-  const pages = ErrorPages.parse(DeveloperArea.errorsSource, errors).pages();
+  const pages = ErrorPages.parse(DeveloperArea.errorsSource, errors).pages(
+    developerArea.releases[0]?.errorsUpdated,
+  );
 
   await Promise.all(pages.map((page) => page.write()));
 }
@@ -70,6 +72,6 @@ await Bun.write(
 );
 await Bun.write(
   `${generated}/compatibility.json`,
-  `${JSON.stringify({ platform: developerArea.releases.map(({ lib: _lib, errors: _errors, abi: _abi, mods: _mods, ...release }) => release), mods: modReleases }, null, 2)}\n`,
+  `${JSON.stringify({ platform: developerArea.releases.map(({ lib: _lib, errors: _errors, errorsUpdated: _errorsUpdated, abi: _abi, mods: _mods, ...release }) => release), mods: modReleases }, null, 2)}\n`,
 );
 await Bun.write(`${generated}/dev-sidebar.json`, `${JSON.stringify(developerSidebar, null, 2)}\n`);

@@ -1,5 +1,5 @@
-# Checks and builds the site on every pull request, and publishes it to
-# GitHub Pages from main. The nightly run picks up the pages other
+# Checks and builds the site on every pull request, with a preview on
+# Cloudflare, and deploys it to Cloudflare from main. The nightly run picks up the pages other
 # repositories feed in, such as the platform's book.
 name: site
 
@@ -29,7 +29,8 @@ jobs:
     uses: enshwick/.github/.github/workflows/docs-site.yml@main # zizmor: ignore[unpinned-uses]
     permissions:
       contents: read
-      pages: write
-      id-token: write
     with:
       deploy: ${{ github.event_name != 'pull_request' }}
+    secrets:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}

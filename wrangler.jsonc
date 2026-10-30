@@ -1,0 +1,14 @@
+// The Cloudflare Worker that serves the built site: static files only, no script.
+{
+  "$schema": "https://unpkg.com/wrangler@4.156.0/config-schema.json",
+  "name": "enshwick-docs",
+  "compatibility_date": "2026-10-30",
+  "assets": {
+    "directory": "./dist",
+    // Pages live at `/guides/install/`; `/guides/install` redirects there.
+    "html_handling": "force-trailing-slash",
+    "not_found_handling": "404-page",
+  },
+  "workers_dev": true,
+  "preview_urls": true,
+}

@@ -123,7 +123,7 @@ export class ModPages {
 
     await mkdir(`${PageFile.contentRoot}/${ModPages.folder}`, { recursive: true });
     await ModPages.copyImages(checkout, slug);
-    await this.writePage(release, languages.root, root, file);
+    await this.writePage(release, checkout, languages.root, root, file);
     await Promise.all(
       languages.others.map((code) => this.writeTranslation(release, checkout, code)),
     );
@@ -157,12 +157,13 @@ export class ModPages {
     if (text !== undefined) {
       const origin = `${release.repository}@${release.tag} ${ModPages.docs}/${file}`;
 
-      await this.writePage(release, language, PlayerPageSource.parse(origin, text), file);
+      await this.writePage(release, checkout, language, PlayerPageSource.parse(origin, text), file);
     }
   }
 
   private async writePage(
     release: ModRelease,
+    checkout: GitSource,
     language: LanguageCode,
     source: PlayerPageSource,
     file: string,
@@ -180,6 +181,7 @@ export class ModPages {
         editUrl: `${release.repository.url}/edit/main/${ModPages.docs}/${file}`,
       },
       ModPages.body(release, language, source),
+      await checkout.lastChanged(`${ModPages.docs}/${file}`),
     ).write();
   }
 

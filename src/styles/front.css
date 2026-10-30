@@ -96,7 +96,13 @@
 }
 
 .ew-hero .ew-lead {
-  margin-bottom: var(--space-xl);
+  margin-bottom: var(--space-md);
+}
+
+.ew-about {
+  color: var(--color-ink-2);
+  max-width: 44ch;
+  margin-block: 0 var(--space-xl);
 }
 
 .ew-actions {
@@ -616,36 +622,6 @@ html {
   border-bottom: 0;
 }
 
-.ew-toggle {
-  flex: none;
-  width: 2.5rem;
-  height: 1.25rem;
-  border-radius: var(--radius-pill);
-  background: var(--color-rule);
-  position: relative;
-}
-
-.ew-toggle::after {
-  content: '';
-  position: absolute;
-  top: 3px;
-  left: 3px;
-  width: calc(1.25rem - 6px);
-  height: calc(1.25rem - 6px);
-  border-radius: 50%;
-  background: var(--color-muted);
-}
-
-.ew-toggle--on {
-  background: var(--color-flame);
-}
-
-.ew-toggle--on::after {
-  left: auto;
-  right: 3px;
-  background: var(--color-ink-light);
-}
-
 .ew-code pre.ew-frame {
   background: var(--color-paper);
 }
@@ -745,7 +721,7 @@ html {
   font-family: var(--font-body);
   font-size: 1.0625rem;
   background:
-    url('/docs/circles.svg') 85% -120px / 900px auto no-repeat,
+    url('/circles.svg') 85% -120px / 900px auto no-repeat,
     radial-gradient(60rem 40rem at 20% 0%, color-mix(in oklab, var(--color-mist-deep) 45%, transparent), transparent 70%),
     var(--color-paper);
 }
@@ -757,7 +733,7 @@ html {
 }
 
 .ew-front .ew-band--mist {
-  background: url('/docs/circles.svg') 10% 50% / 700px auto no-repeat;
+  background: url('/circles.svg') 10% 50% / 700px auto no-repeat;
 }
 
 .ew-hero {
@@ -958,10 +934,6 @@ a.ew-index__row:focus-visible :is(.ew-index__name, .ew-index__line, .ew-index__n
   color: var(--color-row-focus-ink);
 }
 
-.ew-toggle--on {
-  background: var(--color-on);
-}
-
 .ew-bento > .ew-bento__lead {
   background: color-mix(in oklab, var(--color-panel-2) 90%, transparent);
 }
@@ -1055,7 +1027,7 @@ a.ew-index__row:focus-visible :is(.ew-index__name, .ew-index__line, .ew-index__n
   align-content: end;
   min-height: 24rem;
   background:
-    url('/docs/circles.svg') 120% -40% / 560px auto no-repeat,
+    url('/circles.svg') 120% -40% / 560px auto no-repeat,
     color-mix(in oklab, var(--color-panel-2) 90%, transparent);
 }
 
@@ -1174,55 +1146,6 @@ a.ew-index__row:focus-visible :is(.ew-index__name, .ew-index__line, .ew-index__n
 
 .ew-screen__head img {
   width: 2rem;
-}
-
-.ew-settings {
-  display: grid;
-  gap: var(--space-3xs);
-  margin-bottom: var(--space-xl);
-}
-
-.ew-settings > * {
-  margin: 0;
-}
-
-.ew-settings__row {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-  align-items: center;
-  padding: var(--space-sm) var(--space-md);
-  background: color-mix(in oklab, var(--color-paper-2) 80%, transparent);
-  font-family: var(--font-display);
-  font-size: var(--text-lg);
-  color: var(--color-ink);
-}
-
-.ew-settings__row--on {
-  background: var(--color-row-focus);
-  color: var(--color-row-focus-ink);
-}
-
-.ew-settings__value {
-  justify-self: center;
-  font-weight: 700;
-}
-
-.ew-slider {
-  position: relative;
-  justify-self: stretch;
-  height: 1px;
-  margin-inline: var(--space-md);
-  background: var(--color-ink-2);
-}
-
-.ew-slider__thumb {
-  position: absolute;
-  top: 50%;
-  left: 40%;
-  width: 10px;
-  height: 10px;
-  background: var(--color-ink);
-  transform: translate(-50%, -50%) rotate(45deg);
 }
 
 .ew-bento > .ew-bento__lead {
@@ -1497,14 +1420,6 @@ a.ew-index__row:hover .ew-index__name::before {
   pointer-events: none;
 }
 
-.ew-toggle::after {
-  transition: transform var(--dur-short) var(--ease-out);
-}
-
-.ew-modlist__row:hover .ew-toggle--on::after {
-  transform: translateX(-2px);
-}
-
 @media (prefers-reduced-motion: reduce) {
   .ew-screen,
   .ew-screen__head::before {
@@ -1513,8 +1428,7 @@ a.ew-index__row:hover .ew-index__name::before {
 
   .ew-front summary::before,
   .ew-button,
-  .ew-link,
-  .ew-toggle::after {
+  .ew-link {
     transition: none;
   }
 

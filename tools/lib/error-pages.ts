@@ -21,8 +21,8 @@ export class ErrorPages {
     return new ErrorPages(parsed.value);
   }
 
-  /** The pages: one per code, and the index when the source has steps. */
-  public pages(): PageFile[] {
+  /** The pages, dated by the source's last change: one per code, and the index when the source has steps. */
+  public pages(lastUpdated?: Date): PageFile[] {
     const codes = this.errors.error.map(
       (error) =>
         new PageFile(
@@ -35,6 +35,7 @@ export class ErrorPages {
             sidebar: { label: error.code.toString() },
           },
           `## Why it happens\n\n${error.cause}\n\n## What to do\n\n${error.fix}\n`,
+          lastUpdated,
         ),
     );
     const steps = this.errors.step ?? [];
@@ -55,6 +56,7 @@ export class ErrorPages {
           sidebar: { order: 0 },
         },
         this.decisionTree(),
+        lastUpdated,
       ),
       ...codes,
     ];

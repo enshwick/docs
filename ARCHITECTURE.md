@@ -17,14 +17,15 @@ developer pages are versioned per API minor.
 
 Generated pages are never committed: `tools/fetch.ts` writes them before every
 build into `src/content/docs/dev/` and the `mods/` folders, and its data into
-`src/generated/`. `bun run check:player-page <files>` checks a mod's player
+`src/generated/`. Each generated page carries the date of the last commit that
+changed its source. A page without one shows no date. `bun run check:player-page <files>` checks a mod's player
 pages against the same schema before they are released.
 
 ## Sets that grow are data
 
 | Set | One source |
 | --- | --- |
-| languages | `src/data/languages.json`; a language is a list entry and a folder of pages, and a page missing in it falls back to the root language |
+| languages | `src/data/languages.json`; a language is a list entry and a folder of pages, and a page missing in it falls back to the root language; `src/route-data.ts` keeps such a fallback out of search, the languages list and the sitemap |
 | the site's own short texts | `src/data/texts.json`, every key in every language (checked by a test) |
 | developer versions | `src/data/sources.json` |
 | our mods | the platform's `tools/mods.toml` at the newest version's ref, which its dev bundle reads too; a renamed or retired mod follows from there |
@@ -40,16 +41,20 @@ pages against the same schema before they are released.
 | `src/data/` | the data files above |
 | `src/site/` | the nominal types and the readers of the data files |
 | `src/plugins/` | the Markdown plugin that adds the base to links |
-| `src/components/` | Starlight component overrides: the head marks the area for its accent |
+| `src/components/` | Starlight component overrides: the head marks the area for its accent and adds the structured data |
 | `src/styles/brand.css` | the brand's colours and fonts as Starlight variables |
-| `src/assets/`, `public/` | the mark, favicons and the social banner |
+| `src/assets/`, `public/` | the mark, favicons and the social banner; `robots.txt`, `security.txt` and `_headers` for the host |
+| `wrangler.jsonc` | the Cloudflare Worker that serves `dist/` |
 | `tools/fetch.ts`, `tools/lib/` | the build step that collects generated pages |
+| `tools/check-dist.ts` | the check of the built site |
 
 ## Checks
 
-`bun run check` runs `astro check`, oxlint with type information and the
-tests; `bun run build` fails on a broken internal link
-(`starlight-links-validator`). Git hooks run oxfmt, oxlint, markdownlint and
+`bun run check` runs `astro check`, oxlint with type information, the
+tests and `tools/check-dist.ts`, which reads the built site for links outside
+the site's root, canonical addresses, fallback pages in the sitemap and pages
+on two paths. It needs `bun run build` first, which fails on a broken internal
+link (`starlight-links-validator`). Git hooks run oxfmt, oxlint, markdownlint and
 typos on changed files.
 
 The maintainers check the prose of English and Ukrainian pages with
