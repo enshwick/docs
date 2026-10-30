@@ -527,42 +527,107 @@
   }
 }
 
-/* The floating list of the page's sections: wide screens only, where it clears the content. */
+/*
+ * The page map: a thin line down the left with a marker per section and its short label, the
+ * current marker lit in the flame and the line filling as the page scrolls. Wide screens only;
+ * there the content keeps clear of it.
+ */
 .ew-onpage {
   display: none;
 }
 
-@media (min-width: 88rem) {
+@media (min-width: 90rem) {
+  .ew-front {
+    container-type: inline-size;
+    --map-room: 13rem;
+  }
+
+  .ew-front .ew-wrap,
+  .ew-front .ew-hero__body {
+    padding-inline-start: max(
+      var(--gutter),
+      calc(var(--map-room) - (100cqw - var(--container)) / 2)
+    );
+  }
+
   .ew-onpage {
     position: fixed;
-    top: 50%;
-    right: var(--space-md);
+    top: 33vh;
+    left: var(--space-lg);
     z-index: var(--z-raised);
     display: block;
-    padding: var(--space-xs);
-    border: var(--rule-hair) solid var(--color-line-strong);
-    border-radius: var(--radius-control);
-    background: var(--color-veil);
-    backdrop-filter: blur(6px);
-    transform: translateY(-50%);
   }
 }
 
 .ew-onpage ul {
+  position: relative;
   display: grid;
-  gap: var(--space-3xs);
+  gap: var(--space-md);
   margin: 0;
-  padding: 0;
+  padding: 0 0 0 var(--space-lg);
   list-style: none;
+}
+
+.ew-onpage ul::before,
+.ew-onpage ul::after {
+  content: '';
+  position: absolute;
+  top: 0.7em;
+  bottom: 0.7em;
+  left: 4px;
+  width: 1px;
+  background: var(--color-line-strong);
+}
+
+/* The line fills with the reader's progress down the page, where scrolling can drive it. */
+.ew-onpage ul::after {
+  background: var(--color-mist);
+  opacity: 0.6;
+  transform: scaleY(0);
+  transform-origin: top;
+}
+
+@supports (animation-timeline: scroll()) {
+  .ew-onpage ul::after {
+    animation: ew-map-fill linear both;
+    animation-timeline: scroll(root);
+  }
+}
+
+@keyframes ew-map-fill {
+  to {
+    transform: scaleY(1);
+  }
+}
+
+.ew-onpage li {
+  position: relative;
 }
 
 .ew-front .ew-onpage a {
   display: block;
-  padding: var(--space-2xs) var(--space-sm);
-  border-inline-start: 2px solid transparent;
-  font-size: var(--text-sm);
-  color: var(--color-muted);
+  font-size: var(--text-xs);
+  line-height: 1.4;
+  color: var(--color-faint);
   text-decoration: none;
+  white-space: nowrap;
+  transition: color var(--dur-short) var(--ease-out);
+}
+
+/* Each section's marker sits on the line; the current one is lit. */
+.ew-onpage a::before {
+  content: '';
+  position: absolute;
+  top: 0.45em;
+  left: calc(-1 * var(--space-lg) + 1px);
+  width: 7px;
+  height: 7px;
+  border: var(--rule-hair) solid var(--color-stone);
+  background: var(--color-basalt);
+  transform: rotate(45deg);
+  transition:
+    background-color var(--dur-short) var(--ease-out),
+    border-color var(--dur-short) var(--ease-out);
 }
 
 .ew-front .ew-onpage a:hover {
@@ -570,6 +635,17 @@
 }
 
 .ew-front .ew-onpage a[aria-current='true'] {
-  border-inline-start-color: var(--color-flame);
   color: var(--color-bone);
+}
+
+.ew-onpage a[aria-current='true']::before {
+  border-color: var(--color-flame);
+  background: var(--color-flame);
+}
+
+/* Clicking a section glides to it, unless the reader asked for less motion. */
+@media (prefers-reduced-motion: no-preference) {
+  html:has(.ew-front) {
+    scroll-behavior: smooth;
+  }
 }
