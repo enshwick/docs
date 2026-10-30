@@ -1,6 +1,7 @@
 ---
 import compat from '../../generated/compatibility.json';
 import modLines from '../../data/mods.json';
+import smallestModSource from '../../generated/smallest-mod.rs?raw';
 import { frontData } from '../../site/front.ts';
 import { languages } from '../../site/languages.ts';
 import { links } from '../../site/links.ts';
@@ -30,30 +31,8 @@ const sections = [
   { id: 'questions', key: 'front.faq.title' },
 ];
 
-// The guide's first mod with its settings left out: still a whole mod that loads and works.
-const smallestMod = new Snippet(
-  `use enshwick::{Load, Mod, Off};
-
-struct AltarCount;
-
-impl Mod for AltarCount {
-    fn manifest() -> &'static enshwick::abi::Manifest {
-        enshwick::manifest!(
-            id: "you.my-altar-count",
-            side: BOTH,
-            join: true,
-        )
-    }
-
-    fn init(load: &mut Load<'_>) -> Result<Self, Off> {
-        load.on_altar_limit(|limit| limit.allowed = 16)?;
-        Ok(Self)
-    }
-}
-
-enshwick::declare_mod!(AltarCount);`,
-  SnippetLanguage.Rust,
-).html();
+// The smallest whole mod, as the book compiles it; `tools/fetch.ts` takes it from the book.
+const smallestMod = new Snippet(smallestModSource.trimEnd(), SnippetLanguage.Rust).html();
 ---
 
 <div class="ew-front not-content">
