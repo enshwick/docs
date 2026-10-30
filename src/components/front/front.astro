@@ -86,16 +86,13 @@ const smallestMod = new Snippet(smallestModSource.trimEnd(), SnippetLanguage.Rus
       <div class="ew-install">
         <div class="ew-install__way">
           <h3>{t('front.install.auto')}</h3>
-          <div class="ew-services">
-            <a class="ew-service ew-service--vortex" href={links.vortex.toString()}>
-              <ServiceIcon service="vortex" />
-              {t('front.ways.vortex')}
-            </a>
-            <a class="ew-service ew-service--nexus" href={links.nexus.toString()}>
-              <ServiceIcon service="nexus" />
-              {t('front.ways.nexus')}
-            </a>
-          </div>
+          <a class="ew-nexus" href={links.nexus.toString()}>
+            <ServiceIcon service="nexus" />
+            <span class="ew-nexus__text">
+              <span class="ew-nexus__name">{t('front.ways.nexus')}</span>
+              <span class="ew-nexus__note">{t('front.install.nexus.note')}</span>
+            </span>
+          </a>
         </div>
         <div class="ew-install__way">
           <h3>{t('front.install.manual')}</h3>

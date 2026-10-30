@@ -343,10 +343,6 @@
     "en": "Nexus Mods",
     "uk": "Nexus Mods"
   },
-  "front.ways.vortex": {
-    "en": "Vortex extension",
-    "uk": "Розширення для Vortex"
-  },
   "front.download": {
     "en": "Download Enshwick",
     "uk": "Завантажити Enshwick"
@@ -390,5 +386,9 @@
   "front.mods.link": {
     "en": "Mods by the Enshwick team",
     "uk": "Моди від команди Enshwick"
+  },
+  "front.install.nexus.note": {
+    "en": "Choose Mod Manager Download there, and Vortex puts Enshwick into the game folder.",
+    "uk": "Виберіть там Mod Manager Download, і Vortex сам покладе Enshwick у теку гри."
   }
 }
