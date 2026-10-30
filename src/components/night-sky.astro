@@ -1,5 +1,9 @@
 ---
 import { Night } from '../site/night.ts';
+import fogBack from '../assets/night/fog-back.webp';
+import fogFront from '../assets/night/fog-front.webp';
+import fogPage from '../assets/night/fog-page.webp';
+import haze from '../assets/night/haze.webp';
 
 interface Props {
   /** `hero`: the landing's first screen, every layer at full strength; `page`: faint, behind a doc page. */
@@ -11,117 +15,39 @@ const hero = variant === 'hero';
 const night = hero ? Night.hero : Night.page;
 const stars = Night.starMarkup(night.stars);
 const [back, front] = night.ridges;
+// The fog and haze are images rendered once at build time (tools/night-fog.ts): the browser only
+// moves them, it never draws the noise.
+const fog = (image: ImageMetadata) => ({ src: image.src, width: image.width, height: image.height });
 ---
 
 {
   hero ? (
     <div class="ew-night ew-night--hero" aria-hidden="true">
       <svg class="ew-night__stars" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice" set:html={stars} />
+      <canvas class="ew-night__stars ew-night__star-canvas" data-star-canvas hidden />
       <div class="ew-night__layer ew-night__fog ew-night__fog--back">
-        <svg viewBox="0 0 2000 1000" preserveAspectRatio="none">
-          <defs>
-            <filter id="ew-wisp-back" x="0" y="0" width="100%" height="100%">
-              <feTurbulence type="fractalNoise" baseFrequency="0.0016 0.006" numOctaves="4" seed="23" />
-              <feColorMatrix type="matrix" values="0 0 0 0 0.62  0 0 0 0 0.60  0 0 0 0 0.86  0 0 0 2.1 -1.05" />
-              <feGaussianBlur stdDeviation="10" />
-            </filter>
-            <linearGradient id="ew-band-back" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0" stop-color="#fff" stop-opacity="0" />
-              <stop offset=".44" stop-color="#fff" stop-opacity="0" />
-              <stop offset=".66" stop-color="#fff" stop-opacity=".8" />
-              <stop offset=".86" stop-color="#fff" stop-opacity=".3" />
-              <stop offset="1" stop-color="#fff" stop-opacity=".9" />
-            </linearGradient>
-            <mask id="ew-mask-back">
-              <rect width="2000" height="1000" fill="url(#ew-band-back)" />
-            </mask>
-          </defs>
-          <rect width="2000" height="1000" filter="url(#ew-wisp-back)" mask="url(#ew-mask-back)" />
-        </svg>
+        <img {...fog(fogBack)} alt="" decoding="async" />
       </div>
       <svg class="ew-night__ridge ew-night__ridge--back" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMax slice">
         <path d={back.path} />
       </svg>
       <div class="ew-night__layer ew-night__haze">
-        <svg viewBox="0 0 2000 1000" preserveAspectRatio="none">
-          <defs>
-            <filter id="ew-smoke" x="0" y="0" width="100%" height="100%">
-              <feTurbulence type="fractalNoise" baseFrequency="0.0035 0.008" numOctaves="4" seed="41" result="n" />
-              <feTurbulence type="turbulence" baseFrequency="0.006 0.012" numOctaves="2" seed="5" result="curl" />
-              <feDisplacementMap in="n" in2="curl" scale="140" xChannelSelector="R" yChannelSelector="G" result="d" />
-              <feColorMatrix in="d" type="matrix" values="0 0 0 0 0.78  0 0 0 0 0.76  0 0 0 0 0.90  0 0 0 3.2 -1.75" />
-              <feGaussianBlur stdDeviation="3" />
-            </filter>
-            <radialGradient id="ew-puff-l" cx="30%" cy="62%" r="30%">
-              <stop offset="0" stop-color="#fff" stop-opacity=".9" />
-              <stop offset="1" stop-color="#fff" stop-opacity="0" />
-            </radialGradient>
-            <radialGradient id="ew-puff-r" cx="78%" cy="70%" r="26%">
-              <stop offset="0" stop-color="#fff" stop-opacity=".8" />
-              <stop offset="1" stop-color="#fff" stop-opacity="0" />
-            </radialGradient>
-            <radialGradient id="ew-puff-t" cx="55%" cy="22%" r="20%">
-              <stop offset="0" stop-color="#fff" stop-opacity=".35" />
-              <stop offset="1" stop-color="#fff" stop-opacity="0" />
-            </radialGradient>
-            <mask id="ew-mask-haze">
-              <rect width="2000" height="1000" fill="url(#ew-puff-l)" />
-              <rect width="2000" height="1000" fill="url(#ew-puff-r)" />
-              <rect width="2000" height="1000" fill="url(#ew-puff-t)" />
-            </mask>
-          </defs>
-          <rect width="2000" height="1000" filter="url(#ew-smoke)" mask="url(#ew-mask-haze)" />
-        </svg>
+        <img {...fog(haze)} alt="" decoding="async" />
       </div>
       <svg class="ew-night__ridge ew-night__ridge--front" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMax slice">
         <path d={front.path} />
       </svg>
       <div class="ew-night__layer ew-night__fog ew-night__fog--front">
-        <svg viewBox="0 0 2000 1000" preserveAspectRatio="none">
-          <defs>
-            <filter id="ew-wisp-front" x="0" y="0" width="100%" height="100%">
-              <feTurbulence type="fractalNoise" baseFrequency="0.0022 0.009" numOctaves="5" seed="7" />
-              <feColorMatrix type="matrix" values="0 0 0 0 0.80  0 0 0 0 0.79  0 0 0 0 0.92  0 0 0 1.9 -0.95" />
-              <feGaussianBlur stdDeviation="6" />
-            </filter>
-            <linearGradient id="ew-band-front" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0" stop-color="#fff" stop-opacity="0" />
-              <stop offset=".55" stop-color="#fff" stop-opacity="0" />
-              <stop offset=".8" stop-color="#fff" stop-opacity=".9" />
-              <stop offset="1" stop-color="#fff" stop-opacity=".7" />
-            </linearGradient>
-            <mask id="ew-mask-front">
-              <rect width="2000" height="1000" fill="url(#ew-band-front)" />
-            </mask>
-          </defs>
-          <rect width="2000" height="1000" filter="url(#ew-wisp-front)" mask="url(#ew-mask-front)" />
-        </svg>
+        <img {...fog(fogFront)} alt="" decoding="async" />
       </div>
       <canvas class="ew-night__shader" data-fog-canvas hidden />
     </div>
   ) : (
     <div class="ew-night ew-night--page" aria-hidden="true">
       <svg class="ew-night__stars" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice" set:html={stars} />
+      <canvas class="ew-night__stars ew-night__star-canvas" data-star-canvas hidden />
       <div class="ew-night__layer ew-night__fog">
-        <svg viewBox="0 0 2000 1000" preserveAspectRatio="none">
-          <defs>
-            <filter id="ew-wisp-page" x="0" y="0" width="100%" height="100%">
-              <feTurbulence type="fractalNoise" baseFrequency="0.0022 0.009" numOctaves="5" seed="7" />
-              <feColorMatrix type="matrix" values="0 0 0 0 0.80  0 0 0 0 0.79  0 0 0 0 0.92  0 0 0 1.9 -0.95" />
-              <feGaussianBlur stdDeviation="6" />
-            </filter>
-            <linearGradient id="ew-band-page" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0" stop-color="#fff" stop-opacity="0" />
-              <stop offset=".7" stop-color="#fff" stop-opacity="0" />
-              <stop offset=".92" stop-color="#fff" stop-opacity=".9" />
-              <stop offset="1" stop-color="#fff" stop-opacity=".6" />
-            </linearGradient>
-            <mask id="ew-mask-page">
-              <rect width="2000" height="1000" fill="url(#ew-band-page)" />
-            </mask>
-          </defs>
-          <rect width="2000" height="1000" filter="url(#ew-wisp-page)" mask="url(#ew-mask-page)" />
-        </svg>
+        <img {...fog(fogPage)} alt="" decoding="async" />
       </div>
       <svg class="ew-night__ridges" viewBox="0 0 1600 400" preserveAspectRatio="xMidYMax slice">
         <path class="ew-night__ridge--back" d={back.path} />
@@ -130,3 +56,9 @@ const [back, front] = night.ridges;
     </div>
   )
 }
+
+<script>
+  import { StarCanvas } from '../scripts/star-canvas.ts';
+
+  StarCanvas.startAll();
+</script>
