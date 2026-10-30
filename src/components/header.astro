@@ -25,6 +25,12 @@ const area = Area.of(route.id).toString();
     <SiteTitle />
     <span class="ew-alpha" title={t('alpha.title')}>{t('alpha.mark')}</span>
   </div>
+
+<script>
+  import { LoadingLine } from '../scripts/loading-line.ts';
+
+  LoadingLine.start();
+</script>
   <nav class="ew-bar__nav" aria-label={t('nav.main')}>
     <a href={`${prefix}/start/first-modded-game/`} aria-current={area === 'players' ? 'true' : undefined}>
       {t('topic.players')}

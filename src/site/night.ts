@@ -54,6 +54,8 @@ export interface ArtBox {
   /** The highest and lowest a ridge line may go. */
   readonly top: number;
   readonly bottom: number;
+  /** Decimal places of the ridge points; the hero keeps the sketch's one, a doc page needs none. */
+  readonly precision?: number;
 }
 
 /**
@@ -74,7 +76,7 @@ export class Night {
   /** A doc page: fewer, fainter stars over the window and a low strip of ridges at its bottom. */
   public static readonly page = new Night({
     field: { seed: 29, count: 56, width: 1440, height: 760 },
-    box: { width: 1600, height: 400, top: 60, bottom: 390 },
+    box: { width: 1600, height: 400, top: 60, bottom: 390, precision: 0 },
     ridges: [
       { base: 230, rough: 150, seed: 97 },
       { base: 300, rough: 100, seed: 211 },
@@ -161,19 +163,12 @@ export class Night {
     }
 
     const ys = points.map((y) => Math.min(Math.max(y, box.top), box.bottom));
-    const phase = random.next() * 6.28;
-    const phase2 = random.next() * 6.28;
-    const last = ys.length - 1;
-    const xs = ys.map((_, index) => {
-      const u = index / last;
-
-      return (
-        box.width *
-        (u + 0.035 * Math.sin(u * 6.28 * 1.5 + phase) + 0.02 * Math.sin(u * 6.28 * 3.3 + phase2))
-      );
-    });
+    const xs = Night.wobble(ys.length, box.width, random);
     const line = ys
-      .map((y, index) => `${index === 0 ? 'M' : 'L'}${(xs[index] ?? 0).toFixed(1)} ${y.toFixed(1)}`)
+      .map(
+        (y, index) =>
+          `${index === 0 ? 'M' : 'L'}${(xs[index] ?? 0).toFixed(box.precision ?? 1)} ${y.toFixed(box.precision ?? 1)}`,
+      )
       .join(' ');
     const highest = ys.reduce((best, y, index) => (y < (ys[best] ?? Infinity) ? index : best), 0);
 
@@ -181,6 +176,22 @@ export class Night {
       path: `${line} L${box.width} ${box.height} L0 ${box.height} Z`,
       summit: { x: xs[highest] ?? 0, y: ys[highest] ?? box.bottom },
     };
+  }
+
+  /** Where each of `count` ridge points falls across `width`: evenly, with a gentle sideways wobble. */
+  private static wobble(count: number, width: number, random: Seeded): number[] {
+    const phase = random.next() * 6.28;
+    const phase2 = random.next() * 6.28;
+    const last = count - 1;
+
+    return Array.from({ length: count }, (_, index) => {
+      const u = index / last;
+
+      return (
+        width *
+        (u + 0.035 * Math.sin(u * 6.28 * 1.5 + phase) + 0.02 * Math.sin(u * 6.28 * 3.3 + phase2))
+      );
+    });
   }
 
   /** The stars as SVG circles; their colour and motion come from the stylesheet. */
