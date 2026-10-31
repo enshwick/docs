@@ -630,23 +630,58 @@ starlight-toc h2,
   color: var(--color-bone);
 }
 
-/* Previous and next: hairline boxes. */
-.pagination-links a {
-  border: var(--rule-hair) solid var(--color-line-strong);
-  border-radius: 0;
-  background: var(--color-veil-deep);
-  box-shadow: none;
+/*
+ * Previous and next: one quiet row under a hairline, side by side at every width, next always on
+ * the right. The label is small and muted, the title one line of the serif.
+ */
+.pagination-links {
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-lg);
+  padding-top: var(--space-sm);
+  border-top: var(--rule-hair) solid var(--color-line);
 }
 
-.pagination-links a:hover {
-  border-color: var(--color-stone);
+.pagination-links a {
+  align-items: flex-start;
+  gap: var(--space-xs);
+  padding: var(--space-xs) 0;
+  border: 0;
+  border-radius: 0;
+  background: none;
+  box-shadow: none;
+  font-size: var(--text-xs);
+  line-height: 1.4;
+  color: var(--color-muted);
+}
+
+.pagination-links a[rel='next'] {
+  grid-column: 2;
+}
+
+.pagination-links svg {
+  margin-top: 0.15em;
+  font-size: var(--text-sm);
+  transition: transform 160ms var(--ease-out);
+}
+
+.pagination-links a[rel='prev']:hover svg {
+  transform: translateX(-3px);
+}
+
+.pagination-links a[rel='next']:hover svg {
+  transform: translateX(3px);
 }
 
 .pagination-links .link-title {
   font-family: var(--font-display);
-  font-size: var(--text-xl);
+  font-size: var(--text-lg);
   font-weight: 600;
+  line-height: 1.2;
   color: var(--color-bone);
+}
+
+.pagination-links a:hover .link-title {
+  color: var(--sl-color-text-accent);
 }
 
 /* The narrow menu's button and the page's contents bar. */
