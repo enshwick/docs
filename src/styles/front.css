@@ -646,10 +646,3 @@
   border-color: var(--color-flame);
   background: var(--color-flame);
 }
-
-/* Clicking a section glides to it, unless the reader asked for less motion. */
-@media (prefers-reduced-motion: no-preference) {
-  html:has(.ew-front) {
-    scroll-behavior: smooth;
-  }
-}

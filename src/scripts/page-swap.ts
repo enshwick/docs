@@ -24,6 +24,12 @@ export class PageSwap {
       event.viewTransition.skipTransition();
       PageSwap.mark(event.newDocument);
       event.newDocument.documentElement.dataset['swapped'] = '';
+      event.newDocument.documentElement.dataset['swapping'] = '';
+    });
+
+    // The router has scrolled the new page into place by now, so later links glide again.
+    document.addEventListener('astro:after-swap', () => {
+      delete document.documentElement.dataset['swapping'];
     });
   }
 

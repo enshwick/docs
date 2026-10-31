@@ -954,6 +954,16 @@ starlight-lang-select select {
   }
 }
 
+/*
+ * A link within the page, such as one in the page's contents, glides to its place. A page the
+ * router swaps in lands at its place at once: it carries `data-swapping` until it is in.
+ */
+@media (prefers-reduced-motion: no-preference) {
+  :root:not([data-swapping]) {
+    scroll-behavior: smooth;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
