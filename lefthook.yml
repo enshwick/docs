@@ -38,5 +38,6 @@ pre-push:
     commits:
       run: >-
         ! git rev-parse -q --verify origin/main > /dev/null ||
-        { committed origin/main..HEAD &&
+        { for commit in $(git rev-list --no-merges origin/main..HEAD); do
+        committed "$commit" || exit 1; done &&
         ! git log --no-merges --format=%s origin/main..HEAD | grep -E ': [A-Z]|[<>]'; }
