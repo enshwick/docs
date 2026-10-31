@@ -1,3 +1,5 @@
+import { Stability } from './stability.ts';
+
 /** A developer page as the API map reads it. */
 export interface DeveloperPage {
   readonly slug: string;
@@ -19,7 +21,10 @@ export class ApiMap {
   private static readonly publicModule = /^pub mod ([a-z0-9_]+);/gmu;
   private static readonly crateName = 'enshwick';
 
-  private constructor(public readonly modules: readonly ApiModule[]) {}
+  private constructor(
+    public readonly modules: readonly ApiModule[],
+    private readonly pages: readonly DeveloperPage[],
+  ) {}
 
   /** The map of the crate root `lib`, against the newest version's developer pages. */
   public static of(lib: string, pages: readonly DeveloperPage[]): ApiMap {
@@ -32,6 +37,15 @@ export class ApiMap {
           .filter((page) => ApiMap.mentions(page.body, name))
           .map(({ slug, title }) => ({ slug, title })),
       })),
+      pages,
+    );
+  }
+
+  /** The stability badge of each page that documents one module, from the stability chapter. */
+  public get stability(): Stability {
+    return Stability.of(
+      this.modules.map((module) => module.name),
+      this.pages,
     );
   }
 

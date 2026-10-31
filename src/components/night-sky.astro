@@ -1,0 +1,62 @@
+---
+import { Night } from '../site/night.ts';
+import fogBack from '../assets/night/fog-back.webp';
+import fogFront from '../assets/night/fog-front.webp';
+import haze from '../assets/night/haze.webp';
+
+interface Props {
+  /** `hero`: the landing's first screen, every layer at full strength; `page`: faint, behind a doc page. */
+  variant: 'hero' | 'page';
+}
+
+const { variant } = Astro.props;
+const hero = variant === 'hero';
+const night = hero ? Night.hero : Night.page;
+const stars = Night.starMarkup(night.stars);
+const [back, front] = night.ridges;
+// The fog and haze are images rendered once at build time (tools/night-fog.ts): the browser only
+// moves them, it never draws the noise.
+const fog = (image: ImageMetadata) => ({ src: image.src, width: image.width, height: image.height });
+---
+
+{
+  hero ? (
+    <div class="ew-night ew-night--hero" aria-hidden="true">
+      <svg class="ew-night__stars" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice" set:html={stars} />
+      <canvas class="ew-night__stars ew-night__star-canvas" data-star-canvas hidden />
+      <div class="ew-night__layer ew-night__fog ew-night__fog--back">
+        <img {...fog(fogBack)} alt="" decoding="async" />
+      </div>
+      <svg class="ew-night__ridge ew-night__ridge--back" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMax slice">
+        <path d={back.path} />
+      </svg>
+      <div class="ew-night__layer ew-night__haze">
+        <img {...fog(haze)} alt="" decoding="async" />
+      </div>
+      <svg class="ew-night__ridge ew-night__ridge--front" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMax slice">
+        <path d={front.path} />
+      </svg>
+      <div class="ew-night__layer ew-night__fog ew-night__fog--front">
+        <img {...fog(fogFront)} alt="" decoding="async" />
+      </div>
+      <canvas class="ew-night__shader" data-fog-canvas hidden />
+    </div>
+  ) : (
+    <div class="ew-night ew-night--page" aria-hidden="true" transition:persist="ew-night">
+      <svg class="ew-night__stars" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice" set:html={stars} />
+      <canvas class="ew-night__stars ew-night__star-canvas" data-star-canvas hidden />
+      <svg class="ew-night__ridges" viewBox="0 0 1600 400" preserveAspectRatio="xMidYMax slice">
+        <path class="ew-night__ridge--back" d={back.path} />
+        <path class="ew-night__ridge--front" d={front.path} />
+      </svg>
+    </div>
+  )
+}
+
+<script>
+  import { StarCanvas } from '../scripts/star-canvas.ts';
+
+  document.addEventListener('astro:page-load', () => {
+    StarCanvas.startAll();
+  });
+</script>

@@ -1,0 +1,16 @@
+---
+import githubMark from '../assets/services/github.svg?raw';
+import nexusMark from '../assets/services/nexus-mods.svg?raw';
+
+interface Props {
+  /** The service whose own mark links to it: GitHub or Nexus Mods. */
+  service: 'github' | 'nexus';
+}
+
+// The services' own marks, in their own colours, shown only to link to them; the link around the
+// mark carries the name.
+const { service } = Astro.props;
+const marks = { github: githubMark, nexus: nexusMark };
+---
+
+<span class="ew-service-icon" aria-hidden="true" set:html={marks[service]} />

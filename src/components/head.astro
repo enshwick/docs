@@ -1,9 +1,11 @@
 ---
 import Default from '@astrojs/starlight/components/Head.astro';
+import { ClientRouter } from 'astro:transitions';
 
 import compat from '../generated/compatibility.json';
 import modLines from '../data/mods.json';
 import { Area } from '../site/area.ts';
+import { FirstFonts } from '../site/first-fonts.ts';
 import { frontData } from '../site/front.ts';
 import { languages } from '../site/languages.ts';
 import { type SidebarItem, StructuredData } from '../site/structured-data.ts';
@@ -34,11 +36,28 @@ const nodes =
           route.sidebar as SidebarItem[],
           route.siteTitle,
         );
+// The two faces every first screen sets, in the scripts the page's language needs, fetched early.
+const fonts = new FirstFonts(languages.root.toString() !== lang).urls;
+// Each page's own social card, drawn at build time by the route under `src/pages/og/`.
+const ogImage =
+  Astro.site === undefined || id === '404'
+    ? undefined
+    : new URL(`${import.meta.env.BASE_URL.replace(/\/$/u, '')}/og/${route.entry.id}.png`, Astro.site).href;
 ---
 
 <Default />
+{fonts.map((href) => <link rel="preload" href={href} as="font" type="font/woff2" crossorigin />)}
+<ClientRouter />
+<meta name="ew-area" content={area.toString()} />
+{mod && <meta name="ew-mod" />}
+{ogImage !== undefined && <meta property="og:image" content={ogImage} />}
 {nodes.length > 0 && <script is:inline type="application/ld+json" set:html={StructuredData.script(nodes)} />}
 <script is:inline define:vars={{ area: area.toString(), mod }}>
   document.documentElement.dataset.area = area;
   if (mod) document.documentElement.dataset.mod = '';
+</script>
+<script>
+  import { PageSwap } from '../scripts/page-swap.ts';
+
+  PageSwap.start();
 </script>

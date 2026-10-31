@@ -1,11 +1,46 @@
 ---
 import Default from '@astrojs/starlight/components/PageTitle.astro';
 
+import stability from '../generated/stability.json';
 import { languages } from '../site/languages.ts';
+import { PageId } from '../site/page-id.ts';
+import { texts } from '../site/texts.ts';
+import { LanguageCode } from '../site/types.ts';
+import ModCard from './mod-card.astro';
 
-// The front page draws its own heading, so it gets no second h1.
-const id = Astro.locals.starlightRoute.id;
-const front = id === '' || id === 'index' || languages.others.some((code) => id === code.toString() || id === `${code}/index`);
+// The front page draws its own heading, so it gets no second h1. A mod's page opens with its
+// card, an error page with its code, and an API page with the stability of its module.
+const route = Astro.locals.starlightRoute;
+const front = new PageId(route.id).isFront;
+const parsed = LanguageCode.parse(route.lang);
+const language = parsed.ok ? parsed.value : languages.root;
+const t = (key: string): string => texts.get(key, language);
+const { mod, error } = route.entry.data;
+const prefix = `${language}/`;
+const slug = route.id.startsWith(prefix) ? route.id.slice(prefix.length) : route.id;
+const level = Object.entries(stability).find(([page]) => page === slug)?.[1];
 ---
 
-{!front && <Default />}
+{
+  !front && (
+    <>
+      {error !== undefined && (
+        <p class="ew-error-code">
+          <span>{t('error.code')}</span> <code>{error.code}</code>
+        </p>
+      )}
+      <Default />
+      {level !== undefined && (
+        <p class="ew-stability">
+          <span
+            class:list={['ew-stability__badge', `ew-stability__badge--${level}`]}
+            title={level === 'unstable' ? t('stability.unstable.title') : undefined}
+          >
+            {t(`stability.${level}`)}
+          </span>
+        </p>
+      )}
+      {mod !== undefined && <ModCard mod={mod} language={language} />}
+    </>
+  )
+}

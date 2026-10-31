@@ -4,14 +4,21 @@ import { unified } from '@astrojs/markdown-remark';
 import sitemap from '@astrojs/sitemap';
 import starlight from '@astrojs/starlight';
 import type { StarlightUserConfig } from '@astrojs/starlight/types';
+import { pluginCollapsibleSections } from '@expressive-code/plugin-collapsible-sections';
+import { pluginLineNumbers } from '@expressive-code/plugin-line-numbers';
 import { defineConfig } from 'astro/config';
+import starlightGitHubAlerts from 'starlight-github-alerts';
+import starlightHeadingBadges from 'starlight-heading-badges';
 import starlightImageZoom from 'starlight-image-zoom';
+import starlightKbd from 'starlight-kbd';
 import starlightLinksValidator from 'starlight-links-validator';
 import starlightLlmsTxt from 'starlight-llms-txt';
 import starlightSidebarTopics from 'starlight-sidebar-topics';
 
 import siteData from './src/data/site.json' with { type: 'json' };
+import { TableFrame } from './src/plugins/rehype-table-frame.ts';
 import { BaseLinks } from './src/plugins/remark-base-links.ts';
+import { nightCodeTheme } from './src/site/code-theme.ts';
 import { languages } from './src/site/languages.ts';
 import { texts } from './src/site/texts.ts';
 import { Translations } from './src/site/translations.ts';
@@ -50,8 +57,13 @@ export default defineConfig({
   site: siteData.url,
   base: siteData.base,
   trailingSlash: 'always',
+  // Browsers without speculation rules fetch a page ahead when the pointer rests on its link.
+  prefetch: { prefetchAll: true, defaultStrategy: 'hover' },
   markdown: {
-    processor: unified({ remarkPlugins: [new BaseLinks(siteData.base).plugin()] }),
+    processor: unified({
+      remarkPlugins: [new BaseLinks(siteData.base).plugin()],
+      rehypePlugins: [new TableFrame().plugin()],
+    }),
   },
   integrations: [
     // Starlight adds this one itself when it is missing; it is taken over to keep fallback pages out.
@@ -65,37 +77,71 @@ export default defineConfig({
     starlight({
       title: 'enshwick',
       description: texts.get('site.description'),
-      logo: {
-        dark: './src/assets/mark-on-dark.svg',
-        light: './src/assets/mark-on-light.svg',
-        alt: 'enshwick',
-      },
+      logo: { src: './src/assets/brand/lockup.svg', alt: 'enshwick', replacesTitle: true },
       favicon: '/favicon.svg',
       head: [
         {
           tag: 'link',
-          attrs: { rel: 'icon', href: `${siteData.base}/favicon-small.svg`, sizes: '32x32' },
+          attrs: { rel: 'icon', href: `${siteData.base}/favicon-16.svg`, sizes: '16x16' },
         },
         {
           tag: 'link',
-          attrs: { rel: 'apple-touch-icon', href: `${siteData.base}/apple-touch-icon-180.png` },
+          attrs: {
+            rel: 'icon',
+            href: `${siteData.base}/favicon-32.png`,
+            sizes: '32x32',
+            type: 'image/png',
+          },
         },
         {
-          tag: 'meta',
+          tag: 'link',
           attrs: {
-            property: 'og:image',
-            content: `${siteData.url}${siteData.base}/social-banner.png`,
+            rel: 'icon',
+            href: `${siteData.base}/favicon-16.png`,
+            sizes: '16x16',
+            type: 'image/png',
           },
+        },
+        {
+          tag: 'link',
+          attrs: { rel: 'apple-touch-icon', href: `${siteData.base}/apple-touch-icon.png` },
         },
         { tag: 'meta', attrs: { name: 'twitter:card', content: 'summary_large_image' } },
       ],
       routeMiddleware: './src/route-data.ts',
-      customCss: ['./src/styles/brand.css', './src/styles/front.css'],
+      customCss: ['./src/styles/brand.css', './src/styles/night.css', './src/styles/front.css'],
       components: {
         Head: './src/components/head.astro',
+        Header: './src/components/header.astro',
+        PageFrame: './src/components/page-frame.astro',
+        Sidebar: './src/components/sidebar.astro',
+        MobileMenuFooter: './src/components/mobile-menu-footer.astro',
         PageTitle: './src/components/page-title.astro',
+        Footer: './src/components/footer.astro',
         ThemeProvider: './src/components/theme-provider.astro',
         ThemeSelect: './src/components/theme-select.astro',
+      },
+      expressiveCode: {
+        themes: [nightCodeTheme],
+        useStarlightUiThemeColors: false,
+        plugins: [pluginCollapsibleSections(), pluginLineNumbers()],
+        defaultProps: {
+          showLineNumbers: false,
+          overridesByLang: { 'rust,luau,lua,toml,ts,js': { showLineNumbers: true } },
+        },
+        styleOverrides: {
+          borderRadius: '0',
+          borderColor: 'var(--color-line-strong)',
+          codeFontFamily: 'var(--font-mono)',
+          uiFontFamily: 'var(--font-body)',
+          codeFontSize: '0.875rem',
+          codeLineHeight: '1.7',
+          frames: {
+            shadowColor: 'transparent',
+            editorActiveTabIndicatorTopColor: 'var(--color-flame)',
+            frameBoxShadowCssValue: 'none',
+          },
+        },
       },
       defaultLocale: 'root',
       locales,
@@ -103,6 +149,12 @@ export default defineConfig({
       editLink: { baseUrl: `https://github.com/${siteData.repository}/edit/main/` },
       lastUpdated: true,
       plugins: [
+        starlightKbd({
+          globalPicker: false,
+          types: [{ id: 'windows', label: 'Windows', default: true }],
+        }),
+        starlightHeadingBadges(),
+        starlightGitHubAlerts(),
         starlightSidebarTopics([
           {
             label: texts.everyLanguage('topic.players'),
@@ -141,7 +193,7 @@ export default defineConfig({
         starlightLlmsTxt({
           projectName: 'Enshwick',
           description:
-            'Enshwick is a modding API platform for the game Enshrouded. Mod makers write mods in Rust against the `enshwick` crate, in Luau, or as data packs without code. The Enshwick loader ships with it: players install it once, and it runs every mod in the `mods` folder of the game.',
+            'Enshwick is a modding API platform for the game Enshrouded. Mod makers write mods in Rust against the `enshwick` crate, or as data packs without code. Luau support is in progress: a Luau mod hears events and works with players, chat, timers, inventories, its settings and other mods, but cannot set game rules yet. The Enshwick loader ships with it: players install it once, and it runs every mod in the `mods` folder of the game.',
           details: [
             `To write a mod, read [For AI assistants](${siteData.url}${siteData.base}/dev/ai-assistants/) first: the kinds of mod, \`cargo enshwick new\`, the \`unstable\` feature and tests with the fake host. The API reference of the \`enshwick\` crate is on [docs.rs](https://docs.rs/enshwick).`,
             ...(apiMap === undefined ? [] : [apiMap]),
@@ -151,7 +203,7 @@ export default defineConfig({
               label: 'Mod makers',
               paths: ['dev/**'],
               description:
-                'the guide for writing mods in Rust, in Luau and as data packs, with the notes for AI assistants first',
+                'the guide for writing mods in Rust and as data packs, Luau in progress, with the notes for AI assistants first',
             },
             {
               label: 'Players',

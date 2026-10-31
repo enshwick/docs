@@ -1,47 +1,75 @@
 @import url('./tokens.css');
 
-@import url('@fontsource/alegreya/700.css');
-@import url('@fontsource/alegreya-sans/400.css');
-@import url('@fontsource/alegreya-sans/700.css');
+@import url('@fontsource/cormorant-garamond/500.css');
+@import url('@fontsource/cormorant-garamond/600.css');
+@import url('@fontsource/ibm-plex-sans/400.css');
+@import url('@fontsource/ibm-plex-sans/500.css');
+@import url('@fontsource/ibm-plex-sans/600.css');
 @import url('@fontsource/ibm-plex-mono/400.css');
+@import url('@fontsource/ibm-plex-mono/500.css');
 
-/* Starlight's tokens from the brand's: dark is the default look, light keeps the same roles. */
+/* Starlight's roles from the brand's values. The site is dark only. */
 :root {
+  color-scheme: dark;
   --sl-font: var(--font-body);
   --sl-font-mono: var(--font-mono);
-  --sl-color-accent-low: var(--color-mist-low);
+  --sl-color-accent-low: var(--color-mist-deep);
   --sl-color-accent: var(--color-mist);
-  --sl-color-accent-high: var(--color-ink-2);
-  --sl-color-white: var(--color-ink);
-  --sl-color-gray-1: var(--color-ink-2);
-  --sl-color-gray-2: var(--color-muted);
-  --sl-color-gray-5: var(--color-rule);
-  --sl-color-gray-6: var(--color-paper-3);
-  --sl-color-black: var(--color-paper);
+  --sl-color-accent-high: var(--color-bone);
+  --sl-color-white: var(--color-bone);
+  --sl-color-gray-1: var(--color-text);
+  --sl-color-gray-2: var(--color-text);
+  --sl-color-gray-3: var(--color-muted);
+  --sl-color-gray-4: var(--color-faint);
+  --sl-color-gray-5: var(--color-stone);
+  --sl-color-gray-6: var(--color-panel);
+  --sl-color-black: var(--color-basalt);
+  --sl-color-text: var(--color-text);
+  --sl-color-text-accent: var(--color-mist);
+  --sl-color-bg: var(--color-basalt);
+  --sl-color-bg-nav: var(--color-veil);
+  --sl-color-bg-sidebar: var(--color-veil);
+  --sl-color-bg-inline-code: var(--color-code-ground);
+  --sl-color-hairline-light: var(--color-line-strong);
+  --sl-color-hairline: var(--color-line);
+  --sl-color-hairline-shade: var(--color-line);
+  --sl-color-backdrop-overlay: rgb(11 10 16 / 0.8);
+  --sl-text-body: var(--text-body);
+  --sl-line-height: var(--leading-body);
+  --sl-text-h1: var(--text-page-title);
+  --sl-text-h2: var(--text-2xl);
+  --sl-text-h3: var(--text-xl);
+  --sl-text-h4: var(--text-lg);
+  --sl-nav-height: 3.75rem;
+  --sl-sidebar-width: 20rem;
+  --sl-content-width: 46rem;
 }
 
-:root[data-theme='light'] {
-  --sl-color-accent-low: var(--color-mist-low-light);
-  --sl-color-accent: var(--color-mist-light);
-  --sl-color-accent-high: var(--color-ink-light);
-  --sl-color-white: var(--color-ink-light);
-  --sl-color-gray-1: var(--color-ink-2-light);
-  --sl-color-gray-5: var(--color-rule-light);
-  --sl-color-gray-6: var(--color-paper-2-light);
-  --sl-color-black: var(--color-paper-light);
-}
-
-/* The developer area keeps the palette and takes the flame as its accent. */
+/* The developer area keeps the night and takes the flame for its links. */
 :root[data-area='dev'] {
-  --sl-color-accent-low: var(--color-flame-low);
-  --sl-color-accent: var(--color-flame);
-  --sl-color-accent-high: var(--color-core);
+  --sl-color-text-accent: var(--color-core);
+  --color-area: var(--color-area-dev);
 }
 
-:root[data-area='dev'][data-theme='light'] {
-  --sl-color-accent-low: var(--color-flame-low-light);
-  --sl-color-accent: var(--color-flame-light);
-  --sl-color-accent-high: var(--color-ink-light);
+:root {
+  --color-area: var(--color-area-players);
+}
+
+/*
+ * Which docs the reader is in, at a glance: on a doc page the bar's bottom edge is a line in the
+ * area's colour, green for playing and red for making mods, the area's link in the bar is underlined
+ * in it and its tab in the sidebar tinted. The front page belongs to neither and keeps the plain hairline.
+ */
+:root[data-has-sidebar] header.header {
+  border-bottom-color: transparent;
+  box-shadow:
+    inset 0 -2px 0 var(--color-area),
+    0 2px 18px -8px var(--color-area);
+}
+
+:root[data-has-sidebar] .ew-bar a[aria-current='true'] {
+  text-decoration: underline 2px var(--color-area);
+  text-underline-offset: 0.5em;
 }
 
 html,
@@ -49,53 +77,72 @@ body {
   overflow-x: clip;
 }
 
-/* Headings in the carved serif, one weight and one colour. */
+/* The page lies on the night: a hint of indigo at the top that sinks into basalt. */
+body {
+  /* The serif sets old-style figures; codes such as E1001 read better as lining ones. */
+  font-variant-numeric: lining-nums;
+  background:
+    linear-gradient(180deg, var(--color-night-page) 0%, var(--color-basalt) 55%) fixed,
+    var(--color-basalt);
+}
+
+.main-frame,
+.main-pane,
+.right-sidebar-container,
+.content-panel {
+  position: relative;
+}
+
+/* Headings: the carved serif, one weight and one colour. */
 h1,
 h2,
 h3,
-.site-title {
+.sl-markdown-content :is(h1, h2, h3) {
   font-family: var(--font-display);
   font-weight: 600;
-  letter-spacing: var(--tracking-display);
-  color: var(--sl-color-white);
+  color: var(--color-bone);
+  line-height: 1.1;
   overflow-wrap: break-word;
   min-width: 0;
+  text-wrap: balance;
 }
 
-.sl-markdown-content h2 {
-  font-size: var(--text-2xl);
+.sl-markdown-content :is(h4, h5, h6) {
+  font-family: var(--font-body);
+  font-weight: 600;
+  color: var(--color-bone);
 }
 
-/* The shroud's mist: a still glow behind the page head, dark theme only. */
-:root:not([data-theme='light']) .main-frame {
-  background:
-    radial-gradient(60rem 22rem at 50% -6rem, color-mix(in oklab, var(--color-mist-deep) 40%, transparent), transparent 70%),
-    var(--color-paper);
+.content-panel h1#_top {
+  font-size: var(--text-page-title);
+  line-height: var(--leading-display);
+  letter-spacing: -0.005em;
 }
 
-/* A lit seam under the page title, the flame glowing in a crack of stone. */
-.content-panel:first-child h1::after {
-  content: '';
-  display: block;
-  width: 4rem;
-  height: 2px;
-  margin-top: var(--space-sm);
-  background: linear-gradient(90deg, var(--color-flame), var(--color-core) 60%, transparent);
+.sl-markdown-content {
+  color: var(--color-text);
 }
 
-a:focus-visible,
-button:focus-visible,
-summary:focus-visible,
-input:focus-visible,
-select:focus-visible {
+/* Bold is the body face's 600, the heaviest weight the site loads. */
+:is(strong, b) {
+  font-weight: 600;
+}
+
+.sl-markdown-content a {
+  color: var(--sl-color-text-accent);
+  text-underline-offset: 0.2em;
+  text-decoration-thickness: 1px;
+}
+
+.sl-markdown-content a:hover {
+  color: var(--color-bone);
+}
+
+/* Focus: the core's glow, at once. */
+:is(a, button, summary, input, select, textarea, [tabindex]):focus-visible {
   outline: 2px solid var(--color-focus);
   outline-offset: 2px;
   transition: none;
-}
-
-h1,
-h2 {
-  text-wrap: balance;
 }
 
 a:active,
@@ -106,373 +153,866 @@ summary:active {
 
 ::selection {
   background: var(--color-mist-deep);
-  color: var(--color-ink);
+  color: var(--color-bone);
 }
 
 html {
-  scrollbar-color: var(--color-rule) var(--color-paper);
+  scrollbar-color: var(--color-stone) var(--color-basalt);
 }
 
-/* Inline code reads at full contrast on its own ground. */
-.sl-markdown-content :not(pre) > code {
-  background: var(--color-paper-3);
-  color: var(--color-ink);
-}
-
-:root[data-theme='light'] .sl-markdown-content :not(pre) > code {
-  background: var(--color-paper-2-light);
-  color: var(--color-ink-light);
-}
-
-/* The theme and language pickers keep a visible edge. */
-starlight-theme-select select,
-starlight-lang-select select {
-  border: var(--rule-hair) solid var(--color-muted);
-  border-radius: var(--radius-card);
-}
-
-/* Room for the longest guide title in the sidebar on one line. */
-:root {
-  --sl-sidebar-width: 22rem;
-}
-
-/* The world in the docs: a lit seam under the bar, carved corners on code and notes. */
+/* The bar: a veil over the night with one hairline. */
 header.header {
-  border-bottom: 0;
-  box-shadow: 0 1px 0 var(--color-rule);
-  background:
-    linear-gradient(90deg, transparent 20%, color-mix(in oklab, var(--color-flame) 55%, transparent) 50%, transparent 80%) bottom / 100% 1px no-repeat,
-    var(--sl-color-bg-nav);
+  border-bottom: var(--rule-hair) solid var(--color-line);
+  backdrop-filter: blur(6px);
 }
 
-.sidebar-content a[aria-current='page'] {
-  background: color-mix(in oklab, var(--color-mist-deep) 70%, transparent);
-  color: var(--sl-color-white);
-  box-shadow: inset 3px 0 0 var(--color-flame);
+.ew-bar {
+  display: flex;
+  align-items: center;
+  gap: var(--space-lg);
+  height: 100%;
+  font-size: var(--text-sm);
 }
 
-:root[data-theme='light'] .sidebar-content a[aria-current='page'] {
-  background: var(--color-mist-low-light);
-  color: var(--color-ink-light);
+.ew-bar__title {
+  min-width: 0;
+  overflow: clip;
+  padding: var(--space-2xs);
+  margin: calc(-1 * var(--space-2xs));
 }
 
-.sl-markdown-content :is(.expressive-code .frame, .starlight-aside) {
-  position: relative;
-}
-
-.sl-markdown-content :is(.expressive-code .frame, .starlight-aside)::after {
-  content: '';
-  position: absolute;
-  top: -1px;
-  left: -1px;
-  width: 12px;
-  height: 12px;
-  border-top: 2px solid var(--color-flame);
-  border-left: 2px solid var(--color-flame);
-  pointer-events: none;
-}
-
-/* The game's UI language in the docs: the serif, gold rules, settings-style rows. */
-h1,
-h2,
-h3,
-.site-title {
+.ew-bar .site-title {
   font-family: var(--font-display);
-  font-weight: 700;
+  font-size: var(--text-xl);
+  font-weight: 600;
+  color: var(--color-bone);
+  gap: var(--space-xs);
 }
 
-.sl-markdown-content h2 {
-  padding-bottom: var(--space-xs);
-  background: linear-gradient(var(--color-gold), var(--color-gold)) left bottom / 100% 1px no-repeat;
+/* The alpha mark: quiet, beside the wordmark, in the body face. */
+.ew-bar__title {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  flex: none;
 }
 
-header.header {
-  background:
-    linear-gradient(90deg, transparent, var(--color-gold) 30%, var(--color-gold) 70%, transparent) bottom / 100% 1px no-repeat,
-    var(--sl-color-bg-nav);
+.ew-alpha {
+  padding: 0 var(--space-2xs);
+  border: var(--rule-hair) solid var(--color-stone);
+  font-size: var(--text-xs);
+  line-height: 1.5;
+  color: var(--color-muted);
+  white-space: nowrap;
+}
+
+/* The services' own marks: quiet in grey until pointed at. */
+.ew-service-icon {
+  display: inline-flex;
+  flex: none;
+  width: 20px;
+  height: 20px;
+}
+
+.ew-service-icon svg {
+  width: 100%;
+  height: 100%;
+}
+
+.ew-bar a.ew-bar__service {
+  display: inline-flex;
+  padding: var(--space-2xs);
+}
+
+.ew-foot__service {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+}
+
+.ew-foot__service .ew-service-icon {
+  width: 16px;
+  height: 16px;
+}
+
+.ew-bar__nav,
+.ew-bar__out {
+  display: none;
+  align-items: center;
+  gap: var(--space-lg);
+}
+
+.ew-bar__out {
+  gap: var(--space-md);
+}
+
+.ew-bar a:not(.site-title) {
+  color: var(--color-muted);
+  text-decoration: none;
+  white-space: nowrap;
+  transition: color var(--dur-short) var(--ease-out);
+}
+
+.ew-bar a:not(.site-title):hover,
+.ew-bar a[aria-current='true'] {
+  color: var(--color-bone);
+}
+
+.ew-bar__search {
+  flex: 1;
+  display: flex;
+  justify-content: flex-end;
+  min-width: 0;
+}
+
+/* Download: the one filled button in the bar, in the flame. */
+.ew-bar a.ew-bar__download {
+  padding: var(--space-xs) var(--space-md);
+  border-radius: var(--radius-control);
+  background: var(--color-flame);
+  box-shadow: var(--shadow-primary);
+  color: var(--color-basalt);
+  font-weight: 600;
+}
+
+.ew-bar a.ew-bar__download:hover {
+  background: var(--color-core);
+  color: var(--color-basalt);
+}
+
+/* A page without a menu (the front page) keeps Download in the bar on a phone. */
+@media (max-width: 49.99rem) {
+  :root:not([data-has-sidebar]) .ew-bar__out {
+    display: flex;
+  }
+
+  .ew-bar {
+    gap: var(--space-sm);
+  }
+
+  :root:not([data-has-sidebar]) .ew-bar__out > :not(.ew-bar__download) {
+    display: none;
+  }
+}
+
+@media (min-width: 50rem) {
+  .ew-bar__search {
+    justify-content: flex-start;
+  }
+
+  .ew-bar__search site-search {
+    width: min(100%, 18rem);
+  }
+
+  .ew-bar__out {
+    display: flex;
+  }
+}
+
+@media (min-width: 72rem) {
+  .ew-bar__nav {
+    display: flex;
+  }
+}
+
+/* The sidebar: a veil, groups in plain type, the open page marked by a flame bar. */
+.sidebar-pane {
+  backdrop-filter: blur(4px);
+}
+
+@media (min-width: 50rem) {
+  .sidebar-pane {
+    border-inline-end: var(--rule-hair) solid var(--color-line);
+  }
+}
+
+.sidebar-content {
+  font-size: var(--text-sm);
+}
+
+.sidebar-content .top-level > li > details > summary .group-label > span,
+.sidebar-content summary .group-label .large {
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--color-bone);
 }
 
 .sidebar-content a {
   border-radius: 0;
-}
-
-.sidebar-content a[aria-current='page'] {
-  background: var(--color-row-focus);
-  color: var(--color-row-focus-ink);
-  box-shadow: none;
-  font-weight: 700;
-}
-
-.sl-markdown-content :is(.expressive-code .frame, .starlight-aside)::after {
-  display: none;
-}
-
-.sl-markdown-content .starlight-aside {
-  border: 0;
-  border-top: 1px solid var(--color-gold);
-  border-bottom: 1px solid var(--color-gold);
-  background: color-mix(in oklab, var(--color-panel) 85%, transparent);
-}
-
-:root:not([data-theme='light']) .main-frame {
-  background:
-    url('/circles.svg') 100% 0 / 720px auto no-repeat fixed,
-    radial-gradient(60rem 22rem at 50% -6rem, color-mix(in oklab, var(--color-mist-deep) 40%, transparent), transparent 70%),
-    var(--color-paper);
-}
-
-.content-panel:first-child h1::after {
-  background: linear-gradient(90deg, var(--color-gold), transparent);
-  width: 6rem;
-  height: 1px;
-}
-
-/* The developer badge in the brand's colours, and the engraving kept out of the prose. */
-.sidebar-content .sl-badge,
-starlight-tabs .sl-badge,
-.sl-badge {
-  background: var(--color-mist-deep);
-  color: var(--color-ink);
-  border: 1px solid var(--color-gold);
-}
-
-:root:not([data-theme='light']) .main-frame {
-  background:
-    url('/circles.svg') calc(100% + 360px) 0 / 720px auto no-repeat fixed,
-    radial-gradient(60rem 22rem at 50% -6rem, color-mix(in oklab, var(--color-mist-deep) 40%, transparent), transparent 70%),
-    var(--color-paper);
-}
-
-/* ------------------------------------------------------------------
-   The docs in the game's UI language: topic tabs, search, steps,
-   tables, code, notes, page links, the mod card.
-   ------------------------------------------------------------------ */
-
-/* The two topics as menu tabs: caps, a diamond on the current one. */
-.starlight-sidebar-topics a {
-  border-radius: 0;
-  font-family: var(--font-display);
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: var(--tracking-caps);
-  font-size: var(--text-sm);
   color: var(--color-muted);
+  padding-inline-start: var(--space-sm);
+  border-inline-start: var(--rule-hair) solid var(--color-line);
 }
 
-.starlight-sidebar-topics-icon {
+/* A page at the top level reads as a group head, not a big link. */
+.sidebar-content .top-level > li > a {
+  padding-inline-start: 0;
+  border-inline-start: 0;
+}
+
+.sidebar-content .top-level > li > a .large {
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--color-bone);
+}
+
+.sidebar-content .top-level > li > a[aria-current='page'] {
+  padding-inline-start: var(--space-sm);
+  border-inline-start: 2px solid var(--color-flame);
+}
+
+/* The page head stays plain: no rule under the title. */
+.content-panel + .content-panel {
+  border-top: 0;
+}
+
+.sidebar-content a:hover {
+  color: var(--color-bone);
+}
+
+.sidebar-content a[aria-current='page'],
+.sidebar-content a[aria-current='page']:hover,
+.sidebar-content a[aria-current='page']:focus {
+  background: none;
+  color: var(--color-bone);
+  font-weight: 500;
+  border-inline-start: 2px solid var(--color-flame);
+  padding-inline-start: calc(var(--space-sm) - 1px);
+}
+
+.sidebar-content .sl-badge {
+  border-radius: 0;
+}
+
+/* The two topics as a quiet segment; under 50rem the dropdown takes its place. */
+.ew-topics {
   display: none;
 }
 
-.starlight-sidebar-topics a.starlight-sidebar-topics-current,
-.starlight-sidebar-topics .starlight-sidebar-topics-current {
-  color: var(--color-ink);
-  background: none;
+.ew-topics-menu {
+  display: block;
 }
 
-.starlight-sidebar-topics .starlight-sidebar-topics-current::before {
-  content: '';
-  display: inline-block;
-  width: 7px;
-  height: 7px;
-  margin-right: var(--space-sm);
-  background: var(--color-gold);
-  transform: rotate(45deg);
+@media (min-width: 50rem) {
+  .ew-topics {
+    display: flex;
+    gap: var(--space-2xs);
+    padding: var(--space-2xs);
+    margin: 0;
+    list-style: none;
+    border: var(--rule-hair) solid var(--color-line);
+  }
+
+  .ew-topics-menu {
+    display: none;
+  }
 }
 
-/* Search: a slate field with a gold edge. */
-site-search button[data-open-modal] {
-  border-radius: 0;
-  border: 1px solid var(--color-rule);
-  background: var(--color-paper-2);
+.ew-topics li {
+  flex: 1;
+  min-width: 0;
 }
 
-site-search button[data-open-modal]:hover {
-  border-color: var(--color-gold);
-}
-
-site-search dialog {
-  border-radius: 0;
+.ew-topics a {
+  display: block;
+  padding: var(--space-xs);
   border: 0;
-  border-top: 1px solid var(--color-gold);
-  border-bottom: 1px solid var(--color-gold);
-  background: var(--color-paper-2);
+  text-align: center;
+  font-size: var(--text-xs);
+  color: var(--color-muted);
+  text-decoration: none;
+  transition:
+    background-color var(--dur-short) var(--ease-out),
+    color var(--dur-short) var(--ease-out);
 }
 
-/* Steps: numbers in diamonds, a hairline between them. */
-.sl-markdown-content .sl-steps > li::before {
-  border: 0;
+.ew-topics a:hover {
+  color: var(--color-bone);
+}
+
+.ew-topics a[aria-current='page'],
+.ew-topics a.ew-topics__current {
+  background: color-mix(in oklab, var(--color-area) 16%, transparent);
+  color: var(--color-bone);
+}
+
+.starlight-sidebar-topics-dropdown-button,
+.starlight-sidebar-topics-dropdown-menu {
   border-radius: 0;
-  background:
-    linear-gradient(var(--color-paper-2), var(--color-paper-2)) padding-box,
-    var(--color-gold) border-box;
-  border: 1px solid transparent;
-  clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%);
-  font-family: var(--font-display);
-  font-weight: 700;
-  color: var(--color-ink);
 }
 
-.sl-markdown-content .sl-steps > li::after {
-  background: var(--color-rule);
+/* Inline code: a faint ground, no pill. */
+.sl-markdown-content :not(pre) > code {
+  padding: 0.0625em 0.3125em;
+  border: 0;
+  border-radius: var(--radius-code);
+  background: var(--color-code-ground);
+  color: var(--color-bone);
+  font-size: 0.88em;
+  overflow-wrap: anywhere;
 }
 
-/* Tables: settings rows, banded, the head in caps over a gold rule. */
+/* Tables: hairline rows inside a frame that scrolls on its own, so the page never does. */
+.sl-markdown-content .ew-table {
+  max-width: 100%;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scrollbar-width: thin;
+}
+
+.sl-markdown-content .ew-table:focus-visible {
+  outline-offset: 4px;
+}
+
 .sl-markdown-content table {
-  border-collapse: separate;
-  border-spacing: 0 var(--space-3xs);
   display: table;
   width: 100%;
+  margin: 0;
+  border-collapse: collapse;
+  font-size: 0.9375rem;
+  line-height: 1.55;
+}
+
+.sl-markdown-content :is(th, td) {
+  min-width: 7rem;
+  max-width: 34rem;
+  padding: var(--space-sm) var(--space-md) var(--space-sm) 0;
+  border: 0;
+  border-bottom: var(--rule-hair) solid var(--color-line);
+  background: none;
+  text-align: start;
+  vertical-align: top;
+  overflow-wrap: break-word;
+}
+
+.sl-markdown-content :is(th, td):last-child {
+  padding-inline-end: 0;
 }
 
 .sl-markdown-content th {
-  border: 0;
-  border-bottom: 1px solid var(--color-gold);
-  background: none;
-  font-family: var(--font-display);
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: var(--tracking-caps);
+  padding-top: 0;
+  padding-bottom: var(--space-xs);
+  border-bottom-color: var(--color-line-strong);
+  font-family: var(--font-body);
   font-size: var(--text-sm);
-  color: var(--color-ink);
-}
-
-.sl-markdown-content td {
-  border: 0;
-  background: color-mix(in oklab, var(--color-panel) 75%, transparent);
+  font-weight: 500;
+  color: var(--color-faint);
 }
 
 .sl-markdown-content tr:hover td {
-  background: color-mix(in oklab, var(--color-panel-2) 90%, transparent);
+  background: var(--color-row-hover);
 }
 
-/* Code: square frames between gold lines. */
+/* Paths and names in the first column read in the mist, and break only where they must. */
+.sl-markdown-content td:first-child code {
+  padding: 0;
+  background: none;
+  color: var(--color-mist);
+  overflow-wrap: anywhere;
+}
+
+.sl-markdown-content td code {
+  white-space: normal;
+}
+
+/* Code blocks: the frames take their colours from the code theme; here only the shape. */
 .sl-markdown-content .expressive-code .frame {
-  border-radius: 0;
   box-shadow: none;
-  border-top: 1px solid var(--color-gold);
-  border-bottom: 1px solid var(--color-gold);
 }
 
-.sl-markdown-content .expressive-code .frame pre {
-  border: 0;
+/* Notes: a hairline frame with the brand's corner ticks, a flame tick for cautions. */
+.sl-markdown-content .starlight-aside {
+  position: relative;
+  border: var(--rule-hair) solid var(--color-card-edge);
   border-radius: 0;
-  background: var(--color-paper-2);
+  background: var(--color-card);
+  box-shadow: var(--shadow-card);
+  color: var(--color-text);
 }
 
-.sl-markdown-content .expressive-code .frame .header {
-  border-radius: 0;
+.sl-markdown-content .starlight-aside::before,
+.sl-markdown-content .starlight-aside::after {
+  content: '';
+  position: absolute;
+  width: var(--corner-tick);
+  height: var(--corner-tick);
+  border: 0 solid var(--color-mist);
+  pointer-events: none;
 }
 
-/* Notes: their icon in gold. */
-.sl-markdown-content .starlight-aside .starlight-aside__icon {
-  color: var(--color-gold);
+.sl-markdown-content .starlight-aside::before {
+  top: -1px;
+  left: -1px;
+  border-width: 1px 0 0 1px;
+}
+
+.sl-markdown-content .starlight-aside::after {
+  right: -1px;
+  bottom: -1px;
+  border-width: 0 1px 1px 0;
+}
+
+.sl-markdown-content :is(.starlight-aside--caution, .starlight-aside--danger)::before,
+.sl-markdown-content :is(.starlight-aside--caution, .starlight-aside--danger)::after {
+  border-color: var(--color-flame);
 }
 
 .sl-markdown-content .starlight-aside__title {
-  font-family: var(--font-display);
-  font-weight: 700;
-  color: var(--color-ink);
+  font-family: var(--font-body);
+  font-weight: 600;
+  color: var(--color-bone);
 }
 
-/* Previous and next: pointed bars like the front page buttons. */
+.sl-markdown-content .starlight-aside__icon {
+  color: var(--color-mist);
+}
+
+.sl-markdown-content
+  :is(.starlight-aside--caution, .starlight-aside--danger)
+  .starlight-aside__icon {
+  color: var(--color-flame);
+}
+
+/* Steps: a hairline spine, numbers in the body face. */
+.sl-markdown-content .sl-steps > li::before {
+  border: var(--rule-hair) solid var(--color-stone);
+  border-radius: 0;
+  background: var(--color-basalt);
+  color: var(--color-bone);
+  font-family: var(--font-body);
+  font-weight: 500;
+}
+
+.sl-markdown-content .sl-steps > li::after {
+  background: var(--color-line-strong);
+}
+
+/* Badges: square, quiet. */
+.sl-badge {
+  border-radius: 0;
+  font-family: var(--font-body);
+}
+
+/* Search: a hairline field. */
+site-search button[data-open-modal] {
+  border: var(--rule-hair) solid var(--color-faint);
+  border-radius: var(--radius-control);
+  background: none;
+  color: var(--color-faint);
+}
+
+site-search button[data-open-modal]:hover {
+  border-color: var(--color-muted);
+  color: var(--color-bone);
+}
+
+site-search dialog {
+  border: var(--rule-hair) solid var(--color-line-strong);
+  border-radius: 0;
+  background: var(--color-basalt);
+}
+
+/* On this page: plain links, the current one in bone. */
+starlight-toc a {
+  color: var(--color-muted);
+}
+
+starlight-toc a[aria-current='true'],
+starlight-toc a[aria-current='true']:hover {
+  color: var(--color-bone);
+}
+
+starlight-toc h2,
+.right-sidebar-panel h2 {
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--color-bone);
+}
+
+/*
+ * Previous and next: one quiet row under a hairline, side by side at every width, next always on
+ * the right. The label is small and muted, the title one line of the serif.
+ */
+.pagination-links {
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-lg);
+  padding-top: var(--space-sm);
+  border-top: var(--rule-hair) solid var(--color-line);
+}
+
 .pagination-links a {
+  align-items: flex-start;
+  gap: var(--space-xs);
+  padding: var(--space-xs) 0;
   border: 0;
   border-radius: 0;
-  background: var(--color-gold);
+  background: none;
   box-shadow: none;
-  position: relative;
-  isolation: isolate;
-  clip-path: polygon(16px 0, calc(100% - 16px) 0, 100% 50%, calc(100% - 16px) 100%, 16px 100%, 0 50%);
-  padding-inline: var(--space-2xl);
+  font-size: var(--text-xs);
+  line-height: 1.4;
+  color: var(--color-muted);
 }
 
-.pagination-links a::before {
-  content: '';
-  position: absolute;
-  inset: 1px;
-  z-index: -1;
-  background: var(--color-paper-2);
-  clip-path: polygon(15px 0, calc(100% - 15px) 0, 100% 50%, calc(100% - 15px) 100%, 15px 100%, 0 50%);
+.pagination-links a[rel='next'] {
+  grid-column: 2;
 }
 
-.pagination-links a:hover::before {
-  background: var(--color-panel);
+.pagination-links svg {
+  margin-top: 0.15em;
+  font-size: var(--text-sm);
+  transition: transform 160ms var(--ease-out);
+}
+
+.pagination-links a[rel='prev']:hover svg {
+  transform: translateX(-3px);
+}
+
+.pagination-links a[rel='next']:hover svg {
+  transform: translateX(3px);
 }
 
 .pagination-links .link-title {
   font-family: var(--font-display);
-  font-weight: 700;
-  color: var(--color-ink);
-}
-
-/* A mod's page: its facts as the game's item card. */
-[data-mod] .sl-markdown-content > .starlight-aside:first-child {
-  position: relative;
-  margin-bottom: var(--space-2xl);
-  padding: var(--space-lg) var(--space-xl);
-  border: 0;
-  background: color-mix(in oklab, var(--color-panel-2) 92%, transparent);
-}
-
-[data-mod] .sl-markdown-content > .starlight-aside:first-child::before,
-[data-mod] .sl-markdown-content > .starlight-aside:first-child::after {
-  content: '';
-  display: block;
-  position: absolute;
-  left: -10px;
-  right: -10px;
-  height: 9px;
-  pointer-events: none;
-  background:
-    radial-gradient(circle, transparent 0 2.5px, var(--color-gold) 3px 4px, transparent 4.5px) left / 9px 9px no-repeat,
-    radial-gradient(circle, transparent 0 2.5px, var(--color-gold) 3px 4px, transparent 4.5px) right / 9px 9px no-repeat,
-    linear-gradient(var(--color-gold), var(--color-gold)) center / calc(100% - 18px) 1px no-repeat;
-}
-
-[data-mod] .sl-markdown-content > .starlight-aside:first-child::before {
-  top: -4px;
-}
-
-[data-mod] .sl-markdown-content > .starlight-aside:first-child::after {
-  bottom: -4px;
-}
-
-[data-mod] .sl-markdown-content > .starlight-aside:first-child .starlight-aside__title {
   font-size: var(--text-lg);
-  color: var(--color-gold);
+  font-weight: 600;
+  line-height: 1.2;
+  color: var(--color-bone);
 }
 
-[data-mod] .sl-markdown-content > .starlight-aside:first-child .starlight-aside__icon {
-  display: none;
+.pagination-links a:hover .link-title {
+  color: var(--sl-color-text-accent);
 }
 
-/* Section heads in the prose with the ring that opens their rule. */
-.sl-markdown-content h2 {
-  padding-bottom: var(--space-xs);
-  background:
-    radial-gradient(circle at 5px 50%, var(--color-gold) 0 1.5px, transparent 2px 3px, var(--color-gold) 3.5px 4.5px, transparent 5px) left bottom / 10px 10px no-repeat,
-    linear-gradient(var(--color-gold), var(--color-gold)) 12px calc(100% - 4.5px) / calc(100% - 12px) 1px no-repeat;
+/* The narrow menu's button and the page's contents bar. */
+.sl-menu-button {
+  border: var(--rule-hair) solid var(--color-faint);
+  border-radius: var(--radius-control);
+  background: none;
+  box-shadow: none;
+  color: var(--color-bone);
 }
 
-/* The mod card draws its lines inside its own box, so Starlight's note decorations stay out. */
-[data-mod] .sl-markdown-content > .starlight-aside:first-child::before,
-[data-mod] .sl-markdown-content > .starlight-aside:first-child::after {
-  content: none;
+.sl-menu-button:hover,
+.sl-menu-button:has(~ :popover-open) {
+  border-color: var(--color-stone);
 }
 
-[data-mod] .sl-markdown-content > .starlight-aside:first-child {
-  border-left: 0;
-  background:
-    linear-gradient(var(--color-gold), var(--color-gold)) top / 100% 1px no-repeat,
-    linear-gradient(var(--color-gold), var(--color-gold)) bottom / 100% 1px no-repeat,
-    radial-gradient(circle, var(--color-gold) 0 2px, transparent 2.5px) left top / 10px 10px no-repeat,
-    color-mix(in oklab, var(--color-panel-2) 92%, transparent);
+mobile-starlight-toc nav {
+  background: var(--color-veil);
+  backdrop-filter: blur(6px);
+  border-bottom: var(--rule-hair) solid var(--color-line);
 }
 
-.sl-markdown-content td {
-  vertical-align: top;
+mobile-starlight-toc summary .toggle {
+  border-radius: 0;
 }
 
-.sl-markdown-content td code {
-  white-space: nowrap;
+/* The narrow menu's foot. */
+.ew-menu-foot {
+  display: grid;
+  gap: var(--space-md);
+  padding-block: var(--space-md);
+  border-top: var(--rule-hair) solid var(--color-line);
+}
+
+.ew-menu-foot__links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-xs) var(--space-lg);
+}
+
+.ew-menu-foot a {
+  color: var(--color-muted);
+  text-decoration: none;
+}
+
+/* A mod's card: its facts in a hairline frame with the brand's corner ticks. */
+.ew-mod-card {
+  position: relative;
+  margin-top: var(--space-lg);
+  padding: var(--space-md) var(--space-lg);
+  border: var(--rule-hair) solid var(--color-card-edge);
+  background: var(--color-card);
+  box-shadow: var(--shadow-card);
+}
+
+.ew-mod-card::before,
+.ew-mod-card::after {
+  content: '';
+  position: absolute;
+  width: var(--corner-tick);
+  height: var(--corner-tick);
+  border: 0 solid var(--color-flame);
+  pointer-events: none;
+}
+
+.ew-mod-card::before {
+  top: -1px;
+  left: -1px;
+  border-width: 1px 0 0 1px;
+}
+
+.ew-mod-card::after {
+  right: -1px;
+  bottom: -1px;
+  border-width: 0 1px 1px 0;
+}
+
+.ew-mod-card dl {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-sm) var(--space-xl);
+  margin: 0;
+}
+
+.ew-mod-card dt {
+  font-size: var(--text-sm);
+  color: var(--color-text);
+}
+
+.ew-mod-card dd {
+  margin: 0;
+  color: var(--color-bone);
+}
+
+.ew-mod-card code {
+  font-family: var(--font-mono);
+  font-size: 0.9em;
+  color: var(--color-mist);
+}
+
+.ew-mod-card__links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-xs) var(--space-lg);
+  align-items: center;
+  margin: var(--space-md) 0 0;
+  padding-top: var(--space-sm);
+  border-top: var(--rule-hair) solid var(--color-line-strong);
+  font-size: var(--text-sm);
+}
+
+.ew-mod-card__links a {
+  color: var(--color-bone);
+  text-decoration-color: var(--color-mist);
+  text-underline-offset: 0.2em;
+}
+
+.ew-mod-card__links a:hover {
+  color: var(--color-bone);
+}
+
+.ew-mod-card__links a.ew-mod-card__download {
+  padding: var(--space-2xs) var(--space-sm);
+  border-radius: var(--radius-control);
+  background: var(--color-flame);
+  box-shadow: var(--shadow-primary);
+  color: var(--color-basalt);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.ew-mod-card__links a.ew-mod-card__download:hover {
+  background: var(--color-core);
+  color: var(--color-basalt);
+}
+
+/* An error page's code over its title; an API page's stability under it. */
+.ew-error-code {
+  margin: 0 0 var(--space-xs);
+  font-size: var(--text-sm);
+  color: var(--color-muted);
+}
+
+.ew-error-code code {
+  font-family: var(--font-mono);
+  color: var(--color-flame);
+}
+
+.ew-stability {
+  margin: var(--space-sm) 0 0;
+}
+
+.ew-stability__badge {
+  display: inline-block;
+  padding: var(--space-3xs) var(--space-xs);
+  border: var(--rule-hair) solid var(--color-stone);
+  font-size: var(--text-xs);
+  color: var(--color-muted);
+}
+
+.ew-stability__badge--unstable {
+  border-color: var(--color-flame);
+  color: var(--color-bone);
+}
+
+/* The loading line: two pixels of flame that grow across the top while the next page loads. */
+:root.ew-loading::before {
+  content: '';
+  position: fixed;
+  inset: 0 0 auto;
+  z-index: 1000;
+  height: 2px;
+  background: var(--color-flame);
+  box-shadow: 0 0 8px var(--color-flame);
+  opacity: 0;
+  transform-origin: left;
+  /* Shown only after 120 ms, so a page that opens at once never shows it. */
+  animation:
+    ew-loading-show 1ms linear 120ms forwards,
+    ew-loading 2.4s var(--ease-out) 120ms forwards;
+}
+
+@keyframes ew-loading-show {
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes ew-loading {
+  from {
+    transform: scaleX(0.05);
+  }
+
+  to {
+    transform: scaleX(0.9);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root.ew-loading::before {
+    animation: ew-loading-show 1ms linear 120ms forwards !important;
+    transform: none;
+  }
+}
+
+/* Report a problem: one quiet line under every doc page. */
+.ew-report {
+  margin-top: var(--space-xl);
+  padding-top: var(--space-md);
+  border-top: var(--rule-hair) solid var(--color-line);
+  font-size: var(--text-sm);
+  color: var(--color-muted);
+}
+
+.ew-report p {
+  margin: 0;
+}
+
+.ew-report a,
+.ew-foot a {
+  color: var(--color-muted);
+  text-underline-offset: 0.2em;
+  text-decoration-color: var(--color-stone);
+}
+
+.ew-report a:hover,
+.ew-foot a:hover {
+  color: var(--color-bone);
+}
+
+/* The site footer: the outside places, the mailboxes, the licence and the language. */
+.ew-foot {
+  margin-top: var(--space-2xl);
+  padding-block: var(--space-xl) var(--space-lg);
+  border-top: var(--rule-hair) solid var(--color-line);
+  font-size: var(--text-sm);
+  color: var(--color-faint);
+}
+
+.ew-foot__body {
+  display: grid;
+  gap: var(--space-md) var(--space-xl);
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.ew-foot__links,
+.ew-foot__mail {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-xs) var(--space-lg);
+  margin: 0;
+}
+
+/* The licence and the disclaimer: one line of small type. */
+.ew-foot__legal {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2xs) var(--space-md);
+  margin: 0;
+  font-size: var(--text-xs);
+  color: var(--color-faint);
+}
+
+@media (min-width: 50rem) {
+  .ew-foot__body {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .ew-foot__language {
+    justify-self: start;
+  }
+}
+
+/* The footer's language list shows the whole name of the language. */
+/* Room for the longest language name, Українська, in every language list. */
+starlight-lang-select label {
+  --sl-select-width: 8.5em !important;
+}
+
+/* Selects in the bar and the menu. */
+starlight-lang-select select {
+  border: var(--rule-hair) solid var(--color-faint);
+  border-radius: var(--radius-control);
+}
+
+/* The heading badges keep the site's square shape. */
+.sl-markdown-content :is(h2, h3, h4) .sl-badge {
+  vertical-align: middle;
+  font-size: var(--text-xs);
+}
+
+/*
+ * Moving between pages: the router swaps the next page in on the live page, with no snapshots, so
+ * the night, the bar and the sidebar stay exactly as they are; the new content rises into place,
+ * quickly. The first page of a visit just appears.
+ */
+:root[data-swapped] .main-frame {
+  animation: ew-content-in 160ms var(--ease-out) backwards;
+}
+
+@keyframes ew-content-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+}
+
+/*
+ * A link within the page, such as one in the page's contents, glides to its place. A page the
+ * router swaps in lands at its place at once: it carries `data-swapping` until it is in.
+ */
+@media (prefers-reduced-motion: no-preference) {
+  :root:not([data-swapping]) {
+    scroll-behavior: smooth;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* On the narrowest phones the front page's own actions stand in for the bar's Download. */
+@media (max-width: 25rem) {
+  :root:not([data-has-sidebar]) .ew-bar__out {
+    display: none;
+  }
 }

@@ -35,8 +35,11 @@ const compat = {
 };
 
 const lines = {
-  'area-loot': { en: 'Loot the whole area at once.', uk: 'Лут з усієї ділянки одразу.' },
-  'build-camera': { en: 'Fly the camera while you build.' },
+  'area-loot': {
+    side: 'server',
+    summary: { en: 'Loot the whole area at once.', uk: 'Лут з усієї ділянки одразу.' },
+  },
+  'build-camera': { side: 'everyone', summary: { en: 'Fly the camera while you build.' } },
 };
 
 const en = 'en';
@@ -69,9 +72,23 @@ describe('frontData', () => {
   });
 
   it('throws naming mods.json when a mod has no line', () => {
-    expect(() => frontData(compat, { 'area-loot': { en: 'x' } }, en)).toThrow(
+    expect(() => frontData(compat, { 'area-loot': lines['area-loot'] }, en)).toThrow(
       /mods\.json.*build-camera/u,
     );
+  });
+});
+
+describe('frontData mod sides', () => {
+  it('throws naming mods.json when a side disagrees with the mod page', () => {
+    const wrong = { ...lines, 'area-loot': { ...lines['area-loot'], side: 'client' } };
+
+    expect(() => frontData(compat, wrong, en)).toThrow(/mods\.json.*area-loot.*server/u);
+  });
+
+  it('carries what the mod card shows: version, repository and release', () => {
+    const [card] = frontData(compat, lines, en).mods;
+
+    expect(card).toMatchObject({ repository: 'enshwick/mod-area-loot', tag: 'dev' });
   });
 });
 

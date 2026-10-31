@@ -68,3 +68,26 @@ export const Sources = n.object({
     modList: AnyString,
   }),
 });
+
+/** A web address the site links to. */
+export class Address extends AnyString.subtype('docs.Address', /^https:\/\/[^\s]+$/u) {}
+
+/** A mailbox the site names. */
+export class Mailbox extends AnyString.subtype('docs.Mailbox', /^[a-z0-9.-]+@[a-z0-9.-]+$/u) {
+  /** The `mailto:` link, with a subject and a body when given. */
+  public mailto(subject?: string, body?: string): string {
+    const query = new URLSearchParams();
+
+    if (subject !== undefined) {
+      query.set('subject', subject);
+    }
+
+    if (body !== undefined) {
+      query.set('body', body);
+    }
+
+    const search = query.toString().replaceAll('+', '%20');
+
+    return search === '' ? `mailto:${this}` : `mailto:${this}?${search}`;
+  }
+}
