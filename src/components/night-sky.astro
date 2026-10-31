@@ -16,7 +16,11 @@ const stars = Night.starMarkup(night.stars);
 const [back, front] = night.ridges;
 // The fog and haze are images rendered once at build time (tools/night-fog.ts): the browser only
 // moves them, it never draws the noise.
-const fog = (image: ImageMetadata): Pick<ImageMetadata, 'src' | 'width' | 'height'> => ({ src: image.src, width: image.width, height: image.height });
+const fog = (image: ImageMetadata): Pick<ImageMetadata, 'src' | 'width' | 'height'> => ({
+  src: image.src,
+  width: image.width,
+  height: image.height,
+});
 ---
 
 {
