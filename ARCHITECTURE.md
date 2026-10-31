@@ -23,7 +23,9 @@ Generated pages are never committed: `tools/fetch.ts` writes them before every
 build into `src/content/docs/dev/` and the `mods/` folders, and its data into
 `src/generated/`. Each generated page carries the date of the last commit that
 changed its source. A page without one shows no date. `bun run check:player-page <files>` checks a mod's player
-pages against the same schema before they are released.
+pages as the build does, and the mods repository runs it on every change to them: the front
+matter's schema, screenshots together with the game version they show, an opening list of at most
+five changes, and a line naming Enshwick.
 
 ## Sets that grow are data
 
