@@ -1,5 +1,5 @@
 /** A flicker pattern: keyframes as `[at, opacity]`, `at` from 0 to 1, as in night.css. */
-type Pattern = readonly (readonly [number, number])[];
+type Pattern = ReadonlyArray<readonly [number, number]>;
 
 /** A star's fast flicker: one of three patterns, its period and phase in seconds. */
 export interface StarFlicker {
@@ -63,6 +63,7 @@ export class StarLight {
   /** The star's light at `seconds`. */
   public at(seconds: number): number {
     const flicker = this.flicker;
+
     return (
       this.breath(seconds) * (flicker === undefined ? 1 : StarLight.flickerAt(seconds, flicker))
     );
@@ -74,6 +75,7 @@ export class StarLight {
     const cycle = Math.floor(phase);
     const along = cycle % 2 === 0 ? phase - cycle : 1 - (phase - cycle);
     const eased = 0.5 - 0.5 * Math.cos(Math.PI * along);
+
     return 1 + (BREATH_LOW - 1) * eased;
   }
 
@@ -82,14 +84,19 @@ export class StarLight {
     const keys = PATTERNS[flicker.pattern];
     const along = ((((seconds + flicker.delay) / flicker.period) % 1) + 1) % 1;
     let before: readonly [number, number] = [0, 1];
+
     for (const key of keys) {
       const [at, value] = key;
+
       if (along <= at) {
         const [from, start] = before;
+
         return at === from ? value : start + ((value - start) * (along - from)) / (at - from);
       }
+
       before = key;
     }
+
     return before[1];
   }
 }

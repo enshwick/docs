@@ -64,7 +64,7 @@ export class ErrorPages {
   }
 
   /** Every code with its page, cause and fix: the JSON index the loader's messages and tools read. */
-  public index(): { code: string; title: string; cause: string; fix: string; page: string }[] {
+  public index(): Array<{ code: string; title: string; cause: string; fix: string; page: string }> {
     return this.errors.error.map((error) => ({
       code: error.code.toString(),
       title: error.title.toString(),
@@ -77,6 +77,7 @@ export class ErrorPages {
   /** The steps as sections, each answer a link to the next step or to an error's page. */
   public decisionTree(): string {
     const steps = this.errors.step ?? [];
+
     const target = (answer: string): string => {
       const code = ErrorCode.parse(answer);
       const next = steps.findIndex((step) => step.id.toString() === answer) + 1;

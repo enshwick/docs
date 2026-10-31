@@ -57,7 +57,8 @@ pages against the same schema before they are released.
 
 ## Checks
 
-`bun run check` runs `astro check`, oxlint with type information, the
+`bun run check` runs `astro check` over the strictest TypeScript settings, oxfmt,
+oxlint with type information and the code style rules in `.oxlintrc.json`, the
 tests and `tools/check-dist.ts`, which reads the built site for links outside
 the site's root, canonical addresses, fallback pages in the sitemap, pages on two paths and tables
 outside their scrolling frame. It needs `bun run build` first, which fails on a broken internal

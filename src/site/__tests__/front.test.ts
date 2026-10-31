@@ -59,6 +59,7 @@ describe('frontData', () => {
 
   it('builds a card per mod with its line in the asked language and English as fallback', () => {
     const cards = frontData(compat, lines, uk).mods;
+
     expect(cards.map((card) => [card.name, card.line, card.needs])).toEqual([
       ['Area loot', 'Лут з усієї ділянки одразу.', 'server'],
       ['Build camera', 'Fly the camera while you build.', 'everyone'],
@@ -67,6 +68,7 @@ describe('frontData', () => {
 
   it('omits the version when there is no platform release', () => {
     const data = frontData({ ...compat, platform: [] }, lines, en);
+
     expect(data.version).toBeUndefined();
     expect(data.gameBuilds).toEqual([]);
   });
@@ -95,6 +97,7 @@ describe('frontData mod sides', () => {
 describe('frontData mod pages', () => {
   it('marks a mod without a page so its card does not link', () => {
     const noPage = { ...compat, mods: compat.mods.map((mod) => ({ ...mod, page: false })) };
+
     expect(frontData(noPage, lines, 'en').mods.every((card) => !card.page)).toBe(true);
     expect(frontData(compat, lines, 'en').mods.every((card) => card.page)).toBe(true);
   });

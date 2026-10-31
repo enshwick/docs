@@ -3,7 +3,7 @@ import { describe, expect, it } from 'vitest';
 import { type Flicker, Night, type Ridge } from '../night.ts';
 
 /** The ridge line's points, without the two corners that close it along the bottom. */
-const linePoints = (ridge: Ridge): { x: number; y: number }[] =>
+const linePoints = (ridge: Ridge): Array<{ x: number; y: number }> =>
   Array.from(ridge.path.matchAll(/[ML](-?[\d.]+) (-?[\d.]+)/gu), ([, x, y]) => ({
     x: Number(x),
     y: Number(y),

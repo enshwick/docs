@@ -10,7 +10,7 @@ export interface DeveloperPage {
 /** One public module of the API crate and the developer pages that cover it. */
 export interface ApiModule {
   readonly name: string;
-  readonly pages: readonly { readonly slug: string; readonly title: string }[];
+  readonly pages: ReadonlyArray<{ readonly slug: string; readonly title: string }>;
 }
 
 /**

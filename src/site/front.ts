@@ -5,7 +5,7 @@ import { CompatibilityData } from './compatibility.ts';
 /** The front page's data: the newest release, the game builds it runs on and a card per mod. */
 export interface FrontData {
   version?: string;
-  gameBuilds: { side: string; name: string }[];
+  gameBuilds: Array<{ side: string; name: string }>;
   mods: ModCard[];
 }
 
@@ -92,12 +92,15 @@ const modCard = (mod: Compat['mods'][number], lines: Lines, language: string): M
 };
 
 /** Builds the front page's data from the compatibility data and the mods' lines, in `language`. */
-export function frontData(compat: unknown, lines: unknown, language: string): FrontData {
+export const frontData = (compat: unknown, lines: unknown, language: string): FrontData => {
   const parsedCompat = CompatibilityData.parse(compat);
+
   if (!parsedCompat.ok) {
     throw new TypeError(`compatibility.json: ${JSON.stringify(parsedCompat.issues)}`);
   }
+
   const parsedLines = ModLines.parse(lines);
+
   if (!parsedLines.ok) {
     throw new TypeError(`src/data/mods.json: ${JSON.stringify(parsedLines.issues)}`);
   }
@@ -119,4 +122,4 @@ export function frontData(compat: unknown, lines: unknown, language: string): Fr
   const version = newest?.api?.toString();
 
   return version === undefined ? { gameBuilds, mods } : { version, gameBuilds, mods };
-}
+};

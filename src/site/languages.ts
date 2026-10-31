@@ -6,7 +6,7 @@ import { LanguageEntry } from './types.ts';
 export class Languages {
   private static readonly schema = LanguageEntry.array({ min: 1 });
 
-  public readonly all: readonly { code: LanguageCode; label: string; isDefault: boolean }[];
+  public readonly all: ReadonlyArray<{ code: LanguageCode; label: string; isDefault: boolean }>;
 
   public constructor(data: unknown) {
     const parsed = Languages.schema.parse(data);

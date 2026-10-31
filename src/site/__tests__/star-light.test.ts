@@ -5,6 +5,7 @@ import { StarLight } from '../star-light.ts';
 describe('StarLight', () => {
   it('breathes from full down to 0.35 and back over two periods', () => {
     const star = new StarLight(10, 0, undefined);
+
     expect(star.at(0)).toBeCloseTo(1);
     expect(star.at(10)).toBeCloseTo(0.35);
     expect(star.at(20)).toBeCloseTo(1);
@@ -25,6 +26,7 @@ describe('StarLight', () => {
   it('stays within the patterns at any moment', () => {
     for (let second = 0; second < 30; second += 0.37) {
       const value = StarLight.flickerAt(second, { pattern: 2, period: 1.7, delay: 0.4 });
+
       expect(value).toBeGreaterThanOrEqual(0.5);
       expect(value).toBeLessThanOrEqual(1);
     }

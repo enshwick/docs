@@ -217,6 +217,7 @@ void main() {
     // A page swap that dropped the hero ends the shader for good.
     if (!this.canvas.isConnected) {
       this.stop();
+
       return;
     }
 
@@ -244,6 +245,7 @@ void main() {
     if (!this.canvas.isConnected) {
       this.frame = undefined;
       this.update();
+
       return;
     }
 
