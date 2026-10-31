@@ -41,13 +41,16 @@ A Rust mod needs Rust 1.99 or newer and, on Windows, the MSVC build tools.
   `server` (the default), `client` or `both`.
 - The release profile needs `panic = "unwind"`. In a Cargo workspace, set it in
   the workspace root.
-- A mod implements `enshwick::Mod`: `manifest()` returns
-  `enshwick::manifest!(id: ..., side: ...)`, and `init(load: &mut Load)` sets
-  the mod up. `enshwick::declare_mod!` exports it.
+- `Cargo.toml` names the mod in `[package.metadata.enshwick]`: `id`, `side`
+  (`"server"`, `"client"` or `"both"`) and flags such as `join`. The version,
+  description and authors come from `[package]`.
+- A mod implements `enshwick::Mod`: `init(load: &mut Load)` sets the mod up.
+  `enshwick::declare_mod!(Type)` exports it and builds its manifest from
+  `Cargo.toml`.
 - Settings are a type that derives `enshwick::Config`. `load.config()` reads it,
   and `load.on_config_change` applies an edited file.
-- A mod that changes values a server and its players share sets `side: BOTH` and
-  `join: true`. See [The join check](/dev/concepts/join-check/).
+- A mod that changes values a server and its players share sets
+  `side = "both"` and `join = true`. See [The join check](/dev/concepts/join-check/).
 - Use an API call where one exists, such as `load.on_altar_limit`. A hook
   (`detour!`, `load.symbol`, `load.hook`) is `unsafe` and is the last resort.
   See [Hooks](/dev/hooks/).
@@ -56,7 +59,16 @@ A Rust mod needs Rust 1.99 or newer and, on Windows, the MSVC build tools.
 - `cargo enshwick install --game <game folder>` builds the mod in release and
   copies the DLL into the game's `mods` folder.
 
-A complete Rust mod:
+A complete Rust mod. Its `Cargo.toml` names it:
+
+```toml
+[package.metadata.enshwick]
+id = "you.my-altar-count"
+side = "both"
+join = true
+```
+
+Its code:
 
 ```rust
 use std::sync::atomic::{AtomicU8, Ordering};
@@ -86,10 +98,6 @@ fn apply(settings: &Settings) {
 struct AltarCount;
 
 impl Mod for AltarCount {
-    fn manifest() -> &'static enshwick::abi::Manifest {
-        enshwick::manifest!(id: "you.my-altar-count", side: BOTH, join: true)
-    }
-
     fn init(load: &mut Load<'_>) -> Result<Self, Off> {
         let settings: Settings = load.config()?;
         apply(&settings);
