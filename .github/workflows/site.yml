@@ -1,5 +1,5 @@
-# Checks and builds the site on every pull request, with a preview on
-# Cloudflare, and deploys it to Cloudflare from main. The repositories that
+# Checks and builds the site on every pull request, and deploys it to
+# Cloudflare from main. The repositories that
 # feed in pages, such as the platform's book, start a run when those change.
 name: site
 
