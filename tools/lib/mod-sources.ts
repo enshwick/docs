@@ -10,7 +10,7 @@ import { GitSource } from './git-source.ts';
 export interface ModSource {
   readonly package: string;
   readonly folder: string;
-  /** The newest release that carries the mod's archive; `undefined` before its first. */
+  /** The release the site reads the mod at (see `ModSources.newestArchives`); `undefined` before its first. */
   readonly tag: GitRef | undefined;
 }
 
@@ -23,6 +23,7 @@ const WorkspaceManifest = n.object({
 const GitHubRelease = n.object({
   tag_name: GitRef,
   draft: AnyBoolean,
+  prerelease: AnyBoolean,
   assets: n.object({ name: AnyString }).array(),
 });
 
@@ -106,8 +107,9 @@ export class ModSources {
   }
 
   /**
-   * Per package, the tag of the newest release that carries its own archive `<package>.zip`,
-   * prereleases included and drafts left out. A package without one has no entry.
+   * Per package, the tag of the newest regular release that carries its own archive
+   * `<package>.zip`, else of the newest prerelease that does, such as the rolling `dev` build.
+   * Drafts are left out. A package without one has no entry.
    *
    * @throws {TypeError} when the list does not read as GitHub's releases, newest first.
    */
@@ -122,7 +124,9 @@ export class ModSources {
       throw new TypeError(`${origin}: ${JSON.stringify(parsed.issues)}`);
     }
 
-    const published = parsed.value.filter((release) => !release.draft.value);
+    const published = parsed.value
+      .filter((release) => !release.draft.value)
+      .toSorted((a, b) => Number(a.prerelease.value) - Number(b.prerelease.value));
 
     return new Map(
       packages.flatMap((name) => {

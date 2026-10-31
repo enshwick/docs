@@ -11,7 +11,7 @@ import { PageFile } from './lib/page-file.ts';
 import { PlatformChecks } from './lib/platform-checks.ts';
 
 // Fills the generated part of the site from its sources before every build: the developer area
-// from the platform's book at each version's ref, the mod pages from each mod's newest release in the mods repository, and
+// from the platform's book at each version's ref, the mod pages from each mod's release in the mods repository, and
 // the data of the compatibility page. Generated files are never committed.
 
 const generated = 'src/generated';
