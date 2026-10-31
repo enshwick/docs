@@ -19,10 +19,3 @@ the old files. Your settings and world data stay. No archive holds them.
 
 If you play on a server, update when the server does. A server turns away a
 player whose mods differ from its own. It says which mod and version it needs.
-
-## A mod changed its name
-
-A mod with a new name comes as a new file. The old file stays in the `mods`
-folder until you delete it. Enshwick runs only the new one. Its `loader.log`
-names the old file, so you can delete it.
-[Where files live](/reference/where-files-live/) shows where that log is.

@@ -6,7 +6,7 @@ import { ModPages, type ModRelease } from '../mod-pages.ts';
 import { PlayerPageSource } from '../player-page-source.ts';
 
 const page = `---
-id: game-rates
+id: enshwick.game-rates
 name: Game Rates
 summary: Building recipes make more for the same cost.
 needs: everyone
@@ -85,7 +85,7 @@ describe('ModPages.card', () => {
     const card = ModPages.card(release, PlayerPageSource.parse('test', page));
 
     expect(card).toMatchObject({
-      id: 'game-rates',
+      id: 'enshwick.game-rates',
       repository: release.repository.toString(),
       release: release.tag.toString(),
     });
