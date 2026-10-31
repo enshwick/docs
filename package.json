@@ -8,9 +8,10 @@
     "check:player-page": "bun tools/check-player-page.ts",
     "dev": "bun tools/fetch.ts && bun --bun astro dev",
     "build": "bun tools/fetch.ts && bun --bun astro build",
-    "check": "bun --bun astro check && oxfmt --check && oxlint && bun --bun vitest run && bun tools/check-dist.ts",
+    "check": "bun --bun astro check && oxfmt --check && oxlint && bun --bun vitest run && bun tools/check-dist.ts && bun tools/check-prose.ts",
     "preview": "bun --bun astro preview",
-    "check:dist": "bun tools/check-dist.ts"
+    "check:dist": "bun tools/check-dist.ts",
+    "check:prose": "bun tools/check-prose.ts"
   },
   "dependencies": {
     "@astrojs/markdown-remark": "7.3.4",

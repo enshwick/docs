@@ -43,7 +43,9 @@ for one world. The log names the file.
 ## Remove Enshwick
 
 Delete `powrprof.dll` from the game folder. The game then starts without
-Enshwick and without any mod. You may also delete the `mods`, `mod-configs`,
+Enshwick and without any mod.
+
+You may also delete the `mods`, `mod-configs`,
 `mod-data` and `logs/enshwick` folders. Only Enshwick uses them.
 
 On Linux and Steam Deck, also remove the line you added to the game's **Launch
