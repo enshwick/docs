@@ -1,6 +1,6 @@
 import type { StarlightRouteData } from '@astrojs/starlight/route-data';
 
-import { languages } from './languages.ts';
+import { Languages } from './languages.ts';
 
 /** One tag of a page's `<head>`, in the shape Starlight's route data holds it. */
 export type HeadEntry = StarlightRouteData['head'][number];
@@ -42,7 +42,7 @@ export class Translations {
   public isFallback(path: string): boolean {
     const key = Translations.key(path);
     const [first] = key.split('/');
-    const translated = languages.others.some((code) => code.toString() === first);
+    const translated = Languages.site.others.some((code) => code.toString() === first);
 
     return translated && !this.keys.has(key);
   }
@@ -92,7 +92,7 @@ export class Translations {
   /** The default language's path of a page at `path`. */
   private static originalPath(path: string): string {
     const [, first = '', ...rest] = path.split('/');
-    const translated = languages.others.some((code) => code.toString() === first);
+    const translated = Languages.site.others.some((code) => code.toString() === first);
 
     return translated ? `/${rest.join('/')}` : path;
   }

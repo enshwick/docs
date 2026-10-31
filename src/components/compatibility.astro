@@ -1,8 +1,8 @@
 ---
 import raw from '../generated/compatibility.json';
 import { CompatibilityData } from '../site/compatibility.ts';
-import { languages } from '../site/languages.ts';
-import { texts } from '../site/texts.ts';
+import { Languages } from '../site/languages.ts';
+import { Texts } from '../site/texts.ts';
 import { LanguageCode } from '../site/types.ts';
 
 const data = CompatibilityData.parse(raw);
@@ -12,10 +12,10 @@ if (!data.ok) {
 }
 
 const { platform, mods } = data.value;
-const parsed = LanguageCode.parse(Astro.currentLocale ?? languages.root.toString());
-const language = parsed.ok ? parsed.value : languages.root;
-const t = (key: string): string => texts.get(key, language);
-const prefix = language.equals(languages.root) ? '' : `/${language}`;
+const parsed = LanguageCode.parse(Astro.currentLocale ?? Languages.site.root.toString());
+const language = parsed.ok ? parsed.value : Languages.site.root;
+const t = (key: string): string => Texts.site.get(key, language);
+const prefix = language.equals(Languages.site.root) ? '' : `/${language}`;
 const base = import.meta.env.BASE_URL.replace(/\/$/u, '');
 ---
 

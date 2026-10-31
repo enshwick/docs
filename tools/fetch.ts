@@ -2,7 +2,7 @@ import { mkdir, rm } from 'node:fs/promises';
 
 import siteData from '../src/data/site.json' with { type: 'json' };
 import sourcesData from '../src/data/sources.json' with { type: 'json' };
-import { languages } from '../src/site/languages.ts';
+import { Languages } from '../src/site/languages.ts';
 import { Sources } from '../src/site/types.ts';
 import { DeveloperArea } from './lib/developer-area.ts';
 import { ErrorPages } from './lib/error-pages.ts';
@@ -27,7 +27,7 @@ const generatedFolders = [
   DeveloperArea.folder,
   ErrorPages.folder,
   ModPages.folder,
-  ...languages.others.map((code) => `${code}/${ModPages.folder}`),
+  ...Languages.site.others.map((code) => `${code}/${ModPages.folder}`),
 ];
 
 await Promise.all(

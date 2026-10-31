@@ -18,6 +18,9 @@ export class Links {
     security: Mailbox,
   });
 
+  /** The site's outside links, as `src/data/links.json` holds them. */
+  public static readonly site = new Links(linksData);
+
   public readonly github: Address;
   public readonly nexus: Address;
   public readonly download: Address;
@@ -51,6 +54,3 @@ export class Links {
     return `${this.issues}?${query.toString().replaceAll('+', '%20')}`;
   }
 }
-
-/** The site's outside links, as `src/data/links.json` holds them. */
-export const links = new Links(linksData);

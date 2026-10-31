@@ -1,6 +1,6 @@
 import { AnyString } from '@horizon-republic/nominal-types';
 
-import { languages } from './languages.ts';
+import { Languages } from './languages.ts';
 
 /** A page of the site by its content id, such as `uk/dev/hooks`; the root front page's is empty. */
 export class PageId extends AnyString.subtype('docs.PageId', /^\S*$/u) {
@@ -11,7 +11,7 @@ export class PageId extends AnyString.subtype('docs.PageId', /^\S*$/u) {
     return (
       this.value === '' ||
       this.value === PageId.index ||
-      languages.others.some(
+      Languages.site.others.some(
         (code) => this.value === code.toString() || this.value === `${code}/${PageId.index}`,
       )
     );

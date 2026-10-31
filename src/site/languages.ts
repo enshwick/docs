@@ -6,6 +6,9 @@ import { LanguageEntry } from './types.ts';
 export class Languages {
   private static readonly schema = LanguageEntry.array({ min: 1 });
 
+  /** The site's languages, as `src/data/languages.json` lists them. */
+  public static readonly site = new Languages(languagesData);
+
   public readonly all: ReadonlyArray<{ code: LanguageCode; label: string; isDefault: boolean }>;
 
   public constructor(data: unknown) {
@@ -44,6 +47,3 @@ export class Languages {
     return this.all.filter((language) => !language.isDefault).map((language) => language.code);
   }
 }
-
-/** The site's languages, as `src/data/languages.json` lists them. */
-export const languages = new Languages(languagesData);

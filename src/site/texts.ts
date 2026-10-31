@@ -1,12 +1,15 @@
 import { AnyString, n } from '@horizon-republic/nominal-types';
 
 import textsData from '../data/texts.json' with { type: 'json' };
-import { type Languages, languages } from './languages.ts';
+import { Languages } from './languages.ts';
 import { LanguageCode, TextKey } from './types.ts';
 
 /** The site's own short texts, from `src/data/texts.json`, one entry per key and language. */
 export class Texts {
   private static readonly schema = n.record(TextKey, n.record(LanguageCode, AnyString));
+
+  /** The site's texts, as `src/data/texts.json` holds them. */
+  public static readonly site = new Texts(textsData, Languages.site);
 
   private readonly entries: ReadonlyMap<string, ReadonlyMap<string, string>>;
 
@@ -65,6 +68,3 @@ export class Texts {
     );
   }
 }
-
-/** The site's texts, as `src/data/texts.json` holds them. */
-export const texts = new Texts(textsData, languages);

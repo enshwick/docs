@@ -1,6 +1,6 @@
 ---
 import { ModCard, type ModCardData } from '../site/mod-card.ts';
-import { texts } from '../site/texts.ts';
+import { Texts } from '../site/texts.ts';
 import type { LanguageCode } from '../site/types.ts';
 
 interface Props {
@@ -12,7 +12,7 @@ interface Props {
 
 // The head of a mod's page: what it is, who needs it, which version, and where to get it.
 const { mod, language } = Astro.props;
-const t = (key: string): string => texts.get(key, language);
+const t = (key: string): string => Texts.site.get(key, language);
 const repository = `https://github.com/${mod.repository}`;
 ---
 

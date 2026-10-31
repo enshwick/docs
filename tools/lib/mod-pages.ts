@@ -1,9 +1,9 @@
 import { cp, mkdir } from 'node:fs/promises';
 import { posix } from 'node:path';
 
-import { languages } from '../../src/site/languages.ts';
+import { Languages } from '../../src/site/languages.ts';
 import { type ModCardData, modCardSchema } from '../../src/site/mod-card.ts';
-import { texts } from '../../src/site/texts.ts';
+import { Texts } from '../../src/site/texts.ts';
 import type { GitRef, LanguageCode, RepositoryName } from '../../src/site/types.ts';
 import type { GitSource } from './git-source.ts';
 import { type ModSource, ModSources } from './mod-sources.ts';
@@ -89,9 +89,9 @@ export class ModPages {
 
     await mkdir(`${PageFile.contentRoot}/${ModPages.folder}`, { recursive: true });
     await ModPages.copyImages(checkout, release);
-    await this.writePage(release, checkout, languages.root, root, ModPages.file);
+    await this.writePage(release, checkout, Languages.site.root, root, ModPages.file);
     await Promise.all(
-      languages.others.map((code) => this.writeTranslation(release, checkout, code)),
+      Languages.site.others.map((code) => this.writeTranslation(release, checkout, code)),
     );
 
     return release;
@@ -134,7 +134,7 @@ export class ModPages {
     source: PlayerPageSource,
     file: string,
   ): Promise<void> {
-    const folder = language.equals(languages.root)
+    const folder = language.equals(Languages.site.root)
       ? ModPages.folder
       : `${language}/${ModPages.folder}`;
     const path = `${release.folder}/${file}`;
@@ -173,7 +173,7 @@ export class ModPages {
     language: LanguageCode,
     source: PlayerPageSource,
   ): string {
-    const t = (key: string): string => texts.get(key, language);
+    const t = (key: string): string => Texts.site.get(key, language);
     const body = source.body.replaceAll(
       `](${ModPages.images}/`,
       `](./${release.slug}/${ModPages.images}/`,

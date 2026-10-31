@@ -2,9 +2,9 @@
 import Default from '@astrojs/starlight/components/PageTitle.astro';
 
 import stability from '../generated/stability.json';
-import { languages } from '../site/languages.ts';
+import { Languages } from '../site/languages.ts';
 import { PageId } from '../site/page-id.ts';
-import { texts } from '../site/texts.ts';
+import { Texts } from '../site/texts.ts';
 import { LanguageCode } from '../site/types.ts';
 import ModCard from './mod-card.astro';
 
@@ -13,8 +13,8 @@ import ModCard from './mod-card.astro';
 const route = Astro.locals.starlightRoute;
 const front = new PageId(route.id).isFront;
 const parsed = LanguageCode.parse(route.lang);
-const language = parsed.ok ? parsed.value : languages.root;
-const t = (key: string): string => texts.get(key, language);
+const language = parsed.ok ? parsed.value : Languages.site.root;
+const t = (key: string): string => Texts.site.get(key, language);
 const { mod, error } = route.entry.data;
 const prefix = `${language}/`;
 const slug = route.id.startsWith(prefix) ? route.id.slice(prefix.length) : route.id;
