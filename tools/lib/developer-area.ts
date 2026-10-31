@@ -48,7 +48,6 @@ export class DeveloperArea {
   public static readonly folder = 'dev';
   private static readonly changelog = 'crates/enshwick/CHANGELOG.md';
   private static readonly summary = 'SUMMARY.md';
-  private static readonly defaultType: PageType = 'how-to';
   private static readonly mainBranch = 'main';
   private static readonly tables = 'crates/enshwick-gamedata/tables';
   private static readonly apiManifest = 'crates/enshwick/Cargo.toml';
@@ -101,14 +100,25 @@ export class DeveloperArea {
     return sidebar;
   }
 
-  /** The page type of a chapter: its own entry, else the entry of the folder it is in, else how-to. */
+  /**
+   * The page type of a chapter: its own entry, else the entry of the folder it is in.
+   *
+   * @throws {TypeError} for a chapter neither entry declares, so a new chapter cannot go out untyped.
+   */
   public pageType(path: string): PageType {
     const own = this.source.pageTypes[path];
     const folder = Object.entries(this.source.pageTypes).find(
       ([key]) => key.endsWith('/') && path.startsWith(key),
     );
+    const type = own ?? folder?.[1];
 
-    return own ?? folder?.[1] ?? DeveloperArea.defaultType;
+    if (type === undefined) {
+      throw new TypeError(
+        `${this.source.book}/${path} has no page type: give it one under platform.pageTypes in src/data/sources.json`,
+      );
+    }
+
+    return type;
   }
 
   private async buildVersion(

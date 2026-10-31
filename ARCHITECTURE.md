@@ -10,7 +10,7 @@ developer pages are versioned per API minor.
 | Pages | Written in | Reaches the site |
 | --- | --- | --- |
 | player area: tutorial, how-to guides, reference, explanation | `src/content/docs/`, one folder per language beside the root language | as committed |
-| developer area | the book of [enshwick/enshwick](https://github.com/enshwick/enshwick/tree/main/book/src), where its examples compile as doctests | `tools/fetch.ts` checks out each version's ref and converts the chapters |
+| developer area | the book of [enshwick/enshwick](https://github.com/enshwick/enshwick/tree/main/book/src), where its examples compile as doctests | `tools/fetch.ts` checks out each version's ref and converts the chapters. Each chapter's page type comes from `platform.pageTypes` in `src/data/sources.json`, by its path or its folder's; the build fails on a chapter with neither |
 | one page per mod | `<mod>/docs/player.md` of [enshwick/mods](https://github.com/enshwick/mods), and `<mod>/docs/player.<language>.md` for each translation | `tools/fetch.ts` reads them at the newest regular release that carries the mod's archive `<package>.zip`, else at the newest prerelease that does, such as the rolling `dev` build, and checks the front matter. Each page gains the settings table, and its front matter the facts of the mod card |
 | one page per error code, and `/errors.json` | the platform's `errors.toml` | `tools/fetch.ts` writes the pages and `src/generated/errors.json`, which `src/pages/errors.json.ts` serves |
 | stability badges on API pages | the book's stability chapter and the API crate's public modules | `tools/fetch.ts` writes `src/generated/stability.json` |
@@ -23,7 +23,9 @@ Generated pages are never committed: `tools/fetch.ts` writes them before every
 build into `src/content/docs/dev/` and the `mods/` folders, and its data into
 `src/generated/`. Each generated page carries the date of the last commit that
 changed its source. A page without one shows no date. `bun run check:player-page <files>` checks a mod's player
-pages against the same schema before they are released.
+pages as the build does, and the mods repository runs it on every change to them: the front
+matter's schema, screenshots together with the game version they show, an opening list of at most
+five changes, and a line naming Enshwick.
 
 ## Sets that grow are data
 

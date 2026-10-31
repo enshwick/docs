@@ -29,18 +29,31 @@ export const Setting = n.object({
 /** One picture of a mod, a path under its `docs/` folder and what to notice in it. */
 export const Screenshot = n.object({ file: AnyString, alt: AnyString });
 
+const pageFields = {
+  id: ModId,
+  name: AnyString,
+  summary: Summary,
+  needs: Needs,
+  settings: Setting.array().optional(),
+  screenshots: Screenshot.array().optional(),
+  screenshot_game_version: n.of(AnyString).optional(),
+};
+
+/** Screenshots name the game version they show, and a game version comes with screenshots. */
+const screenshotsDated = n.constraint(
+  {
+    screenshots: pageFields.screenshots,
+    screenshot_game_version: pageFields.screenshot_game_version,
+  },
+  ({ screenshots, screenshot_game_version }) =>
+    (screenshots?.length ?? 0) > 0 === (screenshot_game_version !== undefined)
+      ? true
+      : 'screenshots and screenshot_game_version come together',
+  { path: 'screenshot_game_version' },
+);
+
 /**
  * The front matter of a mod's `docs/player.md` and of each translation, `docs/player.<language>.md`:
  * the single source of its site page, its Nexus text and its README.
  */
-export const PlayerPageFrontMatter = n
-  .object({
-    id: ModId,
-    name: AnyString,
-    summary: Summary,
-    needs: Needs,
-    settings: Setting.array().optional(),
-    screenshots: Screenshot.array().optional(),
-    screenshot_game_version: n.of(AnyString).optional(),
-  })
-  .strict();
+export const PlayerPageFrontMatter = n.object(pageFields, screenshotsDated).strict();
