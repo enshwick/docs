@@ -1,16 +1,16 @@
 import { describe, expect, it } from 'vitest';
 
-import { modArchive } from '../mod-card.ts';
+import { ModCard } from '../mod-card.ts';
 
-describe('modArchive', () => {
+describe('ModCard.archive', () => {
   it('points at the mod’s own archive in its release', () => {
-    expect(modArchive({ repository: 'enshwick/mod-game-rates', release: 'dev' })).toBe(
+    expect(ModCard.archive({ repository: 'enshwick/mod-game-rates', release: 'dev' })).toBe(
       'https://github.com/enshwick/mod-game-rates/releases/download/dev/enshwick-game-rates.zip',
     );
   });
 
   it('follows the release tag', () => {
-    expect(modArchive({ repository: 'enshwick/mod-optimizer', release: 'v0.2.0' })).toBe(
+    expect(ModCard.archive({ repository: 'enshwick/mod-optimizer', release: 'v0.2.0' })).toBe(
       'https://github.com/enshwick/mod-optimizer/releases/download/v0.2.0/enshwick-optimizer.zip',
     );
   });

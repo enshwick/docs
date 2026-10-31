@@ -6,7 +6,7 @@ import compat from '../generated/compatibility.json';
 import modLines from '../data/mods.json';
 import { Area } from '../site/area.ts';
 import { FirstFonts } from '../site/first-fonts.ts';
-import { frontData } from '../site/front.ts';
+import { FrontData } from '../site/front.ts';
 import { languages } from '../site/languages.ts';
 import { type SidebarItem, StructuredData } from '../site/structured-data.ts';
 
@@ -23,7 +23,7 @@ const nodes =
   data === undefined || route.isFallback === true || id === '404'
     ? []
     : home
-      ? data.home(lang, frontData(compat, modLines, lang).version)
+      ? data.home(lang, FrontData.from(compat, modLines, lang).version)
       : data.article(
           {
             path: Astro.url.pathname,

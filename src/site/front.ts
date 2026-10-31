@@ -2,13 +2,6 @@ import { AnyString, n } from '@horizon-republic/nominal-types';
 
 import { CompatibilityData } from './compatibility.ts';
 
-/** The front page's data: the newest release, the game builds it runs on and a card per mod. */
-export interface FrontData {
-  version?: string;
-  gameBuilds: Array<{ side: string; name: string }>;
-  mods: ModCard[];
-}
-
 /** One mod, as its card on the front page and the head of its own page show it. */
 export interface ModCard {
   slug: string;
@@ -35,91 +28,112 @@ const ModLines = n.record(
   n.object({ side: Side, summary: n.record(AnyString, AnyString) }),
 );
 
-/** The language every mod line must have. */
-const ROOT = 'en';
-
 /** The parsed compatibility data. */
 type Compat = Extract<ReturnType<typeof CompatibilityData.parse>, { ok: true }>['value'];
 
 /** Who needs each mod and its lines by language, keyed by the mod's slug. */
 type Lines = Map<string, { side: string; summary: Map<string, string> }>;
 
-/** The newest platform release's game builds: per side, the newest with a Steam build. */
-const newestBuilds = (newest: Compat['platform'][number] | undefined): FrontData['gameBuilds'] =>
-  ['client', 'server'].flatMap((side) => {
-    const ofSide = (newest?.builds ?? []).filter((build) => build.side.toString() === side);
-    const steam = ofSide.filter((build) => build.steamBuild !== undefined);
-    const pick = (steam.length > 0 ? steam : ofSide).at(-1);
+/** One of the newest platform release's game builds: its side and its name. */
+interface GameBuild {
+  side: string;
+  name: string;
+}
 
-    return pick === undefined ? [] : [{ side, name: pick.name.toString() }];
-  });
+/** The front page's data: the newest release, the game builds it runs on and a card per mod. */
+export class FrontData {
+  /** The language every mod line must have. */
+  private static readonly root = 'en';
 
-/** One mod's card, its line in `language` or English, its side checked against its page. */
-const modCard = (mod: Compat['mods'][number], lines: Lines, language: string): ModCard => {
-  const slug = mod.slug.toString();
-  const entry = lines.get(slug);
-  const line = entry?.summary.get(language) ?? entry?.summary.get(ROOT);
+  /** The sides the front page names a game build for, in the order it shows them. */
+  private static readonly sides = ['client', 'server'];
 
-  if (entry === undefined || line === undefined) {
-    throw new TypeError(`src/data/mods.json: no line for ${slug}`);
+  public readonly version: string | undefined;
+  public readonly gameBuilds: GameBuild[];
+  public readonly mods: ModCard[];
+
+  private constructor(version: string | undefined, gameBuilds: GameBuild[], mods: ModCard[]) {
+    this.version = version;
+    this.gameBuilds = gameBuilds;
+    this.mods = mods;
   }
 
-  if (mod.needs !== undefined && mod.needs.toString() !== entry.side) {
-    throw new TypeError(
-      `src/data/mods.json: ${slug} is for "${entry.side}", its page says "${mod.needs.toString()}"`,
+  /** Builds the front page's data from the compatibility data and the mods' lines, in `language`. */
+  public static from(compat: unknown, lines: unknown, language: string): FrontData {
+    const parsedCompat = CompatibilityData.parse(compat);
+
+    if (!parsedCompat.ok) {
+      throw new TypeError(`compatibility.json: ${JSON.stringify(parsedCompat.issues)}`);
+    }
+
+    const parsedLines = ModLines.parse(lines);
+
+    if (!parsedLines.ok) {
+      throw new TypeError(`src/data/mods.json: ${JSON.stringify(parsedLines.issues)}`);
+    }
+
+    const byMod: Lines = new Map(
+      Object.entries(parsedLines.value).map(([slug, entry]) => [
+        slug,
+        {
+          side: entry.side.toString(),
+          summary: new Map(
+            Object.entries(entry.summary).map(([code, text]) => [code, text.toString()]),
+          ),
+        },
+      ]),
     );
+    const newest = parsedCompat.value.platform[0];
+    const mods = parsedCompat.value.mods.map((mod) => FrontData.modCard(mod, byMod, language));
+
+    return new FrontData(newest?.api?.toString(), FrontData.newestBuilds(newest), mods);
   }
 
-  const card: ModCard = {
-    slug,
-    name: mod.name.toString(),
-    line,
-    needs: entry.side,
-    repository: mod.repository.toString(),
-    tag: mod.tag.toString(),
-    page: mod.page.value,
-  };
+  /** The newest platform release's game builds: per side, the newest with a Steam build. */
+  private static newestBuilds(newest: Compat['platform'][number] | undefined): GameBuild[] {
+    return FrontData.sides.flatMap((side) => {
+      const ofSide = (newest?.builds ?? []).filter((build) => build.side.toString() === side);
+      const steam = ofSide.filter((build) => build.steamBuild !== undefined);
+      const pick = (steam.length > 0 ? steam : ofSide).at(-1);
 
-  if (mod.version !== undefined) {
-    card.version = mod.version.toString();
+      return pick === undefined ? [] : [{ side, name: pick.name.toString() }];
+    });
   }
 
-  if (mod.api !== undefined) {
-    card.api = mod.api.toString();
-  }
+  /** One mod's card, its line in `language` or English, its side checked against its page. */
+  private static modCard(mod: Compat['mods'][number], lines: Lines, language: string): ModCard {
+    const slug = mod.slug.toString();
+    const entry = lines.get(slug);
+    const line = entry?.summary.get(language) ?? entry?.summary.get(FrontData.root);
 
-  return card;
-};
+    if (entry === undefined || line === undefined) {
+      throw new TypeError(`src/data/mods.json: no line for ${slug}`);
+    }
 
-/** Builds the front page's data from the compatibility data and the mods' lines, in `language`. */
-export const frontData = (compat: unknown, lines: unknown, language: string): FrontData => {
-  const parsedCompat = CompatibilityData.parse(compat);
+    if (mod.needs !== undefined && mod.needs.toString() !== entry.side) {
+      throw new TypeError(
+        `src/data/mods.json: ${slug} is for "${entry.side}", its page says "${mod.needs.toString()}"`,
+      );
+    }
 
-  if (!parsedCompat.ok) {
-    throw new TypeError(`compatibility.json: ${JSON.stringify(parsedCompat.issues)}`);
-  }
-
-  const parsedLines = ModLines.parse(lines);
-
-  if (!parsedLines.ok) {
-    throw new TypeError(`src/data/mods.json: ${JSON.stringify(parsedLines.issues)}`);
-  }
-
-  const byMod: Lines = new Map(
-    Object.entries(parsedLines.value).map(([slug, entry]) => [
+    const card: ModCard = {
       slug,
-      {
-        side: entry.side.toString(),
-        summary: new Map(
-          Object.entries(entry.summary).map(([code, text]) => [code, text.toString()]),
-        ),
-      },
-    ]),
-  );
-  const newest = parsedCompat.value.platform[0];
-  const gameBuilds = newestBuilds(newest);
-  const mods = parsedCompat.value.mods.map((mod) => modCard(mod, byMod, language));
-  const version = newest?.api?.toString();
+      name: mod.name.toString(),
+      line,
+      needs: entry.side,
+      repository: mod.repository.toString(),
+      tag: mod.tag.toString(),
+      page: mod.page.value,
+    };
 
-  return version === undefined ? { gameBuilds, mods } : { version, gameBuilds, mods };
-};
+    if (mod.version !== undefined) {
+      card.version = mod.version.toString();
+    }
+
+    if (mod.api !== undefined) {
+      card.api = mod.api.toString();
+    }
+
+    return card;
+  }
+}
