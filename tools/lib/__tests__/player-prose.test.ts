@@ -57,15 +57,53 @@ describe('PlayerProse', () => {
     expect(prose.warnings).toHaveLength(1);
   });
 
-  it('refuses a GIF, another still format, a missing alt text and a large picture', () => {
-    const sizes: Record<string, number> = { 'a.webp': 300 * 1024 };
-    const page = '![](loop.gif)\n![The menu](shot.png)\n![The menu](a.webp)\n![The menu](b.avif)\n';
+  it('does not end a sentence after e.g., i.e., etc. or vs.', () => {
+    const prose = PlayerProse.of(
+      'Use a launcher, e.g. Steam. Keep one copy, i.e. Your own, etc. Then compare mods vs. Packs.\n',
+    );
 
-    expect(PlayerProse.media(page, (path) => sizes[path], PlayerProse.maxPictureBytes)).toEqual([
+    expect(prose.errors).toEqual([]);
+  });
+
+  it('ends a sentence before one that opens with a code span', () => {
+    expect(
+      PlayerProse.of('Open the folder. `powrprof.dll` loads first. Then play.\n').errors,
+    ).toEqual([]);
+    expect(
+      PlayerProse.of('Open the folder. `powrprof.dll` loads first. Then play. Done.\n').errors,
+    ).toEqual([{ line: 1, message: 'a paragraph of 4 sentences; keep it to 3' }]);
+  });
+
+  it('ends a sentence after a closing quote or bracket', () => {
+    const quoted = PlayerProse.of('Click "Save." Then wait. Then play. Done.\n').errors;
+    const bracketed = PlayerProse.of(
+      'Read it (the install guide.) Then wait. Then play. Done.\n',
+    ).errors;
+
+    expect(quoted).toEqual([{ line: 1, message: 'a paragraph of 4 sentences; keep it to 3' }]);
+    expect(bracketed).toEqual(quoted);
+  });
+
+  it('refuses a GIF, another still format, a missing alt text, a missing file and a large picture', () => {
+    const sizes: Partial<Record<string, number | typeof PlayerProse.missing>> = {
+      'loop.gif': PlayerProse.missing,
+      'shot.png': PlayerProse.missing,
+      'a.webp': 300 * 1024,
+      'b.avif': 1024,
+      'gone.webp': PlayerProse.missing,
+    };
+    const page =
+      '![](loop.gif)\n![The menu](shot.png)\n![The menu](a.webp)\n![The menu](b.avif)\n![The menu](gone.webp)\n![A site](https://example.com/c.webp)\n';
+    const size = (path: string): number | typeof PlayerProse.missing | undefined => sizes[path];
+
+    expect(PlayerProse.media(page, size, PlayerProse.maxPictureBytes)).toEqual([
       'loop.gif: a loop is MP4 or WebM with a poster frame, never GIF',
       'loop.gif: say in its alt text what to notice',
+      'loop.gif: no such file',
       'shot.png: a screenshot is WebP or AVIF',
+      'shot.png: no such file',
       'a.webp: 300 KB; keep a screenshot to 200 KB',
+      'gone.webp: no such file',
     ]);
   });
 });

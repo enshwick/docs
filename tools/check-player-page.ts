@@ -1,3 +1,4 @@
+import { statSync } from 'node:fs';
 import { basename, dirname, join } from 'node:path';
 
 import { PlayerPageSource } from './lib/player-page-source.ts';
@@ -13,7 +14,9 @@ const english = 'player.md';
 const check = async (file: string): Promise<string[]> => {
   const text = await Bun.file(file).text();
   const source = PlayerPageSource.parse(file, text);
-  const size = (path: string): number => Bun.file(join(dirname(file), path)).size;
+  // Bun has no synchronous way to tell a missing file from an empty one.
+  const size = (path: string): number | typeof PlayerProse.missing =>
+    statSync(join(dirname(file), path), { throwIfNoEntry: false })?.size ?? PlayerProse.missing;
   const screenshots = (source.data.screenshots ?? [])
     .map((shot) => `![${shot.alt.toString()}](${shot.file.toString()})`)
     .join('\n');

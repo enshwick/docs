@@ -23,6 +23,8 @@ export class PlayerProse {
   private static readonly banned = /\b(?:simply|just|easy|easily)\b/giu;
   /** A screenshot's size limit, the rule's "about 200 KB". */
   public static readonly maxPictureBytes = 200 * 1024;
+  /** What a size lookup answers for a picture whose file is not there. */
+  public static readonly missing = 'missing';
   private static readonly maxSentenceWords = 25;
   private static readonly maxParagraphSentences = 3;
   private static readonly targetAverageWords = 15;
@@ -36,6 +38,9 @@ export class PlayerProse {
   private static readonly pictures = /\.(?:webp|avif)$/iu;
   private static readonly loops = /\.(?:mp4|webm)$/iu;
   private static readonly gif = /\.gif$/iu;
+  private static readonly boundary = /[.!?]["')\]]*\s+(?=["'(`[*]*[A-Z0-9])/gu;
+  /** A short abbreviation whose period ends no sentence. */
+  private static readonly abbreviation = /\b(?:e\.g|i\.e|etc|vs)\.["')\]]*\s+$/iu;
 
   private constructor(private readonly blocks: readonly ProseBlock[]) {}
 
@@ -155,11 +160,12 @@ export class PlayerProse {
 
   /**
    * The problems with how a page shows pictures: a GIF, a still in another format than WebP or AVIF,
-   * a picture without alt text, or a file past `maxBytes` by `size`.
+   * a picture without alt text, a file that is not there, or a file past `maxBytes`. `size` gives a
+   * file's bytes, `missing` for a file that is not there, or `undefined` for one off the site.
    */
   public static media(
     markdown: string,
-    size: (path: string) => number | undefined,
+    size: (path: string) => number | typeof PlayerProse.missing | undefined,
     maxBytes: number,
   ): string[] {
     return [...markdown.matchAll(PlayerProse.image)].flatMap((match) => {
@@ -178,7 +184,9 @@ export class PlayerProse {
         problems.push(`${path}: say in its alt text what to notice`);
       }
 
-      if (bytes !== undefined && bytes > maxBytes) {
+      if (bytes === PlayerProse.missing) {
+        problems.push(`${path}: no such file`);
+      } else if (bytes !== undefined && bytes > maxBytes) {
         problems.push(
           `${path}: ${Math.round(bytes / 1024)} KB; keep a screenshot to ${maxBytes / 1024} KB`,
         );
@@ -188,23 +196,38 @@ export class PlayerProse {
     });
   }
 
-  /** Text without Markdown: link text kept, code spans as one word, emphasis and tags dropped. */
+  /**
+   * Text without Markdown: link text kept, emphasis and tags dropped, and a code span as the one
+   * word `Code`, capitalised so a sentence that opens with one still starts a new sentence.
+   */
   private static plain(text: string): string {
     return text
       .replaceAll(/!\[[^\]]*\]\([^)]*\)/gu, '')
       .replaceAll(/\[([^\]]+)\]\([^)]*\)/gu, '$1')
-      .replaceAll(/`[^`]*`/gu, 'code')
+      .replaceAll(/`[^`]*`/gu, 'Code')
       .replaceAll(/<[^>]+>/gu, '')
       .replaceAll(/[*_]/gu, '')
       .replaceAll(/\s+/gu, ' ')
       .trim();
   }
 
+  /** Sentences end at `.`, `!` or `?`, a closing quote or bracket after it allowed, before a capital or digit. */
   private static sentences(text: string): string[] {
-    return text
-      .split(/(?<=[.!?])\s+(?=[A-Z0-9"(])/u)
-      .map((sentence) => sentence.trim())
-      .filter((sentence) => PlayerProse.words(sentence).length > 0);
+    const sentences: string[] = [];
+    let start = 0;
+
+    for (const match of text.matchAll(PlayerProse.boundary)) {
+      const end = match.index + match[0].length;
+
+      if (!PlayerProse.abbreviation.test(text.slice(start, end))) {
+        sentences.push(text.slice(start, end).trim());
+        start = end;
+      }
+    }
+
+    sentences.push(text.slice(start).trim());
+
+    return sentences.filter((sentence) => PlayerProse.words(sentence).length > 0);
   }
 
   private static words(sentence: string): string[] {
