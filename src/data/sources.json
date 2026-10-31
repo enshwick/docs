@@ -15,7 +15,9 @@
       "concepts/": "explanation",
       "abi-reference.md": "reference",
       "faq.md": "reference"
-    },
-    "modList": "tools/mods.toml"
+    }
+  },
+  "mods": {
+    "repository": "enshwick/mods"
   }
 }

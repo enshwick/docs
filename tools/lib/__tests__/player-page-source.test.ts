@@ -32,7 +32,9 @@ None known.
 const release: ModRelease = {
   slug: 'game-rates',
   name: 'Game Rates',
-  repository: new RepositoryName('enshwick/mod-game-rates'),
+  repository: new RepositoryName('enshwick/mods'),
+  folder: 'game-rates',
+  package: 'enshwick-game-rates',
   tag: new GitRef('dev'),
   version: '0.1.0',
   api: '1.0.0',
@@ -81,12 +83,14 @@ describe('ModPages.body', () => {
 });
 
 describe('ModPages.card', () => {
-  it('gives the mod card its id, who needs it, its version and where its release is', () => {
+  it('gives the mod card its id, who needs it, its version and where its source and release are', () => {
     const card = ModPages.card(release, PlayerPageSource.parse('test', page));
 
     expect(card).toMatchObject({
       id: 'enshwick.game-rates',
       repository: release.repository.toString(),
+      folder: release.folder,
+      package: release.package,
       release: release.tag.toString(),
     });
     expect(card.needs).toBeDefined();

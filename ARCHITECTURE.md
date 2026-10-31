@@ -11,7 +11,7 @@ developer pages are versioned per API minor.
 | --- | --- | --- |
 | player area: tutorial, how-to guides, reference, explanation | `src/content/docs/`, one folder per language beside the root language | as committed |
 | developer area | the book of [enshwick/enshwick](https://github.com/enshwick/enshwick/tree/main/book/src), where its examples compile as doctests | `tools/fetch.ts` checks out each version's ref and converts the chapters |
-| one page per mod | `docs/player.md` of each mod repository, and `docs/player.<language>.md` for each translation | `tools/fetch.ts` reads them at the mod's newest release tag and checks the front matter. Each page gains the settings table, and its front matter the facts of the mod card |
+| one page per mod | `<mod>/docs/player.md` of [enshwick/mods](https://github.com/enshwick/mods), and `<mod>/docs/player.<language>.md` for each translation | `tools/fetch.ts` reads them at the newest release that carries the mod's archive `<package>.zip` and checks the front matter. Each page gains the settings table, and its front matter the facts of the mod card |
 | one page per error code, and `/errors.json` | the platform's `errors.toml` | `tools/fetch.ts` writes the pages and `src/generated/errors.json`, which `src/pages/errors.json.ts` serves |
 | stability badges on API pages | the book's stability chapter and the API crate's public modules | `tools/fetch.ts` writes `src/generated/stability.json` |
 | the whole mod on the front page | the example the book's getting started chapter marks with `smallest-mod` comments, compiled there as a doctest | `tools/fetch.ts` writes `src/generated/smallest-mod.rs` and fails when the chapter no longer marks it |
@@ -32,7 +32,7 @@ pages against the same schema before they are released.
 | languages | `src/data/languages.json`; a language is a list entry and a folder of pages, and a page missing in it falls back to the root language; `src/route-data.ts` keeps such a fallback out of search, the languages list and the sitemap |
 | the site's own short texts | `src/data/texts.json`, every key in every language (checked by a test) |
 | developer versions | `src/data/sources.json` |
-| our mods | the platform's `tools/mods.toml` at the newest version's ref, which its dev bundle reads too; a renamed or retired mod follows from there. `src/data/mods.json` gives each one who needs it and a one-line summary per language; the build fails when that side differs from the mod's page |
+| our mods | the mods repository named in `src/data/sources.json`: every member of its Cargo workspace on `main` with a `docs/player.md`, the folder giving the page's address. A mod without a release yet has no page. `src/data/mods.json` gives each one who needs it and a one-line summary per language; the build fails when that side differs from the mod's page |
 | links outside the site | `src/data/links.json`: GitHub, Nexus Mods, the Vortex extension, the download, the licence, the issue form and the mailboxes |
 | the site's address | `src/data/site.json`; pages link root-relative (`/guides/install/`) and `src/plugins/remark-base-links.ts` adds the base |
 

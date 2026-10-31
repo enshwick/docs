@@ -11,7 +11,7 @@ import { PageFile } from './lib/page-file.ts';
 import { PlatformChecks } from './lib/platform-checks.ts';
 
 // Fills the generated part of the site from its sources before every build: the developer area
-// from the platform's book at each version's ref, the mod pages from each mod's newest release, and
+// from the platform's book at each version's ref, the mod pages from each mod's newest release in the mods repository, and
 // the data of the compatibility page. Generated files are never committed.
 
 const generated = 'src/generated';
@@ -21,7 +21,7 @@ if (!parsed.ok) {
   throw new TypeError(`src/data/sources.json: ${JSON.stringify(parsed.issues)}`);
 }
 
-const { platform } = parsed.value;
+const { platform, mods } = parsed.value;
 
 const generatedFolders = [
   DeveloperArea.folder,
@@ -44,15 +44,12 @@ const developerArea = new DeveloperArea({
     name: version.name.toString(),
     ref: version.ref,
   })),
-  modList: platform.modList.toString(),
   pageTypes: Object.fromEntries(
     Object.entries(platform.pageTypes).map(([path, type]) => [path, type.value]),
   ),
 });
 const developerSidebar = await developerArea.build();
-const modReleases = await new ModPages(
-  ModPages.listed(platform.modList.toString(), developerArea.releases[0]?.mods),
-).build();
+const modReleases = await new ModPages(mods.repository).build();
 
 const platformChecks = new PlatformChecks(developerArea.releases[0], developerArea.newestPages);
 const apiMap = platformChecks.run();
@@ -75,7 +72,7 @@ await Bun.write(
 );
 await Bun.write(
   `${generated}/compatibility.json`,
-  `${JSON.stringify({ platform: developerArea.releases.map(({ lib: _lib, errors: _errors, errorsUpdated: _errorsUpdated, abi: _abi, mods: _mods, ...release }) => release), mods: modReleases }, null, 2)}\n`,
+  `${JSON.stringify({ platform: developerArea.releases.map(({ lib: _lib, errors: _errors, errorsUpdated: _errorsUpdated, abi: _abi, ...release }) => release), mods: modReleases }, null, 2)}\n`,
 );
 await Bun.write(
   `${generated}/stability.json`,

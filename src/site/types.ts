@@ -53,11 +53,6 @@ export class PageTypeName extends AnyString.subtype(
 /** One version of the developer area: an API minor and the platform ref it is read at. */
 export const PlatformVersion = n.object({ name: AnyString, ref: GitRef });
 
-/** The platform's list of our mods, `tools/mods.toml`: one `[[mod]]` per mod repository. */
-export const ModList = n.object({
-  mod: n.object({ package: AnyString, repository: RepositoryName }).array(),
-});
-
 /** Where the site's generated pages come from, as `src/data/sources.json` names it. */
 export const Sources = n.object({
   platform: n.object({
@@ -65,8 +60,8 @@ export const Sources = n.object({
     book: AnyString,
     versions: PlatformVersion.array({ min: 1 }),
     pageTypes: n.record(AnyString, PageTypeName),
-    modList: AnyString,
   }),
+  mods: n.object({ repository: RepositoryName }),
 });
 
 /** A web address the site links to. */

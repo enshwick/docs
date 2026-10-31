@@ -46,6 +46,11 @@ export class GitSource {
     return new GitSource(repository, ref, root);
   }
 
+  /** Checks out `paths` too, beside what the checkout already holds. */
+  public async widen(paths: readonly string[]): Promise<void> {
+    await GitSource.git(['-C', this.root, 'sparse-checkout', 'add', ...paths]);
+  }
+
   /** The path of a file of the checkout. */
   public path(relative: string): string {
     return join(this.root, relative);
