@@ -46,6 +46,6 @@ const repository = `https://github.com/${mod.repository}`;
   <p class="ew-mod-card__links">
     <a class="ew-mod-card__download" href={ModCard.archive(mod)}>{t('nav.download')}</a>
     <a href={`${repository}/releases/tag/${mod.release}`}>{t('mod.release')}</a>
-    <a href={repository}>{t('mod.source')}</a>
+    <a href={ModCard.source(mod)}>{t('mod.source')}</a>
   </p>
 </section>

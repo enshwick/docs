@@ -18,8 +18,6 @@ export interface PlatformSource {
   readonly book: string;
   readonly versions: readonly DeveloperVersion[];
   readonly pageTypes: Readonly<Record<string, PageType>>;
-  /** The platform's list of our mods, such as `tools/mods.toml`. */
-  readonly modList: string;
 }
 
 /** One game build the platform has a build table for. */
@@ -43,8 +41,6 @@ export interface PlatformRelease {
   readonly errors: string | undefined;
   /** When `errors.toml` last changed at the version's ref. */
   readonly errorsUpdated: Date | undefined;
-  /** The platform's list of our mods at the version's ref. */
-  readonly mods: string | undefined;
 }
 
 /** The developer area: every version of the platform's book, the newest at `/dev/`, older ones under `/dev/<version>/`. */
@@ -127,7 +123,6 @@ export class DeveloperArea {
       `/${DeveloperArea.apiRoot}`,
       `/${DeveloperArea.apiAbi}`,
       `/${DeveloperArea.errorsSource}`,
-      `/${this.source.modList}`,
     ]);
     const summary = Summary.parse(await this.require(checkout, DeveloperArea.summary));
     const index = summary.chapters[0]?.chapter.path;
@@ -156,7 +151,7 @@ export class DeveloperArea {
     return {
       version,
       entries: sidebar,
-      release: await DeveloperArea.release(version, checkout, this.source.modList),
+      release: await DeveloperArea.release(version, checkout),
     };
   }
 
@@ -206,7 +201,6 @@ export class DeveloperArea {
   private static async release(
     version: DeveloperVersion,
     checkout: GitSource,
-    modList: string,
   ): Promise<PlatformRelease> {
     const manifest = await checkout.read(DeveloperArea.apiManifest);
     const api =
@@ -241,7 +235,6 @@ export class DeveloperArea {
       abi: await checkout.read(DeveloperArea.apiAbi),
       errors: await checkout.read(DeveloperArea.errorsSource),
       errorsUpdated: await checkout.lastChanged(DeveloperArea.errorsSource),
-      mods: await checkout.read(modList),
     };
   }
 

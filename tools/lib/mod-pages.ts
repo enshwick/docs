@@ -1,11 +1,12 @@
 import { cp, mkdir } from 'node:fs/promises';
+import { posix } from 'node:path';
 
 import { languages } from '../../src/site/languages.ts';
 import { type ModCardData, modCardSchema } from '../../src/site/mod-card.ts';
 import { texts } from '../../src/site/texts.ts';
-import { GitRef, type LanguageCode, ModList, type RepositoryName } from '../../src/site/types.ts';
-import { Fields } from './fields.ts';
-import { GitSource } from './git-source.ts';
+import type { GitRef, LanguageCode, RepositoryName } from '../../src/site/types.ts';
+import type { GitSource } from './git-source.ts';
+import { type ModSource, ModSources } from './mod-sources.ts';
 import { PageFile } from './page-file.ts';
 import { type PlayerPageData, PlayerPageSource } from './player-page-source.ts';
 
@@ -14,6 +15,10 @@ export interface ModRelease {
   readonly slug: string;
   readonly name: string;
   readonly repository: RepositoryName;
+  /** The mod's folder in its repository. */
+  readonly folder: string;
+  /** The mod's Cargo package, which names its archive. */
+  readonly package: string;
   readonly tag: GitRef;
   readonly version: string | undefined;
   readonly api: string | undefined;
@@ -21,110 +26,70 @@ export interface ModRelease {
   readonly page: boolean;
 }
 
-/** The player area's mod pages, each from its repository's newest release, in every language it has. */
+/**
+ * The player area's mod pages, one per mod of the mods repository, each read at the newest release
+ * that carries the mod's archive, in every language it has.
+ */
 export class ModPages {
   public static readonly folder = 'mods';
-  private static readonly docs = 'docs';
-  private static readonly page = 'player';
   private static readonly images = 'images';
-  private static readonly manifest = 'Cargo.toml';
-  private static readonly api = 'enshwick';
-  private static readonly repositoryPrefix = /^mod-/u;
+  private static readonly file = `${ModSources.docs}/${ModSources.page}.md`;
 
-  public constructor(private readonly repositories: readonly RepositoryName[]) {}
+  private readonly sources: ModSources;
 
-  /**
-   * The mod repositories the platform's list names, in its order.
-   *
-   * @throws {TypeError} when the list is missing or does not read, since the site would lose every
-   *   mod page.
-   */
-  public static listed(origin: string, text?: string): RepositoryName[] {
-    if (text === undefined) {
-      throw new TypeError(`the platform has no ${origin}`);
-    }
-
-    const parsed = ModList.parse(Bun.TOML.parse(text));
-
-    if (!parsed.ok) {
-      throw new TypeError(`${origin}: ${JSON.stringify(parsed.issues)}`);
-    }
-
-    return parsed.value.mod.map((mod) => mod.repository);
+  public constructor(repository: RepositoryName) {
+    this.sources = new ModSources(repository);
   }
 
-  /** Writes every mod's pages and returns what each release says about itself, in list order. */
+  /** Writes every mod's pages and returns what each release says about itself, in folder order. */
   public async build(): Promise<ModRelease[]> {
-    const releases = await Promise.all(
-      this.repositories.map((repository) => this.buildMod(repository)),
-    );
+    const mods = await this.sources.list();
+    const releases = await Promise.all(mods.map((mod) => this.buildMod(mod)));
 
     return releases.filter((release): release is ModRelease => release !== undefined);
   }
 
-  /** The newest release's tag, prereleases included; `undefined` when the mod has none. */
-  public static async newestTag(repository: RepositoryName): Promise<GitRef | undefined> {
-    const token = Bun.env['GITHUB_TOKEN'];
-    const response = await fetch(`https://api.github.com/repos/${repository}/releases?per_page=1`, {
-      headers: {
-        accept: 'application/vnd.github+json',
-        ...(token === undefined || token === '' ? {} : { authorization: `Bearer ${token}` }),
-      },
-    });
+  private async buildMod(mod: ModSource): Promise<ModRelease | undefined> {
+    const { repository } = this.sources;
 
-    if (!response.ok) {
-      throw new Error(`${repository}: listing releases answered ${response.status}`);
-    }
-
-    const releases: unknown = await response.json();
-    const first: unknown = Array.isArray(releases) ? releases[0] : undefined;
-
-    return typeof first === 'object' &&
-      first !== null &&
-      'tag_name' in first &&
-      typeof first.tag_name === 'string'
-      ? new GitRef(first.tag_name)
-      : undefined;
-  }
-
-  private async buildMod(repository: RepositoryName): Promise<ModRelease | undefined> {
-    const tag = await ModPages.newestTag(repository);
-
-    if (tag === undefined) {
-      ModPages.note(`${repository} has no release yet; no page`);
+    if (mod.tag === undefined) {
+      ModPages.note(`${repository} has no release of ${mod.package} yet; no page`);
 
       return undefined;
     }
 
-    const checkout = await GitSource.checkout(repository, tag, [
-      `/${ModPages.docs}/`,
-      `/${ModPages.manifest}`,
-    ]);
-    const slug = repository.name.replace(ModPages.repositoryPrefix, '');
-    const manifest = ModPages.manifestFacts(await checkout.read(ModPages.manifest));
-    const file = `${ModPages.page}.md`;
-    const rootText = await checkout.read(`${ModPages.docs}/${file}`);
+    const checkout = await this.sources.checkout(mod.tag);
+    const known = {
+      slug: posix.basename(mod.folder),
+      repository,
+      folder: mod.folder,
+      package: mod.package,
+      tag: mod.tag,
+      ...ModSources.manifestFacts(
+        await checkout.read(`${mod.folder}/${ModSources.manifest}`),
+        await checkout.read(ModSources.manifest),
+      ),
+    };
+    const origin = `${repository}@${mod.tag} ${mod.folder}/${ModPages.file}`;
+    const rootText = await checkout.read(`${mod.folder}/${ModPages.file}`);
 
     if (rootText === undefined) {
-      ModPages.note(`${repository}@${tag} has no ${ModPages.docs}/${file}; no page`);
+      ModPages.note(`${origin} is missing; no page`);
 
-      return { slug, name: slug, repository, tag, needs: undefined, page: false, ...manifest };
+      return { ...known, name: known.slug, needs: undefined, page: false };
     }
 
-    const root = PlayerPageSource.parse(`${repository}@${tag} ${ModPages.docs}/${file}`, rootText);
+    const root = PlayerPageSource.parse(origin, rootText);
     const release: ModRelease = {
-      slug,
+      ...known,
       name: root.data.name.toString(),
-      repository,
-      tag,
       needs: root.data.needs.toString(),
       page: true,
-      ...manifest,
     };
 
     await mkdir(`${PageFile.contentRoot}/${ModPages.folder}`, { recursive: true });
-    await ModPages.copyImages(checkout, slug);
-    await this.writePage(release, checkout, languages.root, root, file);
+    await ModPages.copyImages(checkout, release);
+    await this.writePage(release, checkout, languages.root, root, ModPages.file);
     await Promise.all(
       languages.others.map((code) => this.writeTranslation(release, checkout, code)),
     );
@@ -132,11 +97,11 @@ export class ModPages {
     return release;
   }
 
-  /** The pictures a page shows, from `docs/images/`, beside the generated page. */
-  private static async copyImages(checkout: GitSource, slug: string): Promise<void> {
+  /** The pictures a page shows, from the mod's `docs/images/`, beside the generated page. */
+  private static async copyImages(checkout: GitSource, release: ModRelease): Promise<void> {
     await cp(
-      checkout.path(`${ModPages.docs}/${ModPages.images}`),
-      `${PageFile.contentRoot}/${ModPages.folder}/${slug}/${ModPages.images}`,
+      checkout.path(`${release.folder}/${ModSources.docs}/${ModPages.images}`),
+      `${PageFile.contentRoot}/${ModPages.folder}/${release.slug}/${ModPages.images}`,
       { recursive: true, force: true },
     ).catch((error: unknown) => {
       // A mod without pictures has no images folder.
@@ -152,11 +117,11 @@ export class ModPages {
     checkout: GitSource,
     language: LanguageCode,
   ): Promise<void> {
-    const file = `${ModPages.page}.${language}.md`;
-    const text = await checkout.read(`${ModPages.docs}/${file}`);
+    const file = `${ModSources.docs}/${ModSources.page}.${language}.md`;
+    const text = await checkout.read(`${release.folder}/${file}`);
 
     if (text !== undefined) {
-      const origin = `${release.repository}@${release.tag} ${ModPages.docs}/${file}`;
+      const origin = `${release.repository}@${release.tag} ${release.folder}/${file}`;
 
       await this.writePage(release, checkout, language, PlayerPageSource.parse(origin, text), file);
     }
@@ -172,6 +137,7 @@ export class ModPages {
     const folder = language.equals(languages.root)
       ? ModPages.folder
       : `${language}/${ModPages.folder}`;
+    const path = `${release.folder}/${file}`;
 
     await new PageFile(
       `${folder}/${release.slug}`,
@@ -179,11 +145,11 @@ export class ModPages {
         title: source.data.name.toString(),
         description: source.data.summary.toString(),
         type: 'reference',
-        editUrl: `${release.repository.url}/edit/main/${ModPages.docs}/${file}`,
+        editUrl: `${release.repository.url}/edit/${ModSources.mainBranch}/${path}`,
         mod: ModPages.card(release, source),
       },
       ModPages.body(release, language, source),
-      await checkout.lastChanged(`${ModPages.docs}/${file}`),
+      await checkout.lastChanged(path),
     ).write();
   }
 
@@ -193,6 +159,8 @@ export class ModPages {
       id: source.data.id.toString(),
       needs: source.data.needs.toString(),
       repository: release.repository.toString(),
+      folder: release.folder,
+      package: release.package,
       release: release.tag.toString(),
       ...(release.version === undefined ? {} : { version: release.version }),
       ...(release.api === undefined ? {} : { api: release.api }),
@@ -262,24 +230,6 @@ export class ModPages {
       '| --- | --- | --- | --- | --- |',
       ...rows.map((row) => `| ${row} |`),
     ].join('\n');
-  }
-
-  /** The mod's version and the API version it asks for, from its Cargo manifest. */
-  private static manifestFacts(text: string | undefined): {
-    version: string | undefined;
-    api: string | undefined;
-  } {
-    if (text === undefined) {
-      return { version: undefined, api: undefined };
-    }
-
-    const manifest = new Fields(Bun.TOML.parse(text));
-    const dependency = manifest.at('dependencies').at(ModPages.api);
-
-    return {
-      version: manifest.at('package').at('version').text(),
-      api: dependency.text() ?? dependency.at('version').text(),
-    };
   }
 
   /** Text for a table cell, its pipes escaped. */

@@ -18,7 +18,7 @@ const compat = {
     {
       slug: 'area-loot',
       name: 'Area loot',
-      repository: 'enshwick/mod-area-loot',
+      repository: 'enshwick/mods',
       tag: 'dev',
       needs: 'server',
       page: true,
@@ -26,7 +26,7 @@ const compat = {
     {
       slug: 'build-camera',
       name: 'Build camera',
-      repository: 'enshwick/mod-build-camera',
+      repository: 'enshwick/mods',
       tag: 'dev',
       needs: 'everyone',
       page: true,
@@ -90,7 +90,7 @@ describe('FrontData.from mod sides', () => {
   it('carries what the mod card shows: version, repository and release', () => {
     const [card] = FrontData.from(compat, lines, en).mods;
 
-    expect(card).toMatchObject({ repository: 'enshwick/mod-area-loot', tag: 'dev' });
+    expect(card).toMatchObject({ repository: 'enshwick/mods', tag: 'dev' });
   });
 });
 
