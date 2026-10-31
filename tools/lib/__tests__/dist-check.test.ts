@@ -42,6 +42,21 @@ describe('DistCheck', () => {
     expect(await new DistCheck(root, site).run()).toEqual([]);
   });
 
+  it('finds a table that is not in a frame of its own, which would widen the page', async () => {
+    await write({
+      'index.html': page('/', '<div class="ew-table" tabindex="0"><table></table></div>'),
+      'guides/install/index.html': page(
+        '/guides/install/',
+        '<div class="ew-table" tabindex="0"><table></table></div><table class="x"></table>',
+      ),
+      'sitemap-0.xml': sitemap('/', '/guides/install/'),
+    });
+
+    expect(await new DistCheck(root, site).run()).toEqual([
+      'guides/install/index.html: 1 of 2 tables sit outside a scrolling frame',
+    ]);
+  });
+
   it('finds links to the old base, doubled slashes and missing values', async () => {
     await write({
       'index.html': page(

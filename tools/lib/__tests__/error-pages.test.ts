@@ -44,6 +44,25 @@ describe('ErrorPages', () => {
     expect(tree).toContain("- No: [E1002: Enshwick cannot read the game's files](/errors/e1002/)");
   });
 
+  it('lists every code with its page, cause and fix for the JSON index', () => {
+    expect(ErrorPages.parse('test', source).index()).toEqual([
+      {
+        code: 'E1002',
+        title: "Enshwick cannot read the game's files",
+        cause: 'The game does not look like the game Enshwick knows.',
+        fix: 'Verify the game files in Steam.',
+        page: '/errors/e1002/',
+      },
+      {
+        code: 'E1008',
+        title: 'Enshwick did not start',
+        cause: "The game loaded Windows' powrprof.dll.",
+        fix: 'Extract Enshwick again.',
+        page: '/errors/e1008/',
+      },
+    ]);
+  });
+
   it('refuses a code that is not E and four digits', () => {
     expect(() => ErrorPages.parse('test', source.replace('"E1008"', '"X8"'))).toThrow(/test/u);
   });

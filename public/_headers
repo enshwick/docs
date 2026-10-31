@@ -2,8 +2,13 @@
 https://:worker.:subdomain.workers.dev/*
   X-Robots-Tag: noindex
 
+# Pages: a browser reuses one for a minute without asking, then shows it while it checks for a new one.
+/*
+  Cache-Control: public, max-age=60, stale-while-revalidate=86400
+
 # Built files carry a hash of their content in the name, so they never change.
 /_astro/*
+  ! Cache-Control
   Cache-Control: public, max-age=31536000, immutable
 
 /.well-known/security.txt

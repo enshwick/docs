@@ -1,6 +1,7 @@
 import { cp, mkdir } from 'node:fs/promises';
 
 import { languages } from '../../src/site/languages.ts';
+import { type ModCardData, modCardSchema } from '../../src/site/mod-card.ts';
 import { texts } from '../../src/site/texts.ts';
 import { GitRef, type LanguageCode, ModList, type RepositoryName } from '../../src/site/types.ts';
 import { Fields } from './fields.ts';
@@ -179,28 +180,32 @@ export class ModPages {
         description: source.data.summary.toString(),
         type: 'reference',
         editUrl: `${release.repository.url}/edit/main/${ModPages.docs}/${file}`,
+        mod: ModPages.card(release, source),
       },
       ModPages.body(release, language, source),
       await checkout.lastChanged(`${ModPages.docs}/${file}`),
     ).write();
   }
 
-  /** The page: a facts table, then the mod's own text with its settings table under its settings heading. */
+  /** What the mod card at the head of the page shows, kept in the page's front matter. */
+  public static card(release: ModRelease, source: PlayerPageSource): ModCardData {
+    return modCardSchema.parse({
+      id: source.data.id.toString(),
+      needs: source.data.needs.toString(),
+      repository: release.repository.toString(),
+      release: release.tag.toString(),
+      ...(release.version === undefined ? {} : { version: release.version }),
+      ...(release.api === undefined ? {} : { api: release.api }),
+    });
+  }
+
+  /** The page: the mod's own text with its settings table under its settings heading. */
   public static body(
     release: ModRelease,
     language: LanguageCode,
     source: PlayerPageSource,
   ): string {
     const t = (key: string): string => texts.get(key, language);
-    const facts = [
-      `:::note[${t('mod.needs')}: ${t(`mod.who.${source.data.needs}`)}]`,
-      [
-        `${t('mod.id')}: \`${source.data.id}\``,
-        ...(release.version === undefined ? [] : [`${t('mod.version')}: ${release.version}`]),
-        `[${t('mod.source')}](${release.repository.url})`,
-      ].join(' · '),
-      ':::',
-    ].join('\n');
     const body = source.body.replaceAll(
       `](${ModPages.images}/`,
       `](./${release.slug}/${ModPages.images}/`,
@@ -208,19 +213,19 @@ export class ModPages {
     const table = ModPages.settingsTable(source.data, t);
 
     if (table === undefined) {
-      return `${facts}\n\n${body}`;
+      return body;
     }
 
     const heading = `## ${t('mod.settings')}`;
     const at = body.split('\n').findIndex((line) => line.trim() === heading);
 
     if (at === -1) {
-      return `${facts}\n\n${body.trimEnd()}\n\n${heading}\n\n${table}\n`;
+      return `${body.trimEnd()}\n\n${heading}\n\n${table}\n`;
     }
 
     const lines = body.split('\n');
 
-    return `${facts}\n\n${[...lines.slice(0, at + 1), '', table, ...lines.slice(at + 1)].join('\n')}`;
+    return [...lines.slice(0, at + 1), '', table, ...lines.slice(at + 1)].join('\n');
   }
 
   private static settingsTable(

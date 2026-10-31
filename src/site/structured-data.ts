@@ -26,10 +26,10 @@ export class StructuredData {
   private static readonly email = 'contact@enshwick.com';
   private static readonly github = 'https://github.com/enshwick';
   private static readonly nexus = 'https://www.nexusmods.com/site/mods/2511';
-  private static readonly logo = '/apple-touch-icon-180.png';
+  private static readonly logo = '/logo-512.png';
   private static readonly download = 'https://github.com/enshwick/enshwick/releases';
   private static readonly description =
-    'A mod loader for Enshrouded with the mods built on it, and an API platform for writing mods in Rust or Luau.';
+    'A mod loader for Enshrouded with the mods built on it, and an API platform for writing mods in Rust.';
 
   public constructor(private readonly site: string) {}
 

@@ -1,10 +1,15 @@
 import { ApiMap } from './api-map.ts';
 import type { DeveloperPage } from './api-map.ts';
+import { BookSnippet } from './book-snippet.ts';
 import type { PlatformRelease } from './developer-area.ts';
 import { IdRule } from './id-rule.ts';
 
 /** The checks that hold the site to the platform's newest version; the build fails when one does not pass. */
 export class PlatformChecks {
+  /** The chapter that holds the smallest whole mod, and the comments that mark it. */
+  private static readonly smallestModPage = 'dev/getting-started';
+  private static readonly smallestModName = 'smallest-mod';
+
   public constructor(
     private readonly newest: PlatformRelease | undefined,
     private readonly pages: readonly DeveloperPage[],
@@ -37,5 +42,26 @@ export class PlatformChecks {
     }
 
     return apiMap;
+  }
+
+  /**
+   * The smallest whole mod the book compiles, which the front page shows.
+   *
+   * @throws {Error} when the getting started chapter no longer marks it.
+   */
+  public smallestMod(): string {
+    const chapter = this.pages.find((page) => page.slug === PlatformChecks.smallestModPage);
+    const code =
+      chapter === undefined
+        ? undefined
+        : new BookSnippet(chapter.body).named(PlatformChecks.smallestModName);
+
+    if (code === undefined) {
+      throw new Error(
+        `the book's ${PlatformChecks.smallestModPage} chapter marks no ${PlatformChecks.smallestModName} example for the front page`,
+      );
+    }
+
+    return code;
   }
 }
