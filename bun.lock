@@ -19,7 +19,7 @@
         "sharp": "0.35.5",
         "starlight-github-alerts": "0.5.0",
         "starlight-heading-badges": "0.8.0",
-        "starlight-image-zoom": "0.16.1",
+        "starlight-image-zoom": "0.16.2",
         "starlight-kbd": "0.4.0",
         "starlight-links-validator": "0.27.0",
         "starlight-llms-txt": "0.12.0",
@@ -1067,7 +1067,7 @@
 
     "starlight-heading-badges": ["starlight-heading-badges@0.8.0", "", { "dependencies": { "@astrojs/markdown-remark": "^7.2.0", "@astrojs/markdown-satteri": "^0.3.2", "github-slugger": "^2.0.0", "mdast-util-directive": "^3.1.0", "satteri": "^0.9.3", "unist-util-visit": "^5.1.0" }, "peerDependencies": { "@astrojs/starlight": ">=0.41.0" } }, "sha512-iX7YwXqzJrVYqVxqHXW4BPL+SPIzsfTPmiWI6dbZD2qfaJ34zn7TiymUuAIyfSRpHz7jmlIw29dRz0cpjqhUAA=="],
 
-    "starlight-image-zoom": ["starlight-image-zoom@0.16.1", "", { "dependencies": { "mdast-util-mdx-jsx": "^3.2.0", "rehype-raw": "^7.0.0", "satteri": "^0.10.3", "unist-util-visit": "^5.1.0", "unist-util-visit-parents": "^6.0.2" }, "peerDependencies": { "@astrojs/starlight": ">=0.42.0", "astro": ">=7.2.10" } }, "sha512-CbP5T4GBjyS6IwUnk13N37eK1zqrtIdCGxi8QpJX8WOOjF5WkwNNHIW2WVgVp6KS5TiNbOswqdlb0eWWH0jEVg=="],
+    "starlight-image-zoom": ["starlight-image-zoom@0.16.2", "", { "dependencies": { "mdast-util-mdx-jsx": "^3.2.0", "rehype-raw": "^7.0.0", "satteri": "^0.10.3", "unist-util-visit": "^5.1.0", "unist-util-visit-parents": "^6.0.2" }, "peerDependencies": { "@astrojs/starlight": ">=0.42.0", "astro": ">=7.2.10" } }, "sha512-TF3TGjkb3d8hsYE5Hr09vTVAG0SsozNGQRy0Xy29zHqxNZVorrnE7CsddO98M6NA1KbKg4p2sNrCq59COLL80A=="],
 
     "starlight-kbd": ["starlight-kbd@0.4.0", "", { "peerDependencies": { "@astrojs/starlight": ">=0.38.0" } }, "sha512-Uz/MimnPaRqHsv2EllVnkD78ab2k3SQbVls3VZ53nUMbPMjIzg0+evgicqxrF8ZukQSRdve5sykKlbBEdH4xzQ=="],
 
