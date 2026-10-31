@@ -1,4 +1,4 @@
-# The Worker's own addresses, production and previews alike, stay out of search.
+# The Worker's own workers.dev address stays out of search.
 https://:worker.:subdomain.workers.dev/*
   X-Robots-Tag: noindex
 

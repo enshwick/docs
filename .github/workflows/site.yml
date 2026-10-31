@@ -1,6 +1,6 @@
-# Checks and builds the site on every pull request, with a preview on
-# Cloudflare, and deploys it to Cloudflare from main. The repositories that
-# feed in pages, such as the platform's book, start a run when those change.
+# Checks and builds the site on every pull request, and deploys it to
+# Cloudflare from main. The repositories that feed in pages, such as the
+# platform's book, start a run when those change.
 name: site
 
 on:
@@ -29,6 +29,7 @@ jobs:
       contents: read
     with:
       deploy: ${{ github.event_name != 'pull_request' }}
+    # Only a deploy needs Cloudflare; a pull request gets no secrets.
     secrets:
-      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+      CLOUDFLARE_API_TOKEN: ${{ github.event_name != 'pull_request' && secrets.CLOUDFLARE_API_TOKEN || '' }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ github.event_name != 'pull_request' && secrets.CLOUDFLARE_ACCOUNT_ID || '' }}

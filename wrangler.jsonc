@@ -10,5 +10,5 @@
     "not_found_handling": "404-page",
   },
   "workers_dev": true,
-  "preview_urls": true,
+  "preview_urls": false,
 }
