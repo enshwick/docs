@@ -37,7 +37,7 @@ sets a hold: a file `hold.txt` in its `mod-data` folder. While the mod does not
 run, the game stops before that world loads, and the log names the mod.
 
 To open the world anyway, delete the mod's `hold.txt`, at your own risk. It is
-`mod-data/<mod id>/hold.txt`, or `mod-data/<mod id>/worlds/<world>/hold.txt`
+`mod-data/<mod id>/hold.txt`, or `mod-data/<mod id>/worlds/<world key>/hold.txt`
 for one world. The log names the file.
 
 ## Remove Enshwick

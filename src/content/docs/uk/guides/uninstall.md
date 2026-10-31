@@ -37,7 +37,7 @@ sidebar:
 працює, гра зупиняється до завантаження цього світу, а журнал називає мод.
 
 Щоб усе одно відкрити світ, видаліть `hold.txt` цього мода на власний ризик. Це
-`mod-data/<mod id>/hold.txt` або `mod-data/<mod id>/worlds/<world>/hold.txt`
+`mod-data/<mod id>/hold.txt` або `mod-data/<mod id>/worlds/<world key>/hold.txt`
 для одного світу. Журнал називає цей файл.
 
 ## Прибрати Enshwick
