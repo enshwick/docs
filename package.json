@@ -8,7 +8,7 @@
     "check:player-page": "bun tools/check-player-page.ts",
     "dev": "bun tools/fetch.ts && bun --bun astro dev",
     "build": "bun tools/fetch.ts && bun --bun astro build",
-    "check": "bun --bun astro check && oxlint --type-aware && bun --bun vitest run && bun tools/check-dist.ts",
+    "check": "bun --bun astro check && oxfmt --check && oxlint && bun --bun vitest run && bun tools/check-dist.ts",
     "preview": "bun --bun astro preview",
     "check:dist": "bun tools/check-dist.ts"
   },
@@ -36,7 +36,9 @@
   },
   "devDependencies": {
     "@astrojs/check": "0.9.10",
+    "@stylistic/eslint-plugin": "5.10.0",
     "@types/bun": "1.4.2",
+    "eslint-plugin-jsdoc": "65.4.2",
     "lefthook": "2.2.2",
     "oxfmt": "0.72.0",
     "oxlint": "1.87.0",

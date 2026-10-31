@@ -27,7 +27,7 @@ export class Stability {
     const unstable = Stability.unstableModules(chapter.body);
     const known = new Set(modules);
     const badges = Object.fromEntries(
-      pages.flatMap((page): [string, StabilityLevel][] => {
+      pages.flatMap((page): Array<[string, StabilityLevel]> => {
         const name = (page.slug.split('/').at(-1) ?? '').replaceAll('-', '_');
 
         if (!known.has(name)) {

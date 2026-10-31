@@ -42,6 +42,7 @@ export class ChapterConverter {
       if (fence !== null && open === undefined) {
         const info = (fence[3] ?? '').trim();
         const language = info.split(/[,\s]/u)[0] ?? '';
+
         open = { marker: fence[2] ?? '```', rust: language === ChapterConverter.rust };
         out.push(`${fence[1] ?? ''}${fence[2] ?? ''}${language}`);
         continue;

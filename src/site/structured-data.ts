@@ -125,7 +125,7 @@ export class StructuredData {
   /** The groups from the sidebar's top down to the current page, or `undefined` off the sidebar. */
   private static pathTo(
     items: readonly SidebarItem[],
-  ): Extract<SidebarItem, { type: 'group' }>[] | undefined {
+  ): Array<Extract<SidebarItem, { type: 'group' }>> | undefined {
     for (const item of items) {
       if (item.type === 'link') {
         if (item.isCurrent) {
