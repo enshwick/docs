@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { frontData } from '../front.ts';
+import { FrontData } from '../front.ts';
 
 const compat = {
   platform: [
@@ -45,20 +45,20 @@ const lines = {
 const en = 'en';
 const uk = 'uk';
 
-describe('frontData', () => {
+describe('FrontData.from', () => {
   it('takes the newest platform release as the version', () => {
-    expect(frontData(compat, lines, en).version).toBe('1.0.0-alpha.11');
+    expect(FrontData.from(compat, lines, en).version).toBe('1.0.0-alpha.11');
   });
 
   it('lists the newest Steam build of each side', () => {
-    expect(frontData(compat, lines, en).gameBuilds).toEqual([
+    expect(FrontData.from(compat, lines, en).gameBuilds).toEqual([
       { side: 'client', name: '1.0 client (26082781)' },
       { side: 'server', name: '1.0 server (26083076)' },
     ]);
   });
 
   it('builds a card per mod with its line in the asked language and English as fallback', () => {
-    const cards = frontData(compat, lines, uk).mods;
+    const cards = FrontData.from(compat, lines, uk).mods;
 
     expect(cards.map((card) => [card.name, card.line, card.needs])).toEqual([
       ['Area loot', 'Лут з усієї ділянки одразу.', 'server'],
@@ -67,38 +67,38 @@ describe('frontData', () => {
   });
 
   it('omits the version when there is no platform release', () => {
-    const data = frontData({ ...compat, platform: [] }, lines, en);
+    const data = FrontData.from({ ...compat, platform: [] }, lines, en);
 
     expect(data.version).toBeUndefined();
     expect(data.gameBuilds).toEqual([]);
   });
 
   it('throws naming mods.json when a mod has no line', () => {
-    expect(() => frontData(compat, { 'area-loot': lines['area-loot'] }, en)).toThrow(
+    expect(() => FrontData.from(compat, { 'area-loot': lines['area-loot'] }, en)).toThrow(
       /mods\.json.*build-camera/u,
     );
   });
 });
 
-describe('frontData mod sides', () => {
+describe('FrontData.from mod sides', () => {
   it('throws naming mods.json when a side disagrees with the mod page', () => {
     const wrong = { ...lines, 'area-loot': { ...lines['area-loot'], side: 'client' } };
 
-    expect(() => frontData(compat, wrong, en)).toThrow(/mods\.json.*area-loot.*server/u);
+    expect(() => FrontData.from(compat, wrong, en)).toThrow(/mods\.json.*area-loot.*server/u);
   });
 
   it('carries what the mod card shows: version, repository and release', () => {
-    const [card] = frontData(compat, lines, en).mods;
+    const [card] = FrontData.from(compat, lines, en).mods;
 
     expect(card).toMatchObject({ repository: 'enshwick/mods', tag: 'dev' });
   });
 });
 
-describe('frontData mod pages', () => {
+describe('FrontData.from mod pages', () => {
   it('marks a mod without a page so its card does not link', () => {
     const noPage = { ...compat, mods: compat.mods.map((mod) => ({ ...mod, page: false })) };
 
-    expect(frontData(noPage, lines, 'en').mods.every((card) => !card.page)).toBe(true);
-    expect(frontData(compat, lines, 'en').mods.every((card) => card.page)).toBe(true);
+    expect(FrontData.from(noPage, lines, 'en').mods.every((card) => !card.page)).toBe(true);
+    expect(FrontData.from(compat, lines, 'en').mods.every((card) => card.page)).toBe(true);
   });
 });

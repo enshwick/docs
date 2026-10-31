@@ -2,7 +2,7 @@
 import compat from '../../generated/compatibility.json';
 import modLines from '../../data/mods.json';
 import smallestModSource from '../../generated/smallest-mod.rs?raw';
-import { frontData } from '../../site/front.ts';
+import { FrontData } from '../../site/front.ts';
 import { languages } from '../../site/languages.ts';
 import { links } from '../../site/links.ts';
 import { Snippet, SnippetLanguage } from '../../site/snippet.ts';
@@ -18,7 +18,7 @@ interface Props {
 const { lang } = Astro.props;
 const code = languages.all.find((language) => language.code.toString() === lang)?.code ?? languages.root;
 const t = (key: string): string => texts.get(key, code);
-const data = frontData(compat, modLines, lang);
+const data = FrontData.from(compat, modLines, lang);
 const base = import.meta.env.BASE_URL.replace(/\/$/u, '');
 const prefix = code.equals(languages.root) ? base : `${base}/${lang}`;
 const faq = ['safe', 'server', 'linux', 'saves', 'update', 'free'];
