@@ -17,7 +17,7 @@ bun run check    # types, lint, tests and the built site in dist/
 
 `bun run build` checks out the sources the site collects, so it needs
 network access to GitHub. The site runs on a Cloudflare Worker
-(`wrangler.jsonc`); `main` deploys it, and a pull request gets a preview. [ARCHITECTURE.md](ARCHITECTURE.md) says which
+(`wrangler.jsonc`); `main` deploys it, and a pull request only builds it. [ARCHITECTURE.md](ARCHITECTURE.md) says which
 pages are written here and which come from other repositories.
 
 ## Contributing

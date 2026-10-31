@@ -63,7 +63,8 @@ tests and `tools/check-dist.ts`, which reads the built site for links outside
 the site's root, canonical addresses, fallback pages in the sitemap, pages on two paths and tables
 outside their scrolling frame. It needs `bun run build` first, which fails on a broken internal
 link (`starlight-links-validator`). Git hooks run oxfmt, oxlint, markdownlint and
-typos on changed files.
+typos on changed files, and [actionlint](https://github.com/rhysd/actionlint)
+and [zizmor](https://docs.zizmor.sh) when a workflow changed.
 
 The maintainers check the prose of English and Ukrainian pages with
 [Vale](https://vale.sh) and their own tooling, kept outside this repository.
