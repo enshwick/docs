@@ -3,7 +3,7 @@ import { AnyString, n } from '@horizon-republic/nominal-types';
 import { CompatibilityData } from './compatibility.ts';
 
 /** One mod, as its card on the front page and the head of its own page show it. */
-export interface ModCard {
+export interface ModCardFacts {
   slug: string;
   name: string;
   line: string;
@@ -48,12 +48,16 @@ export class FrontData {
   /** The sides the front page names a game build for, in the order it shows them. */
   private static readonly sides = ['client', 'server'];
 
-  public readonly version: string | undefined;
+  /** The Enshwick API of the newest platform release, where there is one. */
+  public readonly version?: string;
   public readonly gameBuilds: GameBuild[];
-  public readonly mods: ModCard[];
+  public readonly mods: ModCardFacts[];
 
-  private constructor(version: string | undefined, gameBuilds: GameBuild[], mods: ModCard[]) {
-    this.version = version;
+  private constructor(version: string | undefined, gameBuilds: GameBuild[], mods: ModCardFacts[]) {
+    if (version !== undefined) {
+      this.version = version;
+    }
+
     this.gameBuilds = gameBuilds;
     this.mods = mods;
   }
@@ -101,7 +105,11 @@ export class FrontData {
   }
 
   /** One mod's card, its line in `language` or English, its side checked against its page. */
-  private static modCard(mod: Compat['mods'][number], lines: Lines, language: string): ModCard {
+  private static modCard(
+    mod: Compat['mods'][number],
+    lines: Lines,
+    language: string,
+  ): ModCardFacts {
     const slug = mod.slug.toString();
     const entry = lines.get(slug);
     const line = entry?.summary.get(language) ?? entry?.summary.get(FrontData.root);
@@ -116,7 +124,7 @@ export class FrontData {
       );
     }
 
-    const card: ModCard = {
+    const card: ModCardFacts = {
       slug,
       name: mod.name.toString(),
       line,
