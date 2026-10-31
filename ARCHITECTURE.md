@@ -67,7 +67,8 @@ outside their scrolling frame. It needs `bun run build` first, which fails on a 
 link (`starlight-links-validator`). A test runs `tools/lib/code-rules.ts` over every tracked
 TypeScript and Astro file for the rules oxlint has none for: no `const enum`, no re-export, no
 exported function outside a class but Astro's route handlers, a reason on the line above every
-suppression, and tests only in `__tests__`. Git hooks run oxfmt, oxlint, markdownlint and
+suppression, and tests only in `__tests__`. In Astro files only the suppression rule applies; the
+syntax rules read `.ts` files. Git hooks run oxfmt, oxlint, markdownlint and
 typos on changed files, and [actionlint](https://github.com/rhysd/actionlint)
 and [zizmor](https://docs.zizmor.sh) when a workflow changed.
 
