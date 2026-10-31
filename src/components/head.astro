@@ -7,7 +7,7 @@ import modLines from '../data/mods.json';
 import { Area } from '../site/area.ts';
 import { FirstFonts } from '../site/first-fonts.ts';
 import { FrontData } from '../site/front.ts';
-import { languages } from '../site/languages.ts';
+import { Languages } from '../site/languages.ts';
 import { type SidebarItem, StructuredData } from '../site/structured-data.ts';
 
 const route = Astro.locals.starlightRoute;
@@ -16,7 +16,7 @@ const area = Area.of(id);
 // A mod's own page, in any language, gets its facts drawn as the game's item card.
 const mod = /^([a-z-]+\/)?mods\/[a-z0-9-]+$/u.test(id);
 const lang = route.lang;
-const home = ['/', ...languages.others.map((code) => `/${code}/`)].includes(Astro.url.pathname);
+const home = ['/', ...Languages.site.others.map((code) => `/${code}/`)].includes(Astro.url.pathname);
 const data = Astro.site === undefined ? undefined : new StructuredData(Astro.site.href);
 // A fallback page copies another and stays out of search; the 404 page is no document.
 const nodes =
@@ -37,7 +37,7 @@ const nodes =
           route.siteTitle,
         );
 // The two faces every first screen sets, in the scripts the page's language needs, fetched early.
-const fonts = new FirstFonts(languages.root.toString() !== lang).urls;
+const fonts = new FirstFonts(Languages.site.root.toString() !== lang).urls;
 // Each page's own social card, drawn at build time by the route under `src/pages/og/`.
 const ogImage =
   Astro.site === undefined || id === '404'

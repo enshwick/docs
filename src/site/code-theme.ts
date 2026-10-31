@@ -91,13 +91,16 @@ const tokenColors = [
   { scope: ['markup.inserted'], settings: { foreground: palette.mistLight } },
 ];
 
-/**
- * The night theme for code blocks: mist for keywords and attributes, the core's gold for strings
- * and numbers, comments faint, everything else in the body ink.
- */
-export const nightCodeTheme = new ExpressiveCodeTheme({
-  name: 'enshwick-night',
-  type: 'dark',
-  colors,
-  tokenColors,
-});
+/** The site's themes for code blocks, in the brand's colours. */
+export class CodeTheme {
+  /**
+   * The night theme: mist for keywords and attributes, the core's gold for strings and numbers,
+   * comments faint, everything else in the body ink.
+   */
+  public static readonly night = new ExpressiveCodeTheme({
+    name: 'enshwick-night',
+    type: 'dark',
+    colors,
+    tokenColors,
+  });
+}

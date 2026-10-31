@@ -3,10 +3,10 @@ import compat from '../../generated/compatibility.json';
 import modLines from '../../data/mods.json';
 import smallestModSource from '../../generated/smallest-mod.rs?raw';
 import { FrontData } from '../../site/front.ts';
-import { languages } from '../../site/languages.ts';
-import { links } from '../../site/links.ts';
+import { Languages } from '../../site/languages.ts';
+import { Links } from '../../site/links.ts';
 import { Snippet, SnippetLanguage } from '../../site/snippet.ts';
-import { texts } from '../../site/texts.ts';
+import { Texts } from '../../site/texts.ts';
 import NightSky from '../night-sky.astro';
 import ServiceIcon from '../service-icon.astro';
 
@@ -16,11 +16,11 @@ interface Props {
 }
 
 const { lang } = Astro.props;
-const code = languages.all.find((language) => language.code.toString() === lang)?.code ?? languages.root;
-const t = (key: string): string => texts.get(key, code);
+const code = Languages.site.all.find((language) => language.code.toString() === lang)?.code ?? Languages.site.root;
+const t = (key: string): string => Texts.site.get(key, code);
 const data = FrontData.from(compat, modLines, lang);
 const base = import.meta.env.BASE_URL.replace(/\/$/u, '');
-const prefix = code.equals(languages.root) ? base : `${base}/${lang}`;
+const prefix = code.equals(Languages.site.root) ? base : `${base}/${lang}`;
 const faq = ['safe', 'server', 'linux', 'saves', 'update', 'free'];
 const steps = [1, 2, 3, 4];
 const client = data.gameBuilds.find((build) => build.side === 'client');
@@ -43,7 +43,7 @@ const smallestMod = new Snippet(smallestModSource.trimEnd(), SnippetLanguage.Rus
         <h1 id="ew-title">{t('front.title')}</h1>
         <p class="ew-hero__lead">{t('front.lead')}</p>
         <p class="ew-hero__luau">{t('front.luau')}</p>
-        <a class="ew-button ew-button--primary" href={links.download.toString()}>{t('front.download')}</a>
+        <a class="ew-button ew-button--primary" href={Links.site.download.toString()}>{t('front.download')}</a>
         {
           data.version !== undefined && (
             <div class="ew-release">
@@ -87,7 +87,7 @@ const smallestMod = new Snippet(smallestModSource.trimEnd(), SnippetLanguage.Rus
       <div class="ew-install">
         <div class="ew-install__way">
           <h3>{t('front.install.auto')}</h3>
-          <a class="ew-nexus" href={links.nexus.toString()}>
+          <a class="ew-nexus" href={Links.site.nexus.toString()}>
             <ServiceIcon service="nexus" />
             <span class="ew-nexus__text">
               <span class="ew-nexus__name">{t('front.ways.nexus')}</span>
@@ -102,7 +102,7 @@ const smallestMod = new Snippet(smallestModSource.trimEnd(), SnippetLanguage.Rus
               steps.map((step) =>
                 step === 1 ? (
                   <li>
-                    <a href={links.download.toString()}>{t(`front.install.step.${step}`)}</a>
+                    <a href={Links.site.download.toString()}>{t(`front.install.step.${step}`)}</a>
                   </li>
                 ) : (
                   <li>{t(`front.install.step.${step}`)}</li>

@@ -18,9 +18,9 @@ import starlightSidebarTopics from 'starlight-sidebar-topics';
 import siteData from './src/data/site.json' with { type: 'json' };
 import { TableFrame } from './src/plugins/rehype-table-frame.ts';
 import { BaseLinks } from './src/plugins/remark-base-links.ts';
-import { nightCodeTheme } from './src/site/code-theme.ts';
-import { languages } from './src/site/languages.ts';
-import { texts } from './src/site/texts.ts';
+import { CodeTheme } from './src/site/code-theme.ts';
+import { Languages } from './src/site/languages.ts';
+import { Texts } from './src/site/texts.ts';
 import { Translations } from './src/site/translations.ts';
 
 type Sidebar = NonNullable<StarlightUserConfig['sidebar']>;
@@ -38,13 +38,13 @@ const apiMapFile = new URL('./src/generated/api-map.md', import.meta.url);
 const apiMap = existsSync(apiMapFile) ? readFileSync(apiMapFile, 'utf8') : undefined;
 
 const group = (key: string, directory: string): Sidebar[number] => ({
-  label: texts.get(key),
-  translations: texts.translations(key),
+  label: Texts.site.get(key),
+  translations: Texts.site.translations(key),
   items: [{ autogenerate: { directory } }],
 });
 
 const locales = Object.fromEntries(
-  languages.all.map(({ code, label, isDefault }) => [
+  Languages.site.all.map(({ code, label, isDefault }) => [
     isDefault ? 'root' : code.toString(),
     { label, lang: code.toString() },
   ]),
@@ -76,7 +76,7 @@ export default defineConfig({
     }),
     starlight({
       title: 'enshwick',
-      description: texts.get('site.description'),
+      description: Texts.site.get('site.description'),
       logo: { src: './src/assets/brand/lockup.svg', alt: 'enshwick', replacesTitle: true },
       favicon: '/favicon.svg',
       head: [
@@ -122,7 +122,7 @@ export default defineConfig({
         ThemeSelect: './src/components/theme-select.astro',
       },
       expressiveCode: {
-        themes: [nightCodeTheme],
+        themes: [CodeTheme.night],
         useStarlightUiThemeColors: false,
         plugins: [pluginCollapsibleSections(), pluginLineNumbers()],
         defaultProps: {
@@ -157,7 +157,7 @@ export default defineConfig({
         starlightGitHubAlerts(),
         starlightSidebarTopics([
           {
-            label: texts.everyLanguage('topic.players'),
+            label: Texts.site.everyLanguage('topic.players'),
             link: '/start/first-modded-game/',
             icon: 'rocket',
             items: [
@@ -174,15 +174,15 @@ export default defineConfig({
             ],
           },
           {
-            label: texts.everyLanguage('topic.developers'),
+            label: Texts.site.everyLanguage('topic.developers'),
             link: '/dev/',
             icon: 'seti:rust',
-            badge: { text: texts.everyLanguage('badge.developers'), variant: 'note' },
+            badge: { text: Texts.site.everyLanguage('badge.developers'), variant: 'note' },
             items: [
               ...developerSidebar,
               {
-                label: texts.get('group.ai'),
-                translations: texts.translations('group.ai'),
+                label: Texts.site.get('group.ai'),
+                translations: Texts.site.translations('group.ai'),
                 link: '/dev/ai-assistants/',
               },
             ],

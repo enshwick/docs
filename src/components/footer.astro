@@ -2,22 +2,22 @@
 import Default from '@astrojs/starlight/components/Footer.astro';
 
 import { PageId } from '../site/page-id.ts';
-import { languages } from '../site/languages.ts';
-import { texts } from '../site/texts.ts';
+import { Languages } from '../site/languages.ts';
+import { Texts } from '../site/texts.ts';
 import { LanguageCode } from '../site/types.ts';
-import { links } from '../site/links.ts';
+import { Links } from '../site/links.ts';
 import SiteFooter from './site-footer.astro';
 
 // Doc pages keep Starlight's footer and gain the report link; every page ends with the site footer.
 const route = Astro.locals.starlightRoute;
 const front = new PageId(route.id).isFront;
 const parsed = LanguageCode.parse(route.lang);
-const language = parsed.ok ? parsed.value : languages.root;
-const t = (key: string): string => texts.get(key, language);
+const language = parsed.ok ? parsed.value : Languages.site.root;
+const t = (key: string): string => Texts.site.get(key, language);
 const page = new URL(Astro.url.pathname, Astro.site ?? Astro.url).href;
 const details = `${t('report.page')}: ${page}\n${t('report.language')}: ${language}\n\n`;
-const issue = links.issue(`${t('report.subject')}: ${route.entry.data.title}`, details);
-const mail = links.contact.mailto(`${t('report.subject')}: ${route.entry.data.title}`, details);
+const issue = Links.site.issue(`${t('report.subject')}: ${route.entry.data.title}`, details);
+const mail = Links.site.contact.mailto(`${t('report.subject')}: ${route.entry.data.title}`, details);
 ---
 
 {
@@ -27,7 +27,7 @@ const mail = links.contact.mailto(`${t('report.subject')}: ${route.entry.data.ti
       <aside class="ew-report" aria-label={t('report.title')}>
         <p>
           {t('report.title')} <a href={issue}>{t('report.issue')}</a> {t('report.or')}{' '}
-          <a href={mail}>{links.contact.toString()}</a>
+          <a href={mail}>{Links.site.contact.toString()}</a>
         </p>
       </aside>
     </>

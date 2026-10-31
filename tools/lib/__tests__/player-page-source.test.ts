@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { languages } from '../../../src/site/languages.ts';
+import { Languages } from '../../../src/site/languages.ts';
 import { GitRef, RepositoryName } from '../../../src/site/types.ts';
 import { ModPages, type ModRelease } from '../mod-pages.ts';
 import { PlayerPageSource } from '../player-page-source.ts';
@@ -68,7 +68,7 @@ describe('PlayerPageSource', () => {
 
 describe('ModPages.body', () => {
   it('puts the settings table under the settings heading, before the next section', () => {
-    const body = ModPages.body(release, languages.root, PlayerPageSource.parse('test', page));
+    const body = ModPages.body(release, Languages.site.root, PlayerPageSource.parse('test', page));
     const table = body.indexOf('| `recipe_multiplier` | `2` | 2 to 100 |');
 
     expect(table).toBeGreaterThan(body.indexOf('## Settings'));
@@ -76,7 +76,7 @@ describe('ModPages.body', () => {
   });
 
   it('leaves the facts out of the text, for the mod card to show', () => {
-    const body = ModPages.body(release, languages.root, PlayerPageSource.parse('test', page));
+    const body = ModPages.body(release, Languages.site.root, PlayerPageSource.parse('test', page));
 
     expect(body).not.toContain(':::note');
   });
@@ -98,7 +98,7 @@ describe('ModPages.card', () => {
 
   it('adds a settings section at the end when the page has none', () => {
     const source = PlayerPageSource.parse('test', page.replace('## Settings', '## Options'));
-    const body = ModPages.body(release, languages.root, source);
+    const body = ModPages.body(release, Languages.site.root, source);
 
     expect(body.trimEnd().endsWith('| at once |')).toBe(true);
   });

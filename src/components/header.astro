@@ -4,19 +4,19 @@ import Search from '@astrojs/starlight/components/Search.astro';
 import SiteTitle from '@astrojs/starlight/components/SiteTitle.astro';
 
 import { Area } from '../site/area.ts';
-import { languages } from '../site/languages.ts';
-import { links } from '../site/links.ts';
-import { texts } from '../site/texts.ts';
+import { Languages } from '../site/languages.ts';
+import { Links } from '../site/links.ts';
+import { Texts } from '../site/texts.ts';
 import { LanguageCode } from '../site/types.ts';
 import ServiceIcon from './service-icon.astro';
 
 // One bar on every page, the front page included: where to go, search, the outside places, download.
 const route = Astro.locals.starlightRoute;
 const parsed = LanguageCode.parse(route.lang);
-const language = parsed.ok ? parsed.value : languages.root;
-const t = (key: string): string => texts.get(key, language);
+const language = parsed.ok ? parsed.value : Languages.site.root;
+const t = (key: string): string => Texts.site.get(key, language);
 const base = import.meta.env.BASE_URL.replace(/\/$/u, '');
-const prefix = language.equals(languages.root) ? base : `${base}/${language}`;
+const prefix = language.equals(Languages.site.root) ? base : `${base}/${language}`;
 const area = Area.of(route.id).toString();
 ---
 
@@ -41,13 +41,13 @@ const area = Area.of(route.id).toString();
     <Search />
   </div>
   <div class="ew-bar__out">
-    <a class="ew-bar__service" href={links.github.toString()} aria-label="GitHub" title="GitHub">
+    <a class="ew-bar__service" href={Links.site.github.toString()} aria-label="GitHub" title="GitHub">
       <ServiceIcon service="github" />
     </a>
-    <a class="ew-bar__service" href={links.nexus.toString()} aria-label="Nexus Mods" title="Nexus Mods">
+    <a class="ew-bar__service" href={Links.site.nexus.toString()} aria-label="Nexus Mods" title="Nexus Mods">
       <ServiceIcon service="nexus" />
     </a>
     <LanguageSelect />
-    <a class="ew-bar__download" href={links.download.toString()}>{t('nav.download')}</a>
+    <a class="ew-bar__download" href={Links.site.download.toString()}>{t('nav.download')}</a>
   </div>
 </div>
