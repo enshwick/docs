@@ -23,7 +23,7 @@ concurrency:
 
 jobs:
   site:
-    uses: enshwick/.github/.github/workflows/docs-site.yml@main # zizmor: ignore[unpinned-uses]
+    uses: ./.github/workflows/docs-site.yml
     permissions:
       contents: read
     with:
