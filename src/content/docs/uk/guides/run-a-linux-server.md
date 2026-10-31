@@ -60,4 +60,4 @@ GE-Proton 11 користуються ним без додаткових нал�
 пораду.
 
 Про сервер у Docker або Kubernetes читайте
-[Running a server in Docker or Kubernetes](/uk/dev/servers/).
+[Сервер у Docker або Kubernetes](/uk/guides/run-a-server-in-docker/).
