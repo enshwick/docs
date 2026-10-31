@@ -13,10 +13,14 @@ version = "0.3.0"
 enshwick = { git = "https://github.com/enshwick/enshwick", rev = "6b948b0", version = "1.0.0-alpha.11" }
 `;
 
-const release = (tag: string, assets: readonly string[], draft = false): object => ({
+const release = (
+  tag: string,
+  assets: readonly string[],
+  { draft = false, prerelease = false } = {},
+): object => ({
   tag_name: tag,
   draft,
-  prerelease: false,
+  prerelease,
   assets: assets.map((name) => ({ name, size: 1 })),
 });
 
@@ -40,28 +44,54 @@ describe('ModSources.workspaceMembers', () => {
 describe('ModSources.newestArchives', () => {
   const packages = ['enshwick-area-loot', 'enshwick-game-rates', 'enshwick-optimizer'];
 
-  it('reads each package at the newest release that carries its own archive', () => {
+  it('reads each package at the newest regular release that carries its own archive', () => {
     const tags = ModSources.newestArchives(
       'releases',
       [
         release('enshwick-game-rates-v0.2.0', ['enshwick-game-rates.zip']),
-        release('dev', ['enshwick-area-loot.zip', 'enshwick-game-rates.zip']),
-        release('enshwick-area-loot-v0.1.0', ['enshwick-area-loot.zip']),
+        release('enshwick-area-loot-v0.2.0', ['enshwick-area-loot.zip']),
+        release('enshwick-game-rates-v0.1.0', ['enshwick-game-rates.zip']),
       ],
       packages,
     );
 
     expect(Object.fromEntries([...tags].map(([name, tag]) => [name, tag.toString()]))).toEqual({
-      'enshwick-area-loot': 'dev',
+      'enshwick-area-loot': 'enshwick-area-loot-v0.2.0',
       'enshwick-game-rates': 'enshwick-game-rates-v0.2.0',
     });
+  });
+
+  it('prefers an older regular release to a newer prerelease', () => {
+    const tags = ModSources.newestArchives(
+      'releases',
+      [
+        release('dev', ['enshwick-area-loot.zip', 'enshwick-game-rates.zip'], { prerelease: true }),
+        release('enshwick-game-rates-v0.1.0', ['enshwick-game-rates.zip']),
+      ],
+      packages,
+    );
+
+    expect(tags.get('enshwick-game-rates')?.toString()).toBe('enshwick-game-rates-v0.1.0');
+  });
+
+  it('reads a package without a regular release at the dev prerelease', () => {
+    const tags = ModSources.newestArchives(
+      'releases',
+      [
+        release('dev', ['enshwick-area-loot.zip', 'enshwick-game-rates.zip'], { prerelease: true }),
+        release('enshwick-game-rates-v0.1.0', ['enshwick-game-rates.zip']),
+      ],
+      packages,
+    );
+
+    expect(tags.get('enshwick-area-loot')?.toString()).toBe('dev');
   });
 
   it('leaves out drafts and archives of other names', () => {
     const tags = ModSources.newestArchives(
       'releases',
       [
-        release('enshwick-optimizer-v0.2.0', ['enshwick-optimizer.zip'], true),
+        release('enshwick-optimizer-v0.2.0', ['enshwick-optimizer.zip'], { draft: true }),
         release('enshwick-optimizer-v0.1.0', ['enshwick-optimizer.tar.gz', 'enshwick.zip']),
       ],
       packages,
