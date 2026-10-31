@@ -16,6 +16,9 @@ export class DistCheck {
   private static readonly canonical = /<link rel="canonical" href="([^"]*)"/gu;
   private static readonly location = /<loc>([^<]+)<\/loc>/gu;
   private static readonly noindex = /<meta name="robots" content="noindex"/u;
+  private static readonly table = /<table[\s>]/gu;
+  /** A table that opens its frame: the scrolling div with nothing but space before the table. */
+  private static readonly framedTable = /<div class="ew-table"[^>]*>\s*<table[\s>]/gu;
 
   /** The site built into `root`, to be served at the address `site`. */
   public constructor(
@@ -42,7 +45,8 @@ export class DistCheck {
     return [...ofPages.flat(), ...ofStyles.flat(), ...ofSitemap];
   }
 
-  /** A page's problems: wrong links, not exactly one canonical address, a path without a folder. */
+  /** A page's problems: wrong links, not exactly one canonical address, a path without a folder,
+   * a table outside its scrolling frame. */
   private async page(page: string): Promise<string[]> {
     const text = await Bun.file(join(this.root, page)).text();
     const problems = Array.from(
@@ -55,6 +59,15 @@ export class DistCheck {
       const found = canonicals.length === 0 ? DistCheck.none : canonicals.join(', ');
 
       problems.push(`${page}: wants one canonical address on ${this.site}, has ${found}`);
+    }
+
+    const tables = text.match(DistCheck.table)?.length ?? 0;
+    const framed = text.match(DistCheck.framedTable)?.length ?? 0;
+
+    if (framed < tables) {
+      problems.push(
+        `${page}: ${tables - framed} of ${tables} tables sit outside a scrolling frame`,
+      );
     }
 
     if (page !== DistCheck.notFound && !page.endsWith(DistCheck.pageFile)) {

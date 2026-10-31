@@ -33,6 +33,7 @@ export class ErrorPages {
             type: 'reference',
             editUrl: false,
             sidebar: { label: error.code.toString() },
+            error: { code: error.code.toString() },
           },
           `## Why it happens\n\n${error.cause}\n\n## What to do\n\n${error.fix}\n`,
           lastUpdated,
@@ -60,6 +61,17 @@ export class ErrorPages {
       ),
       ...codes,
     ];
+  }
+
+  /** Every code with its page, cause and fix: the JSON index the loader's messages and tools read. */
+  public index(): { code: string; title: string; cause: string; fix: string; page: string }[] {
+    return this.errors.error.map((error) => ({
+      code: error.code.toString(),
+      title: error.title.toString(),
+      cause: error.cause.toString(),
+      fix: error.fix.toString(),
+      page: `/${ErrorPages.folder}/${error.code.slug}/`,
+    }));
   }
 
   /** The steps as sections, each answer a link to the next step or to an error's page. */

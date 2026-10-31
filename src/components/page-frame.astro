@@ -1,0 +1,16 @@
+---
+import Default from '@astrojs/starlight/components/PageFrame.astro';
+
+import { PageId } from '../site/page-id.ts';
+import NightSky from './night-sky.astro';
+
+// Doc pages lie on a faint night; the front page draws the full one in its hero.
+const front = new PageId(Astro.locals.starlightRoute.id).isFront;
+---
+
+{!front && <NightSky variant="page" />}
+<Default>
+  <slot name="header" slot="header" />
+  <slot name="sidebar" slot="sidebar" />
+  <slot />
+</Default>

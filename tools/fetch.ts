@@ -54,17 +54,20 @@ const modReleases = await new ModPages(
   ModPages.listed(platform.modList.toString(), developerArea.releases[0]?.mods),
 ).build();
 
-const apiMap = new PlatformChecks(developerArea.releases[0], developerArea.newestPages).run();
+const platformChecks = new PlatformChecks(developerArea.releases[0], developerArea.newestPages);
+const apiMap = platformChecks.run();
 
 const errors = developerArea.releases[0]?.errors;
+const errorPages =
+  errors === undefined ? undefined : ErrorPages.parse(DeveloperArea.errorsSource, errors);
 
-if (errors !== undefined) {
-  const pages = ErrorPages.parse(DeveloperArea.errorsSource, errors).pages(
-    developerArea.releases[0]?.errorsUpdated,
-  );
-
-  await Promise.all(pages.map((page) => page.write()));
-}
+await Promise.all(
+  (errorPages?.pages(developerArea.releases[0]?.errorsUpdated) ?? []).map((page) => page.write()),
+);
+await Bun.write(
+  `${generated}/errors.json`,
+  `${JSON.stringify(errorPages?.index() ?? [], null, 2)}\n`,
+);
 
 await Bun.write(
   `${generated}/api-map.md`,
@@ -74,4 +77,9 @@ await Bun.write(
   `${generated}/compatibility.json`,
   `${JSON.stringify({ platform: developerArea.releases.map(({ lib: _lib, errors: _errors, errorsUpdated: _errorsUpdated, abi: _abi, mods: _mods, ...release }) => release), mods: modReleases }, null, 2)}\n`,
 );
+await Bun.write(
+  `${generated}/stability.json`,
+  `${JSON.stringify(apiMap.stability.badges, null, 2)}\n`,
+);
+await Bun.write(`${generated}/smallest-mod.rs`, `${platformChecks.smallestMod()}\n`);
 await Bun.write(`${generated}/dev-sidebar.json`, `${JSON.stringify(developerSidebar, null, 2)}\n`);

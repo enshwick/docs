@@ -1,0 +1,36 @@
+---
+import LanguageSelect from '@astrojs/starlight/components/LanguageSelect.astro';
+
+import { links } from '../site/links.ts';
+import { texts } from '../site/texts.ts';
+import type { LanguageCode } from '../site/types.ts';
+import ServiceIcon from './service-icon.astro';
+
+interface Props {
+  /** The page's language. */
+  language: LanguageCode;
+}
+
+const { language } = Astro.props;
+const t = (key: string): string => texts.get(key, language);
+---
+
+<footer class="ew-foot">
+  <div class="ew-foot__body">
+    <nav class="ew-foot__links" aria-label={t('foot.links')}>
+      <a class="ew-foot__service" href={links.github.toString()}><ServiceIcon service="github" />GitHub</a>
+      <a class="ew-foot__service" href={links.nexus.toString()}><ServiceIcon service="nexus" />Nexus Mods</a>
+    </nav>
+    <p class="ew-foot__mail">
+      <a href={links.contact.mailto()}>{links.contact.toString()}</a>
+      <a href={links.security.mailto()}>{links.security.toString()}</a>
+    </p>
+    <div class="ew-foot__language">
+      <LanguageSelect />
+    </div>
+    <p class="ew-foot__legal">
+      <a href={links.license.toString()}>{t('foot.license')}</a>
+      <span>{t('foot.not-affiliated')}</span>
+    </p>
+  </div>
+</footer>

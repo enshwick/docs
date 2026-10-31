@@ -71,7 +71,25 @@ describe('ModPages.body', () => {
 
     expect(table).toBeGreaterThan(body.indexOf('## Settings'));
     expect(table).toBeLessThan(body.indexOf('## Problems'));
-    expect(body).toContain('`enshwick.game-rates`');
+  });
+
+  it('leaves the facts out of the text, for the mod card to show', () => {
+    const body = ModPages.body(release, languages.root, PlayerPageSource.parse('test', page));
+
+    expect(body).not.toContain(':::note');
+  });
+});
+
+describe('ModPages.card', () => {
+  it('gives the mod card its id, who needs it, its version and where its release is', () => {
+    const card = ModPages.card(release, PlayerPageSource.parse('test', page));
+
+    expect(card).toMatchObject({
+      id: 'enshwick.game-rates',
+      repository: release.repository.toString(),
+      release: release.tag.toString(),
+    });
+    expect(card.needs).toBeDefined();
   });
 
   it('adds a settings section at the end when the page has none', () => {

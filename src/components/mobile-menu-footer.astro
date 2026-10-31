@@ -1,0 +1,23 @@
+---
+import LanguageSelect from '@astrojs/starlight/components/LanguageSelect.astro';
+
+import { languages } from '../site/languages.ts';
+import { links } from '../site/links.ts';
+import { texts } from '../site/texts.ts';
+import { LanguageCode } from '../site/types.ts';
+import ServiceIcon from './service-icon.astro';
+
+// The narrow menu's foot carries what the bar has no room for there.
+const parsed = LanguageCode.parse(Astro.locals.starlightRoute.lang);
+const language = parsed.ok ? parsed.value : languages.root;
+const t = (key: string): string => texts.get(key, language);
+---
+
+<div class="ew-menu-foot">
+  <nav class="ew-menu-foot__links" aria-label={t('foot.links')}>
+    <a href={links.download.toString()}>{t('nav.download')}</a>
+    <a class="ew-foot__service" href={links.github.toString()}><ServiceIcon service="github" />GitHub</a>
+    <a class="ew-foot__service" href={links.nexus.toString()}><ServiceIcon service="nexus" />Nexus Mods</a>
+  </nav>
+  <LanguageSelect />
+</div>
