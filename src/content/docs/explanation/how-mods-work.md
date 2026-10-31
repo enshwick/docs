@@ -7,7 +7,9 @@ sidebar:
 ---
 
 Enshwick runs mods in Rust, and data packs. A Rust mod runs inside the
-game with the same rights as the game. For this reason, it can change a lot. For
+game with the same rights as the game.
+
+For this reason, it can change a lot. For
 the same reason, install only mods from sources you trust.
 
 Luau mods are in progress. A Luau mod hears events and works with players, but
@@ -17,14 +19,19 @@ it cannot set game rules yet.
 
 Windows loads the file `powrprof.dll` for every program that asks for it.
 Enshrouded asks for it at start. Windows looks in the game folder first.
+
 Enshwick puts its own file with that name there, so Enshwick starts together
 with the game. It passes each request on to the real Windows file, so the game
 works as before.
 
 Enshwick then reads the `mods` folder and starts each mod in it. Before any mod
-changes anything, Enshwick checks the game's version against what it knows. A
+changes anything, Enshwick checks the game's version against what it knows.
+
+A
 game update can move the parts of the game that mods change. When Enshwick
-cannot find such a part, it turns off the features that need it. The rest keeps
+cannot find such a part, it turns off the features that need it.
+
+The rest keeps
 running. Enshwick writes what it turned off to its log.
 
 ## What a mod can change
@@ -34,13 +41,17 @@ recipe or the comfort of a chair. Enshwick knows where those parts are in each
 version of the game. A mod does not have to guess.
 
 When two or more mods change the same thing, Enshwick puts them in a chain. Each
-mod gets its turn. When a mod fails, Enshwick turns that mod off, and the game
+mod gets its turn.
+
+When a mod fails, Enshwick turns that mod off, and the game
 goes on without it. The log names the mod and what went wrong.
 
 ## Mods and multiplayer
 
 Some mods change values that a server and its players share, such as the pieces
-a recipe makes. A server compares those mods with yours when you join. If they
+a recipe makes. A server compares those mods with yours when you join.
+
+If they
 differ, the game tells you which mod and version you need. It does not let you
 into a world that would break. [Play on a server](/guides/play-on-a-server/)
 shows each case.
@@ -58,9 +69,12 @@ pack holds no code, and a server sends you only data, never code.
 
 So the safety of a Rust mod depends on where it comes from:
 
-- **Our mods** are open source. Anyone can read every line. Each file you
-  download is built from that code on our own build machines. Each download
-  comes with a record that ties it to the exact code it came from.
+- **Our mods** are open source. Anyone can read every line.
+
+  Each file you download is built from that code on our own build machines.
+  Each download comes with a record that ties it to the exact code it came
+  from.
+
   [Our security policy](https://github.com/enshwick/.github/blob/main/SECURITY.md#check-a-download)
   shows how to check it.
 - **Other people's mods** are as safe as their authors. Prefer mods whose code

@@ -64,7 +64,11 @@ oxlint with type information and the code style rules in `.oxlintrc.json`, the
 tests and `tools/check-dist.ts`, which reads the built site for links outside
 the site's root, canonical addresses, fallback pages in the sitemap, pages on two paths and tables
 outside their scrolling frame. It needs `bun run build` first, which fails on a broken internal
-link (`starlight-links-validator`). Git hooks run oxfmt, oxlint, markdownlint and
+link (`starlight-links-validator`). `tools/check-prose.ts` reads the English player pages for
+"simply", "just" and "easy", sentences over 25 words, paragraphs over three sentences and pictures
+that are GIF, not WebP or AVIF, without alt text or over 200 KB; it prints a page's average sentence
+length and reading grade when they pass their target, without failing. `tools/check-player-page.ts`
+holds a mod's English page to the same rules. Git hooks run oxfmt, oxlint, markdownlint and
 typos on changed files, and [actionlint](https://github.com/rhysd/actionlint)
 and [zizmor](https://docs.zizmor.sh) when a workflow changed.
 
