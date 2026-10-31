@@ -26,7 +26,7 @@ const head = (path: string): HeadEntry[] => {
   ];
 };
 
-const attr = (entries: readonly HeadEntry[], key: string, value: string, read: string) =>
+const attr = (entries: readonly HeadEntry[], key: string, value: string, read: string): unknown =>
   entries.find((entry) => entry.attrs?.[key] === value)?.attrs?.[read];
 
 const hreflangs = (entries: readonly HeadEntry[]): unknown[] =>

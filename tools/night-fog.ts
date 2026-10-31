@@ -12,27 +12,27 @@ interface Layer {
   readonly body: string;
 }
 
-function wisp(
+const wisp = (
   id: string,
   frequency: string,
   octaves: number,
   seed: number,
   matrix: string,
   blur: number,
-): string {
-  return `<filter id="${id}" x="0" y="0" width="100%" height="100%">
+): string =>
+  `<filter id="${id}" x="0" y="0" width="100%" height="100%">
     <feTurbulence type="fractalNoise" baseFrequency="${frequency}" numOctaves="${octaves}" seed="${seed}"/>
     <feColorMatrix type="matrix" values="${matrix}"/>
     <feGaussianBlur stdDeviation="${blur}"/>
   </filter>`;
-}
 
-function band(id: string, stops: readonly (readonly [number, number])[]): string {
+const band = (id: string, stops: ReadonlyArray<readonly [number, number]>): string => {
   const marks = stops
     .map(([at, alpha]) => `<stop offset="${at}" stop-color="#fff" stop-opacity="${alpha}"/>`)
     .join('');
+
   return `<linearGradient id="${id}" x1="0" y1="0" x2="0" y2="1">${marks}</linearGradient>`;
-}
+};
 
 const FRONT_MATRIX = '0 0 0 0 0.80  0 0 0 0 0.79  0 0 0 0 0.92  0 0 0 1.9 -0.95';
 
@@ -97,6 +97,7 @@ await Promise.all(
   LAYERS.map(async (layer) => {
     const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${WIDTH}" height="${HEIGHT}" viewBox="0 0 2000 1000" preserveAspectRatio="none">${layer.body}</svg>`;
     const out = new URL(`../src/assets/night/${layer.name}.webp`, import.meta.url);
+
     await sharp(Buffer.from(svg), { density: 72 })
       .webp({ quality: 82, alphaQuality: 90, effort: 6 })
       .toFile(out.pathname);

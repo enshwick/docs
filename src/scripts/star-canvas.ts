@@ -33,6 +33,7 @@ export class StarCanvas {
   ) {
     this.context = context;
     const view = svg.viewBox.baseVal;
+
     this.box = { width: view.width, height: view.height };
     this.stars = [...svg.querySelectorAll('circle')].map((circle) => StarCanvas.read(circle));
     this.colour = getComputedStyle(svg.querySelector('circle') ?? svg).fill || '#e9e1d3';
@@ -46,14 +47,17 @@ export class StarCanvas {
     if (window.matchMedia(StarCanvas.reducedMotion).matches) {
       return;
     }
+
     for (const canvas of document.querySelectorAll<HTMLCanvasElement>(
       '[data-star-canvas]:not([data-drawing])',
     )) {
       const svg = canvas.previousElementSibling;
       const context = canvas.getContext('2d');
+
       if (!(svg instanceof SVGSVGElement) || context === null) {
         continue;
       }
+
       canvas.dataset['drawing'] = '';
       new StarCanvas(canvas, svg, context).start(svg);
     }
@@ -65,6 +69,7 @@ export class StarCanvas {
       Math.abs(Number(style.getPropertyValue(name).replace('s', '')) || 0);
     const mark = /ew-star--f([123])/u.exec(circle.getAttribute('class') ?? '')?.[1];
     const pattern = mark === '1' ? 1 : mark === '2' ? 2 : mark === '3' ? 3 : undefined;
+
     return {
       x: circle.cx.baseVal.value,
       y: circle.cy.baseVal.value,
@@ -89,27 +94,34 @@ export class StarCanvas {
     const sizes = new ResizeObserver(() => {
       this.resize();
     });
+
     sizes.observe(this.canvas.parentElement ?? this.canvas);
     this.canvas.hidden = false;
     svg.style.display = 'none';
+
     const frame = (now: number): void => {
       // A page swap that dropped this night ends its drawing.
       if (!this.canvas.isConnected) {
         sizes.disconnect();
+
         return;
       }
+
       if (now - this.last >= StarCanvas.frameGap) {
         this.last = now;
         this.draw(Date.now() / 1000);
       }
+
       requestAnimationFrame(frame);
     };
+
     requestAnimationFrame(frame);
   }
 
   private resize(): void {
     const ratio = Math.min(window.devicePixelRatio || 1, 2);
     const { clientWidth, clientHeight } = this.canvas;
+
     this.canvas.width = Math.round(clientWidth * ratio);
     this.canvas.height = Math.round(clientHeight * ratio);
     this.draw(Date.now() / 1000);
@@ -122,8 +134,10 @@ export class StarCanvas {
     const left = (width - this.box.width * scale) / 2;
     const top = (height - this.box.height * scale) / 2;
     const context = this.context;
+
     context.clearRect(0, 0, width, height);
     context.fillStyle = this.colour;
+
     for (const star of this.stars) {
       context.globalAlpha = star.opacity * star.light.at(seconds);
       context.beginPath();

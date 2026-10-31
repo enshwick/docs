@@ -19,7 +19,9 @@ export class PageSwap {
 
   private listen(): void {
     document.addEventListener('astro:before-swap', (event) => {
-      // Skipping rejects the transition's `ready`; nothing waits on it.
+      // Skipping rejects the transition's `ready`; nothing waits on it, and the handler stays
+      // synchronous so the skip and the marks land before the router swaps.
+      // oxlint-disable-next-line promise/prefer-await-to-then
       event.viewTransition.ready.catch(() => {});
       event.viewTransition.skipTransition();
       PageSwap.mark(event.newDocument);

@@ -36,8 +36,8 @@ export class Summary {
 
   /** Reads the summary's text; lines it does not know (comments, the book's title) are skipped. */
   public static parse(text: string): Summary {
-    const parts: { title: string | undefined; chapters: SummaryChapter[] }[] = [];
-    const stack: { depth: number; children: SummaryChapter[] }[] = [];
+    const parts: Array<{ title: string | undefined; chapters: SummaryChapter[] }> = [];
+    const stack: Array<{ depth: number; children: SummaryChapter[] }> = [];
     let current = { title: undefined as string | undefined, chapters: [] as SummaryChapter[] };
 
     parts.push(current);
@@ -94,8 +94,9 @@ export class Summary {
   }
 
   /** Every chapter in reading order, nested ones after their parent, each with its part's title. */
-  public get chapters(): readonly { chapter: SummaryChapter; part: string | undefined }[] {
-    const all: { chapter: SummaryChapter; part: string | undefined }[] = [];
+  public get chapters(): ReadonlyArray<{ chapter: SummaryChapter; part: string | undefined }> {
+    const all: Array<{ chapter: SummaryChapter; part: string | undefined }> = [];
+
     const walk = (chapters: readonly SummaryChapter[], part: string | undefined): void => {
       for (const chapter of chapters) {
         all.push({ chapter, part });
@@ -127,6 +128,7 @@ export class Summary {
               ...chapter.children.map(entry),
             ],
           };
+
     const part = (title: string, chapters: readonly SummaryChapter[]): SidebarEntry => {
       const [first, ...rest] = chapters.map((chapter) => entry(chapter));
       const items =
