@@ -64,7 +64,8 @@
       "testing.md": "how-to",
       "vetoes.md": "how-to",
       "weather.md": "how-to",
-      "world.md": "how-to"
+      "world.md": "how-to",
+      "item-and-entity-data.md": "how-to"
     }
   },
   "mods": {
