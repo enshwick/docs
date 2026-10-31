@@ -20,6 +20,10 @@ settings:
 
 - Building recipes make twice as much.
 
+## Install
+
+Game Rates needs Enshwick.
+
 ## Settings
 
 Change them on the world settings screen.
@@ -28,6 +32,10 @@ Change them on the world settings screen.
 
 None known.
 `;
+
+const shots = 'screenshots:\n  - file: images/menu.webp\n    alt: The rates in the menu';
+const version = 'screenshot_game_version: "1.0"';
+const withFields = (fields: string): string => page.replace('\n---\n\n', `\n${fields}\n---\n\n`);
 
 const release: ModRelease = {
   slug: 'game-rates',
@@ -63,6 +71,50 @@ describe('PlayerPageSource', () => {
         page.replace(/^summary: .*$/mu, `summary: ${'a'.repeat(201)}`),
       ),
     ).toThrow(/test/u);
+  });
+
+  it('refuses a page that does not open with a list of what the mod changes', () => {
+    expect(() => PlayerPageSource.parse('test', page.replace('- Building', 'Building'))).toThrow(
+      /opens with a list/u,
+    );
+  });
+
+  it('refuses an opening list of more than five items', () => {
+    const long = Array.from({ length: 6 }, (_, index) => `- Change ${index}.`).join('\n');
+
+    expect(() =>
+      PlayerPageSource.parse('test', page.replace('- Building recipes make twice as much.', long)),
+    ).toThrow(/6 items/u);
+  });
+
+  it('counts an item that wraps onto the next line once', () => {
+    const wrapped = page.replace(
+      '- Building recipes make twice as much.',
+      '- Building recipes make\n  twice as much.\n- Nothing else changes.',
+    );
+
+    expect(PlayerPageSource.parse('test', wrapped).body.startsWith('- Building')).toBe(true);
+  });
+
+  it('refuses a page that never says the mod needs Enshwick', () => {
+    expect(() =>
+      PlayerPageSource.parse('test', page.replace('Game Rates needs Enshwick.', 'Unpack it.')),
+    ).toThrow(/needs Enshwick/u);
+  });
+
+  it('refuses screenshots without the game version they show, and a version without screenshots', () => {
+    expect(() => PlayerPageSource.parse('test', withFields(shots))).toThrow(
+      /screenshot_game_version/u,
+    );
+    expect(() => PlayerPageSource.parse('test', withFields(version))).toThrow(
+      /screenshot_game_version/u,
+    );
+  });
+
+  it('reads screenshots that name their game version', () => {
+    const source = PlayerPageSource.parse('test', withFields(`${shots}\n${version}`));
+
+    expect(source.data.screenshots).toHaveLength(1);
   });
 });
 
