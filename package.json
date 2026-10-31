@@ -37,7 +37,7 @@
   "devDependencies": {
     "@astrojs/check": "0.9.12",
     "@stylistic/eslint-plugin": "5.10.0",
-    "@types/bun": "1.4.2",
+    "@types/bun": "1.4.4",
     "eslint-plugin-jsdoc": "65.4.2",
     "lefthook": "2.2.2",
     "oxfmt": "0.75.0",
