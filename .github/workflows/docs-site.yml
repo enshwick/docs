@@ -1,0 +1,68 @@
+name: Docs site
+
+# Checks and builds the site, and puts the build on the Cloudflare Worker
+# that `wrangler.jsonc` names. With `deploy` and the two Cloudflare secrets
+# the build goes live; otherwise, as on a pull request, the build is only
+# checked.
+
+on:
+  workflow_call:
+    inputs:
+      deploy:
+        description: Deploy the build to production; off only checks and builds it.
+        type: boolean
+        default: false
+    secrets:
+      CLOUDFLARE_API_TOKEN:
+        description: A token that may edit the account's Workers scripts.
+        required: false
+      CLOUDFLARE_ACCOUNT_ID:
+        description: The Cloudflare account the Worker belongs to.
+        required: false
+
+permissions: {}
+
+env:
+  WRANGLER_VERSION: 4.156.0
+
+jobs:
+  build:
+    runs-on: ubuntu-26.04
+    timeout-minutes: 20
+    permissions:
+      contents: read
+    env:
+      # Whether the caller passed a token, without putting the token itself
+      # into every step's environment.
+      CLOUDFLARE: ${{ secrets.CLOUDFLARE_API_TOKEN != '' }}
+    steps:
+      # Full history: each page's "Last updated" date comes from its last
+      # commit, and a shallow clone would date every page to the newest one.
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+
+      - uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2.2.0
+        with:
+          bun-version: 1.4.4
+
+      # No lifecycle scripts: the only one installs git hooks, which CI has
+      # no use for.
+      - name: Install
+        run: bun install --frozen-lockfile --ignore-scripts
+
+      - name: Build
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: bun run build
+
+      - name: Check
+        run: bun run check
+
+      - name: Deploy
+        if: inputs.deploy && env.CLOUDFLARE == 'true'
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: bunx "wrangler@$WRANGLER_VERSION" deploy
