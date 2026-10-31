@@ -1,6 +1,6 @@
 ---
 title: Change a mod's settings
-description: Set a mod's values for new worlds, for one world, or on a dedicated server.
+description: Set a mod's values for new worlds, for one world, in the game, or on a dedicated server.
 type: how-to
 sidebar:
   order: 5
@@ -30,6 +30,24 @@ keeps its own copy.
 
 Most changes to a loaded world apply about one second after you save. A mod's
 page says when a setting waits until the world loads again or the game restarts.
+
+## Change your own settings in the game
+
+Some settings belong to your own game and apply in every world. You change them
+on the **Mods** screen.
+
+1. Open **Mods** in the main menu, or in the pause menu beside **Settings**.
+2. Find the mod and change its values.
+3. For a text value, click the field, type the text and press Enter.
+
+Only Enter sets a text value. If you leave the field another way, nothing is
+set. If a value is refused, the reason shows above the list.
+
+## Change the world's settings while you host
+
+If you host a game, open the pause menu and select **World settings** above
+it. The game's own world settings open. Each mod's settings show on the last
+tab.
 
 ## Change them on a dedicated server
 

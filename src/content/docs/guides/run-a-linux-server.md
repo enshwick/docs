@@ -59,4 +59,4 @@ With ntsync in place, it reads `/dev/ntsync present`. Each missing setting gets
 a line of advice.
 
 For a server in Docker or Kubernetes, see
-[Running a server in Docker or Kubernetes](/dev/servers/).
+[Run a server in Docker or Kubernetes](/guides/run-a-server-in-docker/).
