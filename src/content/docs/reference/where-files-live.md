@@ -27,5 +27,17 @@ All paths are inside the game folder, the one that holds `enshrouded.exe` or
 Each log keeps the two sessions before the last one, such as `all.1.log` and
 `all.2.log`. `crash.log` keeps growing across sessions.
 
+A log can also fill up during a long session. `all.log` holds up to 32 MiB, and
+each other log up to 8 MiB. A full log moves to `all.1.log` in the same way,
+and a new `all.log` starts.
+
+When Enshwick writes one of its files again, such as `mods.toml`, it keeps the
+old one beside it, such as `mods.toml.bak`. If `mods.toml` does not read, the
+mods that are off in `mods.toml.bak` stay off.
+
+After a game update that Enshwick does not know yet, it finds the game code it
+needs again. It notes where in `mod-data/enshwick/carried-server.txt` or
+`carried-client.txt`, so the next start is faster.
+
 A mod's id names its files, such as `enshwick.game-rates`. Each mod's page shows
 its id.
