@@ -1,4 +1,11 @@
 {
+  "admin-tools": {
+    "side": "server",
+    "summary": {
+      "en": "Admins mute players in chat from the game.",
+      "uk": "Адміністратори вимикають гравцям чат у грі."
+    }
+  },
   "area-loot": {
     "side": "server",
     "summary": {
