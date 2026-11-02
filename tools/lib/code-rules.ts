@@ -1,4 +1,4 @@
-import ts from 'typescript';
+import { type Directive, parseSync, type Span, type Statement, Visitor } from 'oxc-parser';
 
 /**
  * The code style rules a linter here cannot hold: a native `enum` over `const enum`, behaviour on
@@ -50,23 +50,23 @@ export class CodeRules {
   }
 
   private static syntax(path: string, text: string): string[] {
-    const source = ts.createSourceFile(path, text, ts.ScriptTarget.Latest, true);
-    const at = (node: ts.Node): string =>
-      `${path}:${source.getLineAndCharacterOfPosition(node.getStart(source)).line + 1}`;
+    const { program } = parseSync(path, text);
+    const at = (node: Span): string => `${path}:${text.slice(0, node.start).split('\n').length}`;
     const problems: string[] = [];
 
-    const visit = (node: ts.Node): void => {
-      if (ts.isEnumDeclaration(node) && CodeRules.has(node, ts.SyntaxKind.ConstKeyword)) {
-        problems.push(`${at(node)}: use a native enum, not a const enum`);
-      }
+    new Visitor({
+      TSEnumDeclaration(node) {
+        if (node.const) {
+          problems.push(`${at(node)}: use a native enum, not a const enum`);
+        }
+      },
+    }).visit(program);
 
-      ts.forEachChild(node, visit);
-    };
-
-    visit(source);
-
-    for (const statement of source.statements) {
-      if (ts.isExportDeclaration(statement) && statement.moduleSpecifier !== undefined) {
+    for (const statement of program.body) {
+      if (
+        statement.type === 'ExportAllDeclaration' ||
+        (statement.type === 'ExportNamedDeclaration' && statement.source !== null)
+      ) {
         problems.push(
           `${at(statement)}: import the file that declares it instead of re-exporting it`,
         );
@@ -83,36 +83,36 @@ export class CodeRules {
   }
 
   /** The names of the functions a top-level statement exports outside a class. */
-  private static looseFunctions(statement: ts.Statement): string[] {
-    if (!CodeRules.has(statement, ts.SyntaxKind.ExportKeyword)) {
+  private static looseFunctions(statement: Directive | Statement): string[] {
+    if (statement.type === 'ExportDefaultDeclaration') {
+      return statement.declaration.type === 'FunctionDeclaration'
+        ? [statement.declaration.id?.name ?? 'default']
+        : [];
+    }
+
+    if (statement.type !== 'ExportNamedDeclaration') {
       return [];
     }
 
-    if (ts.isFunctionDeclaration(statement)) {
-      return [statement.name?.text ?? 'default'];
+    const { declaration } = statement;
+
+    if (declaration?.type === 'FunctionDeclaration') {
+      return [declaration.id?.name ?? 'default'];
     }
 
-    if (!ts.isVariableStatement(statement)) {
+    if (declaration?.type !== 'VariableDeclaration') {
       return [];
     }
 
-    return statement.declarationList.declarations
+    return declaration.declarations
       .filter(
-        ({ initializer }) =>
-          initializer !== undefined &&
-          (ts.isArrowFunction(initializer) || ts.isFunctionExpression(initializer)),
+        ({ init }) =>
+          init?.type === 'ArrowFunctionExpression' || init?.type === 'FunctionExpression',
       )
-      .map(({ name }) => (ts.isIdentifier(name) ? name.text : ''));
+      .map(({ id }) => (id.type === 'Identifier' ? id.name : ''));
   }
 
   private static isRoute(path: string, name: string): boolean {
     return path.startsWith(CodeRules.pages) && CodeRules.routeExports.test(name);
-  }
-
-  private static has(node: ts.Node, kind: ts.SyntaxKind): boolean {
-    return (
-      ts.canHaveModifiers(node) &&
-      (ts.getModifiers(node) ?? []).some((modifier) => modifier.kind === kind)
-    );
   }
 }

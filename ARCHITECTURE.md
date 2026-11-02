@@ -59,7 +59,8 @@ five changes, and a line naming Enshwick.
 
 ## Checks
 
-`bun run check` runs `astro check` over the strictest TypeScript settings, oxfmt,
+`bun run check` runs `tools/check-types.ts` (TypeScript 7 `tsc` with `@astrojs/ts-content-mapper` for
+`.astro` files, over the strictest settings, ignoring errors in packages' own sources), oxfmt,
 oxlint with type information and the code style rules in `.oxlintrc.json`, the
 tests and `tools/check-dist.ts`, which reads the built site for links outside
 the site's root, canonical addresses, fallback pages in the sitemap, pages on two paths and tables
