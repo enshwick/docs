@@ -23,10 +23,12 @@ keeps its own copy.
 
 ## Change them for one world
 
-1. Open `mod-data/<mod id>/worlds/` in the game folder. It holds one folder per
-   world.
-2. Open `settings.toml` in the folder of your world, in a text editor.
-3. Change the values and save the file.
+1. Open the folder that holds your world's save.
+   [Back up your worlds](/guides/back-up-saves/) says where it is.
+2. Open the folder named after the save and the mod, such as
+   `world0-mod-settings/enshwick.game-rates` for `world0.ksd`.
+3. Open `settings.toml` there in a text editor.
+4. Change the values and save the file.
 
 Most changes to a loaded world apply about one second after you save. A mod's
 page says when a setting waits until the world loads again or the game restarts.

@@ -86,5 +86,8 @@ the game starts exactly as it did before.
 ## Your worlds
 
 Some mods keep their own data for a world, such as who owns a chest. They keep
-it in the `mod-data` folder, beside the game's own save.
-[Back up your worlds](/guides/back-up-saves/) shows how to keep a copy of both.
+it in a folder beside the world's save, such as `world0-mod-data` beside
+`world0.ksd`, never inside the save.
+
+A copy of the save folder takes both. [Back up your worlds](/guides/back-up-saves/)
+shows how.
