@@ -58,38 +58,29 @@ finds what it needs by code patterns, and only what they miss stays off. With
 `build_patterns = false` in `mod-configs/enshwick.toml`, such a build runs
 without mods instead.
 
-Enshwick saves what the patterns found in
-`mod-data/enshwick/carried-server.txt`. It reads the file back while the game
-and Enshwick stay the same, so only the first start after an update searches.
-Keep `mod-data` on a volume to keep that file.
-
 Rebuild the image once a newer Enshwick has the table for the build.
 
-## Move a world to another folder
+## Keep worlds on a volume
 
-Mods keep each world's data in `mod-data/<mod id>/worlds/<key>/`. The key holds
-a hash of the save's folder, such as `world0-1a2b3c4d`. A world whose save moves
-to another folder gets a new key, such as a hosted world brought to a dedicated
-server.
+Mods keep each world's settings and data beside its save, in folders such as
+`world0-mod-settings` and `world0-mod-data` next to `world0.ksd`. Put the
+server's `savegame` folder on a volume, and the world keeps its mod data across
+rollouts.
 
-Enshwick finds the old data by itself. A world may load with a save but no mod
-data under its key. When one other key of the same save name has data,
-Enshwick takes that data over.
+To move a world to another server, copy the save with its two folders. A
+hosted world comes along the same way: copy it from the player's save folder
+into the server's `savegame`.
 
-Enshwick moves the folders when the old save is gone. It copies them when the
-old save is still there. The log says which of the two it did.
-
-When two or more keys of the same save name have data, Enshwick moves nothing.
-The log and the status summary list those keys. Stop the server, then rename
-the right folder in each `mod-data/<mod id>/worlds/` to the new key.
-
-The log names the new key in a line such as `world key <key>, from <path>`.
+[Where files live](/reference/where-files-live/) lists the folders.
 
 ## Check what a server loaded
 
-At every start, Enshwick writes `mods/enshwick/enshwick.lock`. It lists the
-version and SHA-256 of Enshwick, and the game build. It also lists each running
-mod's id, version, file and SHA-256.
+At every world load, Enshwick writes `mods.lock` into that world's
+`world0-mod-data/enshwick/`. It lists the version and SHA-256 of Enshwick, and
+the game build. It also lists each running mod's id, version, folder and
+SHA-256.
+
+What changed since the world last loaded goes to the log.
 
 Compare the file with the lock of a server you trust, or with the hashes of the
 files you put in. Then you know that a pod runs exactly the image you meant.

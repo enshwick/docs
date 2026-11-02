@@ -176,8 +176,8 @@
     "uk": "Чи не зіпсує це мої збереження?"
   },
   "front.faq.saves.a": {
-    "en": "Mods keep their own data in the mod-data folder, beside the game’s save. Delete powrprof.dll, and the game starts as it did before.",
-    "uk": "Моди тримають свої дані в теці mod-data, поруч зі збереженням гри. Видаліть powrprof.dll, і гра запуститься так, як раніше."
+    "en": "Mods keep their own data in folders beside the game’s save, never inside it. Delete powrprof.dll, and the game starts as it did before.",
+    "uk": "Моди тримають свої дані в теках поруч зі збереженням гри, ніколи не в ньому. Видаліть powrprof.dll, і гра запуститься так, як раніше."
   },
   "front.faq.update.q": {
     "en": "What happens after a game update?",

@@ -6,8 +6,9 @@ sidebar:
   order: 6
 ---
 
-To back up a modded world, copy two things: the game's own save, and the folders
-where Enshwick keeps mod data. Close the game or stop the server first.
+To back up a modded world, copy the folder that holds the game's saves. Mods
+keep each world's settings and data in folders beside its save, so the copy
+takes them along. Close the game or stop the server first.
 
 ## Copy the game's save
 
@@ -19,14 +20,17 @@ Steam Cloud is on for Enshrouded.
 - With Steam Cloud off: `Saved Games\Enshrouded` in your user folder.
 - On a dedicated server: the `savegame` folder beside `enshrouded_server.exe`.
 
-Copy that folder to a safe place.
+Copy that folder to a safe place. Beside each save, such as `world0.ksd`, it
+holds the folders `world0-mod-settings` and `world0-mod-data`, with what mods
+keep for that world.
 
-## Copy what mods keep
+Steam Cloud copies only the game's own files to your other computers, not the
+folders of mods. Back them up yourself.
 
-Copy these two folders from the game folder to the same safe place:
+## Copy the settings new worlds start with
 
-- `mod-data`, with each mod's data and its settings for every world.
-- `mod-configs`, with the settings new worlds start with.
+Copy `mod-configs` from the game folder to the same safe place. It holds the
+settings new worlds start with.
 
 ## Bring a world back
 

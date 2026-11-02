@@ -12,46 +12,47 @@ mod.
 
 ## Turn off one mod
 
-1. Open the `mods/enshwick` folder inside the game folder.
-2. Open `mods.toml` in a text editor such as Notepad.
-3. Find the lines for the mod. They start with its id, such as
-   `enshwick.game-rates`. Change `enabled = true` to `enabled = false`.
-4. Save the file and start the game. The **Mods** screen no longer lists the
-   mod.
+1. Open the `mods` folder inside the game folder.
+2. Move the mod's folder, such as `enshwick.game-rates`, out of `mods`, to a
+   folder of your own.
+3. Start the game. The **Mods** screen no longer lists the mod.
 
-The mod stays in the folder. You can turn it back on later.
+To turn the mod back on, move its folder back into `mods`.
 
 ## Delete one mod
 
 1. Open the `mods` folder inside the game folder.
-2. Delete the mod's file. Its name starts with `enshwick-` and ends in `.dll`,
-   such as `enshwick-game-rates.dll`.
+2. Delete the mod's folder, such as `enshwick.game-rates`.
 
-Its settings in `mod-configs` and its data in `mod-data` stay. Delete them too
-for a clean removal.
+Its settings for new worlds in `mod-configs` stay. Each world also keeps the
+mod's settings and data in the folders beside its save, such as
+`world0-mod-settings/enshwick.game-rates` and
+`world0-mod-data/enshwick.game-rates`. Delete them too for a clean removal.
 
 ## Open a world that a removed mod holds
 
 Some mods keep a world that the game without them cannot open safely. Such a mod
-sets a hold: a file `hold.txt` in its `mod-data` folder. While the mod does not
-run, the game stops before that world loads, and the log names the mod.
+sets a hold: a file `hold.txt` in the mod's folder in `mods`, or in its folder
+beside one world's save. While the mod does not run, the game stops before that
+world loads, and the log names the mod.
 
 To open the world anyway, delete the mod's `hold.txt`, at your own risk. It is
-`mod-data/<mod id>/hold.txt`, or `mod-data/<mod id>/worlds/<world key>/hold.txt`
-for one world. The log names the file.
+`mods/<mod id>/hold.txt`, or `world0-mod-data/<mod id>/hold.txt` for one world.
+The log names the file.
 
 ## Remove Enshwick
 
 Delete `powrprof.dll` from the game folder. The game then starts without
 Enshwick and without any mod.
 
-You may also delete the `mods`, `mod-configs`,
-`mod-data` and `logs/enshwick` folders. Only Enshwick uses them.
+You may also delete the `mods`, `mod-configs` and `logs/enshwick` folders, and
+the folders that end in `-mod-settings` and `-mod-data` beside your saves. Only
+Enshwick uses them.
 
 On Linux and Steam Deck, also remove the line you added to the game's **Launch
 options**.
 
 :::caution
-`mod-data` holds what mods keep for each world. Keep a copy before you delete
-it, as [Back up your worlds](/guides/back-up-saves/) shows.
+The folders beside your saves hold what mods keep for each world. Keep a copy
+before you delete them, as [Back up your worlds](/guides/back-up-saves/) shows.
 :::
