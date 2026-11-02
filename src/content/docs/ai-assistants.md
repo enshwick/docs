@@ -44,6 +44,19 @@ A Rust mod needs Rust 1.99 or newer and, on Windows, the MSVC build tools.
 - `Cargo.toml` names the mod in `[package.metadata.enshwick]`: `id`, `side`
   (`"server"`, `"client"` or `"both"`) and flags such as `join`. The version,
   description and authors come from `[package]`.
+- Other mods are named once, by alias, in `requires`, `after` and
+  `recommends` of `[package.metadata.enshwick]`. In code, `enshwick::deps!()`
+  at the crate root writes a module per alias:
+  `deps::<alias>::id("<name>")` is that mod's content id. It is `Off` for a
+  required mod that does not export the name, and `None` for an optional
+  one that does not run or does not export it. Never write another mod's
+  full id in code.
+- A call, point, service or event takes a local `name`, and `of = <alias>`
+  for one of another mod: `#[enshwick::event(of = lockers, name = "opened")]`.
+- Vanilla content goes through `deps::vanilla`, by the game's debug name, such
+  as `deps::vanilla::item("Prop_Production_T1_Forge")`. Never write a GUID
+  literal. [The manifest](/dev/concepts/loader-and-abi/#the-manifest) has
+  the rules.
 - A mod implements `enshwick::Mod`: `init(load: &mut Load)` sets the mod up.
   `enshwick::declare_mod!(Type)` exports it and builds its manifest from
   `Cargo.toml`.
@@ -147,6 +160,10 @@ enshwick = { version = "1", features = ["test"] }
    `declare_mod!` writes these two exports.
 4. Check the status, `loader.logs()` and `loader.faults()`. Call a detour or
    raise an event as the game would.
+
+A required mod initialises first. Before `start`, serve its calls with
+`loader.serve_call(..)` and define its points with `loader.define_point::<P>()`.
+Otherwise the fake refuses them, as the loader would.
 
 A lookup the test did not set answers `Status::MISSING`. Settings default to the
 mod's own defaults. [Testing](/dev/testing/) has full examples.
