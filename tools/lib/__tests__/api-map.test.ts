@@ -7,8 +7,10 @@ pub mod stats;
 pub mod raw;
 mod host;
 #[doc(hidden)]
-pub mod __private {
-}
+pub mod __private;
+#[cfg(feature = "test")]
+#[doc(hidden)]
+pub mod fixtures;
 pub mod weather;
 `;
 
@@ -38,6 +40,13 @@ describe('ApiMap', () => {
 
   it('names the modules no page covers', () => {
     expect(ApiMap.of(lib, pages).uncovered).toEqual(['weather']);
+  });
+
+  it('leaves out modules hidden from the docs, under any other attributes', () => {
+    const names = ApiMap.of(lib, pages).modules.map((module) => module.name);
+
+    expect(names).not.toContain('__private');
+    expect(names).not.toContain('fixtures');
   });
 
   it('writes one line per module with absolute links', () => {

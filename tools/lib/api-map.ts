@@ -18,7 +18,10 @@ export interface ApiModule {
  * lists it, and the build fails when a module has no page, so the two stay in step.
  */
 export class ApiMap {
-  private static readonly publicModule = /^pub mod ([a-z0-9_]+);/gmu;
+  // The attribute lines above each module, so a `#[doc(hidden)]` one is left out.
+  private static readonly publicModule = /^((?:#\[[^\n]*\]\r?\n)*)pub mod ([a-z0-9_]+);/gmu;
+  // Hidden modules, such as macro support, are no part of the documented API.
+  private static readonly hidden = /#\[doc\(hidden\)\]/u;
   private static readonly crateName = 'enshwick';
 
   private constructor(
@@ -28,7 +31,9 @@ export class ApiMap {
 
   /** The map of the crate root `lib`, against the newest version's developer pages. */
   public static of(lib: string, pages: readonly DeveloperPage[]): ApiMap {
-    const names = [...lib.matchAll(ApiMap.publicModule)].map((match) => match[1] ?? '');
+    const names = [...lib.matchAll(ApiMap.publicModule)]
+      .filter((match) => !ApiMap.hidden.test(match[1] ?? ''))
+      .map((match) => match[2] ?? '');
 
     return new ApiMap(
       names.map((name) => ({
