@@ -52,7 +52,11 @@ start with these values.
 Only Enter sets a text value. If you leave the field another way, nothing is
 set. If a value is refused, the reason shows above the list.
 
-The game's own world settings show no mod settings.
+The game's own world settings show no mod settings. When you create a world,
+set its mod settings first, in the main menu under **New worlds**.
+
+In a world someone else hosts, the world's settings show but cannot be
+changed.
 
 ## Change them on a dedicated server
 
