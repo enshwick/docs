@@ -1,10 +1,15 @@
 import { AnyBoolean, AnyString, n } from '@horizon-republic/nominal-types';
 
-/** One game build with a build table. */
+/**
+ * One game build with a build table: its Steam build and game version where the table names them,
+ * and the loader features off or partly off on it, absent without report data for the build.
+ */
 const GameBuild = n.object({
   side: AnyString,
   name: AnyString,
   steamBuild: n.of(AnyString).optional(),
+  gameVersion: n.of(AnyString).optional(),
+  off: n.of(AnyString).array().optional(),
 });
 
 /**

@@ -25,6 +25,12 @@ export interface GameBuild {
   readonly side: string;
   readonly name: string;
   readonly steamBuild: string | undefined;
+  readonly gameVersion: string | undefined;
+  /**
+   * The loader features that are off or partly off on the build, from the table's report data;
+   * absent when the version has no report data for it.
+   */
+  readonly off: readonly string[] | undefined;
 }
 
 /** What one platform version supports, for the compatibility page. */
@@ -50,6 +56,8 @@ export class DeveloperArea {
   private static readonly summary = 'SUMMARY.md';
   private static readonly mainBranch = 'main';
   private static readonly tables = 'crates/enshwick-gamedata/tables';
+  /** What the loader finds on each table's build, under the table's file name. */
+  private static readonly reports = 'crates/enshwick-gamedata/reports';
   private static readonly apiManifest = 'crates/enshwick/Cargo.toml';
   private static readonly apiRoot = 'crates/enshwick/src/lib.rs';
   private static readonly apiAbi = 'crates/enshwick/src/abi.rs';
@@ -129,6 +137,7 @@ export class DeveloperArea {
       `/${this.source.book}/`,
       `/${DeveloperArea.changelog}`,
       `/${DeveloperArea.tables}/`,
+      `/${DeveloperArea.reports}/`,
       `/${DeveloperArea.apiManifest}`,
       `/${DeveloperArea.apiRoot}`,
       `/${DeveloperArea.apiAbi}`,
@@ -208,6 +217,26 @@ export class DeveloperArea {
   }
 
   /** The API version and the game builds with a build table at the version's ref. */
+  /** The loader features off or partly off on table `file`'s build, from its report data. */
+  private static async off(
+    checkout: GitSource,
+    file: string,
+  ): Promise<readonly string[] | undefined> {
+    const report = await checkout.read(`${DeveloperArea.reports}/${file}`);
+
+    if (report === undefined) {
+      return undefined;
+    }
+
+    const features = new Fields(Bun.TOML.parse(report)).at('feature').value;
+
+    return (Array.isArray(features) ? features : []).flatMap((feature) => {
+      const name = new Fields(feature).at('name').text();
+
+      return name === undefined ? [] : [name];
+    });
+  }
+
   private static async release(
     version: DeveloperVersion,
     checkout: GitSource,
@@ -227,11 +256,14 @@ export class DeveloperArea {
         const side = table.at('side').text();
         const name = table.at('name').text();
         const steamBuild = table.at('steam_build').value;
+        const gameVersion = table.at('game_version').value;
 
         return {
           side: side ?? file,
           name: name ?? file,
           steamBuild: typeof steamBuild === 'number' ? String(steamBuild) : undefined,
+          gameVersion: typeof gameVersion === 'number' ? String(gameVersion) : undefined,
+          off: await DeveloperArea.off(checkout, file),
         };
       }),
     );
