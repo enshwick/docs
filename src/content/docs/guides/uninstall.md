@@ -24,8 +24,7 @@ To turn the mod back on, move its folder back into `mods`.
 1. Open the `mods` folder inside the game folder.
 2. Delete the mod's folder, such as `enshwick.game-rates`.
 
-Its settings for new worlds in `mod-configs` stay. Each world also keeps the
-mod's settings and data in the folders beside its save, such as
+Each world keeps the mod's settings and data in the folders beside its save, such as
 `world0-mod-settings/enshwick.game-rates` and
 `world0-mod-data/enshwick.game-rates`. Delete them too for a clean removal.
 
