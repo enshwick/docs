@@ -20,11 +20,15 @@ Then join as usual. The server checks your mods when you join.
 Some mods change things that the server and every player must agree on, such as
 recipes. Each mod's page says whether it is one of those.
 
-- If you do not have such a mod, or have another version, the game tells you
-  which one. You do not join.
+- If you do not have such a mod, or have another version, you do not join. The
+  main menu then lists each mod that differs, with the version the server needs
+  and the version you have.
 - If you have such a mod and the server does not run it, the mod stays off while
-  you play there. The game tells you so.
-- Other mods are your own choice. They run as usual.
+  you play there. The game tells you so. The mod is back on in your next world.
+- A mod that runs only on the server is not checked. You do not need it.
+
+The list shows each mod by its id, such as `you.lanterns`. Find the mod by that
+id on the site where you get mods. The list never names a download place.
 
 ## Settings on a server
 
