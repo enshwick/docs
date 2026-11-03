@@ -55,7 +55,7 @@ a set nobody built, and replicas drift apart.
 
 After a game update, Enshwick may lack the table for the new game build. It then
 finds what it needs by code patterns, and only what they miss stays off. With
-`build_patterns = false` in `mod-configs/enshwick.toml`, such a build runs
+`build_patterns = false` in `enshwick.toml` in the game folder, such a build runs
 without mods instead.
 
 Rebuild the image once a newer Enshwick has the table for the build.
@@ -84,24 +84,6 @@ What changed since the world last loaded goes to the log.
 
 Compare the file with the lock of a server you trust, or with the hashes of the
 files you put in. Then you know that a pod runs exactly the image you meant.
-
-## Greet players when they join
-
-Set `motd` in `mod-configs/enshwick.toml` to a message of the day. Every player
-reads it in chat when they join:
-
-```toml
-motd = """
-Welcome to Ember Vale.
-Restarts at 06:00 UTC. Rules: discord.gg/example
-"""
-```
-
-The message is plain text. Enshwick keeps the first 4 lines and 500 bytes, and
-it drops empty lines and control characters. The log warns when Enshwick cuts
-the text.
-
-A change applies at the next join, without a restart.
 
 ## Use mods from Nexus
 
