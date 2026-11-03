@@ -18,7 +18,9 @@ const check = async (file: string): Promise<string[]> => {
   const size = (path: string): number | typeof PlayerProse.missing =>
     statSync(join(dirname(file), path), { throwIfNoEntry: false })?.size ?? PlayerProse.missing;
   const screenshots = (source.data.screenshots ?? [])
-    .map((shot) => `![${shot.alt.toString()}](${shot.file.toString()})`)
+    .flatMap(({ file: shot, alt, poster }) =>
+      (poster === undefined ? [shot] : [shot, poster]).map((path) => `![${alt}](${path})`),
+    )
     .join('\n');
   const problems = PlayerProse.media(
     `${text}\n${screenshots}`,
