@@ -6,7 +6,7 @@ sidebar:
   order: 5
 ---
 
-Mod settings belong to each world. Each world keeps them beside its save. The
+Mod settings belong to each world, which keeps them beside its save. The
 loader writes them from the mod's defaults when the world first loads. A
 change applies when the world loads again.
 
