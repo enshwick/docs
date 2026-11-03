@@ -1,3 +1,5 @@
+import { posix, win32 } from 'node:path';
+
 import { describe, expect, it } from 'vitest';
 
 import { ModSources } from '../mod-sources.ts';
@@ -38,6 +40,15 @@ describe('ModSources.workspaceMembers', () => {
     expect(() => ModSources.workspaceMembers('Cargo.toml', '[workspace]\nmembers = []\n')).toThrow(
       /Cargo\.toml/u,
     );
+  });
+});
+
+describe('ModSources.folder', () => {
+  it('gives the folder of a scanned path with forward slashes on every platform', () => {
+    expect(ModSources.folder('devtools\\enshwick-probe\\Cargo.toml', win32.sep)).toBe(
+      'devtools/enshwick-probe',
+    );
+    expect(ModSources.folder('area-loot/Cargo.toml', posix.sep)).toBe('area-loot');
   });
 });
 
