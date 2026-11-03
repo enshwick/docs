@@ -43,7 +43,8 @@ sidebar:
 ## Прибрати Enshwick
 
 Видаліть `powrprof.dll` з теки гри. Тоді гра запускається без Enshwick і без
-жодного мода. Можна також видалити теки `mods`, `mod-configs` і `logs/enshwick`,
+жодного мода. Можна також видалити теки `mods` і `mod-configs`, `enshwick.toml`,
+файли `enshwick` у `logs`,
 а також теки поруч зі збереженнями, чиї назви закінчуються на `-mod-settings` і
 `-mod-data`. Їх використовує лише Enshwick.
 

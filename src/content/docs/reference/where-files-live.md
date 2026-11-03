@@ -20,12 +20,11 @@ The game folder is the one that holds `enshrouded.exe` or
 | `mods/enshwick/`                         | Enshwick itself, `enshwick.dll`, and the files it keeps for this installation    |
 | `mods/<mod id>/`                         | one folder per mod, with the mod's files; a mod runs while its folder is there   |
 | `mods/<mod id>/hold.txt`                 | a hold the mod set: the game stops while the mod does not run                    |
-| `mod-configs/enshwick.toml`              | the settings of Enshwick itself, such as how much it writes to its logs          |
-| `logs/enshwick/all.log`                  | every log line of the last session                                               |
-| `logs/enshwick/loader.log`               | the lines of Enshwick itself: which mods loaded and why a mod did not            |
-| `logs/enshwick/mods/<mod id>.log`        | the lines of one mod                                                             |
-| `logs/enshwick/status.log`               | a summary: the game build, every mod and whether it runs                         |
-| `logs/enshwick/crash.log`                | one line per crash, with the mod, Enshwick or the game it came from              |
+| `enshwick.toml`                          | the settings of Enshwick itself, such as how much it writes to its logs          |
+| `logs/enshwick_<date>_<time>.log`        | the lines of Enshwick itself in one run: which mods loaded and why a mod did not |
+| `logs/<mod id>_<date>_<time>.log`        | the lines of one mod in one run                                                  |
+| `logs/enshwick-crash_<date>_<time>.log`  | one crash, with the mod, Enshwick or the game it came from                       |
+| `logs/start.log`                         | why Enshwick did not start; it is there only when Enshwick did not start         |
 
 `mods/enshwick/` also holds `clones.toml`, the items and objects mods copied
 from the game's own, and `kept-stacks.toml`, the stack sizes a world was saved
@@ -40,6 +39,7 @@ beside each world's save, named after that file:
 | Path                            | What it holds                                                                       |
 | ------------------------------- | ----------------------------------------------------------------------------------- |
 | `world0-mod-settings/<mod id>/` | the world's settings of a mod                                                       |
+| `world0-mod-settings/enshwick/` | Enshwick's rule for the world: whether players need its mods to stay                |
 | `world0-mod-data/<mod id>/`     | what a mod keeps for the world, such as who owns which Safe                         |
 | `world0-mod-data/enshwick/`     | what Enshwick keeps for the world, such as the mods it last ran with in `mods.lock` |
 
@@ -62,12 +62,16 @@ To reset a world, delete its save and its two folders.
 
 ## Logs and backups
 
-Each log keeps the two sessions before the last one, such as `all.1.log` and
-`all.2.log`. `crash.log` keeps growing across sessions.
+Each run writes new log files, named after the time it started, such as
+`enshwick_2026-11-03_10-00-00.log`. Enshwick keeps the newest 10 files of
+Enshwick, of each mod and of crashes, and deletes older ones. You may delete
+any log file yourself.
 
-A log can also fill up during a long session. `all.log` holds up to 32 MiB, and
-each other log up to 8 MiB. A full log moves to `all.1.log` in the same way,
-and a new `all.log` starts.
+A log file holds up to 8 MiB. A full file ends with a line that names the next
+file, and the run goes on there.
+
+To ask for help, attach Enshwick's file of the run that went wrong and, after
+a crash, the crash file.
 
 When Enshwick writes one of its files again, it keeps the old one beside it,
 such as `clones.toml.bak`.
