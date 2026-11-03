@@ -1,27 +1,37 @@
 ---
 title: Change a mod's settings
-description: Set a mod's values for new worlds, for one world, in the game, or on a dedicated server.
+description: Set a mod's values for one world, in the game or in its file, or on a dedicated server.
 type: how-to
 sidebar:
   order: 5
 ---
 
-Each world keeps its own copy of every mod's settings. The world takes this copy
-when it first loads. New worlds start from the values in the `mod-configs`
-folder.
+Mod settings belong to each world. Each world keeps them beside its save. The
+loader writes them from the mod's defaults when the world first loads. A
+change applies when the world loads again.
 
-## Change the values new worlds start with
+## Change settings in the game
 
-1. Start the game once with the mod. The mod then writes its settings file.
-2. Open the `mod-configs` folder in the game folder.
-3. Open the file named after the mod's id, such as `enshwick.game-rates.toml`,
-   in a text editor.
-4. Change the values and save the file.
+Each mod with settings has a **Settings** button on the **Mods** screen while
+you are in a world.
 
-Worlds you make from then on start with your values. A world you already have
-keeps its own copy.
+1. Load the world.
+2. Open **Mods** in the pause menu, beside **Settings**.
+3. Select **Settings** under the mod.
+4. Change its values.
+5. For a text value, click the field, type the text and press Enter.
 
-## Change them for one world
+The change is saved for this world. It applies when you load the world again.
+
+Only Enter sets a text value. If you leave the field another way, nothing is
+set. If a value is refused, the reason shows above the list.
+
+In the main menu, the **Mods** screen shows no **Settings** button. Open a
+world to change its settings.
+
+In a world someone else hosts, the settings show but cannot be changed.
+
+## Change them in the world's file
 
 1. Open the folder that holds your world's save.
    [Back up your worlds](/guides/back-up-saves/) says where it is.
@@ -30,35 +40,12 @@ keeps its own copy.
 3. Open `settings.toml` there in a text editor.
 4. Change the values and save the file.
 
-Most changes to a loaded world apply about one second after you save. A mod's
-page says when a setting waits until the world loads again or the game restarts.
+The change applies when the world loads again. The folder exists after the
+world loaded once with the mod.
 
-## Change settings in the game
-
-Each mod with settings has a **Settings** button on the **Mods** screen.
-
-1. Open **Mods** in the main menu, or in the pause menu beside **Settings**.
-2. Select **Settings** under the mod.
-3. Change its values.
-4. For a text value, click the field, type the text and press Enter.
-
-The page shows your own settings first, under **Your settings**. They apply in
-every world. The world's settings follow.
-
-In a world you play alone or host, they show under **This world**. A change
-applies only to that world.
-
-In the main menu, they show under **New worlds**. Worlds you make from then on
-start with these values.
-
-Only Enter sets a text value. If you leave the field another way, nothing is
-set. If a value is refused, the reason shows above the list.
-
-The game's own world settings show no mod settings. When you create a world,
-set its mod settings first, in the main menu under **New worlds**.
-
-In a world someone else hosts, the world's settings show but cannot be
-changed.
+When a newer version of the mod adds or removes a setting, the loader adds or
+removes it as the world loads. It keeps a copy of the old file as
+`settings.toml.bak`.
 
 ## Change them on a dedicated server
 
@@ -66,6 +53,7 @@ changed.
 2. Open **Mods** in the pause menu.
 3. Select **Settings** under the mod, then **Server settings**.
 4. Set the values you want.
+5. Restart the server. The values apply when its world loads again.
 
 Players who are not admins see the server's values but cannot change them.
 

@@ -27,11 +27,6 @@ keep for that world.
 Steam Cloud copies only the game's own files to your other computers, not the
 folders of mods. Back them up yourself.
 
-## Copy the settings new worlds start with
-
-Copy `mod-configs` from the game folder to the same safe place. It holds the
-settings new worlds start with.
-
 ## Bring a world back
 
 1. Close the game or stop the server.

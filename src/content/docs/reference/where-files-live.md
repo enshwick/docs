@@ -20,7 +20,6 @@ The game folder is the one that holds `enshrouded.exe` or
 | `mods/enshwick/`                         | Enshwick itself, `enshwick.dll`, and the files it keeps for this installation    |
 | `mods/<mod id>/`                         | one folder per mod, with the mod's files; a mod runs while its folder is there   |
 | `mods/<mod id>/hold.txt`                 | a hold the mod set: the game stops while the mod does not run                    |
-| `mod-configs/<mod id>.toml`              | the settings new worlds start with, one file per mod                             |
 | `mod-configs/enshwick.toml`              | the settings of Enshwick itself, such as how much it writes to its logs          |
 | `logs/enshwick/all.log`                  | every log line of the last session                                               |
 | `logs/enshwick/loader.log`               | the lines of Enshwick itself: which mods loaded and why a mod did not            |
