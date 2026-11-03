@@ -40,14 +40,14 @@ A Rust mod needs Rust 1.99 or newer and, on Windows, the MSVC build tools.
 ## Rust mods
 
 - `cargo enshwick new <id> --side server` makes a `cdylib` crate. `--side` takes
-  `server` (the default), `client` or `both`.
+  `server` (the default) or `both`.
 - The release profile needs `panic = "unwind"`. In a Cargo workspace, set it in
   the workspace root.
 - `Cargo.toml` names the mod in `[package.metadata.enshwick]`: `id`, `side`
-  (`"server"`, `"client"` or `"both"`) and flags such as `join`. The version,
+  (`"server"` or `"both"`) and flags such as `developer`. The version,
   description and authors come from `[package]`.
-- Other mods are named once, by alias, in `requires`, `after` and
-  `recommends` of `[package.metadata.enshwick]`. In code, `enshwick::deps!()`
+- Other mods are named once, by alias, in `requires`, `after` and `breaks`
+  of `[package.metadata.enshwick]`. In code, `enshwick::deps!()`
   at the crate root writes a module per alias:
   `deps::<alias>::id("<name>")` is that mod's content id. It is `Off` for a
   required mod that does not export the name, and `None` for an optional
@@ -65,7 +65,8 @@ A Rust mod needs Rust 1.99 or newer and, on Windows, the MSVC build tools.
 - Settings are a type that derives `enshwick::Config`. `load.config()` reads it,
   and `load.on_config_change` applies an edited file.
 - A mod that changes values a server and its players share sets
-  `side = "both"` and `join = true`. See [The join check](/dev/concepts/join-check/).
+  `side = "both"`; a mod only the world's side needs sets `side = "server"`.
+  See [The join check](/dev/concepts/join-check/).
 - Use an API call where one exists, such as `load.on_altar_limit`. A hook
   (`detour!`, `load.symbol`, `load.hook`) is `unsafe` and is the last resort.
   See [Hooks](/dev/hooks/).
@@ -80,7 +81,6 @@ A complete Rust mod. Its `Cargo.toml` names it:
 [package.metadata.enshwick]
 id = "you.my-altar-count"
 side = "both"
-join = true
 ```
 
 Its code:
