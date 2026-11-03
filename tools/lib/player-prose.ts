@@ -29,6 +29,8 @@ export class PlayerProse {
   private static readonly maxParagraphSentences = 3;
   private static readonly targetAverageWords = 15;
   private static readonly targetGrade = 7;
+  /** A Windows checkout's line end, read as `\n`. */
+  private static readonly windowsLineEnd = /\r\n/gu;
   private static readonly frontMatter = /^---\n[\s\S]*?\n---\n/u;
   private static readonly fence = /^\s*(`{3,}|~{3,})/u;
   /** Lines that hold no prose: headings, tables, components, imports, asides and rules. */
@@ -45,7 +47,8 @@ export class PlayerProse {
   private constructor(private readonly blocks: readonly ProseBlock[]) {}
 
   /** Reads the prose blocks of a page: paragraphs and list items, without code, tables or markup. */
-  public static of(markdown: string): PlayerProse {
+  public static of(source: string): PlayerProse {
+    const markdown = source.replaceAll(PlayerProse.windowsLineEnd, '\n');
     const offset = (PlayerProse.frontMatter.exec(markdown)?.[0] ?? '').split('\n').length - 1;
     const lines = markdown.replace(PlayerProse.frontMatter, '').split('\n');
     const blocks: ProseBlock[] = [];

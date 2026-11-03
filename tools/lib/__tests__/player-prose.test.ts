@@ -41,6 +41,14 @@ describe('PlayerProse', () => {
     ]);
   });
 
+  it('skips front matter with Windows line endings', () => {
+    const page = `---\r\ntitle: A\r\ndescription: ${words(30)}.\r\n---\r\n\r\nJust one.\r\n`;
+
+    expect(PlayerProse.of(page).errors).toEqual([
+      { line: 6, message: '"Just" tells the reader how hard something is' },
+    ]);
+  });
+
   it('reads link text and code spans as words', () => {
     const prose = PlayerProse.of(
       'Open [the settings guide](/guides/change-mod-settings/) and set `count.bases`.\n',
