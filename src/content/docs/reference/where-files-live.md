@@ -36,12 +36,12 @@ The game keeps each world as a file such as `world0.ksd`. The name is a slot,
 `world0`, `world1` and so on, not the world's name. Enshwick keeps two folders
 beside each world's save, named after that file:
 
-| Path                            | What it holds                                                                       |
-| ------------------------------- | ----------------------------------------------------------------------------------- |
-| `world0-mod-settings/<mod id>/` | the world's settings of a mod                                                       |
-| `world0-mod-settings/enshwick/` | Enshwick's rule for the world: whether players need its mods to stay                |
-| `world0-mod-data/<mod id>/`     | what a mod keeps for the world, such as who owns which Safe                         |
-| `world0-mod-data/enshwick/`     | what Enshwick keeps for the world, such as the mods it last ran with in `mods.lock` |
+| Path                            | What it holds                                                                                                                                     |
+| ------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `world0-mod-settings/<mod id>/` | the world's settings of a mod                                                                                                                     |
+| `world0-mod-settings/enshwick/` | Enshwick's rules for the world: whether players need its mods to stay, in `enshwick.toml`, and the recipes nobody crafts there, in `recipes.toml` |
+| `world0-mod-data/<mod id>/`     | what a mod keeps for the world, such as who owns which Safe                                                                                       |
+| `world0-mod-data/enshwick/`     | what Enshwick keeps for the world, such as the mods it last ran with in `mods.lock`                                                               |
 
 [Back up your worlds](/guides/back-up-saves/) says where the game keeps its
 saves. Copy the save and its two folders together, and the world keeps
