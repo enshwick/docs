@@ -1,6 +1,7 @@
 import { cp, mkdir } from 'node:fs/promises';
 import { posix } from 'node:path';
 
+import siteData from '../../src/data/site.json' with { type: 'json' };
 import { Languages } from '../../src/site/languages.ts';
 import { type ModCardData, modCardSchema } from '../../src/site/mod-card.ts';
 import { Texts } from '../../src/site/texts.ts';
@@ -32,7 +33,10 @@ export interface ModRelease {
  */
 export class ModPages {
   public static readonly folder = 'mods';
+  /** Where loops and their posters are served from, beside the pages under the same address. */
+  public static readonly publicFolder = `public/${ModPages.folder}`;
   private static readonly images = 'images';
+  private static readonly heading = '## ';
   private static readonly file = `${ModSources.docs}/${ModSources.page}.md`;
 
   private readonly sources: ModSources;
@@ -88,7 +92,7 @@ export class ModPages {
     };
 
     await mkdir(`${PageFile.contentRoot}/${ModPages.folder}`, { recursive: true });
-    await ModPages.copyImages(checkout, release);
+    await ModPages.copyImages(checkout, release, ModPages.publicFolder);
     await this.writePage(release, checkout, Languages.site.root, root, ModPages.file);
     await Promise.all(
       Languages.site.others.map((code) => this.writeTranslation(release, checkout, code)),
@@ -97,11 +101,15 @@ export class ModPages {
     return release;
   }
 
-  /** The pictures a page shows, from the mod's `docs/images/`, beside the generated page. */
-  private static async copyImages(checkout: GitSource, release: ModRelease): Promise<void> {
+  /** The pictures and loops a page shows, from the mod's `docs/images/`, into `folder/<slug>/images`. */
+  private static async copyImages(
+    checkout: GitSource,
+    release: ModRelease,
+    folder: string,
+  ): Promise<void> {
     await cp(
       checkout.path(`${release.folder}/${ModSources.docs}/${ModPages.images}`),
-      `${PageFile.contentRoot}/${ModPages.folder}/${release.slug}/${ModPages.images}`,
+      `${folder}/${release.slug}/${ModPages.images}`,
       { recursive: true, force: true },
     ).catch((error: unknown) => {
       // A mod without pictures has no images folder.
@@ -139,6 +147,7 @@ export class ModPages {
       : `${language}/${ModPages.folder}`;
     const path = `${release.folder}/${file}`;
 
+    await ModPages.copyImages(checkout, release, `${PageFile.contentRoot}/${folder}`);
     await new PageFile(
       `${folder}/${release.slug}`,
       {
@@ -174,7 +183,7 @@ export class ModPages {
     source: PlayerPageSource,
   ): string {
     const t = (key: string): string => Texts.site.get(key, language);
-    const body = source.body.replaceAll(
+    const body = ModPages.withMedia(release, source).replaceAll(
       `](${ModPages.images}/`,
       `](./${release.slug}/${ModPages.images}/`,
     );
@@ -194,6 +203,39 @@ export class ModPages {
     const lines = body.split('\n');
 
     return [...lines.slice(0, at + 1), '', table, ...lines.slice(at + 1)].join('\n');
+  }
+
+  /**
+   * The text with the page's pictures and loops after its opening list. A loop is a video that
+   * waits on its poster frame until the reader plays it, and reads from `public/`, where Markdown
+   * cannot point.
+   */
+  private static withMedia(release: ModRelease, source: PlayerPageSource): string {
+    const url = (path: string): string =>
+      `${siteData.base}/${ModPages.folder}/${release.slug}/${path}`;
+    const media = (source.data.screenshots ?? []).map(({ file, alt, poster }) =>
+      poster === undefined
+        ? `![${alt}](${file})`
+        : `<video src="${url(file.toString())}" poster="${url(poster.toString())}" aria-label="${ModPages.attribute(alt.toString())}" controls loop muted playsinline preload="none"></video>`,
+    );
+
+    if (media.length === 0) {
+      return source.body;
+    }
+
+    const lines = source.body.split('\n');
+    const at = lines.findIndex((line) => line.startsWith(ModPages.heading));
+
+    if (at === -1) {
+      return `${source.body.trimEnd()}\n\n${media.join('\n\n')}\n`;
+    }
+
+    return [...lines.slice(0, at), media.join('\n\n'), '', ...lines.slice(at)].join('\n');
+  }
+
+  /** Text for a double-quoted HTML attribute. */
+  private static attribute(text: string): string {
+    return text.replaceAll('&', '&amp;').replaceAll('"', '&quot;');
   }
 
   private static settingsTable(

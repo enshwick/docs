@@ -26,8 +26,26 @@ export const Setting = n.object({
   applies: Applies,
 });
 
-/** One picture of a mod, a path under its `docs/` folder and what to notice in it. */
-export const Screenshot = n.object({ file: AnyString, alt: AnyString });
+/** A loop's file, MP4 or WebM, which a page shows as a video that starts on its poster frame. */
+export class LoopFile extends AnyString.subtype('docs.LoopFile', /\.(?:mp4|webm)$/u) {}
+
+const screenshotFields = { file: AnyString, alt: AnyString, poster: n.of(AnyString).optional() };
+
+/** A loop starts on a still poster frame for readers who do not want motion; a still has none. */
+const postersForLoops = n.constraint(
+  { file: screenshotFields.file, poster: screenshotFields.poster },
+  ({ file, poster }) =>
+    LoopFile.parse(file.toString()).ok === (poster !== undefined)
+      ? true
+      : 'a loop (MP4 or WebM) has a poster, a WebP or AVIF still; a picture has none',
+  { path: 'poster' },
+);
+
+/**
+ * One picture or loop of a mod: a path under its `docs/` folder, what to notice in it, and for a
+ * loop its poster frame.
+ */
+export const Screenshot = n.object(screenshotFields, postersForLoops);
 
 const pageFields = {
   id: ModId,

@@ -1,4 +1,4 @@
-import { posix } from 'node:path';
+import { posix, sep } from 'node:path';
 
 import { AnyBoolean, AnyString, n } from '@horizon-republic/nominal-types';
 
@@ -171,6 +171,11 @@ export class ModSources {
     };
   }
 
+  /** The folder of a path a glob scan gives, which uses the platform's separator, written with `/`. */
+  public static folder(path: string, separator: string = sep): string {
+    return posix.dirname(path.split(separator).join(posix.sep));
+  }
+
   /** The workspace members on `main` with a player page, each by its package and folder. */
   private async members(): Promise<Array<Omit<ModSource, 'tag'>>> {
     const checkout = await GitSource.checkout(this.repository, ModSources.mainBranch, [
@@ -195,7 +200,7 @@ export class ModSources {
     );
     const folders = manifests
       .flat()
-      .map((path) => posix.dirname(path))
+      .map((path) => ModSources.folder(path))
       .toSorted();
     const found = await Promise.all(
       folders.map(async (folder) => {

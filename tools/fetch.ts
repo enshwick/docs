@@ -35,6 +35,7 @@ await Promise.all(
     rm(`${PageFile.contentRoot}/${folder}`, { recursive: true, force: true }),
   ),
 );
+await rm(ModPages.publicFolder, { recursive: true, force: true });
 await mkdir(generated, { recursive: true });
 
 const developerArea = new DeveloperArea({

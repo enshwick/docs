@@ -116,6 +116,18 @@ describe('PlayerPageSource', () => {
 
     expect(source.data.screenshots).toHaveLength(1);
   });
+
+  it('refuses a loop without a poster and a picture with one', () => {
+    const loop = 'screenshots:\n  - file: images/build.mp4\n    alt: The camera flies';
+    const posteredPicture = `${shots}\n    poster: images/menu.webp`;
+
+    expect(() => PlayerPageSource.parse('test', withFields(`${loop}\n${version}`))).toThrow(
+      /poster/u,
+    );
+    expect(() =>
+      PlayerPageSource.parse('test', withFields(`${posteredPicture}\n${version}`)),
+    ).toThrow(/poster/u);
+  });
 });
 
 describe('ModPages.body', () => {
@@ -125,6 +137,29 @@ describe('ModPages.body', () => {
 
     expect(table).toBeGreaterThan(body.indexOf('## Settings'));
     expect(table).toBeLessThan(body.indexOf('## Problems'));
+  });
+
+  it('shows pictures and loops after the opening list, a loop starting on its poster', () => {
+    const media = `screenshots:
+  - file: images/menu.webp
+    alt: The rates in the menu
+  - file: images/craft.mp4
+    alt: The "x2" count
+    poster: images/craft.webp
+${version}`;
+    const body = ModPages.body(
+      release,
+      Languages.site.root,
+      PlayerPageSource.parse('test', withFields(media)),
+    );
+    const picture = body.indexOf('![The rates in the menu](./game-rates/images/menu.webp)');
+    const loop = body.indexOf(
+      '<video src="/mods/game-rates/images/craft.mp4" poster="/mods/game-rates/images/craft.webp" aria-label="The &quot;x2&quot; count" controls loop muted playsinline preload="none"></video>',
+    );
+
+    expect(picture).toBeGreaterThan(body.indexOf('- Building recipes'));
+    expect(loop).toBeGreaterThan(picture);
+    expect(loop).toBeLessThan(body.indexOf('## Install'));
   });
 
   it('leaves the facts out of the text, for the mod card to show', () => {

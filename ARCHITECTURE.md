@@ -11,7 +11,7 @@ developer pages are versioned per API minor.
 | --- | --- | --- |
 | player area: tutorial, how-to guides, reference, explanation | `src/content/docs/`, one folder per language beside the root language | as committed |
 | developer area | the book of [enshwick/enshwick](https://github.com/enshwick/enshwick/tree/main/book/src), where its examples compile as doctests | `tools/fetch.ts` checks out each version's ref and converts the chapters. Each chapter's page type comes from `platform.pageTypes` in `src/data/sources.json`, by its path or its folder's; the build fails on a chapter with neither |
-| one page per mod | `<mod>/docs/player.md` of [enshwick/mods](https://github.com/enshwick/mods), and `<mod>/docs/player.<language>.md` for each translation | `tools/fetch.ts` reads them at the newest regular release that carries the mod's archive `<package>.zip`, else at the newest prerelease that does, such as the rolling `dev` build, and checks the front matter. Each page gains the settings table, and its front matter the facts of the mod card |
+| one page per mod | `<mod>/docs/player.md` of [enshwick/mods](https://github.com/enshwick/mods), and `<mod>/docs/player.<language>.md` for each translation | `tools/fetch.ts` reads them at the newest regular release that carries the mod's archive `<package>.zip`, else at the newest prerelease that does, such as the rolling `dev` build, and checks the front matter. Each page gains the settings table, its front matter's pictures and loops after the opening list, and its front matter the facts of the mod card. A loop is an MP4 or WebM with a WebP or AVIF poster; it waits on the poster until the reader plays it |
 | one page per error code, and `/errors.json` | the platform's `errors.toml` | `tools/fetch.ts` writes the pages and `src/generated/errors.json`, which `src/pages/errors.json.ts` serves |
 | stability badges on API pages | the book's stability chapter and the API crate's public modules | `tools/fetch.ts` writes `src/generated/stability.json` |
 | the whole mod on the front page | the example the book's getting started chapter marks with `smallest-mod` comments, compiled there as a doctest | `tools/fetch.ts` writes `src/generated/smallest-mod.rs` and fails when the chapter no longer marks it |
@@ -20,11 +20,11 @@ developer pages are versioned per API minor.
 | `llms.txt` | the developer pages, with a map of the API crate's public modules | `tools/fetch.ts` fails when a public module of the API crate has no developer page that names it |
 
 Generated pages are never committed: `tools/fetch.ts` writes them before every
-build into `src/content/docs/dev/` and the `mods/` folders, and its data into
-`src/generated/`. Each generated page carries the date of the last commit that
+build into `src/content/docs/dev/` and the `mods/` folders, a mod's pictures beside its page in
+every language, its loops into `public/mods/`, and its data into `src/generated/`. Each generated page carries the date of the last commit that
 changed its source. A page without one shows no date. `bun run check:player-page <files>` checks a mod's player
 pages as the build does, and the mods repository runs it on every change to them: the front
-matter's schema, screenshots together with the game version they show, an opening list of at most
+matter's schema, screenshots together with the game version they show, a poster for every loop, an opening list of at most
 five changes, and a line naming Enshwick.
 
 ## Sets that grow are data

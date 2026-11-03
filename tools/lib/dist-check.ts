@@ -1,4 +1,4 @@
-import { join } from 'node:path';
+import { join, posix, sep } from 'node:path';
 
 /** The checks of a built site that only the build output can answer, each problem as one line. */
 export class DistCheck {
@@ -129,6 +129,9 @@ export class DistCheck {
   }
 
   private async scan(pattern: string): Promise<string[]> {
-    return (await Array.fromAsync(new Bun.Glob(pattern).scan(this.root))).toSorted();
+    const found = await Array.fromAsync(new Bun.Glob(pattern).scan(this.root));
+
+    // The scan answers in the platform's separator; the site's paths use `/`.
+    return found.map((path) => path.split(sep).join(posix.sep)).toSorted();
   }
 }
