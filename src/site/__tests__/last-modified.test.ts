@@ -25,6 +25,16 @@ describe('LastModified', () => {
     );
   });
 
+  it('finds a page at the address its slug gives it', () => {
+    const moved = LastModified.fromLog(
+      '\u00002026-11-02T08:00:00+02:00\n\nsrc/content/docs/ai-assistants.md\n',
+      new Map([['ai-assistants.md', 'dev/ai-assistants']]),
+    );
+
+    expect(moved.of('https://enshwick.com/dev/ai-assistants/')).toBe('2026-11-02T08:00:00+02:00');
+    expect(moved.of('https://enshwick.com/ai-assistants/')).toBeUndefined();
+  });
+
   it('gives no date to a page without a file in this repository', () => {
     expect(dates.of('https://enshwick.com/dev/hooks/')).toBeUndefined();
   });
