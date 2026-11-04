@@ -92,6 +92,10 @@ export default defineConfig({
         })),
         {
           tag: 'link',
+          attrs: { rel: 'icon', href: `${siteData.base}/favicon.svg`, type: 'image/svg+xml' },
+        },
+        {
+          tag: 'link',
           attrs: { rel: 'apple-touch-icon', href: `${siteData.base}/apple-touch-icon.png` },
         },
         { tag: 'meta', attrs: { name: 'twitter:card', content: 'summary_large_image' } },
