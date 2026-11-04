@@ -78,9 +78,10 @@ export default defineConfig({
       title: 'enshwick',
       description: Texts.site.get('site.description'),
       logo: { src: './src/assets/brand/lockup.svg', alt: 'enshwick', replacesTitle: true },
-      favicon: '/favicon.svg',
+      // Emitted as `shortcut icon`, the fallback for clients that read neither the SVG nor a sized PNG.
+      favicon: '/favicon.ico',
       head: [
-        // Search engines want a raster icon of 48 px or a multiple of it; browsers pick the size they draw.
+        // Google wants a raster of 48 px or a multiple; 16 and 32 keep small tab icons sharp.
         ...[16, 32, 48, 96, 192].map((size) => ({
           tag: 'link' as const,
           attrs: {
