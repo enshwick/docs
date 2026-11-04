@@ -1,3 +1,5 @@
+import { ModLanguage } from './mod-language.ts';
+
 /**
  * The site moves between pages without loading a new document: Astro's router fetches the next
  * page and swaps it in, so a click answers at once. The swap gives the root element the next
@@ -25,6 +27,7 @@ export class PageSwap {
       event.viewTransition.ready.catch(() => {});
       event.viewTransition.skipTransition();
       PageSwap.mark(event.newDocument);
+      ModLanguage.carry(event.newDocument);
       event.newDocument.documentElement.dataset['swapped'] = '';
       event.newDocument.documentElement.dataset['swapping'] = '';
     });

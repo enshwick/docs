@@ -1,10 +1,14 @@
 import { dirname, join, normalize } from 'node:path/posix';
 
+import { LanguageSwitch } from './language-switch.ts';
+
 /** The front matter and body of one chapter as a site page. */
 export interface ChapterPage {
   readonly title: string;
   readonly description: string | undefined;
   readonly body: string;
+  /** Whether the body uses components, so the page is written as MDX. */
+  readonly mdx: boolean;
 }
 
 /** Turns one mdBook chapter into a site page: its title out of the body, mdBook's code syntax and links made plain. */
@@ -14,8 +18,14 @@ export class ChapterConverter {
   private static readonly title = /^# (.+)$/mu;
   private static readonly rust = 'rust';
 
-  /** @param url the site URL of a chapter by its book path, such as `/dev/content/items/`. */
-  public constructor(private readonly url: (path: string) => string) {}
+  /**
+   * @param url the site URL of a chapter by its book path, such as `/dev/content/items/`.
+   * @param languages what makes the chapter's mod languages switchable.
+   */
+  public constructor(
+    private readonly url: (path: string) => string,
+    private readonly languages: LanguageSwitch = new LanguageSwitch(),
+  ) {}
 
   /** The page for the chapter at `path` with the text `markdown`. */
   public convert(path: string, markdown: string): ChapterPage {
@@ -26,9 +36,15 @@ export class ChapterConverter {
     }
 
     const withoutTitle = markdown.replace(ChapterConverter.title, '').replace(/^\s+/u, '');
-    const body = this.links(path, ChapterConverter.code(withoutTitle));
+    const { body, mdx } = this.languages.apply(ChapterConverter.code(withoutTitle));
+    const linked = this.links(path, body);
 
-    return { title: titleMatch[1].trim(), description: ChapterConverter.description(body), body };
+    return {
+      title: titleMatch[1].trim(),
+      description: ChapterConverter.description(linked),
+      body: linked,
+      mdx,
+    };
   }
 
   /** mdBook's fence attributes dropped (`rust,ignore` is `rust`), and its hidden lines in Rust examples removed. */

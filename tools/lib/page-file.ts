@@ -7,17 +7,20 @@ import { dirname } from 'node:path';
  */
 export class PageFile {
   public static readonly contentRoot = 'src/content/docs';
+  private static readonly markdownExtension = 'md';
+  private static readonly mdxExtension = 'mdx';
 
   public constructor(
     public readonly slug: string,
     private readonly frontMatter: Readonly<Record<string, unknown>>,
     private readonly body: string,
     private readonly lastUpdated: Date | undefined,
+    private readonly mdx = false,
   ) {}
 
-  /** The file's path, `<content root>/<slug>.md`. */
+  /** The file's path, `<content root>/<slug>.md`, or `.mdx` for a body that uses components. */
   public get path(): string {
-    return `${PageFile.contentRoot}/${this.slug}.md`;
+    return `${PageFile.contentRoot}/${this.slug}.${this.mdx ? PageFile.mdxExtension : PageFile.markdownExtension}`;
   }
 
   /** The file's text. */
