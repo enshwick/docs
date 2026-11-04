@@ -53,6 +53,7 @@
 
 :root {
   --color-area: var(--color-area-players);
+  --color-area-wash: color-mix(in oklab, var(--color-area) 16%, transparent);
 }
 
 /*
@@ -439,7 +440,7 @@ header.header {
 
 .ew-topics a[aria-current='page'],
 .ew-topics a.ew-topics__current {
-  background: color-mix(in oklab, var(--color-area) 16%, transparent);
+  background: var(--color-area-wash);
   color: var(--color-bone);
 }
 
@@ -592,6 +593,57 @@ header.header {
 
 .sl-markdown-content .sl-steps > li::after {
   background: var(--color-line-strong);
+}
+
+/*
+ * Tabs, such as the mod language switch: the topics' quiet segment over the content, the chosen
+ * tab washed and underlined in the area's colour, as the bar is. Starlight keeps the roles, the
+ * keys and the sync; only the look is the site's.
+ */
+starlight-tabs [role='tablist'] {
+  gap: var(--space-2xs);
+  width: fit-content;
+  padding: var(--space-2xs);
+  border: var(--rule-hair) solid var(--color-line-strong);
+}
+
+starlight-tabs .tab > [role='tab'] {
+  padding: var(--space-2xs) var(--space-sm);
+  box-shadow: none;
+  font-size: var(--text-sm);
+  font-weight: 500;
+  line-height: 1.5;
+  color: var(--color-muted);
+  white-space: nowrap;
+  transition:
+    background-color var(--dur-short) var(--ease-out),
+    color var(--dur-short) var(--ease-out);
+}
+
+starlight-tabs .tab > [role='tab']:hover {
+  color: var(--color-bone);
+}
+
+starlight-tabs .tab > [role='tab'][aria-selected='true'] {
+  background: var(--color-area-wash);
+  box-shadow: inset 0 -2px 0 var(--color-area);
+  color: var(--color-bone);
+}
+
+/* Forced colours drop the wash and the shadow, so the chosen tab keeps a real border. */
+@media (forced-colors: active) {
+  starlight-tabs .tab > [role='tab'][aria-selected='true'] {
+    border-bottom: 2px solid;
+  }
+}
+
+/* The wrapper scrolls a long tab row, which would clip a ring drawn outside the tab. */
+starlight-tabs .tab > [role='tab']:focus-visible {
+  outline-offset: -2px;
+}
+
+starlight-tabs .tablist-wrapper ~ [role='tabpanel'] {
+  margin-top: var(--space-sm);
 }
 
 /* Badges: square, quiet. */
@@ -928,6 +980,10 @@ mobile-starlight-toc summary .toggle {
   color: var(--color-faint);
 }
 
+/*
+ * One column on a phone. Wider, the language list stands at the top right and the small print
+ * takes a row of its own, so no translation's length moves another part.
+ */
 .ew-foot__body {
   display: grid;
   gap: var(--space-md) var(--space-xl);
@@ -954,18 +1010,43 @@ mobile-starlight-toc summary .toggle {
 
 @media (min-width: 50rem) {
   .ew-foot__body {
+    grid-template-areas:
+      'links language'
+      'mail language'
+      'legal legal';
     grid-template-columns: minmax(0, 1fr) auto;
   }
 
+  .ew-foot__links {
+    grid-area: links;
+  }
+
+  .ew-foot__mail {
+    grid-area: mail;
+  }
+
   .ew-foot__language {
-    justify-self: start;
+    grid-area: language;
+  }
+
+  .ew-foot__legal {
+    grid-area: legal;
   }
 }
 
-/* The footer's language list shows the whole name of the language. */
-/* Room for the longest language name, Українська, in every language list. */
+/*
+ * Room for the longest language name, Українська, in every language list. The label keeps the
+ * select's width, so the caret stays inside the frame where a grid stretches the list.
+ */
 starlight-lang-select label {
   --sl-select-width: 8.5em !important;
+
+  width: fit-content;
+}
+
+/* Starlight lets the select overhang its label; in the footer and the menu the frame keeps to its column. */
+:is(.ew-foot__language, .ew-menu-foot) starlight-lang-select label {
+  margin-inline: var(--sl-inline-padding);
 }
 
 /* Selects in the bar and the menu. */
