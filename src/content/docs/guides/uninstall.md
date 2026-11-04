@@ -1,6 +1,6 @@
 ---
 title: Remove a mod or Enshwick
-description: Turn one mod off, delete it, or take Enshwick out of the game folder.
+description: Turn one mod off, delete it with its world data, or take Enshwick out of the game folder. Your game saves stay as they are in every case.
 type: how-to
 sidebar:
   order: 3

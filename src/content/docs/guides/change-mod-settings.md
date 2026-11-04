@@ -1,6 +1,6 @@
 ---
 title: Change a mod's settings
-description: Set a mod's values for one world, in the game or in its file, or on a dedicated server.
+description: Set a mod's values for one world on the Mods screen, in the file beside its save, or on a dedicated server. A change applies when the world loads again.
 type: how-to
 sidebar:
   order: 5

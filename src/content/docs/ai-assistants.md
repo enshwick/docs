@@ -1,6 +1,6 @@
 ---
 title: For AI assistants
-description: The facts an AI coding assistant needs to write an Enshwick mod, with links to the full pages.
+description: The facts an AI coding assistant needs to write an Enshwick mod in Rust or Luau, or a data pack, with links to the full page for each topic.
 type: reference
 slug: dev/ai-assistants
 ---

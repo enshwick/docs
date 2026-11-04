@@ -1,6 +1,6 @@
 ---
 title: Run a server on Linux
-description: Run the Enshrouded dedicated server with Enshwick under Proton, and tune Linux so the server runs fast.
+description: Run the Enshrouded dedicated server with Enshwick under Proton on Linux, then tune the kernel, Wine, CPU cores and clock so the server runs fast.
 type: how-to
 sidebar:
   order: 7

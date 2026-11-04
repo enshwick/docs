@@ -1,6 +1,6 @@
 ---
 title: Run a server in Docker or Kubernetes
-description: Put Enshwick and its mods into a server image, roll out new versions, move worlds and check what each server loaded.
+description: Put Enshwick and its mods into a dedicated server image, roll out new versions, move worlds and check what each server loaded, in Docker or Kubernetes.
 type: how-to
 sidebar:
   order: 8

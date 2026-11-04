@@ -1,6 +1,6 @@
 ---
 title: How mods work, and are they safe?
-description: What Enshwick does when the game starts, what a mod can reach, and how to judge whether a mod is safe to run.
+description: What Enshwick does when Enshrouded starts, what a mod can change, how mods work in multiplayer, and how to judge whether a mod is safe to run.
 type: explanation
 sidebar:
   order: 1

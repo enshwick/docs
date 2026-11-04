@@ -1,6 +1,6 @@
 ---
 title: Where files live
-description: Every file and folder Enshwick adds to the game folder and beside each save, and what each one holds.
+description: Every file and folder Enshwick adds to the game folder and beside each save, what each one holds, and where to find the logs and crash reports.
 type: reference
 sidebar:
   order: 1

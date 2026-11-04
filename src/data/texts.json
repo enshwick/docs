@@ -1,7 +1,7 @@
 {
   "site.description": {
-    "en": "Install and play Enshrouded mods, or write your own with Enshwick.",
-    "uk": "Встановлюйте моди для Enshrouded і грайте з ними або пишіть власні з Enshwick."
+    "en": "Enshwick loads mods into Enshrouded on your PC or dedicated server. Install ready mods, or write your own in Rust against a typed API.",
+    "uk": "Enshwick завантажує моди в Enshrouded на вашому ПК або виділеному сервері. Встановлюйте готові моди або пишіть власні на Rust з типізованим API."
   },
   "topic.players": {
     "en": "Play with mods",
@@ -458,9 +458,5 @@
   "foot.not-affiliated": {
     "en": "Not made by or affiliated with Keen Games. Enshrouded is their trademark.",
     "uk": "Не створений Keen Games і не пов’язаний з ними. Enshrouded — їхня торгова марка."
-  },
-  "front.luau": {
-    "en": "Luau support is in progress.",
-    "uk": "Підтримку Luau ще доробляємо."
   }
 }

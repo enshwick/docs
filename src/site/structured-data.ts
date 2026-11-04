@@ -23,6 +23,8 @@ export interface ArticlePage {
 export class StructuredData {
   private static readonly context = 'https://schema.org';
   private static readonly name = 'Enshwick';
+  /** Fallback site names for Google, in order of preference, the bare domain last. */
+  private static readonly alternateNames = ['enshwick', 'enshwick.com'];
   private static readonly email = 'contact@enshwick.com';
   private static readonly github = 'https://github.com/enshwick';
   private static readonly nexus = 'https://www.nexusmods.com/site/mods/2511';
@@ -51,6 +53,7 @@ export class StructuredData {
         '@context': StructuredData.context,
         '@type': 'WebSite',
         name: StructuredData.name,
+        alternateName: StructuredData.alternateNames,
         url,
         inLanguage: lang,
       },

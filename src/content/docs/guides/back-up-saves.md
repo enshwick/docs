@@ -1,6 +1,6 @@
 ---
 title: Back up your worlds
-description: Copy a world and everything mods keep for it, so you can bring both back.
+description: Copy a modded world with the settings and data its mods keep beside the save, then bring both back. Steam Cloud does not copy the mod folders.
 type: how-to
 sidebar:
   order: 6

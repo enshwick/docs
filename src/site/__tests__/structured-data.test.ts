@@ -47,6 +47,18 @@ describe('StructuredData', () => {
     });
   });
 
+  it('names the site Enshwick at the domain root from every language home page', () => {
+    for (const lang of ['en', 'uk']) {
+      expect(data.home(lang, '1.0.0')[1]).toMatchObject({
+        '@type': 'WebSite',
+        name: 'Enshwick',
+        alternateName: ['enshwick', 'enshwick.com'],
+        url: `${site}/`,
+        inLanguage: lang,
+      });
+    }
+  });
+
   it('dates an article only when the page has a real date', () => {
     const page = { path: '/guides/update/', title: 'Update', description: 'How', lang: 'en' };
     const [dated] = data.article(

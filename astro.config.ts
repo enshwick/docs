@@ -75,9 +75,9 @@ export default defineConfig({
       },
     }),
     starlight({
-      title: 'enshwick',
+      title: 'Enshwick',
       description: Texts.site.get('site.description'),
-      logo: { src: './src/assets/brand/lockup.svg', alt: 'enshwick', replacesTitle: true },
+      logo: { src: './src/assets/brand/lockup.svg', alt: 'Enshwick', replacesTitle: true },
       // Emitted as `shortcut icon`, the fallback for clients that read neither the SVG nor a sized PNG.
       favicon: '/favicon.ico',
       head: [

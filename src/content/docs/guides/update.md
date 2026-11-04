@@ -1,6 +1,6 @@
 ---
 title: Update Enshwick and its mods
-description: Replace the files of Enshwick and of your mods with newer archives.
+description: Replace the files of Enshwick and your mods with newer archives. Your settings and world data stay, and a server tells you which version it needs.
 type: how-to
 sidebar:
   order: 2

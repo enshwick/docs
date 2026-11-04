@@ -42,11 +42,12 @@ const smallestMod = new Snippet(smallestModSource.trimEnd(), SnippetLanguage.Rus
       <div class="ew-hero__copy">
         <h1 id="ew-title">{t('front.title')}</h1>
         <p class="ew-hero__lead">{t('front.lead')}</p>
-        <p class="ew-hero__luau">{t('front.luau')}</p>
-        <a class="ew-button ew-button--primary" href={Links.site.download.toString()}>{t('front.download')}</a>
+        <a class="ew-button ew-button--primary" href={Links.site.download.toString()}>
+          <span data-nosnippet>{t('front.download')}</span>
+        </a>
         {
           data.version !== undefined && (
-            <div class="ew-release">
+            <div class="ew-release" data-nosnippet>
               <dl class="ew-versions">
                 <div>
                   <dt>{t('front.tech.api')}</dt>
@@ -63,7 +64,7 @@ const smallestMod = new Snippet(smallestModSource.trimEnd(), SnippetLanguage.Rus
             </div>
           )
         }
-        <div class="ew-actions">
+        <div class="ew-actions" data-nosnippet>
           <a class="ew-button ew-button--quiet" href={`${prefix}/dev/getting-started/`}>{t('front.write')}</a>
           <a class="ew-button ew-button--quiet" href={`${prefix}/start/first-modded-game/`}>{t('topic.players')}</a>
         </div>
@@ -165,7 +166,7 @@ const smallestMod = new Snippet(smallestModSource.trimEnd(), SnippetLanguage.Rus
         sections.map((section, index) => (
           <li>
             <a href={`#${section.id}`} aria-current={index === 0 ? 'true' : undefined}>
-              {t(section.key)}
+              <span data-nosnippet>{t(section.key)}</span>
             </a>
           </li>
         ))
