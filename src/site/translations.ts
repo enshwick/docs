@@ -14,7 +14,8 @@ export class Translations {
   private static readonly contentRoot = 'src/content/docs';
   private static readonly pages = '**/*.{md,mdx}';
   private static readonly index = 'index';
-  private static readonly xDefault = 'x-default';
+  /** The `hreflang` of the page shown to a reader whose language the site does not have. */
+  public static readonly xDefault = 'x-default';
 
   private constructor(private readonly keys: ReadonlySet<string>) {}
 

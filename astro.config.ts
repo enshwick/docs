@@ -89,7 +89,7 @@ export default defineConfig({
           // The same `x-default` every page's head names: the root language's page.
           ...(item.links === undefined || fallback === undefined
             ? {}
-            : { links: [...item.links, { url: fallback.url, lang: 'x-default' }] }),
+            : { links: [...item.links, { url: fallback.url, lang: Translations.xDefault }] }),
         };
       },
     }),
@@ -119,6 +119,11 @@ export default defineConfig({
           attrs: { rel: 'apple-touch-icon', href: `${siteData.base}/apple-touch-icon.png` },
         },
         { tag: 'meta', attrs: { name: 'twitter:card', content: 'summary_large_image' } },
+        // Replaces the link Starlight adds, which names `@astrojs/sitemap`'s own file.
+        {
+          tag: 'link',
+          attrs: { rel: 'sitemap', href: `${siteData.base}/${SitemapFile.path}` },
+        },
       ],
       routeMiddleware: './src/route-data.ts',
       customCss: ['./src/styles/brand.css', './src/styles/night.css', './src/styles/front.css'],
