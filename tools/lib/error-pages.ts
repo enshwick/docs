@@ -1,12 +1,33 @@
 import { ErrorCode, ErrorsSource } from '../../src/site/errors.ts';
+import { Languages } from '../../src/site/languages.ts';
+import { Texts } from '../../src/site/texts.ts';
+import type { LanguageCode } from '../../src/site/types.ts';
 import { PageFile } from './page-file.ts';
 
 /** The parsed `errors.toml`. */
 type Errors = NonNullable<Extract<ReturnType<typeof ErrorsSource.parse>, { ok: true }>['value']>;
+type ErrorEntry = Errors['error'][number];
+type StepEntry = NonNullable<Errors['step']>[number];
+type ErrorText = Pick<ErrorEntry, 'title' | 'cause' | 'fix'>;
+type StepText = Pick<StepEntry, 'question'>;
 
-/** A page per loader error code at `/errors/<code>/`, and the "game won't start" steps as the folder's index. */
+/**
+ * A page per loader error code at `/errors/<code>/`, and the "game won't start" steps as the
+ * folder's index, in every site language the source translates them to.
+ */
 export class ErrorPages {
   public static readonly folder = 'errors';
+
+  private static readonly text = {
+    why: 'error.why',
+    fix: 'error.fix',
+    title: 'errors.title',
+    description: 'errors.description',
+    start: 'errors.start',
+    yes: 'errors.yes',
+    no: 'errors.no',
+    next: 'errors.next',
+  } as const;
 
   private constructor(private readonly errors: Errors) {}
 
@@ -21,46 +42,25 @@ export class ErrorPages {
     return new ErrorPages(parsed.value);
   }
 
-  /** The pages, dated by the source's last change: one per code, and the index when the source has steps. */
+  /**
+   * The pages, dated by the source's last change: in each language, one per code it translates,
+   * and the index when the source has steps and translates them all. A page left out falls back
+   * to the root language's.
+   */
   public pages(lastUpdated?: Date): PageFile[] {
-    const codes = this.errors.error.map(
-      (error) =>
-        new PageFile(
-          `${ErrorPages.folder}/${error.code.slug}`,
-          {
-            title: `${error.code}: ${error.title}`,
-            description: error.cause.toString(),
-            type: 'reference',
-            editUrl: false,
-            sidebar: { label: error.code.toString() },
-            error: { code: error.code.toString() },
-          },
-          `## Why it happens\n\n${error.cause}\n\n## What to do\n\n${error.fix}\n`,
-          lastUpdated,
-        ),
-    );
-    const steps = this.errors.step ?? [];
+    return Languages.site.all.flatMap(({ code }) => this.pagesIn(code, lastUpdated));
+  }
 
-    if (steps.length === 0) {
-      return codes;
-    }
-
-    return [
-      new PageFile(
-        `${ErrorPages.folder}/index`,
-        {
-          title: "The game won't start",
-          description:
-            'Answer a few questions to find the error that stops your game, and its fix.',
-          type: 'how-to',
-          editUrl: false,
-          sidebar: { order: 0 },
-        },
-        this.decisionTree(),
-        lastUpdated,
-      ),
-      ...codes,
-    ];
+  /** Each code and step without its text in a site language, as `<code or step> <language>`. */
+  public missing(): string[] {
+    return Languages.site.others.flatMap((language) => [
+      ...this.errors.error
+        .filter((error) => ErrorPages.errorIn(error, language) === undefined)
+        .map((error) => `${error.code} ${language}`),
+      ...(this.errors.step ?? [])
+        .filter((step) => ErrorPages.stepIn(step, language) === undefined)
+        .map((step) => `${step.id} ${language}`),
+    ]);
   }
 
   /** Every code with its page, cause and fix: the JSON index the loader's messages and tools read. */
@@ -75,28 +75,103 @@ export class ErrorPages {
   }
 
   /** The steps as sections, each answer a link to the next step or to an error's page. */
-  public decisionTree(): string {
+  public decisionTree(language: LanguageCode = Languages.site.root): string {
     const steps = this.errors.step ?? [];
+    const text = (key: string): string => Texts.site.get(key, language);
 
     const target = (answer: string): string => {
       const code = ErrorCode.parse(answer);
       const next = steps.findIndex((step) => step.id.toString() === answer) + 1;
 
       return code.ok
-        ? `[${code.value}: ${this.title(code.value)}](/${ErrorPages.folder}/${code.value.slug}/)`
-        : `[go to question ${next}](#${answer})`;
+        ? `[${code.value}: ${ErrorPages.escaped(this.title(code.value, language))}](/${ErrorPages.folderIn(language)}/${code.value.slug}/)`
+        : `[${text(ErrorPages.text.next)} ${next}](#${answer})`;
     };
 
     return [
-      'Start with the first question and follow your answers.',
+      text(ErrorPages.text.start),
       ...steps.map(
         (step, index) =>
-          `<span id="${step.id}"></span>\n\n## ${index + 1}. ${step.question}\n\n- Yes: ${target(step.yes.toString())}\n- No: ${target(step.no.toString())}`,
+          `<span id="${step.id}"></span>\n\n## ${index + 1}. ${ErrorPages.escaped((ErrorPages.stepIn(step, language) ?? step).question)}\n\n- ${text(ErrorPages.text.yes)}: ${target(step.yes.toString())}\n- ${text(ErrorPages.text.no)}: ${target(step.no.toString())}`,
       ),
     ].join('\n\n');
   }
 
-  private title(code: ErrorCode): string {
-    return this.errors.error.find((error) => error.code.equals(code))?.title.toString() ?? '';
+  private pagesIn(language: LanguageCode, lastUpdated?: Date): PageFile[] {
+    const folder = ErrorPages.folderIn(language);
+    const text = (key: string): string => Texts.site.get(key, language);
+    const codes = this.errors.error.flatMap((error) => {
+      const page = ErrorPages.errorIn(error, language);
+
+      return page === undefined
+        ? []
+        : [
+            new PageFile(
+              `${folder}/${error.code.slug}`,
+              {
+                title: `${error.code}: ${page.title}`,
+                description: page.cause.toString(),
+                type: 'reference',
+                editUrl: false,
+                sidebar: { label: error.code.toString() },
+                error: { code: error.code.toString() },
+              },
+              `## ${text(ErrorPages.text.why)}\n\n${ErrorPages.escaped(page.cause)}\n\n## ${text(ErrorPages.text.fix)}\n\n${ErrorPages.escaped(page.fix)}\n`,
+              lastUpdated,
+            ),
+          ];
+    });
+    const steps = this.errors.step ?? [];
+
+    if (
+      steps.length === 0 ||
+      steps.some((step) => ErrorPages.stepIn(step, language) === undefined)
+    ) {
+      return codes;
+    }
+
+    return [
+      new PageFile(
+        `${folder}/index`,
+        {
+          title: text(ErrorPages.text.title),
+          description: text(ErrorPages.text.description),
+          type: 'how-to',
+          editUrl: false,
+          sidebar: { order: 0 },
+        },
+        this.decisionTree(language),
+        lastUpdated,
+      ),
+      ...codes,
+    ];
+  }
+
+  /** The folder of a language's pages: `errors` for the root, `<language>/errors` for the others. */
+  private static folderIn(language: LanguageCode): string {
+    return language.equals(Languages.site.root)
+      ? ErrorPages.folder
+      : `${language}/${ErrorPages.folder}`;
+  }
+
+  /** A source text as Markdown shows it literally: its `<save>` and `<date>` are no HTML tags. */
+  private static escaped(text: { toString(): string }): string {
+    return text.toString().replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;');
+  }
+
+  private static errorIn(error: ErrorEntry, language: LanguageCode): ErrorText | undefined {
+    return language.equals(Languages.site.root) ? error : error.translations?.[language.toString()];
+  }
+
+  private static stepIn(step: StepEntry, language: LanguageCode): StepText | undefined {
+    return language.equals(Languages.site.root) ? step : step.translations?.[language.toString()];
+  }
+
+  private title(code: ErrorCode, language: LanguageCode): string {
+    const error = this.errors.error.find((entry) => entry.code.equals(code));
+
+    return error === undefined
+      ? ''
+      : (ErrorPages.errorIn(error, language) ?? error).title.toString();
   }
 }

@@ -27,7 +27,10 @@ const generatedFolders = [
   DeveloperArea.folder,
   ErrorPages.folder,
   ModPages.folder,
-  ...Languages.site.others.map((code) => `${code}/${ModPages.folder}`),
+  ...Languages.site.others.flatMap((code) => [
+    `${code}/${ModPages.folder}`,
+    `${code}/${ErrorPages.folder}`,
+  ]),
 ];
 
 await Promise.all(
@@ -62,6 +65,14 @@ const errorPages =
 await Promise.all(
   (errorPages?.pages(developerArea.releases[0]?.errorsUpdated) ?? []).map((page) => page.write()),
 );
+const untranslated = errorPages?.missing() ?? [];
+
+if (untranslated.length > 0) {
+  // The build log is where a missing translation shows; its page falls back to the root language.
+  // oxlint-disable-next-line no-console
+  console.warn(`${DeveloperArea.errorsSource} has no text for: ${untranslated.join(', ')}`);
+}
+
 await Bun.write(
   `${generated}/errors.json`,
   `${JSON.stringify(errorPages?.index() ?? [], null, 2)}\n`,

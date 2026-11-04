@@ -363,6 +363,38 @@
     "en": "Error code",
     "uk": "Код помилки"
   },
+  "error.why": {
+    "en": "Why it happens",
+    "uk": "Чому це стається"
+  },
+  "error.fix": {
+    "en": "What to do",
+    "uk": "Що робити"
+  },
+  "errors.title": {
+    "en": "The game won't start",
+    "uk": "Гра не запускається"
+  },
+  "errors.description": {
+    "en": "Answer a few questions to find the error that stops your game, and its fix.",
+    "uk": "Дайте відповідь на кілька запитань, щоб знайти помилку, яка не дає грі запуститися, і її виправлення."
+  },
+  "errors.start": {
+    "en": "Start with the first question and follow your answers.",
+    "uk": "Почніть із першого запитання й рухайтеся за своїми відповідями."
+  },
+  "errors.yes": {
+    "en": "Yes",
+    "uk": "Так"
+  },
+  "errors.no": {
+    "en": "No",
+    "uk": "Ні"
+  },
+  "errors.next": {
+    "en": "go to question",
+    "uk": "перейдіть до запитання"
+  },
   "alpha.mark": {
     "en": "alpha",
     "uk": "альфа"
