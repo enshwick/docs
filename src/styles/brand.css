@@ -53,6 +53,7 @@
 
 :root {
   --color-area: var(--color-area-players);
+  --color-area-wash: color-mix(in oklab, var(--color-area) 16%, transparent);
 }
 
 /*
@@ -439,7 +440,7 @@ header.header {
 
 .ew-topics a[aria-current='page'],
 .ew-topics a.ew-topics__current {
-  background: color-mix(in oklab, var(--color-area) 16%, transparent);
+  background: var(--color-area-wash);
   color: var(--color-bone);
 }
 
@@ -602,8 +603,6 @@ header.header {
 starlight-tabs [role='tablist'] {
   gap: var(--space-2xs);
   width: fit-content;
-  max-width: 100%;
-  margin: 0;
   padding: var(--space-2xs);
   border: var(--rule-hair) solid var(--color-line-strong);
 }
@@ -626,10 +625,16 @@ starlight-tabs .tab > [role='tab']:hover {
 }
 
 starlight-tabs .tab > [role='tab'][aria-selected='true'] {
-  background: color-mix(in oklab, var(--color-area) 16%, transparent);
+  background: var(--color-area-wash);
   box-shadow: inset 0 -2px 0 var(--color-area);
-  font-weight: 500;
   color: var(--color-bone);
+}
+
+/* Forced colours drop the wash and the shadow, so the chosen tab keeps a real border. */
+@media (forced-colors: active) {
+  starlight-tabs .tab > [role='tab'][aria-selected='true'] {
+    border-bottom: 2px solid;
+  }
 }
 
 /* The wrapper scrolls a long tab row, which would clip a ring drawn outside the tab. */
@@ -985,11 +990,6 @@ mobile-starlight-toc summary .toggle {
   grid-template-columns: minmax(0, 1fr);
 }
 
-/* The list keeps its own width, so its caret stays inside its frame. */
-.ew-foot__language {
-  justify-self: start;
-}
-
 .ew-foot__links,
 .ew-foot__mail {
   display: flex;
@@ -1027,8 +1027,6 @@ mobile-starlight-toc summary .toggle {
 
   .ew-foot__language {
     grid-area: language;
-    align-self: start;
-    justify-self: end;
   }
 
   .ew-foot__legal {
@@ -1036,10 +1034,19 @@ mobile-starlight-toc summary .toggle {
   }
 }
 
-/* The footer's language list shows the whole name of the language. */
-/* Room for the longest language name, Українська, in every language list. */
+/*
+ * Room for the longest language name, Українська, in every language list. The label keeps the
+ * select's width, so the caret stays inside the frame where a grid stretches the list.
+ */
 starlight-lang-select label {
   --sl-select-width: 8.5em !important;
+
+  width: fit-content;
+}
+
+/* Starlight lets the select overhang its label; in the footer and the menu the frame keeps to its column. */
+:is(.ew-foot__language, .ew-menu-foot) starlight-lang-select label {
+  margin-inline: var(--sl-inline-padding);
 }
 
 /* Selects in the bar and the menu. */
