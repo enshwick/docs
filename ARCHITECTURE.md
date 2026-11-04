@@ -52,7 +52,7 @@ five changes, and a line naming Enshwick.
 | `src/scripts/` | the browser code: the front page's fog shader. It runs only where WebGL works and the reader welcomes motion, and it pauses while the hero is out of sight |
 | `src/pages/` | routes beside the docs: the error index and the social cards |
 | `src/styles/` | `tokens.css` holds the brand's values, dark only; `brand.css` maps them onto Starlight and styles the docs, `night.css` the night, `front.css` the front page |
-| `src/assets/`, `public/` | the logo and the services' marks, the favicons and the logo for search engines; `robots.txt`, `security.txt` and `_headers` for the host, which caches pages for a minute and built files for good |
+| `src/assets/`, `public/` | the logo and the services' marks, the favicons and the logo for search engines; `robots.txt`, `security.txt` and `_headers` for the host, which caches pages for a minute and built files for good; `_redirects` for old addresses, such as the sitemap's, which `src/site/sitemap-file.ts` moves to `/sitemap.xml` after the build |
 | `wrangler.jsonc` | the Cloudflare Worker that serves `dist/` |
 | `tools/fetch.ts`, `tools/lib/` | the build step that collects generated pages |
 | `tools/check-dist.ts` | the check of the built site |

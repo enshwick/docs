@@ -1,6 +1,6 @@
 ---
 title: Play on a server with mods
-description: "Join a dedicated server or a friend's game that runs Enshwick mods: match its Enshwick build, then see what the server checks and whose settings apply."
+description: "Join a dedicated server or a friend's game that runs Enshwick mods. Match its Enshwick build, then see what the server checks and whose settings apply."
 type: how-to
 sidebar:
   order: 4
