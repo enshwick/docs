@@ -1,5 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
+import { Languages } from '../../../src/site/languages.ts';
+import { Texts } from '../../../src/site/texts.ts';
 import { ErrorPages } from '../error-pages.ts';
 
 const source = `
@@ -61,6 +63,71 @@ describe('ErrorPages', () => {
         page: '/errors/e1008/',
       },
     ]);
+  });
+
+  describe('in another language', () => {
+    const [other] = Languages.site.others;
+
+    if (other === undefined) {
+      return;
+    }
+
+    // E1002 and both steps carry the other language; E1008 does not.
+    const translated = source
+      .replace(
+        'fix = "Verify the game files in Steam."',
+        `fix = "Verify the game files in Steam."\n\n[error.translations.${other}]\ntitle = "t-1002"\ncause = "c-1002"\nfix = "f-1002"`,
+      )
+      .replace(
+        'no = "E1002"\n\n[[step]]',
+        `no = "E1002"\n\n[step.translations.${other}]\nquestion = "q-start?"\n\n[[step]]`,
+      )
+      .concat(`\n[step.translations.${other}]\nquestion = "q-log?"\n`);
+
+    it('writes the pages it translates under the language, and no page for the rest', () => {
+      const pages = ErrorPages.parse('test', translated).pages();
+
+      expect(pages.map((page) => page.slug)).toEqual([
+        'errors/index',
+        'errors/e1002',
+        'errors/e1008',
+        `${other}/errors/index`,
+        `${other}/errors/e1002`,
+      ]);
+      expect(pages.at(-1)?.toString()).toContain(
+        `## ${Texts.site.get('error.why', other)}\n\nc-1002\n\n## ${Texts.site.get('error.fix', other)}\n\nf-1002`,
+      );
+    });
+
+    it('asks the questions in the language and links into its pages', () => {
+      const tree = ErrorPages.parse('test', translated).decisionTree(other);
+      const no = Texts.site.get('errors.no', other);
+
+      expect(tree).toContain('## 1. q-start?');
+      expect(tree).toContain(`- ${no}: [E1002: t-1002](/${other}/errors/e1002/)`);
+      expect(tree).toContain(`[E1008: Enshwick did not start](/${other}/errors/e1008/)`);
+    });
+
+    it('writes no index in the language while a step lacks it', () => {
+      const slugs = ErrorPages.parse(
+        'test',
+        translated.replace(`[step.translations.${other}]\nquestion = "q-log?"\n`, ''),
+      )
+        .pages()
+        .map((page) => page.slug);
+
+      expect(slugs).not.toContain(`${other}/errors/index`);
+    });
+
+    it('names each code and step without its text in the language', () => {
+      expect(ErrorPages.parse('test', translated).missing()).toEqual([`E1008 ${other}`]);
+      expect(ErrorPages.parse('test', source).missing()).toEqual([
+        `E1002 ${other}`,
+        `E1008 ${other}`,
+        `start ${other}`,
+        `loader-log ${other}`,
+      ]);
+    });
   });
 
   it('refuses a code that is not E and four digits', () => {
