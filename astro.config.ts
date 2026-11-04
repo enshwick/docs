@@ -1,4 +1,5 @@
 import { existsSync, readFileSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
 
 import { unified } from '@astrojs/markdown-remark';
 import sitemap from '@astrojs/sitemap';
@@ -20,6 +21,8 @@ import { TableFrame } from './src/plugins/rehype-table-frame.ts';
 import { BaseLinks } from './src/plugins/remark-base-links.ts';
 import { CodeTheme } from './src/site/code-theme.ts';
 import { Languages } from './src/site/languages.ts';
+import { LastModified } from './src/site/last-modified.ts';
+import { SitemapFile } from './src/site/sitemap-file.ts';
 import { Texts } from './src/site/texts.ts';
 import { Translations } from './src/site/translations.ts';
 
@@ -52,6 +55,7 @@ const locales = Object.fromEntries(
 
 /** Which pages have a translation; `bun tools/fetch.ts` has written the generated ones by now. */
 const translations = Translations.fromContent();
+const lastModified = LastModified.fromGit();
 
 export default defineConfig({
   site: siteData.url,
@@ -72,6 +76,21 @@ export default defineConfig({
       i18n: {
         defaultLocale: 'root',
         locales: Object.fromEntries(Object.entries(locales).map(([key, { lang }]) => [key, lang])),
+      },
+      // Pages only: no news, image or video entries.
+      namespaces: { news: false, image: false, video: false },
+      serialize: (item) => {
+        const lastmod = lastModified.of(item.url);
+        const fallback = item.links?.find(({ lang }) => lang === Languages.site.root.toString());
+
+        return {
+          ...item,
+          ...(lastmod === undefined ? {} : { lastmod }),
+          // The same `x-default` every page's head names: the root language's page.
+          ...(item.links === undefined || fallback === undefined
+            ? {}
+            : { links: [...item.links, { url: fallback.url, lang: 'x-default' }] }),
+        };
       },
     }),
     starlight({
@@ -239,5 +258,10 @@ export default defineConfig({
         }),
       ],
     }),
+    // After the sitemap integration above has written its files.
+    {
+      name: 'sitemap-file',
+      hooks: { 'astro:build:done': ({ dir }) => SitemapFile.publish(fileURLToPath(dir)) },
+    },
   ],
 });

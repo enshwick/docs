@@ -35,11 +35,28 @@ describe('DistCheck', () => {
       'guides/install/index.html': page('/guides/install/'),
       'uk/dev/index.html': page('/dev/', '<meta name="robots" content="noindex"/>'),
       '_astro/site.css': "a { background: url('/circles.svg') }",
-      'sitemap-index.xml': '<sitemapindex/>',
-      'sitemap-0.xml': sitemap('/', '/guides/install/'),
+      'sitemap.xml': sitemap('/', '/guides/install/'),
     });
 
     expect(await new DistCheck(root, site).run()).toEqual([]);
+  });
+
+  it('passes a sitemap index at sitemap.xml and checks the files it lists', async () => {
+    await write({
+      'index.html': page('/'),
+      'sitemap.xml': `<sitemapindex><sitemap><loc>${site}/sitemap-0.xml</loc></sitemap></sitemapindex>`,
+      'sitemap-0.xml': sitemap('/', '/gone/'),
+    });
+
+    expect(await new DistCheck(root, site).run()).toEqual([
+      `sitemap-0.xml: ${site}/gone/ has no page`,
+    ]);
+  });
+
+  it('finds a sitemap that does not answer at sitemap.xml', async () => {
+    await write({ 'index.html': page('/'), 'sitemap-0.xml': sitemap('/') });
+
+    expect(await new DistCheck(root, site).run()).toEqual([`${root}: no sitemap.xml`]);
   });
 
   it('finds a table that is not in a frame of its own, which would widen the page', async () => {
@@ -49,7 +66,7 @@ describe('DistCheck', () => {
         '/guides/install/',
         '<div class="ew-table" tabindex="0"><table></table></div><table class="x"></table>',
       ),
-      'sitemap-0.xml': sitemap('/', '/guides/install/'),
+      'sitemap.xml': sitemap('/', '/guides/install/'),
     });
 
     expect(await new DistCheck(root, site).run()).toEqual([
@@ -64,7 +81,7 @@ describe('DistCheck', () => {
         '<link href="/docs/guides/"/><link href="//favicon-small.svg"/><a href="undefined/x/">',
       ),
       '_astro/site.css': "a { background: url('/docs/circles.svg') }",
-      'sitemap-0.xml': sitemap('/'),
+      'sitemap.xml': sitemap('/'),
     });
 
     expect(await new DistCheck(root, site).run()).toEqual([
@@ -79,18 +96,18 @@ describe('DistCheck', () => {
     await write({
       'index.html': '<html></html>',
       'uk/dev/index.html': page('/dev/', '<meta name="robots" content="noindex"/>'),
-      'sitemap-0.xml': sitemap('/uk/dev/', '/gone/'),
+      'sitemap.xml': sitemap('/uk/dev/', '/gone/'),
     });
 
     expect(await new DistCheck(root, site).run()).toEqual([
       `index.html: wants one canonical address on ${site}, has none`,
-      `sitemap-0.xml: ${site}/uk/dev/ is a page search must not index`,
-      `sitemap-0.xml: ${site}/gone/ has no page`,
+      `sitemap.xml: ${site}/uk/dev/ is a page search must not index`,
+      `sitemap.xml: ${site}/gone/ has no page`,
     ]);
   });
 
   it('finds a page that answers without the trailing slash', async () => {
-    await write({ 'guides/install.html': page('/guides/install/'), 'sitemap-0.xml': sitemap() });
+    await write({ 'guides/install.html': page('/guides/install/'), 'sitemap.xml': sitemap() });
 
     expect(await new DistCheck(root, site).run()).toEqual([
       'guides/install.html: a page outside a folder of its own answers without the trailing slash',

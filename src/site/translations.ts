@@ -30,7 +30,8 @@ export class Translations {
     return new Translations(
       new Set(
         files.map((file) => {
-          const key = file.replace(/\.mdx?$/u, '');
+          // Bun's glob gives Windows separators on Windows; page keys use URL slashes.
+          const key = file.replaceAll('\\', '/').replace(/\.mdx?$/u, '');
 
           return key === Translations.index ? key : key.replace(/\/index$/u, '');
         }),
