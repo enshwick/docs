@@ -1,4 +1,5 @@
 import modLanguagesData from '../data/mod-languages.json' with { type: 'json' };
+import { ModLanguageKeys } from './mod-language-keys.ts';
 import { FenceName, ModLanguageEntry } from './types.ts';
 
 /**
@@ -7,14 +8,6 @@ import { FenceName, ModLanguageEntry } from './types.ts';
  * marked for one language only while it is the chosen one.
  */
 export class ModLanguages {
-  /** The key every language tab group shares, so one choice holds across the site. */
-  public static readonly syncKey = 'mod-language';
-  /** Where Starlight's synced tabs remember the chosen tab's label. */
-  public static readonly storageKey = `starlight-synced-tabs__${ModLanguages.syncKey}`;
-  /** The attribute of a block shown only for one language, holding that language's label. */
-  public static readonly onlyAttribute = 'data-only-language';
-  /** The root's attribute holding the chosen language's label. */
-  public static readonly rootAttribute = 'data-mod-language';
   private static readonly schema = ModLanguageEntry.array({ min: 1 });
 
   /** The mod languages, as `src/data/mod-languages.json` lists them. */
@@ -55,6 +48,11 @@ export class ModLanguages {
     return first.label;
   }
 
+  /** Where the language `label` stands in the list, so tabs follow the list's order. */
+  public rank(label: string): number {
+    return this.all.findIndex((language) => language.label === label);
+  }
+
   /** The label of the language whose code fences say `fence`, or nothing for another language. */
   public labelOf(fence: string): string | undefined {
     const parsed = FenceName.parse(fence);
@@ -72,8 +70,8 @@ export class ModLanguages {
    * language has, or none at all without scripts, hides nothing.
    */
   public get css(): string {
-    const root = ModLanguages.rootAttribute;
-    const only = ModLanguages.onlyAttribute;
+    const root = ModLanguageKeys.rootAttribute;
+    const only = ModLanguageKeys.onlyAttribute;
 
     return this.all
       .map(

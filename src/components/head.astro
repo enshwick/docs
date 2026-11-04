@@ -8,6 +8,7 @@ import { Area } from '../site/area.ts';
 import { FirstFonts } from '../site/first-fonts.ts';
 import { FrontData } from '../site/front.ts';
 import { Languages } from '../site/languages.ts';
+import { ModLanguageKeys } from '../site/mod-language-keys.ts';
 import { ModLanguages } from '../site/mod-languages.ts';
 import { type SidebarItem, StructuredData } from '../site/structured-data.ts';
 
@@ -58,7 +59,7 @@ const ogImage =
   if (mod) document.documentElement.dataset.mod = '';
 </script>
 <style is:inline set:html={ModLanguages.site.css}></style>
-<script is:inline define:vars={{ key: ModLanguages.storageKey, fallback: ModLanguages.site.fallback }}>
+<script is:inline define:vars={{ key: ModLanguageKeys.storageKey, fallback: ModLanguages.site.fallback }}>
   // Before the body paints, so a block for another language never shows for a moment.
   let chosen = null;
 

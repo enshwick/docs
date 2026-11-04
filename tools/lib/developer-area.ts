@@ -3,6 +3,7 @@ import type { DeveloperPage } from './api-map.ts';
 import { ChapterConverter } from './chapter-converter.ts';
 import { Fields } from './fields.ts';
 import { GitSource } from './git-source.ts';
+import { MdxBody } from './mdx-body.ts';
 import { PageFile } from './page-file.ts';
 import { type PageType, type SidebarEntry, Summary } from './summary.ts';
 
@@ -161,7 +162,7 @@ export class DeveloperArea {
       await new PageFile(
         slug,
         { title: page.title, type: 'reference', editUrl: false },
-        page.body,
+        page.mdx ? MdxBody.of(page.body) : page.body,
         await checkout.lastChanged(DeveloperArea.changelog),
         page.mdx,
       ).write();
@@ -206,7 +207,7 @@ export class DeveloperArea {
             type: this.pageType(chapter.path),
             editUrl,
           },
-          page.body,
+          page.mdx ? MdxBody.of(page.body) : page.body,
           await checkout.lastChanged(`${this.source.book}/${chapter.path}`),
           page.mdx,
         ).write();

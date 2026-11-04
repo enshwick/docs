@@ -15,8 +15,9 @@ describe('ModLanguages', () => {
     expect(languages.labelOf('')).toBeUndefined();
   });
 
-  it('falls back to the first language', () => {
+  it('falls back to the first language and ranks each by its place in the list', () => {
     expect(languages.fallback).toBe('Rust');
+    expect(languages.rank('Luau')).toBe(1);
   });
 
   it('hides blocks of the other languages for each known choice', () => {

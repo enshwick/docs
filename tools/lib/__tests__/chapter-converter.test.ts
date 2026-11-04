@@ -1,8 +1,11 @@
 import { describe, expect, it } from 'vitest';
 
 import { ChapterConverter } from '../chapter-converter.ts';
+import { LanguageSwitch } from '../language-switch.ts';
+import { MdxBody } from '../mdx-body.ts';
 
 const converter = new ChapterConverter((path) => `/dev/${path.replace(/\.md$/u, '')}/`);
+const languageSwitch = new LanguageSwitch();
 
 describe('ChapterConverter', () => {
   it('takes the title out of the body and the first sentence as the description', () => {
@@ -58,20 +61,19 @@ describe('ChapterConverter', () => {
     expect(() => converter.convert('x.md', 'no title')).toThrow(/level-one heading/u);
   });
 
-  it('turns adjacent Rust and Luau blocks into synced tabs and the page into MDX', () => {
+  it('turns adjacent Rust and Luau blocks into synced tabs in the list order', () => {
     const page = converter.convert(
       'x.md',
-      '# X\n\nRead it.\n\n<!-- snippet -->\n```rust,ignore\n# hidden\nlet a = 1;\n```\n\n```lua\nlocal a = 1\n```\n',
+      '# X\n\nRead it.\n\n<!-- snippet -->\n```lua\nlocal a = 1\n```\n\n```rust,ignore\n# hidden\nlet a = 1;\n```\n',
     );
 
     expect(page.mdx).toBe(true);
     expect(page.description).toBe('Read it.');
     expect(page.body).toBe(
       [
-        "import { TabItem, Tabs } from '@astrojs/starlight/components';",
-        '',
         'Read it.',
         '',
+        '<!-- snippet -->',
         '<Tabs syncKey="mod-language">',
         '<TabItem label="Rust">',
         '',
@@ -93,7 +95,32 @@ describe('ChapterConverter', () => {
     );
   });
 
-  it('leaves blocks apart, of one language or of another kind as they are', () => {
+  it('ends a run at a block of another kind or a language already in it', () => {
+    const { body } = languageSwitch.apply(
+      [
+        '```rust',
+        'a',
+        '```',
+        '```luau',
+        'b',
+        '```',
+        '```toml',
+        'c',
+        '```',
+        '```rust',
+        'd',
+        '```',
+        '```luau',
+        'e',
+        '```',
+      ].join('\n'),
+    );
+
+    expect(body.match(/<Tabs /gu)).toHaveLength(2);
+    expect(body).toContain('</Tabs>\n```toml\nc\n```\n<Tabs ');
+  });
+
+  it('leaves blocks apart, of one language, of another kind or in a list as they are', () => {
     const text = [
       '```rust',
       'a',
@@ -112,28 +139,51 @@ describe('ChapterConverter', () => {
       '```toml',
       'd = 1',
       '```',
+      '- item',
+      '  ```rust',
+      '  e',
+      '  ```',
+      '  ```luau',
+      '  f',
+      '  ```',
+      '<div data-lang="luau">',
       '<!-- kept -->',
     ].join('\n');
 
-    expect(converter.switched(text)).toEqual({ body: text, mdx: false });
+    expect(languageSwitch.apply(text)).toEqual({ body: text, mdx: false });
   });
 
-  it('marks a block for one mod language and leaves one for an unknown language as it is', () => {
-    const { body, mdx } = converter.switched(
-      '<div data-lang="luau">\n\nOnly Luau.\n\n</div>\n<div data-lang="cobol">\n</div>',
+  it('marks a block for one mod language only on a page with tabs', () => {
+    const { body } = languageSwitch.apply(
+      '```rust\na\n```\n```luau\nb\n```\n<div data-lang="luau">\n\nOnly Luau.\n\n</div>\n<div data-lang="cobol">\n</div>',
     );
 
-    expect(mdx).toBe(false);
-    expect(body).toBe(
-      '<div data-only-language="Luau">\n\nOnly Luau.\n\n</div>\n<div data-lang="cobol">\n</div>',
-    );
+    expect(body).toContain('<div data-only-language="Luau">\n\nOnly Luau.\n\n</div>');
+    expect(body).toContain('<div data-lang="cobol">');
   });
 
-  it('keeps comment-like lines inside code blocks of an MDX page', () => {
-    const { body } = converter.switched(
-      '```rust\nlet a = 1;\n```\n\n```luau\n<!-- not a comment here -->\n```',
-    );
+  it('makes a body MDX: comments out, braces escaped and autolinks as links, code untouched', () => {
+    const body = [
+      'Text <!-- inline --> stays.',
+      '<!--',
+      'a comment over lines',
+      '-->',
+      'A {brace} and `{code}` and <https://example.com>.',
+      '```luau',
+      '<!-- code --> { }',
+      '```',
+    ].join('\n');
 
-    expect(body).toContain('<!-- not a comment here -->');
+    expect(MdxBody.of(body)).toBe(
+      [
+        "import { TabItem, Tabs } from '@astrojs/starlight/components';",
+        '',
+        'Text  stays.',
+        'A \\{brace\\} and `{code}` and [https://example.com](https://example.com).',
+        '```luau',
+        '<!-- code --> { }',
+        '```',
+      ].join('\n'),
+    );
   });
 });
