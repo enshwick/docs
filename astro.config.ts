@@ -78,29 +78,22 @@ export default defineConfig({
       title: 'enshwick',
       description: Texts.site.get('site.description'),
       logo: { src: './src/assets/brand/lockup.svg', alt: 'enshwick', replacesTitle: true },
-      favicon: '/favicon.svg',
+      // Emitted as `shortcut icon`, the fallback for clients that read neither the SVG nor a sized PNG.
+      favicon: '/favicon.ico',
       head: [
-        {
-          tag: 'link',
-          attrs: { rel: 'icon', href: `${siteData.base}/favicon-16.svg`, sizes: '16x16' },
-        },
-        {
-          tag: 'link',
+        // Google wants a raster of 48 px or a multiple; 16 and 32 keep small tab icons sharp.
+        ...[16, 32, 48, 96, 192].map((size) => ({
+          tag: 'link' as const,
           attrs: {
             rel: 'icon',
-            href: `${siteData.base}/favicon-32.png`,
-            sizes: '32x32',
+            href: `${siteData.base}/favicon-${size}.png`,
+            sizes: `${size}x${size}`,
             type: 'image/png',
           },
-        },
+        })),
         {
           tag: 'link',
-          attrs: {
-            rel: 'icon',
-            href: `${siteData.base}/favicon-16.png`,
-            sizes: '16x16',
-            type: 'image/png',
-          },
+          attrs: { rel: 'icon', href: `${siteData.base}/favicon.svg`, type: 'image/svg+xml' },
         },
         {
           tag: 'link',
