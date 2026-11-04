@@ -21,6 +21,7 @@
       "concepts/": "explanation",
       "content.md": "how-to",
       "content/": "how-to",
+      "controls.md": "how-to",
       "damage.md": "how-to",
       "daytime.md": "how-to",
       "ecs.md": "how-to",
