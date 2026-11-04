@@ -14,7 +14,8 @@ export class Translations {
   private static readonly contentRoot = 'src/content/docs';
   private static readonly pages = '**/*.{md,mdx}';
   private static readonly index = 'index';
-  private static readonly xDefault = 'x-default';
+  /** The `hreflang` of the page shown to a reader whose language the site does not have. */
+  public static readonly xDefault = 'x-default';
 
   private constructor(private readonly keys: ReadonlySet<string>) {}
 
@@ -30,7 +31,8 @@ export class Translations {
     return new Translations(
       new Set(
         files.map((file) => {
-          const key = file.replace(/\.mdx?$/u, '');
+          // Bun's glob gives Windows separators on Windows; page keys use URL slashes.
+          const key = file.replaceAll('\\', '/').replace(/\.mdx?$/u, '');
 
           return key === Translations.index ? key : key.replace(/\/index$/u, '');
         }),

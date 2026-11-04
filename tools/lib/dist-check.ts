@@ -4,8 +4,10 @@ import { join, posix, sep } from 'node:path';
 export class DistCheck {
   private static readonly pages = '**/*.html';
   private static readonly styles = '**/*.css';
-  private static readonly sitemaps = 'sitemap-*.xml';
-  private static readonly sitemapIndex = 'sitemap-index.xml';
+  private static readonly sitemaps = 'sitemap*.xml';
+  /** Where search engines and people look for the sitemap first. */
+  private static readonly sitemapEntry = 'sitemap.xml';
+  private static readonly sitemapIndex = /<sitemapindex[\s>]/u;
   private static readonly pageFile = 'index.html';
   private static readonly notFound = '404.html';
   private static readonly none = 'none';
@@ -88,28 +90,40 @@ export class DistCheck {
     );
   }
 
-  /** The sitemap's problems: every address must be a page of the site that search may index. */
+  /**
+   * The sitemap's problems: it must answer at `/sitemap.xml`, every file an index lists must exist,
+   * and every page address must be a page of the site that search may index.
+   */
   private async sitemap(): Promise<string[]> {
-    const files = (await this.scan(DistCheck.sitemaps)).filter(
-      (file) => file !== DistCheck.sitemapIndex,
-    );
+    const files = await this.scan(DistCheck.sitemaps);
 
-    if (files.length === 0) {
-      return [`${this.root}: no sitemap`];
+    if (!files.includes(DistCheck.sitemapEntry)) {
+      return [`${this.root}: no ${DistCheck.sitemapEntry}`];
     }
 
-    const entries = await Promise.all(
-      files.map(async (file) => {
-        const text = await Bun.file(join(this.root, file)).text();
-
-        return Array.from(text.matchAll(DistCheck.location), ([, url = '']) => ({ file, url }));
-      }),
+    const texts = await Promise.all(
+      files.map(async (file) => ({ file, text: await Bun.file(join(this.root, file)).text() })),
     );
     const problems = await Promise.all(
-      entries.flat().map(({ file, url }) => this.location(file, url)),
+      texts.flatMap(({ file, text }) => {
+        const urls = Array.from(text.matchAll(DistCheck.location), ([, url = '']) => url);
+
+        return DistCheck.sitemapIndex.test(text)
+          ? urls.map((url) => Promise.resolve(this.listed(file, url, files)))
+          : urls.map((url) => this.location(file, url));
+      }),
     );
 
     return problems.filter((problem): problem is string => problem !== undefined);
+  }
+
+  /** The problem of a sitemap index entry that names no sitemap file of the build. */
+  private listed(file: string, url: string, files: string[]): string | undefined {
+    const prefix = `${this.site}/`;
+
+    return url.startsWith(prefix) && files.includes(url.slice(prefix.length))
+      ? undefined
+      : `${file}: ${url} names no sitemap file`;
   }
 
   private async location(file: string, url: string): Promise<string | undefined> {

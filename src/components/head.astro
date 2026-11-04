@@ -40,11 +40,13 @@ const nodes =
         );
 // The two faces every first screen sets, in the scripts the page's language needs, fetched early.
 const fonts = new FirstFonts(Languages.site.root.toString() !== lang).urls;
-// Each page's own social card, drawn at build time by the route under `src/pages/og/`.
+// Each page's own social card, drawn at build time by the route under `src/pages/og/`, which
+// names the root home page `index` where Starlight's route gives it an empty id.
+const ogId = route.entry.id === '' ? 'index' : route.entry.id;
 const ogImage =
   Astro.site === undefined || id === '404'
     ? undefined
-    : new URL(`${import.meta.env.BASE_URL.replace(/\/$/u, '')}/og/${route.entry.id}.png`, Astro.site).href;
+    : new URL(`${import.meta.env.BASE_URL.replace(/\/$/u, '')}/og/${ogId}.png`, Astro.site).href;
 ---
 
 <Default />

@@ -1,6 +1,6 @@
 ---
 title: Сервер на Linux
-description: Запустіть виділений сервер Enshrouded з Enshwick під Proton і налаштуйте Linux, щоб сервер працював швидко.
+description: Запустіть виділений сервер Enshrouded з Enshwick під Proton у Linux і налаштуйте ядро, Wine та процесор, щоб сервер працював швидко.
 type: how-to
 sidebar:
   order: 7

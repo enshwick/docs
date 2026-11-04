@@ -35,6 +35,17 @@ const hreflangs = (entries: readonly HeadEntry[]): unknown[] =>
     .map((entry) => entry.attrs?.['hreflang']);
 
 describe('Translations', () => {
+  it('reads a translated page listed with Windows separators as translated', () => {
+    const windows = Translations.fromFiles([
+      'index.mdx',
+      'uk\\index.mdx',
+      'uk\\guides\\install.mdx',
+    ]);
+
+    expect(windows.isFallback('/uk/')).toBe(false);
+    expect(windows.isFallback('/uk/guides/install/')).toBe(false);
+  });
+
   it('tells a fallback page from a translated one', () => {
     expect(translations.isFallback('/uk/dev/hooks/')).toBe(true);
     expect(translations.isFallback('/uk/dev/')).toBe(true);
