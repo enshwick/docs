@@ -8,6 +8,7 @@ import { Area } from '../site/area.ts';
 import { FirstFonts } from '../site/first-fonts.ts';
 import { FrontData } from '../site/front.ts';
 import { Languages } from '../site/languages.ts';
+import { ModLanguages } from '../site/mod-languages.ts';
 import { type SidebarItem, StructuredData } from '../site/structured-data.ts';
 
 const route = Astro.locals.starlightRoute;
@@ -56,8 +57,21 @@ const ogImage =
   document.documentElement.dataset.area = area;
   if (mod) document.documentElement.dataset.mod = '';
 </script>
+<style is:inline set:html={ModLanguages.site.css}></style>
+<script is:inline define:vars={{ key: ModLanguages.storageKey, fallback: ModLanguages.site.fallback }}>
+  // Before the body paints, so a block for another language never shows for a moment.
+  let chosen = null;
+
+  try {
+    chosen = localStorage.getItem(key);
+  } catch {}
+
+  document.documentElement.dataset.modLanguage = chosen ?? fallback;
+</script>
 <script>
+  import { ModLanguage } from '../scripts/mod-language.ts';
   import { PageSwap } from '../scripts/page-swap.ts';
 
   PageSwap.start();
+  ModLanguage.start();
 </script>

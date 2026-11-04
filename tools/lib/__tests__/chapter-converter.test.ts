@@ -57,4 +57,83 @@ describe('ChapterConverter', () => {
   it('refuses a chapter without a level-one heading', () => {
     expect(() => converter.convert('x.md', 'no title')).toThrow(/level-one heading/u);
   });
+
+  it('turns adjacent Rust and Luau blocks into synced tabs and the page into MDX', () => {
+    const page = converter.convert(
+      'x.md',
+      '# X\n\nRead it.\n\n<!-- snippet -->\n```rust,ignore\n# hidden\nlet a = 1;\n```\n\n```lua\nlocal a = 1\n```\n',
+    );
+
+    expect(page.mdx).toBe(true);
+    expect(page.description).toBe('Read it.');
+    expect(page.body).toBe(
+      [
+        "import { TabItem, Tabs } from '@astrojs/starlight/components';",
+        '',
+        'Read it.',
+        '',
+        '<Tabs syncKey="mod-language">',
+        '<TabItem label="Rust">',
+        '',
+        '```rust',
+        'let a = 1;',
+        '```',
+        '',
+        '</TabItem>',
+        '<TabItem label="Luau">',
+        '',
+        '```lua',
+        'local a = 1',
+        '```',
+        '',
+        '</TabItem>',
+        '</Tabs>',
+        '',
+      ].join('\n'),
+    );
+  });
+
+  it('leaves blocks apart, of one language or of another kind as they are', () => {
+    const text = [
+      '```rust',
+      'a',
+      '```',
+      '',
+      'Between.',
+      '',
+      '```luau',
+      'b',
+      '```',
+      '',
+      '```luau',
+      'c',
+      '```',
+      '',
+      '```toml',
+      'd = 1',
+      '```',
+      '<!-- kept -->',
+    ].join('\n');
+
+    expect(converter.switched(text)).toEqual({ body: text, mdx: false });
+  });
+
+  it('marks a block for one mod language and leaves one for an unknown language as it is', () => {
+    const { body, mdx } = converter.switched(
+      '<div data-lang="luau">\n\nOnly Luau.\n\n</div>\n<div data-lang="cobol">\n</div>',
+    );
+
+    expect(mdx).toBe(false);
+    expect(body).toBe(
+      '<div data-only-language="Luau">\n\nOnly Luau.\n\n</div>\n<div data-lang="cobol">\n</div>',
+    );
+  });
+
+  it('keeps comment-like lines inside code blocks of an MDX page', () => {
+    const { body } = converter.switched(
+      '```rust\nlet a = 1;\n```\n\n```luau\n<!-- not a comment here -->\n```',
+    );
+
+    expect(body).toContain('<!-- not a comment here -->');
+  });
 });

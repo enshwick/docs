@@ -163,6 +163,7 @@ export class DeveloperArea {
         { title: page.title, type: 'reference', editUrl: false },
         page.body,
         await checkout.lastChanged(DeveloperArea.changelog),
+        page.mdx,
       ).write();
       sidebar.push({ slug, label: page.title });
     }
@@ -207,6 +208,7 @@ export class DeveloperArea {
           },
           page.body,
           await checkout.lastChanged(`${this.source.book}/${chapter.path}`),
+          page.mdx,
         ).write();
       }),
     );

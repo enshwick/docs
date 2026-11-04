@@ -13,11 +13,12 @@ export class PageFile {
     private readonly frontMatter: Readonly<Record<string, unknown>>,
     private readonly body: string,
     private readonly lastUpdated: Date | undefined,
+    private readonly mdx = false,
   ) {}
 
-  /** The file's path, `<content root>/<slug>.md`. */
+  /** The file's path, `<content root>/<slug>.md`, or `.mdx` for a body that uses components. */
   public get path(): string {
-    return `${PageFile.contentRoot}/${this.slug}.md`;
+    return `${PageFile.contentRoot}/${this.slug}.${this.mdx ? 'mdx' : 'md'}`;
   }
 
   /** The file's text. */

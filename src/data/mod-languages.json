@@ -1,0 +1,4 @@
+[
+  { "label": "Rust", "fences": ["rust"] },
+  { "label": "Luau", "fences": ["luau", "lua"] }
+]

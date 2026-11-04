@@ -44,6 +44,18 @@ export const LanguageEntry = n.object({
   default: n.of(AnyBoolean).optional(),
 });
 
+/** The language word after a code fence's backticks, such as `rust` or `luau`. */
+export class FenceName extends AnyString.subtype('docs.FenceName', /^[a-z][a-z0-9+-]*$/u) {}
+
+/** The label of a mod language's tab; it goes into a CSS attribute selector, so it has no quote or backslash. */
+export class ModLanguageLabel extends AnyString.subtype('docs.ModLanguageLabel', /^[^"\\\n]+$/u) {}
+
+/** One language mods are written in, as `src/data/mod-languages.json` lists it; its first fence marks a block for it. */
+export const ModLanguageEntry = n.object({
+  label: ModLanguageLabel,
+  fences: n.of(FenceName).array({ min: 1 }),
+});
+
 /** A Diátaxis page type. */
 export class PageTypeName extends AnyString.subtype(
   'docs.PageTypeName',
