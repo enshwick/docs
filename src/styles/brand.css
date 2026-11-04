@@ -594,6 +594,53 @@ header.header {
   background: var(--color-line-strong);
 }
 
+/*
+ * Tabs, such as the mod language switch: the topics' quiet segment over the content, the chosen
+ * tab washed and underlined in the area's colour, as the bar is. Starlight keeps the roles, the
+ * keys and the sync; only the look is the site's.
+ */
+starlight-tabs [role='tablist'] {
+  gap: var(--space-2xs);
+  width: fit-content;
+  max-width: 100%;
+  margin: 0;
+  padding: var(--space-2xs);
+  border: var(--rule-hair) solid var(--color-line-strong);
+}
+
+starlight-tabs .tab > [role='tab'] {
+  padding: var(--space-2xs) var(--space-sm);
+  box-shadow: none;
+  font-size: var(--text-sm);
+  font-weight: 500;
+  line-height: 1.5;
+  color: var(--color-muted);
+  white-space: nowrap;
+  transition:
+    background-color var(--dur-short) var(--ease-out),
+    color var(--dur-short) var(--ease-out);
+}
+
+starlight-tabs .tab > [role='tab']:hover {
+  color: var(--color-bone);
+}
+
+starlight-tabs .tab > [role='tab'][aria-selected='true'] {
+  background: color-mix(in oklab, var(--color-area) 16%, transparent);
+  box-shadow: inset 0 -2px 0 var(--color-area);
+  font-weight: 500;
+  color: var(--color-bone);
+}
+
+/* The wrapper scrolls a long tab row, which would clip a ring drawn outside the tab. */
+starlight-tabs .tab > [role='tab']:focus-visible {
+  outline-offset: -2px;
+}
+
+starlight-tabs .tablist-wrapper ~ [role='tabpanel'] {
+  margin-top: var(--space-sm);
+}
+
 /* Badges: square, quiet. */
 .sl-badge {
   border-radius: 0;
@@ -928,10 +975,19 @@ mobile-starlight-toc summary .toggle {
   color: var(--color-faint);
 }
 
+/*
+ * One column on a phone. Wider, the language list stands at the top right and the small print
+ * takes a row of its own, so no translation's length moves another part.
+ */
 .ew-foot__body {
   display: grid;
   gap: var(--space-md) var(--space-xl);
   grid-template-columns: minmax(0, 1fr);
+}
+
+/* The list keeps its own width, so its caret stays inside its frame. */
+.ew-foot__language {
+  justify-self: start;
 }
 
 .ew-foot__links,
@@ -954,11 +1010,29 @@ mobile-starlight-toc summary .toggle {
 
 @media (min-width: 50rem) {
   .ew-foot__body {
+    grid-template-areas:
+      'links language'
+      'mail language'
+      'legal legal';
     grid-template-columns: minmax(0, 1fr) auto;
   }
 
+  .ew-foot__links {
+    grid-area: links;
+  }
+
+  .ew-foot__mail {
+    grid-area: mail;
+  }
+
   .ew-foot__language {
-    justify-self: start;
+    grid-area: language;
+    align-self: start;
+    justify-self: end;
+  }
+
+  .ew-foot__legal {
+    grid-area: legal;
   }
 }
 
