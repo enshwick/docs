@@ -130,6 +130,18 @@ describe('ErrorPages', () => {
     });
   });
 
+  it('shows a placeholder such as <save> in a text as text, not as an HTML tag', () => {
+    const placeholders = source
+      .replace('Extract Enshwick again.', 'Delete <save>-mod-settings & retry.')
+      .replace('Is there a loader.log?', 'Is there a logs/enshwick_<date>.log?');
+    const pages = ErrorPages.parse('test', placeholders).pages();
+
+    expect(pages.find((page) => page.slug === 'errors/e1008')?.toString()).toContain(
+      'Delete &lt;save&gt;-mod-settings &amp; retry.',
+    );
+    expect(pages[0]?.toString()).toContain('## 2. Is there a logs/enshwick_&lt;date&gt;.log?');
+  });
+
   it('refuses a code that is not E and four digits', () => {
     expect(() => ErrorPages.parse('test', source.replace('"E1008"', '"X8"'))).toThrow(/test/u);
   });

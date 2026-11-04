@@ -84,7 +84,7 @@ export class ErrorPages {
       const next = steps.findIndex((step) => step.id.toString() === answer) + 1;
 
       return code.ok
-        ? `[${code.value}: ${this.title(code.value, language)}](/${ErrorPages.folderIn(language)}/${code.value.slug}/)`
+        ? `[${code.value}: ${ErrorPages.escaped(this.title(code.value, language))}](/${ErrorPages.folderIn(language)}/${code.value.slug}/)`
         : `[${text(ErrorPages.text.next)} ${next}](#${answer})`;
     };
 
@@ -92,7 +92,7 @@ export class ErrorPages {
       text(ErrorPages.text.start),
       ...steps.map(
         (step, index) =>
-          `<span id="${step.id}"></span>\n\n## ${index + 1}. ${(ErrorPages.stepIn(step, language) ?? step).question}\n\n- ${text(ErrorPages.text.yes)}: ${target(step.yes.toString())}\n- ${text(ErrorPages.text.no)}: ${target(step.no.toString())}`,
+          `<span id="${step.id}"></span>\n\n## ${index + 1}. ${ErrorPages.escaped((ErrorPages.stepIn(step, language) ?? step).question)}\n\n- ${text(ErrorPages.text.yes)}: ${target(step.yes.toString())}\n- ${text(ErrorPages.text.no)}: ${target(step.no.toString())}`,
       ),
     ].join('\n\n');
   }
@@ -116,7 +116,7 @@ export class ErrorPages {
                 sidebar: { label: error.code.toString() },
                 error: { code: error.code.toString() },
               },
-              `## ${text(ErrorPages.text.why)}\n\n${page.cause}\n\n## ${text(ErrorPages.text.fix)}\n\n${page.fix}\n`,
+              `## ${text(ErrorPages.text.why)}\n\n${ErrorPages.escaped(page.cause)}\n\n## ${text(ErrorPages.text.fix)}\n\n${ErrorPages.escaped(page.fix)}\n`,
               lastUpdated,
             ),
           ];
@@ -152,6 +152,11 @@ export class ErrorPages {
     return language.equals(Languages.site.root)
       ? ErrorPages.folder
       : `${language}/${ErrorPages.folder}`;
+  }
+
+  /** A source text as Markdown shows it literally: its `<save>` and `<date>` are no HTML tags. */
+  private static escaped(text: { toString(): string }): string {
+    return text.toString().replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;');
   }
 
   private static errorIn(error: ErrorEntry, language: LanguageCode): ErrorText | undefined {
