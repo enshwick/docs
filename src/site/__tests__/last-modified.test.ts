@@ -19,6 +19,12 @@ describe('LastModified', () => {
     expect(dates.of('https://enshwick.com/uk/')).toBe('2026-11-04T10:00:00+02:00');
   });
 
+  it('finds a page on a site served under a base path', () => {
+    expect(dates.of('https://example.com/docs/guides/install/', '/docs')).toBe(
+      '2026-11-04T10:00:00+02:00',
+    );
+  });
+
   it('gives no date to a page without a file in this repository', () => {
     expect(dates.of('https://enshwick.com/dev/hooks/')).toBeUndefined();
   });

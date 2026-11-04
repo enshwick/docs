@@ -22,6 +22,7 @@ export const onRequest = defineRouteMiddleware((context) => {
   );
 
   if (sitemapLink?.attrs !== undefined) {
-    sitemapLink.attrs['href'] = `${import.meta.env.BASE_URL}${SitemapFile.path}`;
+    sitemapLink.attrs['href'] =
+      `${import.meta.env.BASE_URL.replace(/\/?$/u, '/')}${SitemapFile.path}`;
   }
 });

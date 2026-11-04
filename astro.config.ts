@@ -80,7 +80,7 @@ export default defineConfig({
       // Pages only: no news, image or video entries.
       namespaces: { news: false, image: false, video: false },
       serialize: (item) => {
-        const lastmod = lastModified.of(item.url);
+        const lastmod = lastModified.of(item.url, siteData.base);
         const fallback = item.links?.find(({ lang }) => lang === Languages.site.root.toString());
 
         return {

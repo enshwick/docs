@@ -47,9 +47,14 @@ export class LastModified {
     return new LastModified(dates);
   }
 
-  /** The last change of the page at `url`, or `undefined` when it has no file in this repository. */
-  public of(url: string): string | undefined {
-    return this.dates.get(LastModified.key(new URL(url).pathname));
+  /**
+   * The last change of the page at `url` on a site served under `base`, or `undefined` when the
+   * page has no file in this repository.
+   */
+  public of(url: string, base = ''): string | undefined {
+    const path = new URL(url).pathname;
+
+    return this.dates.get(LastModified.key(path.startsWith(base) ? path.slice(base.length) : path));
   }
 
   /** A content file or a URL path as one page key: `uk/guides/install.md` and `/uk/guides/install/`. */
