@@ -53,6 +53,18 @@ describe('DistCheck', () => {
     ]);
   });
 
+  it('finds a sitemap index that lists a sitemap file the build did not write', async () => {
+    await write({
+      'index.html': page('/'),
+      'sitemap.xml': `<sitemapindex><sitemap><loc>${site}/sitemap-0.xml</loc></sitemap><sitemap><loc>${site}/sitemap-1.xml</loc></sitemap></sitemapindex>`,
+      'sitemap-0.xml': sitemap('/'),
+    });
+
+    expect(await new DistCheck(root, site).run()).toEqual([
+      `sitemap.xml: ${site}/sitemap-1.xml names no sitemap file`,
+    ]);
+  });
+
   it('finds a sitemap that does not answer at sitemap.xml', async () => {
     await write({ 'index.html': page('/'), 'sitemap-0.xml': sitemap('/') });
 
