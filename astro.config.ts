@@ -126,7 +126,12 @@ export default defineConfig({
         },
       ],
       routeMiddleware: './src/route-data.ts',
-      customCss: ['./src/styles/brand.css', './src/styles/night.css', './src/styles/front.css'],
+      customCss: [
+        './src/styles/brand.css',
+        './src/styles/night.css',
+        './src/styles/front.css',
+        './src/styles/language-select.css',
+      ],
       components: {
         Head: './src/components/head.astro',
         Header: './src/components/header.astro',

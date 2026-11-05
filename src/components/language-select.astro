@@ -1,0 +1,71 @@
+---
+import { Icon } from '@astrojs/starlight/components';
+
+import { Languages } from '../site/languages.ts';
+import { Translations } from '../site/translations.ts';
+import { LanguageCode } from '../site/types.ts';
+
+interface Props {
+  /** `menu` opens the list from a compact button, for the bar; `list` shows every language in a row. */
+  form: 'menu' | 'list';
+}
+
+/*
+ * The languages are links to the same page in each language, as Starlight routes it, so the choice
+ * needs no script, works with the page router and never moves the reader while they look through it.
+ */
+const { form } = Astro.props;
+const label = Astro.locals.t('languageSelect.accessibleLabel');
+const parsed = LanguageCode.parse(Astro.locals.starlightRoute.lang);
+const current = parsed.ok ? parsed.value : Languages.site.root;
+const base = import.meta.env.BASE_URL.replace(/\/$/u, '');
+const path = Astro.url.pathname.slice(base.length);
+const languages = Languages.site.all.map(({ code, label: name }) => ({
+  code: code.toString(),
+  name,
+  href: `${base}${Translations.pathIn(path, code)}`,
+  isCurrent: code.equals(current),
+}));
+const currentName = languages.find(({ isCurrent }) => isCurrent)?.name;
+// The bar holds one picker; the list form needs no id.
+const menuId = 'ew-languages';
+---
+
+{
+  languages.length > 1 &&
+    (form === 'menu' ? (
+      <div class="ew-lang">
+        <button class="ew-lang__button" type="button" popovertarget={menuId}>
+          <Icon name="translate" class="ew-lang__icon" />
+          <span class="sr-only">{label}:</span>
+          <span lang={current.toString()}>{currentName}</span>
+          <Icon name="down-caret" class="ew-lang__caret" />
+        </button>
+        <nav id={menuId} class="ew-lang__menu" popover aria-label={label}>
+          <ul>
+            {languages.map(({ code, name, href, isCurrent }) => (
+              <li>
+                <a href={href} hreflang={code} lang={code} aria-current={isCurrent ? 'true' : undefined}>
+                  {name}
+                  {isCurrent && <Icon name="approve-check" class="ew-lang__check" />}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </nav>
+      </div>
+    ) : (
+      <nav class="ew-langs" aria-label={label}>
+        <Icon name="translate" class="ew-lang__icon" />
+        <ul>
+          {languages.map(({ code, name, href, isCurrent }) => (
+            <li>
+              <a href={href} hreflang={code} lang={code} aria-current={isCurrent ? 'true' : undefined}>
+                {name}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </nav>
+    ))
+}

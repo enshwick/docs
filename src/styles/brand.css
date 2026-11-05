@@ -68,7 +68,7 @@
     0 2px 18px -8px var(--color-area);
 }
 
-:root[data-has-sidebar] .ew-bar a[aria-current='true'] {
+:root[data-has-sidebar] .ew-bar__nav a[aria-current='true'] {
   text-decoration: underline 2px var(--color-area);
   text-underline-offset: 0.5em;
 }
@@ -345,7 +345,7 @@ header.header {
   color: var(--color-bone);
 }
 
-.sidebar-content a {
+.sidebar-content .top-level a {
   border-radius: 0;
   color: var(--color-muted);
   padding-inline-start: var(--space-sm);
@@ -1158,27 +1158,6 @@ mobile-starlight-toc summary .toggle {
   .ew-foot__legal {
     grid-area: legal;
   }
-}
-
-/*
- * Room for the longest language name, Українська, in every language list. The label keeps the
- * select's width, so the caret stays inside the frame where a grid stretches the list.
- */
-starlight-lang-select label {
-  --sl-select-width: 8.5em !important;
-
-  width: fit-content;
-}
-
-/* Starlight lets the select overhang its label; in the footer and the menu the frame keeps to its column. */
-:is(.ew-foot__language, .ew-menu-foot) starlight-lang-select label {
-  margin-inline: var(--sl-inline-padding);
-}
-
-/* Selects in the bar and the menu. */
-starlight-lang-select select {
-  border: var(--rule-hair) solid var(--color-faint);
-  border-radius: var(--radius-control);
 }
 
 /* The heading badges keep the site's square shape. */

@@ -1,6 +1,7 @@
 import type { StarlightRouteData } from '@astrojs/starlight/route-data';
 
 import { Languages } from './languages.ts';
+import type { LanguageCode } from './types.ts';
 
 /** One tag of a page's `<head>`, in the shape Starlight's route data holds it. */
 export type HeadEntry = StarlightRouteData['head'][number];
@@ -89,6 +90,13 @@ export class Translations {
     }
 
     return entry;
+  }
+
+  /** The path of the page at `path` in `language`, as Starlight routes it: the root language has no folder. */
+  public static pathIn(path: string, language: LanguageCode): string {
+    const original = Translations.originalPath(path);
+
+    return language.equals(Languages.site.root) ? original : `/${language}${original}`;
   }
 
   /** The default language's path of a page at `path`. */

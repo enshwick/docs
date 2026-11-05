@@ -1,5 +1,4 @@
 ---
-import LanguageSelect from '@astrojs/starlight/components/LanguageSelect.astro';
 import Search from '@astrojs/starlight/components/Search.astro';
 import SiteTitle from '@astrojs/starlight/components/SiteTitle.astro';
 
@@ -8,6 +7,7 @@ import { Languages } from '../site/languages.ts';
 import { Links } from '../site/links.ts';
 import { Texts } from '../site/texts.ts';
 import { LanguageCode } from '../site/types.ts';
+import LanguageSelect from './language-select.astro';
 import ServiceIcon from './service-icon.astro';
 
 // One bar on every page, the front page included: where to go, search, the outside places, download.
@@ -47,7 +47,7 @@ const area = Area.of(route.id).toString();
     <a class="ew-bar__service" href={Links.site.nexus.toString()} aria-label="Nexus Mods" title="Nexus Mods">
       <ServiceIcon service="nexus" />
     </a>
-    <LanguageSelect />
+    <LanguageSelect form="menu" />
     <a class="ew-bar__download" href={Links.site.download.toString()}>{t('nav.download')}</a>
   </div>
 </div>
