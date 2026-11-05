@@ -102,7 +102,7 @@ export class DeveloperArea {
    *
    * @throws {TypeError} for a chapter that declares none, so a new chapter cannot go out untyped.
    */
-  private typeOf(path: string, page: ChapterPage): PageType {
+  public pageType(path: string, page: ChapterPage): PageType {
     if (page.type === undefined) {
       throw new TypeError(
         `${this.source.book}/${path} has no page type: open it with <!-- type: … description: … --> as enshwick's CONTRIBUTING.md shows`,
@@ -190,7 +190,7 @@ export class DeveloperArea {
           {
             title: page.title,
             description: page.description,
-            type: this.typeOf(chapter.path, page),
+            type: this.pageType(chapter.path, page),
             editUrl,
           },
           page.mdx ? MdxBody.of(page.body) : page.body,

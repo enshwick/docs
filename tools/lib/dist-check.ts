@@ -2,7 +2,6 @@ import { join, posix, sep } from 'node:path';
 
 import { Languages } from '../../src/site/languages.ts';
 import { Texts } from '../../src/site/texts.ts';
-import { DeveloperArea } from './developer-area.ts';
 import { MetaDescription } from './meta-description.ts';
 import { ModPages } from './mod-pages.ts';
 
@@ -143,16 +142,15 @@ export class DistCheck {
   }
 
   /**
-   * Whether the page is in an area whose descriptions come from a release of another repository,
-   * in any language: the developer area from the platform's book, the mod pages from each mod.
+   * Whether the page is a mod page, in any language, whose description comes from a release of the
+   * mods repository.
    *
-   * shortcut: developer pages go unchecked, until the book states each chapter's description.
    * shortcut: mod pages are checked only at their source by check-player-page, until each mod's
    * next release carries a summary that fits; then check them here again.
    */
   private static exempt(page: string): boolean {
     return DistCheck.languagePrefixes.some((prefix) =>
-      [DeveloperArea.folder, ModPages.folder].some((area) => page.startsWith(`${prefix}${area}/`)),
+      page.startsWith(`${prefix}${ModPages.folder}/`),
     );
   }
 

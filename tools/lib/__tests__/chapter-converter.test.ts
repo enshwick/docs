@@ -16,6 +16,31 @@ describe('ChapterConverter', () => {
     expect(page.body).toBe('A hook runs first. Then the game.\n');
   });
 
+  it('reads the type and description of the opening comment and leaves it out of the body', () => {
+    const page = converter.convert(
+      'hooks.md',
+      '<!--\ntype: how-to\ndescription: What the search snippet says.\n-->\n\n# Hooks\n\nA hook runs first.\n',
+    );
+
+    expect(page.type).toBe('how-to');
+    expect(page.description).toBe('What the search snippet says.');
+    expect(page.title).toBe('Hooks');
+    expect(page.body).toBe('A hook runs first.\n');
+  });
+
+  it('has no type for a file without the opening comment', () => {
+    expect(converter.convert('hooks.md', '# Hooks\n\nText.\n').type).toBeUndefined();
+  });
+
+  it('refuses an opening comment with an unknown type or a line of another shape', () => {
+    expect(() => converter.convert('hooks.md', '<!--\ntype: guide\n-->\n# Hooks\n')).toThrow(
+      /hooks\.md: type guide is none of tutorial, how-to, reference, explanation/u,
+    );
+    expect(() => converter.convert('hooks.md', '<!--\njust a note\n-->\n# Hooks\n')).toThrow(
+      /hooks\.md: the opening comment has a line that is no "key: value": just a note/u,
+    );
+  });
+
   it("drops mdBook's hidden lines and fence attributes from Rust examples only", () => {
     const text = [
       '```rust,no_run',
