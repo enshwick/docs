@@ -714,6 +714,14 @@ starlight-tabs[data-sync-key='mod-language']
   opacity: var(--ec-frm-inlBtnBrdOpa);
 }
 
+/* The copy icon is a mask over a background, which forced colours would erase. */
+@media (forced-colors: active) {
+  starlight-tabs[data-sync-key='mod-language'] .expressive-code .copy button::after {
+    forced-color-adjust: none;
+    background-color: ButtonText;
+  }
+}
+
 /* Badges: square, quiet. */
 .sl-badge {
   border-radius: 0;
