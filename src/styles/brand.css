@@ -68,7 +68,7 @@
     0 2px 18px -8px var(--color-area);
 }
 
-:root[data-has-sidebar] .ew-bar__nav a[aria-current='true'] {
+:root[data-has-sidebar] .ew-bar a[aria-current='true'] {
   text-decoration: underline 2px var(--color-area);
   text-underline-offset: 0.5em;
 }

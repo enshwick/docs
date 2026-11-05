@@ -18,5 +18,5 @@ const t = (key: string): string => Texts.site.get(key, language);
     <a class="ew-foot__service" href={Links.site.github.toString()}><ServiceIcon service="github" />GitHub</a>
     <a class="ew-foot__service" href={Links.site.nexus.toString()}><ServiceIcon service="nexus" />Nexus Mods</a>
   </nav>
-  <LanguageSelect form="list" />
+  <LanguageSelect language={language} />
 </div>

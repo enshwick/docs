@@ -25,7 +25,7 @@ const t = (key: string): string => Texts.site.get(key, language);
       <a href={Links.site.security.mailto()}>{Links.site.security.toString()}</a>
     </p>
     <div class="ew-foot__language">
-      <LanguageSelect form="list" />
+      <LanguageSelect language={language} />
     </div>
     <p class="ew-foot__legal">
       <a href={Links.site.license.toString()}>{t('foot.license')}</a>
