@@ -83,6 +83,14 @@ Enshwick leaves the game's files on disk as they are. Delete `powrprof.dll`, and
 the game starts exactly as it did before.
 [Remove a mod or Enshwick](/guides/uninstall/) shows how.
 
+At each start, Enshwick asks GitHub once whether a newer Enshwick exists. It
+sends nothing about you, your game or your mods. Enshwick never downloads or
+installs anything.
+
+If a newer Enshwick exists, the **Mods** screen shows its version and the address
+of its page. To turn the question off, set `release_check = false` in
+`enshwick.toml` in the game folder.
+
 ## Your worlds
 
 Some mods keep their own data for a world, such as who owns a chest. They keep
