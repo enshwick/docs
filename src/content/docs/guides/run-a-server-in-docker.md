@@ -53,12 +53,14 @@ a set nobody built, and replicas drift apart.
 
 ## Keep the server running after a game update
 
-After a game update, Enshwick may lack the table for the new game build. It then
-finds what it needs by code patterns, and only what they miss stays off. With
-`build_patterns = false` in `enshwick.toml` in the game folder, such a build runs
+After a game update, Enshwick finds what it needs on the new game build the same
+way as on every build: by its engine routes and code patterns. Only what they
+miss stays off. With `build_patterns = false` in `enshwick.toml` in the game
+folder, a build that no compatibility report of your Enshwick release covers runs
 without mods instead.
 
-Rebuild the image once a newer Enshwick has the table for the build.
+Rebuild the image once a newer Enshwick reports the build or finds what was
+missing.
 
 ## Keep worlds on a volume
 
