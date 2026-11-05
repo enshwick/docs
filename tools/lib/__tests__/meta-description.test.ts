@@ -37,6 +37,27 @@ describe('MetaDescription', () => {
     expect(packed).toBe(`${'a'.repeat(100)}. ${'b'.repeat(55)}…`);
   });
 
+  it('ends no sentence at an abbreviation', () => {
+    const first = `${'a'.repeat(109)}.`;
+    const second = `Another tool, e.g. a mod manager, replaced the file ${'c'.repeat(30)}.`;
+
+    expect(MetaDescription.pack([first, second])).toBe(
+      `${first} Another tool, e.g. a mod manager, replaced the…`,
+    );
+  });
+
+  it('ends a sentence before a capital in any script, so a cut never follows a full stop', () => {
+    const whole = `${'а'.repeat(130)}.`;
+
+    expect(
+      MetaDescription.pack([`${whole} Мод запускається з версією, для якої його зібрано.`]),
+    ).toBe(whole);
+  });
+
+  it('skips an empty text without a doubled space', () => {
+    expect(MetaDescription.pack(['E1: X.', '', 'Fix it.'])).toBe('E1: X. Fix it.');
+  });
+
   it('leaves texts that are short in all as they are', () => {
     expect(MetaDescription.pack(['Short.', 'Also short.'])).toBe('Short. Also short.');
   });

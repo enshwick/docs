@@ -202,18 +202,11 @@ header.header {
   display: flex;
   align-items: center;
   gap: var(--space-xs);
-  flex: 0 1 auto;
 }
 
-/* On the narrowest phones the wordmark shrinks to leave the alpha mark, search and menu their room. */
-.ew-bar .site-title {
-  min-width: 0;
-}
-
+/* Where the bar runs short of room, the wordmark shrinks first, so nothing beside it overlaps. */
 .ew-bar .site-title img {
   min-width: 0;
-  object-fit: contain;
-  object-position: left center;
 }
 
 .ew-alpha {

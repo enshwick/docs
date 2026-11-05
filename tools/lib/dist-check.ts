@@ -1,8 +1,10 @@
 import { join, posix, sep } from 'node:path';
 
 import { Languages } from '../../src/site/languages.ts';
+import { Texts } from '../../src/site/texts.ts';
 import { DeveloperArea } from './developer-area.ts';
 import { MetaDescription } from './meta-description.ts';
+import { ModPages } from './mod-pages.ts';
 
 /** The checks of a built site that only the build output can answer, each problem as one line. */
 export class DistCheck {
@@ -23,6 +25,7 @@ export class DistCheck {
   private static readonly location = /<loc>([^<]+)<\/loc>/gu;
   private static readonly noindex = /<meta name="robots" content="noindex"/u;
   private static readonly description = /<meta name="description" content="([^"]*)"/u;
+  private static readonly siteDescription = 'site.description';
   /** The entities a built attribute value carries, with the characters they stand for. */
   private static readonly entities: ReadonlyArray<readonly [string, string]> = [
     ['&quot;', '"'],
@@ -31,6 +34,19 @@ export class DistCheck {
     ['&gt;', '>'],
     ['&amp;', '&'],
   ];
+  /** Where each language's pages start: `` for the root, `uk/` for the others. */
+  private static readonly languagePrefixes = [
+    '',
+    ...Languages.site.others.map((language) => `${language}/`),
+  ];
+  /** The home page of each language, which states the site's description as its own. */
+  private static readonly homes = DistCheck.languagePrefixes.map(
+    (prefix) => `${prefix}${DistCheck.pageFile}`,
+  );
+  /** The description Starlight gives a page that states none, in each language. */
+  private static readonly siteDescriptions = Languages.site.all.map(({ code }) =>
+    Texts.site.get(DistCheck.siteDescription, code),
+  );
   private static readonly table = /<table[\s>]/gu;
   /** A table that opens its frame: the scrolling div with nothing but space before the table. */
   private static readonly framedTable = /<div class="ew-table"[^>]*>\s*<table[\s>]/gu;
@@ -94,22 +110,30 @@ export class DistCheck {
     return [...problems, ...DistCheck.descriptionOf(page, text)];
   }
 
-  /** The problem of a page search may index whose description is missing, short or long. */
+  /**
+   * The problem of a page search may index whose description is missing, short or long. A page
+   * without one gets the site's own from Starlight, so outside a home page that counts as missing.
+   */
   private static descriptionOf(page: string, text: string): string[] {
-    if (page === DistCheck.notFound || DistCheck.noindex.test(text) || DistCheck.inBook(page)) {
+    if (page === DistCheck.notFound || DistCheck.noindex.test(text) || DistCheck.exempt(page)) {
       return [];
     }
 
     const [, found] = DistCheck.description.exec(text) ?? [];
+    const description =
+      found === undefined
+        ? undefined
+        : DistCheck.entities.reduce(
+            (decoded, [entity, character]) => decoded.replaceAll(entity, character),
+            found,
+          );
 
-    if (found === undefined) {
+    if (
+      description === undefined ||
+      (!DistCheck.homes.includes(page) && DistCheck.siteDescriptions.includes(description))
+    ) {
       return [`${page}: has no description`];
     }
-
-    const description = DistCheck.entities.reduce(
-      (decoded, [entity, character]) => decoded.replaceAll(entity, character),
-      found,
-    );
 
     return MetaDescription.fits(description)
       ? []
@@ -119,13 +143,16 @@ export class DistCheck {
   }
 
   /**
-   * Whether the page is in the developer area, which the platform's book fills, in any language.
+   * Whether the page is in an area whose descriptions come from a release of another repository,
+   * in any language: the developer area from the platform's book, the mod pages from each mod.
    *
-   * shortcut: the area is exempt until the book states each chapter's description; drop this then.
+   * shortcut: developer pages go unchecked, until the book states each chapter's description.
+   * shortcut: mod pages are checked only at their source by check-player-page, until each mod's
+   * next release carries a summary that fits; then check them here again.
    */
-  private static inBook(page: string): boolean {
-    return ['', ...Languages.site.others.map((language) => `${language}/`)].some((prefix) =>
-      page.startsWith(`${prefix}${DeveloperArea.folder}/`),
+  private static exempt(page: string): boolean {
+    return DistCheck.languagePrefixes.some((prefix) =>
+      [DeveloperArea.folder, ModPages.folder].some((area) => page.startsWith(`${prefix}${area}/`)),
     );
   }
 

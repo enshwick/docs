@@ -19,7 +19,10 @@ export class LastModified {
 
   private constructor(private readonly dates: ReadonlyMap<string, string>) {}
 
-  /** The dates from this repository's history; without git, no page has a date. */
+  /**
+   * The dates from this repository's history and the generated pages' front matter; without git,
+   * only generated pages have a date.
+   */
   public static fromGit(): LastModified {
     const log = Bun.spawnSync([
       'git',

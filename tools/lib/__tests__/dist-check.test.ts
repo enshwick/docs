@@ -4,12 +4,18 @@ import { join } from 'node:path';
 
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
+import { Languages } from '../../../src/site/languages.ts';
+import { Texts } from '../../../src/site/texts.ts';
+import type { LanguageCode } from '../../../src/site/types.ts';
 import { DistCheck } from '../dist-check.ts';
 
 const site = 'https://enshwick.com';
 const described = `<meta name="description" content="${'A sentence &amp; more. '.repeat(7).trim()}"/>`;
 const page = (path: string, extra = '', description = described): string =>
   `<html><head><link rel="canonical" href="${site}${path}"/>${description}${extra}<link rel="icon" href="/favicon.svg"/></head></html>`;
+/** The description Starlight gives a page that states none. */
+const fallback = (language: LanguageCode): string =>
+  `<meta name="description" content="${Texts.site.get('site.description', language)}"/>`;
 const sitemap = (...paths: string[]): string =>
   `<urlset>${paths.map((path) => `<url><loc>${site}${path}</loc></url>`).join('')}</urlset>`;
 
@@ -139,6 +145,11 @@ describe('DistCheck', () => {
         '',
         '<meta name="description" content="Short."/>',
       ),
+      'uk/mods/optimizer/index.html': page(
+        '/uk/mods/optimizer/',
+        '',
+        '<meta name="description" content="Short."/>',
+      ),
       'sitemap.xml': sitemap('/guides/install/', '/guides/remove/'),
     });
 
@@ -147,6 +158,34 @@ describe('DistCheck', () => {
       'guides/remove/index.html: its description has 161 characters, wants 120 to 160',
       'index.html: has no description',
     ]);
+  });
+
+  it("counts a page that falls back to the site's description as missing one, except a home page", async () => {
+    const [other = Languages.site.root] = Languages.site.others;
+
+    await write({
+      'index.html': page('/', '', fallback(Languages.site.root)),
+      [`${other}/index.html`]: page(`/${other}/`, '', fallback(other)),
+      [`${other}/guides/install/index.html`]: page(
+        `/${other}/guides/install/`,
+        '',
+        fallback(other),
+      ),
+      'sitemap.xml': sitemap('/', `/${other}/`, `/${other}/guides/install/`),
+    });
+
+    expect(await new DistCheck(root, site).run()).toEqual([
+      `${other}/guides/install/index.html: has no description`,
+    ]);
+  });
+
+  it('counts a description by the characters its entities stand for', async () => {
+    await write({
+      'index.html': page('/', '', `<meta name="description" content="${'&amp;'.repeat(130)}"/>`),
+      'sitemap.xml': sitemap('/'),
+    });
+
+    expect(await new DistCheck(root, site).run()).toEqual([]);
   });
 
   it('finds a page that answers without the trailing slash', async () => {

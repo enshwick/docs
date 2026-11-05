@@ -18,6 +18,8 @@ type StepText = Pick<StepEntry, 'question'>;
  */
 export class ErrorPages {
   public static readonly folder = 'errors';
+  /** A title that already ends as a sentence, so its description adds no period. */
+  private static readonly closed = /[.!?]$/u;
 
   private static readonly text = {
     why: 'error.why',
@@ -150,8 +152,10 @@ export class ErrorPages {
 
   /** A code page's meta description: its code and title, then its cause and fix while they fit. */
   private static description(code: ErrorCode, page: ErrorText): string {
+    const title = page.title.toString();
+
     return MetaDescription.pack([
-      `${code}: ${page.title}.`,
+      ErrorPages.closed.test(title) ? `${code}: ${title}` : `${code}: ${title}.`,
       page.cause.toString(),
       page.fix.toString(),
     ]);

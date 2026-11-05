@@ -1,3 +1,5 @@
+import { PlayerProse } from './player-prose.ts';
+
 /**
  * A page's meta description, the snippet search engines show: 120 to 160 characters, so it is
  * neither scraped from the page body for being short nor cut off for being long.
@@ -5,7 +7,6 @@
 export class MetaDescription {
   public static readonly shortest = 120;
   public static readonly longest = 160;
-  private static readonly sentenceEnd = /(?<=[.!?])\s+/u;
   private static readonly wordGap = /\s+/u;
   private static readonly ellipsis = '…';
   /** A comma or the like that would stand right before the ellipsis. */
@@ -30,7 +31,7 @@ export class MetaDescription {
    * sentence follows cut at a word, with an ellipsis. Shorter texts stay short.
    */
   public static pack(texts: readonly string[]): string {
-    const sentences = texts.flatMap((text) => text.trim().split(MetaDescription.sentenceEnd));
+    const sentences = texts.flatMap((text) => PlayerProse.sentences(text));
     let packed = '';
 
     for (const sentence of sentences) {
