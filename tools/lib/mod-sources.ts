@@ -1,30 +1,23 @@
 import { posix, sep } from 'node:path';
 
-import { AnyBoolean, AnyString, n } from '@horizon-republic/nominal-types';
+import { AnyString, n } from '@horizon-republic/nominal-types';
 
 import { GitRef, type RepositoryName } from '../../src/site/types.ts';
 import { Fields } from './fields.ts';
 import { GitSource } from './git-source.ts';
+import { GitHubReleases } from './github-releases.ts';
 
 /** One of our mods: its Cargo package, its folder in the mods repository and its newest release. */
 export interface ModSource {
   readonly package: string;
   readonly folder: string;
-  /** The release the site reads the mod at (see `ModSources.newestArchives`); `undefined` before its first. */
+  /** The release the site reads the mod at (see `GitHubReleases.newestArchives`); `undefined` before its first. */
   readonly tag: GitRef | undefined;
 }
 
 /** A Cargo workspace manifest, only the members the site reads. */
 const WorkspaceManifest = n.object({
   workspace: n.object({ members: n.of(AnyString).array({ min: 1 }) }),
-});
-
-/** One release as GitHub's releases API lists it, only what the site reads. */
-const GitHubRelease = n.object({
-  tag_name: GitRef,
-  draft: AnyBoolean,
-  prerelease: AnyBoolean,
-  assets: n.object({ name: AnyString }).array(),
 });
 
 /** Where each of our mods lives in the mods repository and which release the site reads it at. */
@@ -34,8 +27,6 @@ export class ModSources {
   public static readonly page = 'player';
   public static readonly mainBranch = new GitRef('main');
   private static readonly api = 'enshwick';
-  private static readonly archive = '.zip';
-  private static readonly releasesPerPage = 100;
 
   /** One checkout per release tag, shared by every mod that tag releases. */
   private readonly checkouts = new Map<string, Promise<GitSource>>();
@@ -50,9 +41,9 @@ export class ModSources {
    */
   public async list(): Promise<readonly ModSource[]> {
     const found = await this.members();
-    const tags = ModSources.newestArchives(
+    const tags = GitHubReleases.newestArchives(
       `${this.repository} releases`,
-      await this.releases(),
+      await GitHubReleases.list(this.repository),
       found.map((mod) => mod.package),
     );
 
@@ -104,40 +95,6 @@ export class ModSources {
     }
 
     return parsed.value.workspace.members.map((member) => member.toString());
-  }
-
-  /**
-   * Per package, the tag of the newest regular release that carries its own archive
-   * `<package>.zip`, else of the newest prerelease that does, such as the rolling `dev` build.
-   * Drafts are left out. A package without one has no entry.
-   *
-   * @throws {TypeError} when the list does not read as GitHub's releases, newest first.
-   */
-  public static newestArchives(
-    origin: string,
-    releases: unknown,
-    packages: readonly string[],
-  ): Map<string, GitRef> {
-    const parsed = GitHubRelease.array().parse(releases);
-
-    if (!parsed.ok) {
-      throw new TypeError(`${origin}: ${JSON.stringify(parsed.issues)}`);
-    }
-
-    const published = parsed.value
-      .filter((release) => !release.draft.value)
-      .toSorted((a, b) => Number(a.prerelease.value) - Number(b.prerelease.value));
-
-    return new Map(
-      packages.flatMap((name) => {
-        const archive = `${name}${ModSources.archive}`;
-        const release = published.find((candidate) =>
-          candidate.assets.some((asset) => asset.name.toString() === archive),
-        );
-
-        return release === undefined ? [] : [[name, release.tag_name] as const];
-      }),
-    );
   }
 
   /**
@@ -216,36 +173,6 @@ export class ModSources {
     );
 
     return found.flat();
-  }
-
-  /** Every release of the repository, newest first, as GitHub lists them page by page. */
-  private async releases(page = 1): Promise<unknown[]> {
-    const token = Bun.env['GITHUB_TOKEN'];
-    const response = await fetch(
-      `https://api.github.com/repos/${this.repository}/releases?per_page=${ModSources.releasesPerPage}&page=${page}`,
-      {
-        headers: {
-          accept: 'application/vnd.github+json',
-          ...(token === undefined || token === '' ? {} : { authorization: `Bearer ${token}` }),
-        },
-      },
-    );
-
-    if (!response.ok) {
-      throw new Error(`${this.repository}: listing releases answered ${response.status}`);
-    }
-
-    const json: unknown = await response.json();
-
-    if (!Array.isArray(json)) {
-      throw new TypeError(`${this.repository}: listing releases answered no list`);
-    }
-
-    const batch = json.map((release: unknown) => release);
-
-    return batch.length < ModSources.releasesPerPage
-      ? batch
-      : [...batch, ...(await this.releases(page + 1))];
   }
 
   /** A manifest field, or the workspace's field where it says `workspace = true`. */

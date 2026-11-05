@@ -29,7 +29,7 @@ export interface ModRelease {
 
 /**
  * The player area's mod pages, one per mod of the mods repository, each read at the release
- * `ModSources.newestArchives` picks for it, in every language it has.
+ * `GitHubReleases.newestArchives` picks for it, in every language it has.
  */
 export class ModPages {
   public static readonly folder = 'mods';

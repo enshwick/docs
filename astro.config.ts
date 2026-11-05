@@ -17,11 +17,14 @@ import starlightLlmsTxt from 'starlight-llms-txt';
 import starlightSidebarTopics from 'starlight-sidebar-topics';
 
 import siteData from './src/data/site.json' with { type: 'json' };
+import releaseArchivesData from './src/generated/release-archives.json' with { type: 'json' };
 import { TableFrame } from './src/plugins/rehype-table-frame.ts';
 import { BaseLinks } from './src/plugins/remark-base-links.ts';
+import { ReleaseLinks } from './src/plugins/remark-release-links.ts';
 import { CodeTheme } from './src/site/code-theme.ts';
 import { Languages } from './src/site/languages.ts';
 import { LastModified } from './src/site/last-modified.ts';
+import { ReleaseArchives } from './src/site/release-archives.ts';
 import { SitemapFile } from './src/site/sitemap-file.ts';
 import { Texts } from './src/site/texts.ts';
 import { Translations } from './src/site/translations.ts';
@@ -65,7 +68,10 @@ export default defineConfig({
   prefetch: { prefetchAll: true, defaultStrategy: 'hover' },
   markdown: {
     processor: unified({
-      remarkPlugins: [new BaseLinks(siteData.base).plugin()],
+      remarkPlugins: [
+        new BaseLinks(siteData.base).plugin(),
+        new ReleaseLinks(new ReleaseArchives(releaseArchivesData)).plugin(),
+      ],
       rehypePlugins: [new TableFrame().plugin()],
     }),
   },
