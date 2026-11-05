@@ -3,7 +3,6 @@ import { mkdir, rm } from 'node:fs/promises';
 import siteData from '../src/data/site.json' with { type: 'json' };
 import sourcesData from '../src/data/sources.json' with { type: 'json' };
 import { Languages } from '../src/site/languages.ts';
-import { ReleaseArchives } from '../src/site/release-archives.ts';
 import { Sources } from '../src/site/types.ts';
 import { DeveloperArea } from './lib/developer-area.ts';
 import { ErrorPages } from './lib/error-pages.ts';
@@ -18,6 +17,8 @@ import { PlatformChecks } from './lib/platform-checks.ts';
 // are never committed.
 
 const generated = 'src/generated';
+/** Astro's content layer cache, under its default `cacheDir`. */
+const contentStore = 'node_modules/.astro/data-store.json';
 /** The loader's package, which names its archive `enshwick.zip`. */
 const loaderPackage = 'enshwick';
 const parsed = Sources.parse(sourcesData);
@@ -44,6 +45,9 @@ await Promise.all(
   ),
 );
 await rm(ModPages.publicFolder, { recursive: true, force: true });
+// Astro keeps rendered pages while their text and config stay the same, but pinned download links
+// change with each release, so every build renders the pages again.
+await rm(contentStore, { force: true });
 await mkdir(generated, { recursive: true });
 
 const developerArea = new DeveloperArea({
@@ -108,7 +112,7 @@ await Bun.write(
 await Bun.write(`${generated}/smallest-mod.rs`, `${platformChecks.smallestMod()}\n`);
 await Bun.write(`${generated}/dev-sidebar.json`, `${JSON.stringify(developerSidebar, null, 2)}\n`);
 await Bun.write(
-  ReleaseArchives.file,
+  `${generated}/release-archives.json`,
   `${JSON.stringify(
     {
       [platform.repository.toString()]: { [`${loaderPackage}.zip`]: loaderTag },

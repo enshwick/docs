@@ -1,5 +1,3 @@
-import { existsSync, readFileSync } from 'node:fs';
-
 import { AnyString, n } from '@horizon-republic/nominal-types';
 
 import { GitRef, RepositoryName } from './types.ts';
@@ -10,29 +8,14 @@ import { GitRef, RepositoryName } from './types.ts';
  * the release `tools/fetch.ts` picked, so before 1.0 it reaches the newest alpha.
  */
 export class ReleaseArchives {
-  /** Where `tools/fetch.ts` writes, per repository, the release tag of each archive. */
-  public static readonly file = new URL('../generated/release-archives.json', import.meta.url);
-
   private static readonly schema = n.record(RepositoryName, n.record(AnyString, GitRef));
   private static readonly latest =
     /^https:\/\/github\.com\/([A-Za-z0-9-]+\/[A-Za-z0-9._-]+)\/releases\/latest\/download\/([^/?#]+)$/u;
 
-  /** The tags `tools/fetch.ts` wrote, or none before it ran, which leaves every link as written. */
-  public static readonly site = new ReleaseArchives(
-    existsSync(ReleaseArchives.file)
-      ? JSON.parse(readFileSync(ReleaseArchives.file, 'utf8'))
-      : undefined,
-  );
+  private readonly tags: ReadonlyMap<string, ReadonlyMap<string, string>>;
 
-  private readonly tags: ReadonlyMap<string, ReadonlyMap<string, string>> | undefined;
-
+  /** Takes `src/generated/release-archives.json`, which `tools/fetch.ts` writes before every build. */
   public constructor(data: unknown) {
-    if (data === undefined) {
-      this.tags = undefined;
-
-      return;
-    }
-
     const parsed = ReleaseArchives.schema.parse(data);
 
     if (!parsed.ok) {
@@ -48,19 +31,22 @@ export class ReleaseArchives {
   }
 
   /**
-   * The link pinned to the archive's release, or the link itself when it names no newest archive.
+   * The link pinned to the archive's release, or the link itself when it names no newest archive of
+   * a repository the site reads releases of.
    *
-   * @throws {TypeError} when it names an archive no release carries, which would be a dead link.
+   * @throws {TypeError} when it names an archive no release of such a repository carries, which
+   * would be a dead link.
    */
   public pin(url: string): string {
     const match = ReleaseArchives.latest.exec(url);
+    const [, repository = '', archive = ''] = match ?? [];
+    const archives = this.tags.get(repository);
 
-    if (match === null || this.tags === undefined) {
+    if (match === null || archives === undefined) {
       return url;
     }
 
-    const [, repository = '', archive = ''] = match;
-    const tag = this.tags.get(repository)?.get(archive);
+    const tag = archives.get(archive);
 
     if (tag === undefined) {
       throw new TypeError(`${url}: no release of ${repository} carries ${archive}`);

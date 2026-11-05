@@ -1,6 +1,8 @@
 import { n } from '@horizon-republic/nominal-types';
 
 import linksData from '../data/links.json' with { type: 'json' };
+// A static import, so the build bundles it; `tools/fetch.ts` writes it before every build.
+import releaseArchivesData from '../generated/release-archives.json' with { type: 'json' };
 import { ReleaseArchives } from './release-archives.ts';
 import { Address, Mailbox } from './types.ts';
 
@@ -20,7 +22,7 @@ export class Links {
   });
 
   /** The site's outside links, as `src/data/links.json` holds them, the download pinned to its release. */
-  public static readonly site = new Links(linksData, ReleaseArchives.site);
+  public static readonly site = new Links(linksData, new ReleaseArchives(releaseArchivesData));
 
   public readonly github: Address;
   public readonly nexus: Address;
@@ -30,7 +32,7 @@ export class Links {
   public readonly contact: Mailbox;
   public readonly security: Mailbox;
 
-  public constructor(data: unknown, archives = new ReleaseArchives(undefined)) {
+  public constructor(data: unknown, archives: ReleaseArchives) {
     const parsed = Links.schema.parse(data);
 
     if (!parsed.ok) {

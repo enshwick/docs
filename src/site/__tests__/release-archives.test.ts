@@ -38,10 +38,10 @@ describe('ReleaseArchives.pin', () => {
     ).toThrow(/enshwick-gone\.zip/u);
   });
 
-  it('leaves links as written before the fetch step wrote any tags', () => {
-    const url = 'https://github.com/enshwick/enshwick/releases/latest/download/enshwick.zip';
+  it('leaves a newest-archive link of a repository the site reads no releases of as written', () => {
+    const url = 'https://github.com/someone/tool/releases/latest/download/tool.zip';
 
-    expect(new ReleaseArchives(undefined).pin(url)).toBe(url);
+    expect(archives.pin(url)).toBe(url);
   });
 
   it('refuses tags that do not read as a repository and archive map', () => {

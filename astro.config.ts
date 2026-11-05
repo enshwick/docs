@@ -17,6 +17,7 @@ import starlightLlmsTxt from 'starlight-llms-txt';
 import starlightSidebarTopics from 'starlight-sidebar-topics';
 
 import siteData from './src/data/site.json' with { type: 'json' };
+import releaseArchivesData from './src/generated/release-archives.json' with { type: 'json' };
 import { TableFrame } from './src/plugins/rehype-table-frame.ts';
 import { BaseLinks } from './src/plugins/remark-base-links.ts';
 import { ReleaseLinks } from './src/plugins/remark-release-links.ts';
@@ -69,7 +70,7 @@ export default defineConfig({
     processor: unified({
       remarkPlugins: [
         new BaseLinks(siteData.base).plugin(),
-        new ReleaseLinks(ReleaseArchives.site).plugin(),
+        new ReleaseLinks(new ReleaseArchives(releaseArchivesData)).plugin(),
       ],
       rehypePlugins: [new TableFrame().plugin()],
     }),

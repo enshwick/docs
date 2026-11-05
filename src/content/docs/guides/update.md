@@ -11,8 +11,8 @@ the old files. Your settings and world data stay. No archive holds them.
 
 :::caution
 Until 1.0, each update is a new alpha. An alpha may change file layouts,
-settings and mod ids. [Back up your worlds](/guides/back-up-saves/) before
-you update.
+settings and mod ids. Before you update,
+[back up your worlds](/guides/back-up-saves/).
 :::
 
 1. Close the game or stop the server.
