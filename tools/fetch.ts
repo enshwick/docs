@@ -3,18 +3,23 @@ import { mkdir, rm } from 'node:fs/promises';
 import siteData from '../src/data/site.json' with { type: 'json' };
 import sourcesData from '../src/data/sources.json' with { type: 'json' };
 import { Languages } from '../src/site/languages.ts';
+import { ReleaseArchives } from '../src/site/release-archives.ts';
 import { Sources } from '../src/site/types.ts';
 import { DeveloperArea } from './lib/developer-area.ts';
 import { ErrorPages } from './lib/error-pages.ts';
+import { GitHubReleases } from './lib/github-releases.ts';
 import { ModPages } from './lib/mod-pages.ts';
 import { PageFile } from './lib/page-file.ts';
 import { PlatformChecks } from './lib/platform-checks.ts';
 
 // Fills the generated part of the site from its sources before every build: the developer area
 // from the platform's book at each version's ref, the mod pages from each mod's release in the mods repository, and
-// the data of the compatibility page. Generated files are never committed.
+// the data of the compatibility page, and the release each download link points at. Generated files
+// are never committed.
 
 const generated = 'src/generated';
+/** The loader's package, which names its archive `enshwick.zip`. */
+const loaderPackage = 'enshwick';
 const parsed = Sources.parse(sourcesData);
 
 if (!parsed.ok) {
@@ -54,6 +59,16 @@ const developerArea = new DeveloperArea({
 });
 const developerSidebar = await developerArea.build();
 const modReleases = await new ModPages(mods.repository).build();
+const loaderTags = GitHubReleases.newestArchives(
+  `${platform.repository} releases`,
+  await GitHubReleases.list(platform.repository),
+  [loaderPackage],
+);
+const loaderTag = loaderTags.get(loaderPackage);
+
+if (loaderTag === undefined) {
+  throw new TypeError(`${platform.repository} has no release with ${loaderPackage}.zip`);
+}
 
 const platformChecks = new PlatformChecks(developerArea.releases[0], developerArea.newestPages);
 const apiMap = platformChecks.run();
@@ -92,3 +107,16 @@ await Bun.write(
 );
 await Bun.write(`${generated}/smallest-mod.rs`, `${platformChecks.smallestMod()}\n`);
 await Bun.write(`${generated}/dev-sidebar.json`, `${JSON.stringify(developerSidebar, null, 2)}\n`);
+await Bun.write(
+  ReleaseArchives.file,
+  `${JSON.stringify(
+    {
+      [platform.repository.toString()]: { [`${loaderPackage}.zip`]: loaderTag },
+      [mods.repository.toString()]: Object.fromEntries(
+        modReleases.map((release) => [`${release.package}.zip`, release.tag]),
+      ),
+    },
+    null,
+    2,
+  )}\n`,
+);

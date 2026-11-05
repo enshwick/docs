@@ -1,6 +1,7 @@
 import { n } from '@horizon-republic/nominal-types';
 
 import linksData from '../data/links.json' with { type: 'json' };
+import { ReleaseArchives } from './release-archives.ts';
 import { Address, Mailbox } from './types.ts';
 
 /**
@@ -18,8 +19,8 @@ export class Links {
     security: Mailbox,
   });
 
-  /** The site's outside links, as `src/data/links.json` holds them. */
-  public static readonly site = new Links(linksData);
+  /** The site's outside links, as `src/data/links.json` holds them, the download pinned to its release. */
+  public static readonly site = new Links(linksData, ReleaseArchives.site);
 
   public readonly github: Address;
   public readonly nexus: Address;
@@ -29,7 +30,7 @@ export class Links {
   public readonly contact: Mailbox;
   public readonly security: Mailbox;
 
-  public constructor(data: unknown) {
+  public constructor(data: unknown, archives = new ReleaseArchives(undefined)) {
     const parsed = Links.schema.parse(data);
 
     if (!parsed.ok) {
@@ -45,6 +46,7 @@ export class Links {
       contact: this.contact,
       security: this.security,
     } = parsed.value);
+    this.download = new Address(archives.pin(this.download.toString()));
   }
 
   /** A new issue on the site's repository, its title and body filled in for the reader. */
