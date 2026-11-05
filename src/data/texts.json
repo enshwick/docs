@@ -376,8 +376,8 @@
     "uk": "Гра не запускається"
   },
   "errors.description": {
-    "en": "Answer a few questions to find the error that stops your game, and its fix.",
-    "uk": "Дайте відповідь на кілька запитань, щоб знайти помилку, яка не дає грі запуститися, і її виправлення."
+    "en": "Your game or server does not start? Answer a few yes or no questions to find the Enshwick error behind it and the steps that fix it.",
+    "uk": "Гра чи сервер не запускається? Дайте відповідь «так» чи «ні» на кілька запитань, щоб знайти помилку Enshwick і кроки, що її виправляють."
   },
   "errors.start": {
     "en": "Start with the first question and follow your answers.",

@@ -7,8 +7,9 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { DistCheck } from '../dist-check.ts';
 
 const site = 'https://enshwick.com';
-const page = (path: string, extra = ''): string =>
-  `<html><head><link rel="canonical" href="${site}${path}"/>${extra}<link rel="icon" href="/favicon.svg"/></head></html>`;
+const described = `<meta name="description" content="${'A sentence &amp; more. '.repeat(7).trim()}"/>`;
+const page = (path: string, extra = '', description = described): string =>
+  `<html><head><link rel="canonical" href="${site}${path}"/>${description}${extra}<link rel="icon" href="/favicon.svg"/></head></html>`;
 const sitemap = (...paths: string[]): string =>
   `<urlset>${paths.map((path) => `<url><loc>${site}${path}</loc></url>`).join('')}</urlset>`;
 
@@ -113,8 +114,38 @@ describe('DistCheck', () => {
 
     expect(await new DistCheck(root, site).run()).toEqual([
       `index.html: wants one canonical address on ${site}, has none`,
+      'index.html: has no description',
       `sitemap.xml: ${site}/uk/dev/ is a page search must not index`,
       `sitemap.xml: ${site}/gone/ has no page`,
+    ]);
+  });
+
+  it('finds an indexable page whose description is missing, short or long', async () => {
+    await write({
+      'index.html': page('/', '', ''),
+      'guides/install/index.html': page(
+        '/guides/install/',
+        '',
+        '<meta name="description" content="Short."/>',
+      ),
+      'guides/remove/index.html': page(
+        '/guides/remove/',
+        '',
+        `<meta name="description" content="${'x'.repeat(161)}"/>`,
+      ),
+      'uk/guides/index.html': page('/uk/guides/', '<meta name="robots" content="noindex"/>', ''),
+      'dev/hooks/index.html': page(
+        '/dev/hooks/',
+        '',
+        '<meta name="description" content="Short."/>',
+      ),
+      'sitemap.xml': sitemap('/guides/install/', '/guides/remove/'),
+    });
+
+    expect(await new DistCheck(root, site).run()).toEqual([
+      'guides/install/index.html: its description has 6 characters, wants 120 to 160',
+      'guides/remove/index.html: its description has 161 characters, wants 120 to 160',
+      'index.html: has no description',
     ]);
   });
 

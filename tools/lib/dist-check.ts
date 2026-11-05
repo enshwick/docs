@@ -1,5 +1,9 @@
 import { join, posix, sep } from 'node:path';
 
+import { Languages } from '../../src/site/languages.ts';
+import { DeveloperArea } from './developer-area.ts';
+import { MetaDescription } from './meta-description.ts';
+
 /** The checks of a built site that only the build output can answer, each problem as one line. */
 export class DistCheck {
   private static readonly pages = '**/*.html';
@@ -18,6 +22,15 @@ export class DistCheck {
   private static readonly canonical = /<link rel="canonical" href="([^"]*)"/gu;
   private static readonly location = /<loc>([^<]+)<\/loc>/gu;
   private static readonly noindex = /<meta name="robots" content="noindex"/u;
+  private static readonly description = /<meta name="description" content="([^"]*)"/u;
+  /** The entities a built attribute value carries, with the characters they stand for. */
+  private static readonly entities: ReadonlyArray<readonly [string, string]> = [
+    ['&quot;', '"'],
+    ['&#39;', "'"],
+    ['&lt;', '<'],
+    ['&gt;', '>'],
+    ['&amp;', '&'],
+  ];
   private static readonly table = /<table[\s>]/gu;
   /** A table that opens its frame: the scrolling div with nothing but space before the table. */
   private static readonly framedTable = /<div class="ew-table"[^>]*>\s*<table[\s>]/gu;
@@ -78,7 +91,42 @@ export class DistCheck {
       );
     }
 
-    return problems;
+    return [...problems, ...DistCheck.descriptionOf(page, text)];
+  }
+
+  /** The problem of a page search may index whose description is missing, short or long. */
+  private static descriptionOf(page: string, text: string): string[] {
+    if (page === DistCheck.notFound || DistCheck.noindex.test(text) || DistCheck.inBook(page)) {
+      return [];
+    }
+
+    const [, found] = DistCheck.description.exec(text) ?? [];
+
+    if (found === undefined) {
+      return [`${page}: has no description`];
+    }
+
+    const description = DistCheck.entities.reduce(
+      (decoded, [entity, character]) => decoded.replaceAll(entity, character),
+      found,
+    );
+
+    return MetaDescription.fits(description)
+      ? []
+      : [
+          `${page}: its description has ${MetaDescription.lengthOf(description)} characters, wants ${MetaDescription.shortest} to ${MetaDescription.longest}`,
+        ];
+  }
+
+  /**
+   * Whether the page is in the developer area, which the platform's book fills, in any language.
+   *
+   * shortcut: the area is exempt until the book states each chapter's description; drop this then.
+   */
+  private static inBook(page: string): boolean {
+    return ['', ...Languages.site.others.map((language) => `${language}/`)].some((prefix) =>
+      page.startsWith(`${prefix}${DeveloperArea.folder}/`),
+    );
   }
 
   private async style(style: string): Promise<string[]> {

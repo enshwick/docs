@@ -2,6 +2,7 @@ import { ErrorCode, ErrorsSource } from '../../src/site/errors.ts';
 import { Languages } from '../../src/site/languages.ts';
 import { Texts } from '../../src/site/texts.ts';
 import type { LanguageCode } from '../../src/site/types.ts';
+import { MetaDescription } from './meta-description.ts';
 import { PageFile } from './page-file.ts';
 
 /** The parsed `errors.toml`. */
@@ -110,7 +111,7 @@ export class ErrorPages {
               `${folder}/${error.code.slug}`,
               {
                 title: `${error.code}: ${page.title}`,
-                description: page.cause.toString(),
+                description: ErrorPages.description(error.code, page),
                 type: 'reference',
                 editUrl: false,
                 sidebar: { label: error.code.toString() },
@@ -145,6 +146,15 @@ export class ErrorPages {
       ),
       ...codes,
     ];
+  }
+
+  /** A code page's meta description: its code and title, then its cause and fix while they fit. */
+  private static description(code: ErrorCode, page: ErrorText): string {
+    return MetaDescription.pack([
+      `${code}: ${page.title}.`,
+      page.cause.toString(),
+      page.fix.toString(),
+    ]);
   }
 
   /** The folder of a language's pages: `errors` for the root, `<language>/errors` for the others. */
