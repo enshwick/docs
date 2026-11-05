@@ -24,7 +24,7 @@
     "@fontsource/ibm-plex-mono": "5.3.0",
     "@fontsource/ibm-plex-sans": "5.3.0",
     "@horizon-republic/nominal-types": "3.1.0",
-    "astro": "7.4.4",
+    "astro": "7.4.5",
     "astro-og-canvas": "0.13.3",
     "sharp": "0.35.5",
     "starlight-github-alerts": "0.5.0",
