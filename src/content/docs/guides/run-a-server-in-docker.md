@@ -17,10 +17,10 @@ volume mounted there works too.
 
 - `enshwick.zip` holds Enshwick and no mod. Each mod comes in an archive of its
   own, from the releases of its project.
-- Until the first release, 1.0.0, these files exist only as development
-  builds, such as
-  `https://github.com/enshwick/enshwick/releases/download/dev/enshwick.zip`.
-  Every new build replaces that file.
+- Until the first release, 1.0.0, these files come as alphas, such as
+  [the newest enshwick.zip](https://github.com/enshwick/enshwick/releases/latest/download/enshwick.zip).
+  Each alpha has its own version and its own files. Anything may change from
+  one alpha to the next, so roll out a new alpha on a copy of a world first.
 - Download the files once and keep them in your own storage, such as a bucket
   or the image's build context. Then each rebuild of the image gets the same
   files.

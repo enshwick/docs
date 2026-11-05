@@ -7,10 +7,12 @@ describe('ModCard.archive', () => {
     expect(
       ModCard.archive({
         repository: 'enshwick/mods',
-        release: 'dev',
+        release: 'enshwick-game-rates-v0.3.0-alpha.1',
         package: 'enshwick-game-rates',
       }),
-    ).toBe('https://github.com/enshwick/mods/releases/download/dev/enshwick-game-rates.zip');
+    ).toBe(
+      'https://github.com/enshwick/mods/releases/download/enshwick-game-rates-v0.3.0-alpha.1/enshwick-game-rates.zip',
+    );
   });
 
   it('follows the release tag', () => {

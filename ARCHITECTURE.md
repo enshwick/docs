@@ -11,7 +11,7 @@ developer pages are versioned per API minor.
 | --- | --- | --- |
 | player area: tutorial, how-to guides, reference, explanation | `src/content/docs/`, one folder per language beside the root language | as committed |
 | developer area | the book of [enshwick/enshwick](https://github.com/enshwick/enshwick/tree/main/book/src), where its examples compile as doctests | `tools/fetch.ts` checks out each version's ref and converts the chapters. Each chapter's page type comes from `platform.pageTypes` in `src/data/sources.json`, by its path or its folder's; the build fails on a chapter with neither |
-| one page per mod | `<mod>/docs/player.md` of [enshwick/mods](https://github.com/enshwick/mods), and `<mod>/docs/player.<language>.md` for each translation | `tools/fetch.ts` reads them at the newest regular release that carries the mod's archive `<package>.zip`, else at the newest prerelease that does, such as the rolling `dev` build, and checks the front matter. Each page gains the settings table, its front matter's pictures and loops after the opening list, and its front matter the facts of the mod card. A loop is an MP4 or WebM with a WebP or AVIF poster; it waits on the poster until the reader plays it |
+| one page per mod | `<mod>/docs/player.md` of [enshwick/mods](https://github.com/enshwick/mods), and `<mod>/docs/player.<language>.md` for each translation | `tools/fetch.ts` reads them at the newest regular release that carries the mod's archive `<package>.zip`, else at the newest prerelease that does whose tag names a version, such as an alpha, else at a rolling prerelease such as `dev`, and checks the front matter. Each page gains the settings table, its front matter's pictures and loops after the opening list, and its front matter the facts of the mod card. A loop is an MP4 or WebM with a WebP or AVIF poster; it waits on the poster until the reader plays it |
 | one page per error code, and `/errors.json` | the platform's `errors.toml` | `tools/fetch.ts` writes the pages and `src/generated/errors.json`, which `src/pages/errors.json.ts` serves |
 | stability badges on API pages | the book's stability chapter and the API crate's public modules | `tools/fetch.ts` writes `src/generated/stability.json` |
 | the whole mod on the front page | the example the book's getting started chapter marks with `smallest-mod` comments, compiled there as a doctest | `tools/fetch.ts` writes `src/generated/smallest-mod.rs` and fails when the chapter no longer marks it |
@@ -36,6 +36,7 @@ five changes, and a line naming Enshwick.
 | developer versions | `src/data/sources.json` |
 | our mods | the mods repository named in `src/data/sources.json`: every member of its Cargo workspace on `main` with a `docs/player.md`, the folder giving the page's address. A mod without a release yet has no page. `src/data/mods.json` gives each one who needs it and a one-line summary per language; the build fails when that side differs from the mod's page |
 | links outside the site | `src/data/links.json`: GitHub, Nexus Mods, the Vortex extension, the download, the licence, the issue form and the mailboxes |
+| download links | pages and `src/data/links.json` link an archive as `https://github.com/<repository>/releases/latest/download/<archive>`; `tools/fetch.ts` writes the release of each archive, picked as for mod pages, into `src/generated/release-archives.json`, and `src/plugins/remark-release-links.ts` and `src/site/links.ts` pin the links to it, so before 1.0 they reach the newest alpha. The build fails on a link to an archive of the platform or the mods that no release carries, and when the platform has no release with `enshwick.zip` |
 | the site's address | `src/data/site.json`; pages link root-relative (`/guides/install/`) and `src/plugins/remark-base-links.ts` adds the base |
 
 ## Layout
@@ -47,7 +48,7 @@ five changes, and a line naming Enshwick.
 | `src/content/docs/` | the player pages, `uk/` and other language folders beside them |
 | `src/data/` | the data files above |
 | `src/site/` | the nominal types and the readers of the data files |
-| `src/plugins/` | the Markdown plugins: one adds the base to links, one puts every table in a frame that scrolls on its own |
+| `src/plugins/` | the Markdown plugins: one adds the base to links, one pins download links to their release, one puts every table in a frame that scrolls on its own |
 | `src/components/` | Starlight component overrides (the head, the bar, the page frame, the sidebar, the page title and the footer) and the site's own parts, such as the front page and the night sky |
 | `src/scripts/` | the browser code: the front page's fog shader. It runs only where WebGL works and the reader welcomes motion, and it pauses while the hero is out of sight |
 | `src/pages/` | routes beside the docs: the error index and the social cards |

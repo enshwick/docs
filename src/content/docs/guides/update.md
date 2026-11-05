@@ -9,9 +9,15 @@ sidebar:
 Enshwick and each mod update on their own: extract the newest archive over
 the old files. Your settings and world data stay. No archive holds them.
 
+:::caution
+Until 1.0, each update is a new alpha. An alpha may change file layouts,
+settings and mod ids. Before you update,
+[back up your worlds](/guides/back-up-saves/).
+:::
+
 1. Close the game or stop the server.
 2. Download
-   [enshwick.zip](https://github.com/enshwick/enshwick/releases/download/dev/enshwick.zip)
+   [enshwick.zip](https://github.com/enshwick/enshwick/releases/latest/download/enshwick.zip)
    again, and the archive of each mod you use from its page.
 3. Extract them into the game folder. Let them replace the files that are
    already there.
