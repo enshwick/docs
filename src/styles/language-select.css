@@ -176,4 +176,8 @@
     text-decoration: underline 2px;
     text-underline-offset: 0.3em;
   }
+
+  .ew-lang__check {
+    color: inherit;
+  }
 }
