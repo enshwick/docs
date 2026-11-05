@@ -202,7 +202,18 @@ header.header {
   display: flex;
   align-items: center;
   gap: var(--space-xs);
-  flex: none;
+  flex: 0 1 auto;
+}
+
+/* On the narrowest phones the wordmark shrinks to leave the alpha mark, search and menu their room. */
+.ew-bar .site-title {
+  min-width: 0;
+}
+
+.ew-bar .site-title img {
+  min-width: 0;
+  object-fit: contain;
+  object-position: left center;
 }
 
 .ew-alpha {
@@ -296,6 +307,10 @@ header.header {
 
   .ew-bar {
     gap: var(--space-sm);
+  }
+
+  .ew-bar__search {
+    min-width: min-content;
   }
 
   :root:not([data-has-sidebar]) .ew-bar__out > :not(.ew-bar__download) {
