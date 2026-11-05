@@ -40,7 +40,7 @@ export class PlayerProse {
   private static readonly pictures = /\.(?:webp|avif)$/iu;
   private static readonly loops = /\.(?:mp4|webm)$/iu;
   private static readonly gif = /\.gif$/iu;
-  private static readonly boundary = /[.!?]["')\]]*\s+(?=["'(`[*]*[A-Z0-9])/gu;
+  private static readonly boundary = /[.!?]["')\]»]*\s+(?=["'(`[*«]*[\p{Lu}\p{N}])/gu;
   /** A short abbreviation whose period ends no sentence. */
   private static readonly abbreviation = /\b(?:e\.g|i\.e|etc|vs)\.["')\]]*\s+$/iu;
 
@@ -214,8 +214,8 @@ export class PlayerProse {
       .trim();
   }
 
-  /** Sentences end at `.`, `!` or `?`, a closing quote or bracket after it allowed, before a capital or digit. */
-  private static sentences(text: string): string[] {
+  /** Sentences end at `.`, `!` or `?`, a closing quote or bracket after it allowed, before a capital or digit in any script. */
+  public static sentences(text: string): string[] {
     const sentences: string[] = [];
     let start = 0;
 

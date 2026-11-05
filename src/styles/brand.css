@@ -202,7 +202,11 @@ header.header {
   display: flex;
   align-items: center;
   gap: var(--space-xs);
-  flex: none;
+}
+
+/* Where the bar runs short of room, the wordmark shrinks first, so nothing beside it overlaps. */
+.ew-bar .site-title img {
+  min-width: 0;
 }
 
 .ew-alpha {
@@ -296,6 +300,10 @@ header.header {
 
   .ew-bar {
     gap: var(--space-sm);
+  }
+
+  .ew-bar__search {
+    min-width: min-content;
   }
 
   :root:not([data-has-sidebar]) .ew-bar__out > :not(.ew-bar__download) {

@@ -46,6 +46,25 @@ describe('ErrorPages', () => {
     expect(tree).toContain("- No: [E1002: Enshwick cannot read the game's files](/errors/e1002/)");
   });
 
+  it('describes a code page by its code, title, cause and fix, in whole sentences while they fit', () => {
+    const page = ErrorPages.parse('test', source)
+      .pages()
+      .find((found) => found.slug === 'errors/e1002');
+
+    expect(page?.toString()).toContain(
+      'description: "E1002: Enshwick cannot read the game\'s files. The game does not look like the game Enshwick knows. Verify the game files in Steam."',
+    );
+  });
+
+  it('adds no period after a title that already ends a sentence', () => {
+    const asked = source.replace("Enshwick cannot read the game's files", 'Is the game updated?');
+    const page = ErrorPages.parse('test', asked)
+      .pages()
+      .find((found) => found.slug === 'errors/e1002');
+
+    expect(page?.toString()).toContain('description: "E1002: Is the game updated? The game');
+  });
+
   it('lists every code with its page, cause and fix for the JSON index', () => {
     expect(ErrorPages.parse('test', source).index()).toEqual([
       {

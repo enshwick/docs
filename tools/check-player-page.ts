@@ -1,12 +1,13 @@
 import { statSync } from 'node:fs';
 import { basename, dirname, join } from 'node:path';
 
+import { MetaDescription } from './lib/meta-description.ts';
 import { PlayerPageSource } from './lib/player-page-source.ts';
 import { PlayerProse } from './lib/player-prose.ts';
 
 // Checks player pages against the schema the site builds them with:
 // `bun tools/check-player-page.ts <mod>/docs/player.md <mod>/docs/player.uk.md ...`.
-// The English page, `player.md`, also keeps the countable player writing rules, and every page's
+// Every page's summary fits a search snippet. The English page, `player.md`, also keeps the countable player writing rules, and every page's
 // pictures their format, alt text and size. Prints each problem and exits with 1 when a page fails.
 
 const english = 'player.md';
@@ -27,6 +28,14 @@ const check = async (file: string): Promise<string[]> => {
     size,
     PlayerProse.maxPictureBytes,
   ).map((problem) => `${file}: ${problem}`);
+  const summary = source.data.summary.toString();
+
+  // The summary is also the mod page's meta description.
+  if (!MetaDescription.fits(summary)) {
+    problems.push(
+      `${file}: its summary has ${MetaDescription.lengthOf(summary)} characters; the page description wants ${MetaDescription.shortest} to ${MetaDescription.longest}`,
+    );
+  }
 
   if (basename(file) === english) {
     problems.push(

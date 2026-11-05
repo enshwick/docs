@@ -35,6 +35,20 @@ describe('LastModified', () => {
     expect(moved.of('https://enshwick.com/ai-assistants/')).toBeUndefined();
   });
 
+  it('dates a generated page by the date its front matter states, over any commit here', () => {
+    const generated = LastModified.fromLog(
+      log,
+      new Map(),
+      new Map([
+        ['dev/hooks.md', '2026-11-03T00:36:01.000Z'],
+        ['guides/install.mdx', '2026-09-01T00:00:00.000Z'],
+      ]),
+    );
+
+    expect(generated.of('https://enshwick.com/dev/hooks/')).toBe('2026-11-03T00:36:01.000Z');
+    expect(generated.of('https://enshwick.com/guides/install/')).toBe('2026-09-01T00:00:00.000Z');
+  });
+
   it('gives no date to a page without a file in this repository', () => {
     expect(dates.of('https://enshwick.com/dev/hooks/')).toBeUndefined();
   });
