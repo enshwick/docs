@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
 import { type HeadEntry, Translations } from '../translations.ts';
+import { LanguageCode } from '../types.ts';
 
 const site = 'https://enshwick.com';
 const translations = Translations.fromFiles([
@@ -77,6 +78,17 @@ describe('Translations', () => {
 
     expect(hreflangs(entries)).toEqual(['en', 'x-default']);
     expect(attr(entries, 'name', 'robots', 'content')).toBeUndefined();
+  });
+
+  it('finds the same page in every language', () => {
+    const en = new LanguageCode('en');
+    const uk = new LanguageCode('uk');
+
+    expect(Translations.pathIn('/uk/guides/install/', en)).toBe('/guides/install/');
+    expect(Translations.pathIn('/guides/install/', uk)).toBe('/uk/guides/install/');
+    expect(Translations.pathIn('/uk/guides/install/', uk)).toBe('/uk/guides/install/');
+    expect(Translations.pathIn('/uk/', en)).toBe('/');
+    expect(Translations.pathIn('/', uk)).toBe('/uk/');
   });
 
   it('keeps fallback pages out of the sitemap', () => {

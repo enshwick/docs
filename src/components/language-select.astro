@@ -1,0 +1,50 @@
+---
+import { Icon } from '@astrojs/starlight/components';
+
+import { Languages } from '../site/languages.ts';
+import { Translations } from '../site/translations.ts';
+import type { LanguageCode } from '../site/types.ts';
+
+interface Props {
+  /** The page's language. */
+  language: LanguageCode;
+}
+
+// Every language of the site, each in its own name; choosing one opens this page in it.
+const { language } = Astro.props;
+const label = Astro.locals.t('languageSelect.accessibleLabel');
+const base = import.meta.env.BASE_URL.replace(/\/$/u, '');
+// The 404 page exists only at the root, so from it each language opens its front page.
+const path =
+  Astro.locals.starlightRoute.id === '404' ? '/' : Astro.url.pathname.slice(base.length);
+---
+
+{
+  Languages.site.all.length > 1 && (
+    <div class="ew-lang">
+      <Icon name="translate" class="ew-lang__icon" />
+      <select class="ew-lang__select" aria-label={label} autocomplete="off">
+        {Languages.site.all.map(({ code, label: name }) => (
+          <option
+            value={`${base}${Translations.pathIn(path, code)}`}
+            lang={code.toString()}
+            selected={code.equals(language)}
+          >
+            {name}
+          </option>
+        ))}
+      </select>
+      <span class="ew-lang__sizer" aria-hidden="true">
+        {Languages.site.all.map(({ code, label: name }) => (
+          <span lang={code.toString()}>{name}</span>
+        ))}
+      </span>
+    </div>
+  )
+}
+
+<script>
+  import { LanguageSelect } from '../scripts/language-select.ts';
+
+  LanguageSelect.start();
+</script>

@@ -1,0 +1,141 @@
+/*
+ * The interface language: a select in the search field's hairline frame, the current language in
+ * its own name, opening a card of every language. Browsers without the base look draw their own
+ * list under the same frame.
+ */
+.ew-lang {
+  --ew-lang-start: calc(var(--space-sm) + 1rem + var(--space-xs));
+  --ew-lang-end: calc(var(--space-sm) + var(--space-xs) + 1em);
+
+  display: inline-grid;
+  align-items: center;
+  max-width: 100%;
+  color: var(--color-muted);
+  font-size: var(--text-sm);
+}
+
+/* Icon, select and sizer share one cell; the sizer holds every name, so the widest sets the width. */
+.ew-lang > * {
+  grid-area: 1 / 1;
+}
+
+.ew-lang__icon {
+  z-index: 1;
+  margin-inline-start: var(--space-sm);
+  font-size: 1rem;
+  pointer-events: none;
+}
+
+.ew-lang__sizer {
+  display: grid;
+  block-size: 0;
+  padding-inline: var(--ew-lang-start) var(--ew-lang-end);
+  border-inline: var(--rule-hair) solid transparent;
+  overflow: hidden;
+  visibility: hidden;
+}
+
+.ew-lang__sizer > * {
+  grid-area: 1 / 1;
+  white-space: nowrap;
+}
+
+.ew-lang__select,
+.ew-lang__select::picker(select) {
+  appearance: base-select;
+}
+
+.ew-lang__select {
+  inline-size: 100%;
+  gap: var(--space-xs);
+  padding-block: var(--space-xs);
+  padding-inline: var(--ew-lang-start) var(--space-sm);
+  border: var(--rule-hair) solid var(--color-faint);
+  border-radius: var(--radius-control);
+  background: none;
+  color: inherit;
+  color-scheme: dark;
+  font: inherit;
+  cursor: pointer;
+  transition:
+    color var(--dur-short) var(--ease-out),
+    border-color var(--dur-short) var(--ease-out);
+}
+
+.ew-lang:hover,
+.ew-lang:has(:open) {
+  color: var(--color-bone);
+}
+
+.ew-lang__select:hover,
+.ew-lang__select:open {
+  border-color: var(--color-muted);
+}
+
+/* A hairline chevron in place of the browser's filled triangle. */
+.ew-lang__select::picker-icon {
+  content: '';
+  inline-size: 0.4em;
+  block-size: 0.4em;
+  align-self: center;
+  margin-inline: auto 0.3em;
+  border-block-end: 1.5px solid;
+  border-inline-end: 1.5px solid;
+  translate: 0 -0.1em;
+  rotate: 45deg;
+  transition:
+    rotate var(--dur-short) var(--ease-out),
+    translate var(--dur-short) var(--ease-out);
+}
+
+.ew-lang__select:open::picker-icon {
+  translate: 0 0.15em;
+  rotate: 225deg;
+}
+
+.ew-lang__select::picker(select) {
+  min-inline-size: max(anchor-size(inline), 11rem);
+  margin-block: var(--space-2xs);
+  padding: var(--space-2xs);
+  border: var(--rule-hair) solid var(--color-card-edge);
+  border-radius: var(--radius-control);
+  background: var(--color-card);
+  box-shadow: var(--shadow-card);
+  color: var(--color-text);
+  font-size: var(--text-sm);
+}
+
+.ew-lang__select option {
+  justify-content: space-between;
+  gap: var(--space-md);
+  padding: var(--space-xs) var(--space-sm);
+  border-radius: calc(var(--radius-control) - 2px);
+  color: var(--color-muted);
+}
+
+.ew-lang__select option:is(:hover, :focus-visible) {
+  background: var(--color-mist-wash);
+  color: var(--color-bone);
+  outline: none;
+}
+
+.ew-lang__select option:checked {
+  color: var(--color-bone);
+}
+
+.ew-lang__select option::checkmark {
+  order: 1;
+  color: var(--color-mist);
+}
+
+/* Forced colours drop the wash, so the focused language keeps an outline. */
+@media (forced-colors: active) {
+  .ew-lang__select option:focus-visible {
+    outline: 2px solid;
+    outline-offset: -2px;
+  }
+
+  .ew-lang__select option::checkmark {
+    color: inherit;
+  }
+}

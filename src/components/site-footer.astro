@@ -1,9 +1,8 @@
 ---
-import LanguageSelect from '@astrojs/starlight/components/LanguageSelect.astro';
-
 import { Links } from '../site/links.ts';
 import { Texts } from '../site/texts.ts';
 import type { LanguageCode } from '../site/types.ts';
+import LanguageSelect from './language-select.astro';
 import ServiceIcon from './service-icon.astro';
 
 interface Props {
@@ -26,7 +25,7 @@ const t = (key: string): string => Texts.site.get(key, language);
       <a href={Links.site.security.mailto()}>{Links.site.security.toString()}</a>
     </p>
     <div class="ew-foot__language">
-      <LanguageSelect />
+      <LanguageSelect language={language} />
     </div>
     <p class="ew-foot__legal">
       <a href={Links.site.license.toString()}>{t('foot.license')}</a>
