@@ -9,6 +9,9 @@ sidebar:
 Enshwick and each mod update on their own: extract the newest archive over
 the old files. Your settings and world data stay. No archive holds them.
 
+The **Mods** screen tells you when a newer Enshwick exists. It shows the new
+version and the address of its page.
+
 :::caution
 Until 1.0, each update is a new alpha. An alpha may change file layouts,
 settings and mod ids. Before you update,
