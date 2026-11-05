@@ -596,7 +596,7 @@ header.header {
 }
 
 /*
- * Tabs, such as the mod language switch: the topics' quiet segment over the content, the chosen
+ * Tabs, such as the tutorial's system tabs: the topics' quiet segment over the content, the chosen
  * tab washed and underlined in the area's colour, as the bar is. Starlight keeps the roles, the
  * keys and the sync; only the look is the site's.
  */
@@ -644,6 +644,132 @@ starlight-tabs .tab > [role='tab']:focus-visible {
 
 starlight-tabs .tablist-wrapper ~ [role='tabpanel'] {
   margin-top: var(--space-sm);
+}
+
+/*
+ * The mod language switch is the code frame's own title bar: the languages as small pills on the
+ * left, the shown block's copy button on the right, the code joined underneath. The bar takes the
+ * code theme's tab bar colours, which Expressive Code sets on the root.
+ */
+starlight-tabs[data-sync-key='mod-language'] {
+  --ew-switch-bar: 2.5rem;
+  --ew-copy: 2rem;
+}
+
+starlight-tabs[data-sync-key='mod-language'] .tablist-wrapper {
+  border: var(--ec-brdWd) solid var(--ec-brdCol);
+  border-bottom: 0;
+  background: var(--ec-frm-edTabBarBg);
+  /* Room for the copy button, which sits over the bar's end. */
+  padding-inline-end: calc(var(--ew-copy) + var(--space-sm));
+}
+
+starlight-tabs[data-sync-key='mod-language'] [role='tablist'] {
+  align-items: center;
+  gap: var(--space-3xs);
+  min-height: var(--ew-switch-bar);
+  padding: 0 var(--space-xs);
+  border: 0;
+}
+
+starlight-tabs[data-sync-key='mod-language'] .tab > [role='tab'] {
+  padding: var(--space-3xs) var(--space-xs);
+  font-size: var(--text-xs);
+  line-height: 1.4;
+  letter-spacing: 0.02em;
+}
+
+/* A finger gets a taller pill; the bar still holds it. */
+@media (pointer: coarse) {
+  starlight-tabs[data-sync-key='mod-language'] .tab > [role='tab'] {
+    padding-block: var(--space-2xs);
+  }
+}
+
+/* Hover previews the chosen pill's ring in the frame's line colour, as the copy button frames itself. */
+starlight-tabs[data-sync-key='mod-language'] .tab > [role='tab']:hover {
+  box-shadow: inset 0 0 0 var(--rule-hair) var(--color-line-strong);
+}
+
+starlight-tabs[data-sync-key='mod-language'] .tab > [role='tab'][aria-selected='true'] {
+  box-shadow: inset 0 0 0 var(--rule-hair) var(--color-area);
+}
+
+/* Forced colours drop the ring: an outline keeps the pill's shape and height, where a border would grow it. */
+@media (forced-colors: active) {
+  starlight-tabs[data-sync-key='mod-language'] .tab > [role='tab'][aria-selected='true'] {
+    border-bottom: 0;
+  }
+
+  starlight-tabs[data-sync-key='mod-language']
+    .tab
+    > [role='tab'][aria-selected='true']:not(:focus-visible) {
+    outline: var(--rule-hair) solid;
+    outline-offset: calc(-1 * var(--rule-hair));
+  }
+}
+
+starlight-tabs[data-sync-key='mod-language'] .tablist-wrapper ~ [role='tabpanel'] {
+  margin-top: 0;
+}
+
+/*
+ * The copy button moves up from the code's corner to the middle of the bar, and stays visible
+ * there. Expressive Code sizes it 2.5rem on touch screens; in the bar it keeps one size.
+ */
+starlight-tabs[data-sync-key='mod-language']
+  [role='tabpanel']
+  > .expressive-code:first-child
+  .copy {
+  inset-block-start: calc(var(--ew-switch-bar) / -2);
+  translate: 0 -50%;
+}
+
+starlight-tabs[data-sync-key='mod-language'] .expressive-code .copy button {
+  width: var(--ew-copy);
+  height: var(--ew-copy);
+  background: transparent;
+  opacity: 0.75;
+}
+
+/* The first line no longer runs under the copy button, so it drops the room kept for it. */
+starlight-tabs[data-sync-key='mod-language'] .expressive-code :nth-child(1 of .ec-line) .code {
+  padding-inline-end: var(--ec-codePadInl);
+}
+
+starlight-tabs[data-sync-key='mod-language'] .expressive-code .copy button::before {
+  opacity: 0;
+}
+
+starlight-tabs[data-sync-key='mod-language']
+  .expressive-code
+  .copy
+  button:is(:hover, :focus-visible) {
+  opacity: 1;
+}
+
+starlight-tabs[data-sync-key='mod-language']
+  .expressive-code
+  .copy
+  button:is(:hover, :focus-visible)::before {
+  opacity: var(--ec-frm-inlBtnBrdOpa);
+}
+
+/* Every copy icon is a mask over a background, which forced colours would erase. */
+@media (forced-colors: active) {
+  .expressive-code .copy button::after {
+    forced-color-adjust: none;
+    background-color: ButtonText;
+  }
+
+  /* In the bar the button has no face of its own: the icon stands on the bar, at full strength. */
+  starlight-tabs[data-sync-key='mod-language'] .expressive-code .copy button {
+    opacity: 1;
+  }
+
+  starlight-tabs[data-sync-key='mod-language'] .expressive-code .copy button::after {
+    background-color: CanvasText;
+  }
 }
 
 /* Badges: square, quiet. */
