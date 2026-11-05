@@ -646,6 +646,71 @@ starlight-tabs .tablist-wrapper ~ [role='tabpanel'] {
   margin-top: var(--space-sm);
 }
 
+/*
+ * The mod language switch is the code frame's own title bar: the languages as small pills on the
+ * left, the shown block's copy button on the right, the code joined underneath. The bar takes the
+ * code theme's tab bar colours, which Expressive Code sets on the root.
+ */
+starlight-tabs[data-sync-key='mod-language'] {
+  --ew-switch-bar: 2.5rem;
+}
+
+starlight-tabs[data-sync-key='mod-language'] .tablist-wrapper {
+  border: var(--ec-brdWd) solid var(--ec-brdCol);
+  border-bottom: 0;
+  background: var(--ec-frm-edTabBarBg);
+  /* Room for the copy button, which sits over the bar's end. */
+  padding-inline-end: calc(var(--ew-switch-bar) + var(--space-xs));
+}
+
+starlight-tabs[data-sync-key='mod-language'] [role='tablist'] {
+  align-items: center;
+  gap: var(--space-3xs);
+  min-height: var(--ew-switch-bar);
+  padding: 0 var(--space-xs);
+  border: 0;
+}
+
+starlight-tabs[data-sync-key='mod-language'] .tab > [role='tab'] {
+  padding: var(--space-3xs) var(--space-xs);
+  font-size: var(--text-xs);
+  line-height: 1.4;
+  letter-spacing: 0.02em;
+}
+
+starlight-tabs[data-sync-key='mod-language'] .tab > [role='tab'][aria-selected='true'] {
+  box-shadow: inset 0 0 0 var(--rule-hair) var(--color-area);
+}
+
+starlight-tabs[data-sync-key='mod-language'] .tablist-wrapper ~ [role='tabpanel'] {
+  margin-top: 0;
+}
+
+/* The copy button moves up from the code's corner into the bar, and stays visible there. */
+starlight-tabs[data-sync-key='mod-language'] .expressive-code .copy {
+  inset-block-start: calc((var(--ew-switch-bar) + 2rem) / -2);
+}
+
+starlight-tabs[data-sync-key='mod-language'] .expressive-code .copy button {
+  background: transparent;
+  opacity: 0.75;
+}
+
+starlight-tabs[data-sync-key='mod-language'] .expressive-code .copy button::before {
+  opacity: 0;
+}
+
+starlight-tabs[data-sync-key='mod-language'] .expressive-code .copy button:is(:hover, :focus-visible) {
+  opacity: 1;
+}
+
+starlight-tabs[data-sync-key='mod-language']
+  .expressive-code
+  .copy
+  button:is(:hover, :focus-visible)::before {
+  opacity: var(--ec-frm-inlBtnBrdOpa);
+}
+
 /* Badges: square, quiet. */
 .sl-badge {
   border-radius: 0;
