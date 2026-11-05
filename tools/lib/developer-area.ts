@@ -1,6 +1,6 @@
 import type { GitRef, RepositoryName } from '../../src/site/types.ts';
 import type { DeveloperPage } from './api-map.ts';
-import { ChapterConverter } from './chapter-converter.ts';
+import { type ChapterPage, ChapterConverter } from './chapter-converter.ts';
 import { type GameBuild, GameBuildFiles } from './game-build-files.ts';
 import { GitSource } from './git-source.ts';
 import { MdxBody } from './mdx-body.ts';
@@ -13,12 +13,11 @@ export interface DeveloperVersion {
   readonly ref: GitRef;
 }
 
-/** Where the platform's book lives and which page type each chapter has. */
+/** Where the platform's book lives; each chapter declares its own page type. */
 export interface PlatformSource {
   readonly repository: RepositoryName;
   readonly book: string;
   readonly versions: readonly DeveloperVersion[];
-  readonly pageTypes: Readonly<Record<string, PageType>>;
 }
 
 /** What one platform version supports, for the compatibility page. */
@@ -41,6 +40,9 @@ export interface PlatformRelease {
 export class DeveloperArea {
   public static readonly folder = 'dev';
   private static readonly changelog = 'crates/enshwick/CHANGELOG.md';
+  /** The changelog has no opening comment of its own; release-plz writes it. */
+  private static readonly changelogDescription =
+    'What changed in each release of the enshwick crate, the API every mod builds against: what was added, changed, removed and fixed.';
   private static readonly summary = 'SUMMARY.md';
   private static readonly mainBranch = 'main';
   /** What the loader finds on each game build, one compatibility report per build. */
@@ -96,24 +98,18 @@ export class DeveloperArea {
   }
 
   /**
-   * The page type of a chapter: its own entry, else the entry of the folder it is in.
+   * The page type a chapter's opening comment declares.
    *
-   * @throws {TypeError} for a chapter neither entry declares, so a new chapter cannot go out untyped.
+   * @throws {TypeError} for a chapter that declares none, so a new chapter cannot go out untyped.
    */
-  public pageType(path: string): PageType {
-    const own = this.source.pageTypes[path];
-    const folder = Object.entries(this.source.pageTypes).find(
-      ([key]) => key.endsWith('/') && path.startsWith(key),
-    );
-    const type = own ?? folder?.[1];
-
-    if (type === undefined) {
+  private typeOf(path: string, page: ChapterPage): PageType {
+    if (page.type === undefined) {
       throw new TypeError(
-        `${this.source.book}/${path} has no page type: give it one under platform.pageTypes in src/data/sources.json`,
+        `${this.source.book}/${path} has no page type: open it with <!-- type: … description: … --> as enshwick's CONTRIBUTING.md shows`,
       );
     }
 
-    return type;
+    return page.type;
   }
 
   private async buildVersion(
@@ -146,7 +142,12 @@ export class DeveloperArea {
 
       await new PageFile(
         slug,
-        { title: page.title, type: 'reference', editUrl: false },
+        {
+          title: page.title,
+          description: DeveloperArea.changelogDescription,
+          type: 'reference',
+          editUrl: false,
+        },
         page.mdx ? MdxBody.of(page.body) : page.body,
         await checkout.lastChanged(DeveloperArea.changelog),
         page.mdx,
@@ -189,7 +190,7 @@ export class DeveloperArea {
           {
             title: page.title,
             description: page.description,
-            type: this.pageType(chapter.path),
+            type: this.typeOf(chapter.path, page),
             editUrl,
           },
           page.mdx ? MdxBody.of(page.body) : page.body,

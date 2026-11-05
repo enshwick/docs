@@ -56,12 +56,6 @@ export const ModLanguageEntry = n.object({
   fences: n.of(FenceName).array({ min: 1 }),
 });
 
-/** A Diátaxis page type. */
-export class PageTypeName extends AnyString.subtype(
-  'docs.PageTypeName',
-  n.oneOf('tutorial', 'how-to', 'reference', 'explanation'),
-) {}
-
 /** One version of the developer area: an API minor and the platform ref it is read at. */
 export const PlatformVersion = n.object({ name: AnyString, ref: GitRef });
 
@@ -71,7 +65,6 @@ export const Sources = n.object({
     repository: RepositoryName,
     book: AnyString,
     versions: PlatformVersion.array({ min: 1 }),
-    pageTypes: n.record(AnyString, PageTypeName),
   }),
   mods: n.object({ repository: RepositoryName }),
 });

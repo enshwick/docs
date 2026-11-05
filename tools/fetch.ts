@@ -57,9 +57,6 @@ const developerArea = new DeveloperArea({
     name: version.name.toString(),
     ref: version.ref,
   })),
-  pageTypes: Object.fromEntries(
-    Object.entries(platform.pageTypes).map(([path, type]) => [path, type.value]),
-  ),
 });
 const developerSidebar = await developerArea.build();
 const modReleases = await new ModPages(mods.repository).build();
