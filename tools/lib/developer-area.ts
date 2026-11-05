@@ -105,7 +105,7 @@ export class DeveloperArea {
   public pageType(path: string, page: ChapterPage): PageType {
     if (page.type === undefined) {
       throw new TypeError(
-        `${this.source.book}/${path} has no page type: open it with <!-- type: … description: … --> as enshwick's CONTRIBUTING.md shows`,
+        `${this.source.book}/${path} has no page type: open it with a comment whose <!-- and --> stand on lines of their own around type: and description: lines, as enshwick's CONTRIBUTING.md shows`,
       );
     }
 

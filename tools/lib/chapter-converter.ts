@@ -25,12 +25,13 @@ export class ChapterConverter {
   private static readonly headerField = /^(\w+): (.+)$/u;
   private static readonly typeKey = 'type';
   private static readonly descriptionKey = 'description';
-  private static readonly pageTypes: readonly PageType[] = [
-    'tutorial',
-    'how-to',
-    'reference',
-    'explanation',
-  ];
+  /** Keyed by `PageType`, so the compiler keeps it in step with the union. */
+  private static readonly pageTypes: Readonly<Record<PageType, true>> = {
+    tutorial: true,
+    'how-to': true,
+    reference: true,
+    explanation: true,
+  };
 
   /**
    * @param url the site URL of a chapter by its book path, such as `/dev/content/items/`.
@@ -77,8 +78,16 @@ export class ChapterConverter {
     for (const line of block?.split('\n') ?? []) {
       const [, key, value] = ChapterConverter.headerField.exec(line) ?? [];
 
-      if (key === undefined || value === undefined) {
+      if (key === undefined || value === undefined || value.trim() === '') {
         throw new Error(`${path}: the opening comment has a line that is no "key: value": ${line}`);
+      }
+
+      if (key !== ChapterConverter.typeKey && key !== ChapterConverter.descriptionKey) {
+        throw new Error(`${path}: the opening comment has an unknown key ${key}`);
+      }
+
+      if (fields.has(key)) {
+        throw new Error(`${path}: the opening comment has ${key} twice`);
       }
 
       fields.set(key, value.trim());
@@ -97,13 +106,17 @@ export class ChapterConverter {
       return undefined;
     }
 
-    const type = ChapterConverter.pageTypes.find((known) => known === value);
-
-    if (type === undefined) {
-      throw new Error(`${path}: type ${value} is none of ${ChapterConverter.pageTypes.join(', ')}`);
+    if (!ChapterConverter.isPageType(value)) {
+      throw new Error(
+        `${path}: type ${value} is none of ${Object.keys(ChapterConverter.pageTypes).join(', ')}`,
+      );
     }
 
-    return type;
+    return value;
+  }
+
+  private static isPageType(value: string): value is PageType {
+    return Object.hasOwn(ChapterConverter.pageTypes, value);
   }
 
   /** mdBook's fence attributes dropped (`rust,ignore` is `rust`), and its hidden lines in Rust examples removed. */

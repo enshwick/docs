@@ -41,6 +41,18 @@ describe('ChapterConverter', () => {
     );
   });
 
+  it('refuses an unknown key, a repeated key and an empty value in the opening comment', () => {
+    expect(() => converter.convert('hooks.md', '<!--\ndescripton: Text.\n-->\n# Hooks\n')).toThrow(
+      /hooks\.md: the opening comment has an unknown key descripton/u,
+    );
+    expect(() =>
+      converter.convert('hooks.md', '<!--\ntype: how-to\ntype: reference\n-->\n# Hooks\n'),
+    ).toThrow(/hooks\.md: the opening comment has type twice/u);
+    expect(() => converter.convert('hooks.md', '<!--\ndescription:   \n-->\n# Hooks\n')).toThrow(
+      /hooks\.md: the opening comment has a line that is no "key: value"/u,
+    );
+  });
+
   it("drops mdBook's hidden lines and fence attributes from Rust examples only", () => {
     const text = [
       '```rust,no_run',
