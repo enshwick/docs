@@ -596,7 +596,7 @@ header.header {
 }
 
 /*
- * Tabs, such as the mod language switch: the topics' quiet segment over the content, the chosen
+ * Tabs, such as the tutorial's system tabs: the topics' quiet segment over the content, the chosen
  * tab washed and underlined in the area's colour, as the bar is. Starlight keeps the roles, the
  * keys and the sync; only the look is the site's.
  */
@@ -700,7 +700,10 @@ starlight-tabs[data-sync-key='mod-language'] .expressive-code .copy button::befo
   opacity: 0;
 }
 
-starlight-tabs[data-sync-key='mod-language'] .expressive-code .copy button:is(:hover, :focus-visible) {
+starlight-tabs[data-sync-key='mod-language']
+  .expressive-code
+  .copy
+  button:is(:hover, :focus-visible) {
   opacity: 1;
 }
 
