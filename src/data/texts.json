@@ -212,8 +212,8 @@
     "uk": "Чи не зіпсує це мої збереження?"
   },
   "front.faq.saves.a": {
-    "en": "Mods keep their own data in folders beside the game’s save, never inside it. Delete powrprof.dll, and the game starts as it did before.",
-    "uk": "Моди тримають свої дані в теках поруч зі збереженням гри, ніколи не в ньому. Видаліть powrprof.dll, і гра запуститься так, як раніше."
+    "en": "Mods keep their own data in folders beside the game’s save, never inside it. Delete powrprof.dll to start the game as it did before.",
+    "uk": "Моди тримають свої дані в теках поруч зі збереженням гри, ніколи не в ньому. Видаліть powrprof.dll, щоб гра запускалася так, як раніше."
   },
   "front.faq.update.q": {
     "en": "What happens after a game update?",
@@ -328,8 +328,8 @@
     "uk": "Чи це безкоштовно і з відкритим кодом?"
   },
   "front.faq.free.a": {
-    "en": "Yes. Enshwick and our mods are free, and their code is open under the MIT licence.",
-    "uk": "Так. Enshwick і наші моди безкоштовні, а їхній код відкритий за ліцензією MIT."
+    "en": "Yes. Enshwick and our mods are free. Their code is open under the MIT licence.",
+    "uk": "Так. Enshwick і наші моди безкоштовні. Їхній код відкритий за ліцензією MIT."
   },
   "mod.card": {
     "en": "About this mod",
@@ -580,8 +580,8 @@
     "uk": "Коли в API немає потрібного виклику"
   },
   "front.makers.levels.a": {
-    "en": "A mod reads the game’s data through reflection, or hooks a game function itself. The loader checks each function before it patches it. Several mods can hook one function. Their hooks run in a chain by priority, and a mod that turns off drops out of the chain.",
-    "uk": "Мод читає дані гри через рефлексію або сам перехоплює функцію гри. Завантажувач перевіряє кожну функцію, перш ніж її змінити. Одну функцію можуть перехоплювати кілька модів. Їхні перехоплення працюють ланцюгом за пріоритетом, а вимкнений мод із ланцюга випадає."
+    "en": "A mod reads the game’s data through reflection, or hooks a game function itself. The loader checks each function before it patches it. Several mods can hook one function, and their hooks run in a chain by priority. A hook can replace the function, and then the hooks after it do not run. A mod that turns off drops out of the chain.",
+    "uk": "Мод читає дані гри через рефлексію або сам перехоплює функцію гри. Завантажувач перевіряє кожну функцію, перш ніж її змінити. Одну функцію можуть перехоплювати кілька модів, і їхні перехоплення працюють ланцюгом за пріоритетом. Перехоплення може замінити функцію, і тоді наступні в ланцюгу не працюють. Вимкнений мод із ланцюга випадає."
   },
   "front.makers.levels.link": {
     "en": "Hooks",
@@ -744,7 +744,7 @@
     "uk": "Мод із помилкою"
   },
   "front.players.fault.a": {
-    "en": "When a mod’s code stops on an error, Enshwick turns that mod off until the next start. The game keeps running without it. A crash in a mod’s code still ends the game. The crash file then names the mod.",
-    "uk": "Коли код мода зупиняється на помилці, Enshwick вимикає цей мод до наступного запуску. Гра працює далі без нього. Аварійне завершення в коді мода все одно закриває гру. Тоді файл про збій називає цей мод."
+    "en": "When a mod’s code stops on an error, Enshwick turns off that mod or the part of it that failed. The game keeps running without it. A crash in a mod’s code still ends the game. The crash file then names the mod.",
+    "uk": "Коли код мода зупиняється на помилці, Enshwick вимикає цей мод або ту його частину, що дала збій. Гра працює далі без нього. Аварійне завершення в коді мода все одно закриває гру. Тоді файл про збій називає цей мод."
   }
 }
