@@ -507,7 +507,7 @@
 .ew-front .ew-points h3 {
   margin: 0;
   font-size: var(--text-lg);
-  line-height: var(--leading-body);
+  line-height: 1.3;
 }
 
 .ew-points__link {

@@ -325,7 +325,8 @@ header.header {
   }
 }
 
-@media (min-width: 72rem) {
+/* The four places fit beside a whole search field from here, in the longest language, Ukrainian. */
+@media (min-width: 84rem) {
   .ew-bar__nav {
     display: flex;
   }
@@ -472,6 +473,7 @@ header.header {
   margin-inline-start: auto;
   font-size: var(--text-sm);
   font-weight: 400;
+  white-space: nowrap;
   color: var(--color-muted);
 }
 
@@ -524,6 +526,12 @@ header.header {
   font-size: var(--text-sm);
   font-weight: 500;
   color: var(--color-faint);
+}
+
+/* A row's own header sits on the row's line, as its cells do. */
+.sl-markdown-content tbody th {
+  padding-block: var(--space-sm);
+  border-bottom-color: var(--color-line);
 }
 
 .sl-markdown-content tr:hover td {
