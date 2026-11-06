@@ -17,7 +17,7 @@ export enum BuildState {
   Unreported = 'unreported',
 }
 
-/** One row of the build table: a build with a report or a kept table, or a newer game version one side lacks. */
+/** One row of the build table: a build with a report, or a newer game version one side lacks. */
 export interface BuildRow {
   readonly side: string;
   readonly name: string | undefined;

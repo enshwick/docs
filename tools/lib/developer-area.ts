@@ -1,9 +1,7 @@
-import { basename } from 'node:path';
-
 import type { GitRef, RepositoryName } from '../../src/site/types.ts';
 import type { DeveloperPage } from './api-map.ts';
 import { ChapterConverter } from './chapter-converter.ts';
-import { GameBuildFiles } from './game-build-files.ts';
+import { type GameBuild, GameBuildFiles } from './game-build-files.ts';
 import { GitSource } from './git-source.ts';
 import { MdxBody } from './mdx-body.ts';
 import { PageFile } from './page-file.ts';
@@ -21,19 +19,6 @@ export interface PlatformSource {
   readonly book: string;
   readonly versions: readonly DeveloperVersion[];
   readonly pageTypes: Readonly<Record<string, PageType>>;
-}
-
-/** One game build the platform has a compatibility report or a build table for. */
-export interface GameBuild {
-  readonly side: string;
-  readonly name: string;
-  readonly steamBuild: string | undefined;
-  readonly gameVersion: string | undefined;
-  /**
-   * The loader features that are off or partly off on the build, from the build's report;
-   * absent when the version has no report data for it.
-   */
-  readonly off: readonly string[] | undefined;
 }
 
 /** What one platform version supports, for the compatibility page. */
@@ -58,12 +43,8 @@ export class DeveloperArea {
   private static readonly changelog = 'crates/enshwick/CHANGELOG.md';
   private static readonly summary = 'SUMMARY.md';
   private static readonly mainBranch = 'main';
-  private static readonly gameData = 'crates/enshwick-gamedata';
-  /** The kept builds' tables, a frozen record since builds run without one. */
-  private static readonly tables = `${DeveloperArea.gameData}/tables`;
-  /** What the loader finds on each build, one file per build, named as its table would be. */
-  private static readonly reports = `${DeveloperArea.gameData}/reports`;
-  private static readonly buildFiles = '{tables,reports}/*.toml';
+  /** What the loader finds on each game build, one compatibility report per build. */
+  private static readonly reports = 'crates/enshwick-gamedata/reports';
   private static readonly apiManifest = 'crates/enshwick/Cargo.toml';
   private static readonly apiRoot = 'crates/enshwick/src/lib.rs';
   private static readonly apiAbi = 'crates/enshwick/src/abi.rs';
@@ -142,7 +123,6 @@ export class DeveloperArea {
     const checkout = await GitSource.checkout(this.source.repository, version.ref, [
       `/${this.source.book}/`,
       `/${DeveloperArea.changelog}`,
-      `/${DeveloperArea.tables}/`,
       `/${DeveloperArea.reports}/`,
       `/${DeveloperArea.apiManifest}`,
       `/${DeveloperArea.apiRoot}`,
@@ -224,7 +204,7 @@ export class DeveloperArea {
     this.newestPages.sort((a, b) => order.indexOf(a.slug) - order.indexOf(b.slug));
   }
 
-  /** The API version and the game builds with a report or a build table at the version's ref. */
+  /** The API version and the game builds with a compatibility report at the version's ref, oldest first. */
   private static async release(
     version: DeveloperVersion,
     checkout: GitSource,
@@ -232,16 +212,12 @@ export class DeveloperArea {
     const manifest = await checkout.read(DeveloperArea.apiManifest);
     const api =
       manifest === undefined ? undefined : /^version\s*=\s*"([^"]+)"/mu.exec(manifest)?.[1];
-    const found = await Array.fromAsync(
-      new Bun.Glob(DeveloperArea.buildFiles).scan(checkout.path(DeveloperArea.gameData)),
+    const files = await Array.fromAsync(
+      new Bun.Glob('*.toml').scan(checkout.path(DeveloperArea.reports)),
     );
-    const files = [...new Set(found.map((path) => basename(path)))].toSorted();
     const builds = await Promise.all(
       files.map(async (file) =>
-        GameBuildFiles.read(file, {
-          table: await checkout.read(`${DeveloperArea.tables}/${file}`),
-          report: await checkout.read(`${DeveloperArea.reports}/${file}`),
-        }),
+        GameBuildFiles.read(file, (await checkout.read(`${DeveloperArea.reports}/${file}`)) ?? ''),
       ),
     );
 
@@ -249,7 +225,7 @@ export class DeveloperArea {
       name: version.name,
       ref: version.ref.toString(),
       api,
-      builds,
+      builds: GameBuildFiles.ordered(builds),
       lib: await checkout.read(DeveloperArea.apiRoot),
       abi: await checkout.read(DeveloperArea.apiAbi),
       errors: await checkout.read(DeveloperArea.errorsSource),

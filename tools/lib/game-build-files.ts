@@ -1,54 +1,58 @@
-import type { GameBuild } from './developer-area.ts';
 import { Fields } from './fields.ts';
 
+/** One game build the platform has a compatibility report for. */
+export interface GameBuild {
+  readonly side: string;
+  readonly name: string;
+  readonly steamBuild: string | undefined;
+  readonly gameVersion: string | undefined;
+  /** The loader features that are off or partly off on the build, from its report. */
+  readonly off: readonly string[];
+}
+
 /**
- * Reads one game build from the files a platform version keeps for it: its compatibility report,
- * which every build the platform runs without a table of its own has, and the build table older
- * versions kept, which may have no report.
+ * Reads the game builds of a platform version from their compatibility reports: every build has
+ * one, also a build the platform runs without a table of its own.
  */
 export class GameBuildFiles {
-  /** The build of `file` from its table and report texts, the report's fields first. */
-  public static read(
-    file: string,
-    { table, report }: { readonly table?: string; readonly report?: string },
-  ): GameBuild {
-    const heads = [report, table].flatMap((text) =>
-      text === undefined ? [] : [GameBuildFiles.header(text)],
-    );
-    const field = (key: string): unknown =>
-      heads.map((head) => head.at(key).value).find((value) => value !== undefined);
-    const text = (key: string): string | undefined => new Fields(field(key)).text();
+  private static readonly side = 'side';
+  /** The name of the build, which a report keeps under the name of its kept table. */
+  private static readonly name = 'table';
+  private static readonly steamBuild = 'steam_build';
+  private static readonly gameVersion = 'game_version';
+  private static readonly feature = 'feature';
+  private static readonly featureName = 'name';
+
+  /** The build of report `file` from its text. */
+  public static read(file: string, report: string): GameBuild {
+    const fields = new Fields(Bun.TOML.parse(report));
 
     const number = (key: string): string | undefined => {
-      const value = field(key);
+      const value = fields.at(key).value;
 
       return typeof value === 'number' ? String(value) : undefined;
     };
 
+    const features = fields.at(GameBuildFiles.feature).value;
+
     return {
-      side: text('side') ?? file,
-      name: text('name') ?? text('table') ?? file,
-      steamBuild: number('steam_build'),
-      gameVersion: number('game_version'),
-      off: report === undefined ? undefined : GameBuildFiles.off(report),
+      side: fields.at(GameBuildFiles.side).text() ?? file,
+      name: fields.at(GameBuildFiles.name).text() ?? file,
+      steamBuild: number(GameBuildFiles.steamBuild),
+      gameVersion: number(GameBuildFiles.gameVersion),
+      off: (Array.isArray(features) ? features : []).flatMap((feature) => {
+        const name = new Fields(feature).at(GameBuildFiles.featureName).text();
+
+        return name === undefined ? [] : [name];
+      }),
     };
   }
 
-  /** Only the header: the tables hold 64-bit addresses, which no JavaScript number holds. */
-  private static header(this: void, text: string): Fields {
-    const at = text.search(/^\[/mu);
+  /** `builds` oldest first, by game version, then Steam build, so the last of a side is its newest. */
+  public static ordered(builds: readonly GameBuild[]): GameBuild[] {
+    const version = (build: GameBuild): number => Number(build.gameVersion ?? 0);
+    const steam = (build: GameBuild): number => Number(build.steamBuild ?? 0);
 
-    return new Fields(Bun.TOML.parse(at < 0 ? text : text.slice(0, at)));
-  }
-
-  /** The loader features a report names as off or partly off. */
-  private static off(this: void, report: string): readonly string[] {
-    const features = new Fields(Bun.TOML.parse(report)).at('feature').value;
-
-    return (Array.isArray(features) ? features : []).flatMap((feature) => {
-      const name = new Fields(feature).at('name').text();
-
-      return name === undefined ? [] : [name];
-    });
+    return builds.toSorted((a, b) => version(a) - version(b) || steam(a) - steam(b));
   }
 }
