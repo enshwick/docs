@@ -468,36 +468,16 @@
     "uk": "Моди працюють і після патчу гри"
   },
   "front.patch.lead": {
-    "en": "Enshwick finds each new game build by itself. When a patch breaks something, you learn what broke, and the rest keeps running.",
-    "uk": "Enshwick сам знаходить кожну нову збірку гри. Коли патч щось ламає, ви дізнаєтеся, що саме, а решта працює далі."
+    "en": "A game patch can change the code that mods rely on.",
+    "uk": "Патч гри може змінити код, на який спираються моди."
   },
-  "front.patch.find.title": {
-    "en": "No table for each build",
-    "uk": "Без таблиці для кожної збірки"
+  "front.patch.update.title": {
+    "en": "A new game build needs no Enshwick update",
+    "uk": "Для нової збірки гри не треба оновлювати Enshwick"
   },
-  "front.patch.find.text": {
-    "en": "The loader finds the game’s code through the engine’s own routes. Nobody has to make a table for a new build.",
-    "uk": "Завантажувач знаходить код гри через власні шляхи рушія. Нікому не треба складати таблицю для нової збірки."
-  },
-  "front.patch.off.title": {
-    "en": "Only what broke turns off",
-    "uk": "Вимикається лише зламане"
-  },
-  "front.patch.off.text": {
-    "en": "If a patch moves something a feature needs, only that feature turns off. Chat and the Mods screen name it, and the other mods keep running.",
-    "uk": "Якщо патч зсуває те, що потрібно функції, вимикається лише вона. Чат і екран Mods її називають, а інші моди працюють далі."
-  },
-  "front.patch.builds.title": {
-    "en": "Every build on one page",
-    "uk": "Усі збірки на одній сторінці"
-  },
-  "front.patch.builds.text": {
-    "en": "The compatibility page lists each game build and whether Enshwick works on it.",
-    "uk": "Сторінка сумісності перелічує кожну збірку гри й те, чи працює на ній Enshwick."
-  },
-  "front.patch.builds.link": {
-    "en": "Compatibility by game build",
-    "uk": "Сумісність за збірками гри"
+  "front.patch.update.text": {
+    "en": "If Enshwick cannot find something in a new build, only the mods and features that need it turn off. Chat and the Mods screen name them, and the rest keeps working.",
+    "uk": "Якщо Enshwick чогось не знаходить у новій збірці, вимикаються лише моди й функції, що від цього залежать. Чат і екран Mods їх називають, а решта працює далі."
   },
   "front.players.title": {
     "en": "What Enshwick solves for players",
