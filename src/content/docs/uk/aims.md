@@ -35,6 +35,8 @@ type: explanation
 ## Як допомогти?
 
 Щоб попросити API або поділитися ідеєю,
-[відкрийте звернення](https://github.com/enshwick/enshwick/issues/new) на GitHub.
-Pull request’и я теж радо прийму. Сторінка
+[відкрийте звернення](https://github.com/enshwick/enshwick/issues/new?template=api-request.yml)
+на GitHub. Pull request’и теж вітаються, а
+[посібник для учасників](https://github.com/enshwick/enshwick/blob/main/CONTRIBUTING.md)
+пояснює, як вони працюють. Сторінка
 [покриття API](/uk/dev/api-coverage/) показує, що API охоплює зараз.
