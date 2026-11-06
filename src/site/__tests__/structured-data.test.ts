@@ -28,12 +28,17 @@ const sidebar: SidebarItem[] = [
   },
 ];
 
+const homePage = {
+  description: 'The modding framework and API for Enshrouded.',
+  questions: [{ question: 'Is it free?', answer: 'Yes.' }],
+};
+
 describe('StructuredData', () => {
   it('describes the project on the home page, with the contact address', () => {
-    const graph = data.home('en', '1.0.0-alpha.11');
+    const graph = data.home('en', '1.0.0-alpha.11', homePage);
     const types = graph.map((node) => node['@type']);
 
-    expect(types).toEqual(['Organization', 'WebSite', 'SoftwareApplication']);
+    expect(types).toEqual(['Organization', 'WebSite', 'SoftwareApplication', 'FAQPage']);
     expect(graph[0]).toMatchObject({
       url: `${site}/`,
       email: 'contact@enshwick.com',
@@ -44,12 +49,47 @@ describe('StructuredData', () => {
       operatingSystem: 'Windows',
       offers: { '@type': 'Offer', price: '0' },
       softwareVersion: '1.0.0-alpha.11',
+      description: 'The modding framework and API for Enshrouded.',
+      inLanguage: 'en',
     });
+  });
+
+  it('states each question the home page answers as a FAQ entry, in its order', () => {
+    const questions = [
+      { question: 'Is it safe?', answer: 'Our mods are open source.' },
+      { question: 'Is it free?', answer: 'Yes.' },
+    ];
+    const faq = data.home('uk', undefined, { ...homePage, questions }).at(-1);
+
+    expect(faq).toEqual({
+      '@context': 'https://schema.org',
+      '@type': 'FAQPage',
+      inLanguage: 'uk',
+      mainEntity: [
+        {
+          '@type': 'Question',
+          name: 'Is it safe?',
+          acceptedAnswer: { '@type': 'Answer', text: 'Our mods are open source.' },
+        },
+        {
+          '@type': 'Question',
+          name: 'Is it free?',
+          acceptedAnswer: { '@type': 'Answer', text: 'Yes.' },
+        },
+      ],
+    });
+  });
+
+  it('leaves out the FAQ when the home page answers no question', () => {
+    const graph = data.home('en', undefined, { ...homePage, questions: [] });
+
+    expect(graph.map((node) => node['@type'])).not.toContain('FAQPage');
+    expect(graph[2]).not.toHaveProperty('softwareVersion');
   });
 
   it('names the site Enshwick at the domain root from every language home page', () => {
     for (const lang of ['en', 'uk']) {
-      expect(data.home(lang, '1.0.0')[1]).toMatchObject({
+      expect(data.home(lang, '1.0.0', homePage)[1]).toMatchObject({
         '@type': 'WebSite',
         name: 'Enshwick',
         alternateName: ['enshwick', 'enshwick.com'],

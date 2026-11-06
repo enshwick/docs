@@ -1,592 +1,805 @@
-[
-  {
-    "domain": "Items",
-    "capability": "read",
-    "status": "covered",
-    "items": ["content::vanilla::item", "item_data", "Blob"]
-  },
-  {
-    "domain": "Items",
-    "capability": "change",
-    "status": "covered",
-    "items": ["content::changes"],
-    "note": "item fields and stack size"
-  },
-  {
-    "domain": "Items",
-    "capability": "create",
-    "status": "covered",
-    "items": ["content::items", "content::icons"]
-  },
-  {
-    "domain": "Items",
-    "capability": "events",
-    "status": "covered",
-    "items": ["HandleEquipmentSlotChangedEvent", "LootInteractionEvent"]
-  },
-  { "domain": "Items", "capability": "ui", "status": "research" },
-
-  {
-    "domain": "Recipes",
-    "capability": "read",
-    "status": "covered",
-    "items": ["content::vanilla::recipe"]
-  },
-  {
-    "domain": "Recipes",
-    "capability": "change",
-    "status": "covered",
-    "items": ["content::recipes::change", "recipes::rules"]
-  },
-  {
-    "domain": "Recipes",
-    "capability": "create",
-    "status": "covered",
-    "items": ["content::recipes::add", "derive"]
-  },
-  {
-    "domain": "Recipes",
-    "capability": "events",
-    "status": "covered",
-    "items": ["CraftRecipeEvent", "CraftRecipeSuccessEvent", "vetoes::on_craft"]
-  },
-  { "domain": "Recipes", "capability": "ui", "status": "covered", "items": ["content::menu"] },
-
-  {
-    "domain": "Crafting stations",
-    "capability": "read",
-    "status": "covered",
-    "items": ["content::vanilla::station", "workshop"]
-  },
-  {
-    "domain": "Crafting stations",
-    "capability": "change",
-    "status": "covered",
-    "items": ["content::menu"],
-    "note": "which recipes a workshop lists"
-  },
-  {
-    "domain": "Crafting stations",
-    "capability": "create",
-    "status": "covered",
-    "items": ["content::workshops"]
-  },
-  {
-    "domain": "Crafting stations",
-    "capability": "events",
-    "status": "covered",
-    "items": ["CraftRecipeEvent"]
-  },
-  {
-    "domain": "Crafting stations",
-    "capability": "ui",
-    "status": "covered",
-    "items": ["content::menu"]
-  },
-
-  {
-    "domain": "Loot",
-    "capability": "read",
-    "status": "covered",
-    "items": ["content::loot_tables", "loot::Containers"]
-  },
-  {
-    "domain": "Loot",
-    "capability": "change",
-    "status": "covered",
-    "items": ["loot_tables", "rates"]
-  },
-  {
-    "domain": "Loot",
-    "capability": "create",
-    "status": "covered",
-    "items": ["loot::drops"],
-    "note": "mod items at an exact chance"
-  },
-  {
-    "domain": "Loot",
-    "capability": "events",
-    "status": "covered",
-    "items": ["LootInteractionEvent", "loot::on_loot_pass"]
-  },
-  { "domain": "Loot", "capability": "ui", "status": "not-applicable" },
-
-  {
-    "domain": "Survivors and NPCs",
-    "capability": "read",
-    "status": "covered",
-    "items": ["survivors", "survivors::workshop"]
-  },
-  {
-    "domain": "Survivors and NPCs",
-    "capability": "change",
-    "status": "covered",
-    "items": ["on_survivor_lookup", "on_survivor_bed_check", "effects::npc_command"]
-  },
-  {
-    "domain": "Survivors and NPCs",
-    "capability": "create",
-    "status": "covered",
-    "items": ["effects::spawn", "survivors::add_summon_item"]
-  },
-  {
-    "domain": "Survivors and NPCs",
-    "capability": "events",
-    "status": "covered",
-    "items": ["on_summon", "on_summoned", "on_survivor_status"]
-  },
-  { "domain": "Survivors and NPCs", "capability": "ui", "status": "in-work" },
-
-  {
-    "domain": "Flame Altars",
-    "capability": "read",
-    "status": "covered",
-    "items": ["altars::Altars"],
-    "note": "the list, levels and bases"
-  },
-  {
-    "domain": "Flame Altars",
-    "capability": "change",
-    "status": "covered",
-    "items": ["base_limit", "raise_base_limit", "on_altar_limit"]
-  },
-  {
-    "domain": "Flame Altars",
-    "capability": "create",
-    "status": "covered",
-    "note": "Flame Altar kinds of a mod"
-  },
-  {
-    "domain": "Flame Altars",
-    "capability": "events",
-    "status": "covered",
-    "items": ["AltarsChanged", "FlameAltarEvent", "on_altar_zone"]
-  },
-  { "domain": "Flame Altars", "capability": "ui", "status": "in-work" },
-
-  {
-    "domain": "Building and props",
-    "capability": "read",
-    "status": "covered",
-    "items": ["world::props", "prop_state", "capture"]
-  },
-  {
-    "domain": "Building and props",
-    "capability": "change",
-    "status": "covered",
-    "items": ["place_prop", "remove_prop", "place_block", "transactions"]
-  },
-  {
-    "domain": "Building and props",
-    "capability": "create",
-    "status": "covered",
-    "note": "prop types and crafting props of a mod"
-  },
-  {
-    "domain": "Building and props",
-    "capability": "events",
-    "status": "covered",
-    "items": ["BuildingPlaced", "BuildingRemoved", "vetoes::on_build", "can_build"]
-  },
-  {
-    "domain": "Building and props",
-    "capability": "ui",
-    "status": "covered",
-    "items": ["vetoes::BuildVerdict"],
-    "note": "a refusal reason under the build cursor"
-  },
-
-  {
-    "domain": "Terrain and voxels",
-    "capability": "read",
-    "status": "covered",
-    "items": ["voxels", "terrain::materials"]
-  },
-  {
-    "domain": "Terrain and voxels",
-    "capability": "change",
-    "status": "covered",
-    "items": ["write_voxels"],
-    "note": "add, dig and flatten terrain"
-  },
-  {
-    "domain": "Terrain and voxels",
-    "capability": "create",
-    "status": "not-supported",
-    "note": "new terrain materials"
-  },
-  {
-    "domain": "Terrain and voxels",
-    "capability": "events",
-    "status": "covered",
-    "items": ["ChunkLoaded", "ChunkUnloaded"]
-  },
-  { "domain": "Terrain and voxels", "capability": "ui", "status": "not-applicable" },
-
-  {
-    "domain": "Inventory and containers",
-    "capability": "read",
-    "status": "covered",
-    "items": ["inventory", "world::containers"]
-  },
-  {
-    "domain": "Inventory and containers",
-    "capability": "change",
-    "status": "covered",
-    "items": ["set_item", "content::containers"]
-  },
-  { "domain": "Inventory and containers", "capability": "create", "status": "in-work" },
-  {
-    "domain": "Inventory and containers",
-    "capability": "events",
-    "status": "covered",
-    "items": ["HandleEquipmentSlotChangedEvent", "LootInteractionEvent"]
-  },
-  { "domain": "Inventory and containers", "capability": "ui", "status": "research" },
-
-  {
-    "domain": "Players and accounts",
-    "capability": "read",
-    "status": "covered",
-    "items": ["world::players", "player_by_key", "players_named"]
-  },
-  {
-    "domain": "Players and accounts",
-    "capability": "change",
-    "status": "covered",
-    "note": "kick, ban, allowlist and mute"
-  },
-  { "domain": "Players and accounts", "capability": "create", "status": "not-applicable" },
-  {
-    "domain": "Players and accounts",
-    "capability": "events",
-    "status": "covered",
-    "items": ["PlayerJoined", "PlayerLeft", "PlayerDied"]
-  },
-  {
-    "domain": "Players and accounts",
-    "capability": "ui",
-    "status": "not-supported",
-    "note": "an admin interface"
-  },
-
-  {
-    "domain": "Character stats and buffs",
-    "capability": "read",
-    "status": "covered",
-    "items": ["world::stats", "stats", "buffs"]
-  },
-  {
-    "domain": "Character stats and buffs",
-    "capability": "change",
-    "status": "covered",
-    "items": ["set_health", "heal"],
-    "note": "add buffs and define stats"
-  },
-  {
-    "domain": "Character stats and buffs",
-    "capability": "create",
-    "status": "covered",
-    "items": ["stats::define_stat", "affixes"]
-  },
-  {
-    "domain": "Character stats and buffs",
-    "capability": "events",
-    "status": "covered",
-    "items": ["stats::on_stats_changed"]
-  },
-  { "domain": "Character stats and buffs", "capability": "ui", "status": "in-work" },
-
-  {
-    "domain": "Skills and experience",
-    "capability": "read",
-    "status": "covered",
-    "items": ["world::stats", "progress"]
-  },
-  {
-    "domain": "Skills and experience",
-    "capability": "change",
-    "status": "covered",
-    "items": ["rates", "progress::on_skill", "on_experience"]
-  },
-  { "domain": "Skills and experience", "capability": "create", "status": "in-work" },
-  {
-    "domain": "Skills and experience",
-    "capability": "events",
-    "status": "covered",
-    "items": ["LevelUpEvent", "XpGainedEvent"]
-  },
-  { "domain": "Skills and experience", "capability": "ui", "status": "in-work" },
-
-  {
-    "domain": "Combat and enemies",
-    "capability": "read",
-    "status": "covered",
-    "items": ["HitEvent", "damage::on_damage"]
-  },
-  {
-    "domain": "Combat and enemies",
-    "capability": "change",
-    "status": "covered",
-    "note": "enemy values, spawn entries and spawner counts"
-  },
-  {
-    "domain": "Combat and enemies",
-    "capability": "create",
-    "status": "covered",
-    "note": "enemies and arsenals of a mod, entity templates"
-  },
-  {
-    "domain": "Combat and enemies",
-    "capability": "events",
-    "status": "covered",
-    "items": ["HitEvent", "EntityDiedEvent"]
-  },
-  { "domain": "Combat and enemies", "capability": "ui", "status": "not-applicable" },
-
-  { "domain": "Knowledge", "capability": "read", "status": "covered", "items": ["knowledge::get"] },
-  {
-    "domain": "Knowledge",
-    "capability": "change",
-    "status": "covered",
-    "note": "grant and revoke, per world or account"
-  },
-  { "domain": "Knowledge", "capability": "create", "status": "in-work" },
-  {
-    "domain": "Knowledge",
-    "capability": "events",
-    "status": "covered",
-    "items": ["KnowledgeChanged", "on_knowledge_input"]
-  },
-  { "domain": "Knowledge", "capability": "ui", "status": "in-work" },
-
-  {
-    "domain": "Quests",
-    "capability": "read",
-    "status": "covered",
-    "items": ["knowledge::quests", "completed"]
-  },
-  { "domain": "Quests", "capability": "change", "status": "in-work" },
-  { "domain": "Quests", "capability": "create", "status": "in-work" },
-  { "domain": "Quests", "capability": "events", "status": "covered", "items": ["QuestCompleted"] },
-  { "domain": "Quests", "capability": "ui", "status": "in-work" },
-
-  {
-    "domain": "Map and fog",
-    "capability": "read",
-    "status": "covered",
-    "note": "map markers, the map frame and the fog"
-  },
-  {
-    "domain": "Map and fog",
-    "capability": "change",
-    "status": "covered",
-    "items": ["ui::map"],
-    "note": "set markers and the waypoint"
-  },
-  {
-    "domain": "Map and fog",
-    "capability": "create",
-    "status": "covered",
-    "items": ["map_marker_types"]
-  },
-  {
-    "domain": "Map and fog",
-    "capability": "events",
-    "status": "covered",
-    "items": ["Load::on_waypoint", "on_ping"]
-  },
-  {
-    "domain": "Map and fog",
-    "capability": "ui",
-    "status": "covered",
-    "items": ["ui::map"],
-    "note": "markers"
-  },
-
-  {
-    "domain": "Weather, time and shroud",
-    "capability": "read",
-    "status": "covered",
-    "items": ["weather::state", "daytime::now", "shroud_time"]
-  },
-  {
-    "domain": "Weather, time and shroud",
-    "capability": "change",
-    "status": "covered",
-    "items": ["weather::set", "clock_speed", "change_shroud_time"],
-    "note": "set the hour of the day"
-  },
-  {
-    "domain": "Weather, time and shroud",
-    "capability": "create",
-    "status": "covered",
-    "note": "add and change weather phenomena"
-  },
-  {
-    "domain": "Weather, time and shroud",
-    "capability": "events",
-    "status": "covered",
-    "items": ["DayStarted", "NightStarted"]
-  },
-  { "domain": "Weather, time and shroud", "capability": "ui", "status": "not-applicable" },
-
-  {
-    "domain": "Chat and notices",
-    "capability": "read",
-    "status": "covered",
-    "note": "chat lines on the server"
-  },
-  { "domain": "Chat and notices", "capability": "change", "status": "not-applicable" },
-  {
-    "domain": "Chat and notices",
-    "capability": "create",
-    "status": "covered",
-    "note": "tell, broadcast and notify"
-  },
-  {
-    "domain": "Chat and notices",
-    "capability": "events",
-    "status": "covered",
-    "items": ["ChatSaid"],
-    "note": "a chat filter that may rewrite a line"
-  },
-  { "domain": "Chat and notices", "capability": "ui", "status": "covered", "note": "notices" },
-
-  { "domain": "Interface", "capability": "read", "status": "not-applicable" },
-  {
-    "domain": "Interface",
-    "capability": "change",
-    "status": "covered",
-    "items": ["Load::extend_screen"],
-    "note": "panels on the game's screens"
-  },
-  {
-    "domain": "Interface",
-    "capability": "create",
-    "status": "covered",
-    "items": ["ui"],
-    "note": "windows, dialogs, HUD and widgets"
-  },
-  {
-    "domain": "Interface",
-    "capability": "events",
-    "status": "covered",
-    "items": ["ui::on_frame"],
-    "note": "dialog answers"
-  },
-  { "domain": "Interface", "capability": "ui", "status": "covered", "items": ["ui"] },
-
-  {
-    "domain": "Input and interactions",
-    "capability": "read",
-    "status": "covered",
-    "items": ["Load::input", "Frame::open_screen", "on_screen_changed"]
-  },
-  { "domain": "Input and interactions", "capability": "change", "status": "in-work" },
-  {
-    "domain": "Input and interactions",
-    "capability": "create",
-    "status": "covered",
-    "note": "controls a mod declares"
-  },
-  {
-    "domain": "Input and interactions",
-    "capability": "events",
-    "status": "covered",
-    "items": ["interactions::on_interaction", "AcceptOfferedInteractionEvent"]
-  },
-  {
-    "domain": "Input and interactions",
-    "capability": "ui",
-    "status": "covered",
-    "note": "players set their own keys"
-  },
-
-  { "domain": "Sound", "capability": "read", "status": "not-applicable" },
-  { "domain": "Sound", "capability": "change", "status": "in-work" },
-  { "domain": "Sound", "capability": "create", "status": "in-work" },
-  { "domain": "Sound", "capability": "events", "status": "in-work" },
-  { "domain": "Sound", "capability": "ui", "status": "covered", "note": "interface sounds" },
-
-  {
-    "domain": "Saves and worlds",
-    "capability": "read",
-    "status": "covered",
-    "items": ["state::Store", "WorldLoaded", "WorldSaved"]
-  },
-  {
-    "domain": "Saves and worlds",
-    "capability": "change",
-    "status": "covered",
-    "items": ["WorldSaving", "hold_saves", "Spawn::do_not_save"],
-    "note": "the save's identity"
-  },
-  { "domain": "Saves and worlds", "capability": "create", "status": "not-applicable" },
-  {
-    "domain": "Saves and worlds",
-    "capability": "events",
-    "status": "covered",
-    "items": ["WorldLoaded", "WorldSaved", "ShutdownStarted"]
-  },
-  { "domain": "Saves and worlds", "capability": "ui", "status": "not-applicable" },
-
-  {
-    "domain": "Networking and joining",
-    "capability": "read",
-    "status": "covered",
-    "items": ["join_missing"],
-    "note": "the mods list"
-  },
-  {
-    "domain": "Networking and joining",
-    "capability": "change",
-    "status": "covered",
-    "note": "sides server and both, requires, after and breaks"
-  },
-  {
-    "domain": "Networking and joining",
-    "capability": "create",
-    "status": "covered",
-    "note": "messages between a mod's parts"
-  },
-  {
-    "domain": "Networking and joining",
-    "capability": "events",
-    "status": "covered",
-    "items": ["JoinRefused"],
-    "note": "a received message"
-  },
-  {
-    "domain": "Networking and joining",
-    "capability": "ui",
-    "status": "covered",
-    "note": "the mismatch screen, refusals by mod id and version"
-  },
-
-  {
-    "domain": "Game settings and rates",
-    "capability": "read",
-    "status": "covered",
-    "items": ["game_settings"]
-  },
-  {
-    "domain": "Game settings and rates",
-    "capability": "change",
-    "status": "covered",
-    "items": ["rates", "game_settings"]
-  },
-  { "domain": "Game settings and rates", "capability": "create", "status": "not-applicable" },
-  {
-    "domain": "Game settings and rates",
-    "capability": "events",
-    "status": "covered",
-    "items": ["SettingsChanged", "SettingsReplaced"]
-  },
-  {
-    "domain": "Game settings and rates",
-    "capability": "ui",
-    "status": "covered",
-    "note": "settings per world behind each mod's gear"
-  }
-]
+{
+  "updated": "2026-11-06",
+  "rows": [
+    {
+      "domain": "Items",
+      "capability": "read",
+      "status": "covered",
+      "module": "content",
+      "items": ["content::vanilla::item", "item_data", "Blob"]
+    },
+    {
+      "domain": "Items",
+      "capability": "change",
+      "status": "covered",
+      "module": "content",
+      "items": ["content::changes", "Field::MaxStackSize"],
+      "note": "item fields and stack size"
+    },
+    {
+      "domain": "Items",
+      "capability": "create",
+      "status": "covered",
+      "module": "content",
+      "items": ["content::items", "content::icons"]
+    },
+    {
+      "domain": "Items",
+      "capability": "events",
+      "status": "covered",
+      "module": "events",
+      "items": ["HandleEquipmentSlotChangedEvent", "LootInteractionEvent"]
+    },
+    {
+      "domain": "Items",
+      "capability": "ui",
+      "status": "research"
+    },
+    {
+      "domain": "Recipes",
+      "capability": "read",
+      "status": "covered",
+      "module": "content",
+      "items": ["content::vanilla::recipe"]
+    },
+    {
+      "domain": "Recipes",
+      "capability": "change",
+      "status": "covered",
+      "module": "content",
+      "items": ["content::recipes::change", "recipes::rules"]
+    },
+    {
+      "domain": "Recipes",
+      "capability": "create",
+      "status": "covered",
+      "module": "content",
+      "items": ["Load::add_recipe", "derive_recipes"]
+    },
+    {
+      "domain": "Recipes",
+      "capability": "events",
+      "status": "covered",
+      "module": "events",
+      "items": ["CraftRecipeEvent", "CraftRecipeSuccessEvent", "vetoes::on_craft"]
+    },
+    {
+      "domain": "Recipes",
+      "capability": "ui",
+      "status": "covered",
+      "module": "content",
+      "items": ["content::menu"]
+    },
+    {
+      "domain": "Crafting stations",
+      "capability": "read",
+      "status": "covered",
+      "module": "content",
+      "items": ["content::vanilla::station", "workshop"]
+    },
+    {
+      "domain": "Crafting stations",
+      "capability": "change",
+      "status": "covered",
+      "module": "content",
+      "items": ["content::menu"],
+      "note": "which recipes a workshop lists"
+    },
+    {
+      "domain": "Crafting stations",
+      "capability": "create",
+      "status": "covered",
+      "module": "content",
+      "items": ["content::workshops"]
+    },
+    {
+      "domain": "Crafting stations",
+      "capability": "events",
+      "status": "covered",
+      "module": "events",
+      "items": ["CraftRecipeEvent"]
+    },
+    {
+      "domain": "Crafting stations",
+      "capability": "ui",
+      "status": "covered",
+      "module": "content",
+      "items": ["content::menu"]
+    },
+    {
+      "domain": "Loot",
+      "capability": "read",
+      "status": "covered",
+      "module": "loot",
+      "items": ["content::loot_tables", "loot::Containers"]
+    },
+    {
+      "domain": "Loot",
+      "capability": "change",
+      "status": "covered",
+      "module": "rates",
+      "items": ["loot_tables", "rates"]
+    },
+    {
+      "domain": "Loot",
+      "capability": "create",
+      "status": "covered",
+      "module": "loot",
+      "items": ["loot::drops"],
+      "note": "mod items at an exact chance"
+    },
+    {
+      "domain": "Loot",
+      "capability": "events",
+      "status": "covered",
+      "module": "loot",
+      "items": ["LootInteractionEvent", "loot::on_loot_pass"]
+    },
+    {
+      "domain": "Loot",
+      "capability": "ui",
+      "status": "not-applicable"
+    },
+    {
+      "domain": "Survivors and NPCs",
+      "capability": "read",
+      "status": "covered",
+      "module": "survivors",
+      "items": ["survivors", "survivors::workshop"]
+    },
+    {
+      "domain": "Survivors and NPCs",
+      "capability": "change",
+      "status": "covered",
+      "module": "survivors",
+      "items": ["on_survivor_lookup", "on_survivor_bed_check", "effects::npc_command"]
+    },
+    {
+      "domain": "Survivors and NPCs",
+      "capability": "create",
+      "status": "covered",
+      "module": "effects",
+      "items": ["effects::spawn", "survivors::add_summon_item"]
+    },
+    {
+      "domain": "Survivors and NPCs",
+      "capability": "events",
+      "status": "covered",
+      "module": "survivors",
+      "items": ["on_summon", "on_summoned", "on_survivor_status"]
+    },
+    {
+      "domain": "Survivors and NPCs",
+      "capability": "ui",
+      "status": "in-work"
+    },
+    {
+      "domain": "Flame Altars",
+      "capability": "read",
+      "status": "covered",
+      "module": "altars",
+      "items": ["altars::Altars"],
+      "note": "the list, levels and bases"
+    },
+    {
+      "domain": "Flame Altars",
+      "capability": "change",
+      "status": "covered",
+      "module": "altars",
+      "items": ["base_limit", "raise_base_limit", "on_altar_limit"]
+    },
+    {
+      "domain": "Flame Altars",
+      "capability": "create",
+      "status": "covered",
+      "module": "content",
+      "note": "Flame Altar kinds of a mod"
+    },
+    {
+      "domain": "Flame Altars",
+      "capability": "events",
+      "status": "covered",
+      "module": "altars",
+      "items": ["AltarsChanged", "FlameAltarEvent", "on_altar_zone"]
+    },
+    {
+      "domain": "Flame Altars",
+      "capability": "ui",
+      "status": "in-work"
+    },
+    {
+      "domain": "Building and props",
+      "capability": "read",
+      "status": "covered",
+      "module": "world",
+      "items": ["world::props", "prop_state", "capture"]
+    },
+    {
+      "domain": "Building and props",
+      "capability": "change",
+      "status": "covered",
+      "module": "world",
+      "items": ["place_prop", "remove_prop", "place_block", "transactions"]
+    },
+    {
+      "domain": "Building and props",
+      "capability": "create",
+      "status": "covered",
+      "module": "content",
+      "note": "prop types and crafting props of a mod"
+    },
+    {
+      "domain": "Building and props",
+      "capability": "events",
+      "status": "covered",
+      "module": "vetoes",
+      "items": ["BuildingPlaced", "BuildingRemoved", "vetoes::on_build", "can_build"]
+    },
+    {
+      "domain": "Building and props",
+      "capability": "ui",
+      "status": "covered",
+      "module": "vetoes",
+      "items": ["vetoes::BuildVerdict"],
+      "note": "a refusal reason under the build cursor"
+    },
+    {
+      "domain": "Terrain and voxels",
+      "capability": "read",
+      "status": "covered",
+      "module": "voxels",
+      "items": ["voxels", "terrain::materials"]
+    },
+    {
+      "domain": "Terrain and voxels",
+      "capability": "change",
+      "status": "covered",
+      "module": "terrain",
+      "items": ["write_voxels"],
+      "note": "add, dig and flatten terrain"
+    },
+    {
+      "domain": "Terrain and voxels",
+      "capability": "create",
+      "status": "not-supported",
+      "note": "new terrain materials"
+    },
+    {
+      "domain": "Terrain and voxels",
+      "capability": "events",
+      "status": "covered",
+      "module": "events",
+      "items": ["ChunkLoaded", "ChunkUnloaded"]
+    },
+    {
+      "domain": "Terrain and voxels",
+      "capability": "ui",
+      "status": "not-applicable"
+    },
+    {
+      "domain": "Inventory and containers",
+      "capability": "read",
+      "status": "covered",
+      "module": "inventory",
+      "items": ["inventory", "world::containers"]
+    },
+    {
+      "domain": "Inventory and containers",
+      "capability": "change",
+      "status": "covered",
+      "module": "inventory",
+      "items": ["set_item", "content::containers"]
+    },
+    {
+      "domain": "Inventory and containers",
+      "capability": "create",
+      "status": "in-work"
+    },
+    {
+      "domain": "Inventory and containers",
+      "capability": "events",
+      "status": "covered",
+      "module": "events",
+      "items": ["HandleEquipmentSlotChangedEvent", "LootInteractionEvent"]
+    },
+    {
+      "domain": "Inventory and containers",
+      "capability": "ui",
+      "status": "research"
+    },
+    {
+      "domain": "Players and accounts",
+      "capability": "read",
+      "status": "covered",
+      "module": "world",
+      "items": ["world::players", "player_by_key", "players_named"]
+    },
+    {
+      "domain": "Players and accounts",
+      "capability": "change",
+      "status": "covered",
+      "module": "world",
+      "note": "kick, ban, allowlist and mute"
+    },
+    {
+      "domain": "Players and accounts",
+      "capability": "create",
+      "status": "not-applicable"
+    },
+    {
+      "domain": "Players and accounts",
+      "capability": "events",
+      "status": "covered",
+      "module": "events",
+      "items": ["PlayerJoined", "PlayerLeft", "events::PlayerDied"]
+    },
+    {
+      "domain": "Players and accounts",
+      "capability": "ui",
+      "status": "not-supported",
+      "note": "an admin interface"
+    },
+    {
+      "domain": "Character stats and buffs",
+      "capability": "read",
+      "status": "covered",
+      "module": "world",
+      "items": ["world::stats", "stats", "buffs"]
+    },
+    {
+      "domain": "Character stats and buffs",
+      "capability": "change",
+      "status": "covered",
+      "module": "stats",
+      "items": ["set_health", "heal"],
+      "note": "add buffs and define stats"
+    },
+    {
+      "domain": "Character stats and buffs",
+      "capability": "create",
+      "status": "covered",
+      "module": "stats",
+      "items": ["stats::define_stat", "affixes"]
+    },
+    {
+      "domain": "Character stats and buffs",
+      "capability": "events",
+      "status": "covered",
+      "module": "stats",
+      "items": ["stats::on_stats_changed"]
+    },
+    {
+      "domain": "Character stats and buffs",
+      "capability": "ui",
+      "status": "in-work"
+    },
+    {
+      "domain": "Skills and experience",
+      "capability": "read",
+      "status": "covered",
+      "module": "world",
+      "items": ["world::stats", "progress"]
+    },
+    {
+      "domain": "Skills and experience",
+      "capability": "change",
+      "status": "covered",
+      "module": "rates",
+      "items": ["rates", "progress::on_skill", "on_experience"]
+    },
+    {
+      "domain": "Skills and experience",
+      "capability": "create",
+      "status": "in-work"
+    },
+    {
+      "domain": "Skills and experience",
+      "capability": "events",
+      "status": "covered",
+      "module": "events",
+      "items": ["LevelUpEvent", "XpGainedEvent"]
+    },
+    {
+      "domain": "Skills and experience",
+      "capability": "ui",
+      "status": "in-work"
+    },
+    {
+      "domain": "Combat and enemies",
+      "capability": "read",
+      "status": "covered",
+      "module": "damage",
+      "items": ["HitEvent", "Load::on_damage"]
+    },
+    {
+      "domain": "Combat and enemies",
+      "capability": "change",
+      "status": "covered",
+      "module": "content",
+      "note": "enemy values, spawn entries and spawner counts"
+    },
+    {
+      "domain": "Combat and enemies",
+      "capability": "create",
+      "status": "covered",
+      "module": "content",
+      "note": "enemies and arsenals of a mod, entity templates"
+    },
+    {
+      "domain": "Combat and enemies",
+      "capability": "events",
+      "status": "covered",
+      "module": "events",
+      "items": ["HitEvent", "EntityDiedEvent"]
+    },
+    {
+      "domain": "Combat and enemies",
+      "capability": "ui",
+      "status": "not-applicable"
+    },
+    {
+      "domain": "Knowledge",
+      "capability": "read",
+      "status": "covered",
+      "module": "knowledge",
+      "items": ["knowledge::get"]
+    },
+    {
+      "domain": "Knowledge",
+      "capability": "change",
+      "status": "covered",
+      "module": "knowledge",
+      "items": ["Knowledge::revoke"],
+      "note": "grant and revoke, per world or account"
+    },
+    {
+      "domain": "Knowledge",
+      "capability": "create",
+      "status": "in-work"
+    },
+    {
+      "domain": "Knowledge",
+      "capability": "events",
+      "status": "covered",
+      "module": "knowledge",
+      "items": ["KnowledgeChanged", "Load::on_knowledge_input"]
+    },
+    {
+      "domain": "Knowledge",
+      "capability": "ui",
+      "status": "in-work"
+    },
+    {
+      "domain": "Quests",
+      "capability": "read",
+      "status": "covered",
+      "module": "knowledge",
+      "items": ["knowledge::quests", "completed"]
+    },
+    {
+      "domain": "Quests",
+      "capability": "change",
+      "status": "in-work"
+    },
+    {
+      "domain": "Quests",
+      "capability": "create",
+      "status": "in-work"
+    },
+    {
+      "domain": "Quests",
+      "capability": "events",
+      "status": "covered",
+      "module": "knowledge",
+      "items": ["QuestCompleted"]
+    },
+    {
+      "domain": "Quests",
+      "capability": "ui",
+      "status": "in-work"
+    },
+    {
+      "domain": "Map and fog",
+      "capability": "read",
+      "status": "covered",
+      "module": "map",
+      "note": "map markers, the map frame and the fog"
+    },
+    {
+      "domain": "Map and fog",
+      "capability": "change",
+      "status": "covered",
+      "module": "map",
+      "items": ["ui::map"],
+      "note": "set markers and the waypoint"
+    },
+    {
+      "domain": "Map and fog",
+      "capability": "create",
+      "status": "covered",
+      "module": "map",
+      "items": ["map_marker_types"]
+    },
+    {
+      "domain": "Map and fog",
+      "capability": "events",
+      "status": "covered",
+      "module": "map",
+      "items": ["Load::on_waypoint", "on_ping"]
+    },
+    {
+      "domain": "Map and fog",
+      "capability": "ui",
+      "status": "covered",
+      "module": "map",
+      "items": ["ui::map"],
+      "note": "markers"
+    },
+    {
+      "domain": "Weather, time and shroud",
+      "capability": "read",
+      "status": "covered",
+      "module": "weather",
+      "items": ["weather::state", "daytime::now", "shroud_time"]
+    },
+    {
+      "domain": "Weather, time and shroud",
+      "capability": "change",
+      "status": "covered",
+      "module": "weather",
+      "items": ["weather::set", "clock_speed", "change_shroud_time"],
+      "note": "set the hour of the day"
+    },
+    {
+      "domain": "Weather, time and shroud",
+      "capability": "create",
+      "status": "covered",
+      "module": "weather",
+      "note": "add and change weather phenomena"
+    },
+    {
+      "domain": "Weather, time and shroud",
+      "capability": "events",
+      "status": "covered",
+      "module": "events",
+      "items": ["DayStarted", "NightStarted"]
+    },
+    {
+      "domain": "Weather, time and shroud",
+      "capability": "ui",
+      "status": "not-applicable"
+    },
+    {
+      "domain": "Chat and notices",
+      "capability": "read",
+      "status": "covered",
+      "module": "world",
+      "note": "chat lines on the server"
+    },
+    {
+      "domain": "Chat and notices",
+      "capability": "change",
+      "status": "not-applicable"
+    },
+    {
+      "domain": "Chat and notices",
+      "capability": "create",
+      "status": "covered",
+      "module": "world",
+      "note": "tell, broadcast and notify"
+    },
+    {
+      "domain": "Chat and notices",
+      "capability": "events",
+      "status": "covered",
+      "module": "chat",
+      "items": ["ChatSaid"],
+      "note": "a chat filter that may rewrite a line"
+    },
+    {
+      "domain": "Chat and notices",
+      "capability": "ui",
+      "status": "covered",
+      "module": "world",
+      "note": "notices"
+    },
+    {
+      "domain": "Interface",
+      "capability": "read",
+      "status": "not-applicable"
+    },
+    {
+      "domain": "Interface",
+      "capability": "change",
+      "status": "covered",
+      "module": "ui",
+      "items": ["Load::extend_screen"],
+      "note": "panels on the game's screens"
+    },
+    {
+      "domain": "Interface",
+      "capability": "create",
+      "status": "covered",
+      "module": "ui",
+      "items": ["ui"],
+      "note": "windows, dialogs, HUD and widgets"
+    },
+    {
+      "domain": "Interface",
+      "capability": "events",
+      "status": "covered",
+      "module": "ui",
+      "items": ["ui::on_frame"],
+      "note": "dialog answers"
+    },
+    {
+      "domain": "Interface",
+      "capability": "ui",
+      "status": "covered",
+      "module": "ui",
+      "items": ["ui"]
+    },
+    {
+      "domain": "Input and interactions",
+      "capability": "read",
+      "status": "covered",
+      "module": "input",
+      "items": ["input", "Frame::open_screen", "Load::on_screen_changed"]
+    },
+    {
+      "domain": "Input and interactions",
+      "capability": "change",
+      "status": "in-work"
+    },
+    {
+      "domain": "Input and interactions",
+      "capability": "create",
+      "status": "covered",
+      "module": "controls",
+      "note": "controls a mod declares"
+    },
+    {
+      "domain": "Input and interactions",
+      "capability": "events",
+      "status": "covered",
+      "module": "interactions",
+      "items": ["interactions::on_interaction", "AcceptOfferedInteractionEvent"]
+    },
+    {
+      "domain": "Input and interactions",
+      "capability": "ui",
+      "status": "covered",
+      "module": "controls",
+      "note": "players set their own keys"
+    },
+    {
+      "domain": "Sound",
+      "capability": "read",
+      "status": "not-applicable"
+    },
+    {
+      "domain": "Sound",
+      "capability": "change",
+      "status": "in-work"
+    },
+    {
+      "domain": "Sound",
+      "capability": "create",
+      "status": "in-work"
+    },
+    {
+      "domain": "Sound",
+      "capability": "events",
+      "status": "in-work"
+    },
+    {
+      "domain": "Sound",
+      "capability": "ui",
+      "status": "covered",
+      "module": "ui",
+      "note": "interface sounds"
+    },
+    {
+      "domain": "Saves and worlds",
+      "capability": "read",
+      "status": "covered",
+      "module": "state",
+      "items": ["state::Store", "WorldLoaded", "WorldSaved"]
+    },
+    {
+      "domain": "Saves and worlds",
+      "capability": "change",
+      "status": "covered",
+      "module": "state",
+      "items": ["WorldSaving", "hold_saves", "Spawn::do_not_save"],
+      "note": "the save's identity"
+    },
+    {
+      "domain": "Saves and worlds",
+      "capability": "create",
+      "status": "not-applicable"
+    },
+    {
+      "domain": "Saves and worlds",
+      "capability": "events",
+      "status": "covered",
+      "module": "events",
+      "items": ["WorldLoaded", "WorldSaved", "ShutdownStarted"]
+    },
+    {
+      "domain": "Saves and worlds",
+      "capability": "ui",
+      "status": "not-applicable"
+    },
+    {
+      "domain": "Networking and joining",
+      "capability": "read",
+      "status": "covered",
+      "module": "mods",
+      "items": ["join_missing"],
+      "note": "the mods list"
+    },
+    {
+      "domain": "Networking and joining",
+      "capability": "change",
+      "status": "covered",
+      "module": "mods",
+      "note": "sides server and both, requires, after and breaks"
+    },
+    {
+      "domain": "Networking and joining",
+      "capability": "create",
+      "status": "covered",
+      "module": "messages",
+      "note": "messages between a mod's parts"
+    },
+    {
+      "domain": "Networking and joining",
+      "capability": "events",
+      "status": "covered",
+      "module": "messages",
+      "items": ["JoinRefused"],
+      "note": "a received message"
+    },
+    {
+      "domain": "Networking and joining",
+      "capability": "ui",
+      "status": "covered",
+      "module": "mods",
+      "note": "the mismatch screen, refusals by mod id and version"
+    },
+    {
+      "domain": "Game settings and rates",
+      "capability": "read",
+      "status": "covered",
+      "module": "game_settings",
+      "items": ["game_settings"]
+    },
+    {
+      "domain": "Game settings and rates",
+      "capability": "change",
+      "status": "covered",
+      "module": "rates",
+      "items": ["rates", "game_settings"]
+    },
+    {
+      "domain": "Game settings and rates",
+      "capability": "create",
+      "status": "not-applicable"
+    },
+    {
+      "domain": "Game settings and rates",
+      "capability": "events",
+      "status": "covered",
+      "module": "events",
+      "items": ["SettingsChanged", "SettingsReplaced"]
+    },
+    {
+      "domain": "Game settings and rates",
+      "capability": "ui",
+      "status": "covered",
+      "module": "config",
+      "note": "settings per world behind each mod's gear"
+    }
+  ]
+}

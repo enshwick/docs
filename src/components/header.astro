@@ -19,7 +19,8 @@ const t = (key: string): string => Texts.site.get(key, language);
 const base = import.meta.env.BASE_URL.replace(/\/$/u, '');
 const href = (path: string): string => `${base}${Translations.pathIn(path, language)}`;
 const area = Area.of(route.id).toString();
-// The aims page sits in the player area but is the bar's own third item, in any language.
+// The coverage and aims pages each have their own item in the bar, apart from their area's, in any language.
+const coverage = /^([a-z-]+\/)?dev\/api-coverage$/u.test(route.id);
 const aims = /^([a-z-]+\/)?aims$/u.test(route.id);
 ---
 
@@ -38,7 +39,8 @@ const aims = /^([a-z-]+\/)?aims$/u.test(route.id);
     <a href={href('/start/first-modded-game/')} aria-current={area === 'players' && !aims ? 'true' : undefined}>
       {t('topic.players')}
     </a>
-    <a href={href('/dev/')} aria-current={area === 'dev' ? 'true' : undefined}>{t('topic.developers')}</a>
+    <a href={href('/dev/')} aria-current={area === 'dev' && !coverage ? 'true' : undefined}>{t('topic.developers')}</a>
+    <a href={href('/dev/api-coverage/')} aria-current={coverage ? 'true' : undefined}>{t('nav.coverage')}</a>
     <a href={href('/aims/')} aria-current={aims ? 'true' : undefined}>{t('nav.aims')}</a>
   </nav>
   <div class="ew-bar__search">

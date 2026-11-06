@@ -5,12 +5,15 @@ import { ClientRouter } from 'astro:transitions';
 import compat from '../generated/compatibility.json';
 import modLines from '../data/mods.json';
 import { Area } from '../site/area.ts';
+import { Coverage } from '../site/coverage.ts';
 import { FirstFonts } from '../site/first-fonts.ts';
 import { FrontData } from '../site/front.ts';
 import { Languages } from '../site/languages.ts';
 import { ModLanguageKeys } from '../site/mod-language-keys.ts';
 import { ModLanguages } from '../site/mod-languages.ts';
 import { type SidebarItem, StructuredData } from '../site/structured-data.ts';
+import { Texts } from '../site/texts.ts';
+import { LanguageCode } from '../site/types.ts';
 
 const route = Astro.locals.starlightRoute;
 const id = route.id;
@@ -18,26 +21,36 @@ const area = Area.of(id);
 // A mod's own page, in any language, gets its facts drawn as the game's item card.
 const mod = /^([a-z-]+\/)?mods\/[a-z0-9-]+$/u.test(id);
 const lang = route.lang;
+const parsedLanguage = LanguageCode.parse(lang);
+const language = parsedLanguage.ok ? parsedLanguage.value : Languages.site.root;
 const home = ['/', ...Languages.site.others.map((code) => `/${code}/`)].includes(Astro.url.pathname);
 const data = Astro.site === undefined ? undefined : new StructuredData(Astro.site.href);
+const page = {
+  path: Astro.url.pathname,
+  title: route.entry.data.title,
+  description: route.entry.data.description,
+  lang,
+  lastUpdated: route.lastUpdated,
+};
 // A fallback page copies another and stays out of search; the 404 page is no document.
 const nodes =
   data === undefined || route.isFallback === true || id === '404'
     ? []
     : home
-      ? data.home(lang, FrontData.from(compat, modLines, lang).version)
-      : data.article(
-          {
-            path: Astro.url.pathname,
-            title: route.entry.data.title,
-            description: route.entry.data.description,
-            lang,
-            lastUpdated: route.lastUpdated,
-          },
+      ? data.home(lang, FrontData.from(compat, modLines, lang).version, {
+          description: route.entry.data.description ?? Texts.site.get('site.description', language),
+          questions: FrontData.questions.map((question) => ({
+            question: Texts.site.get(`front.faq.${question}.q`, language),
+            answer: Texts.site.get(`front.faq.${question}.a`, language),
+          })),
+        })
+      : [
           // Starlight's sidebar entries carry more fields than the breadcrumbs read.
-          route.sidebar as SidebarItem[],
-          route.siteTitle,
-        );
+          ...data.article(page, route.sidebar as SidebarItem[], route.siteTitle),
+          ...(Astro.url.pathname.endsWith(Coverage.page)
+            ? [data.dataset(page, Coverage.site.updated, Coverage.data)]
+            : []),
+        ];
 // The two faces every first screen sets, in the scripts the page's language needs, fetched early.
 const fonts = new FirstFonts(Languages.site.root.toString() !== lang).urls;
 // Each page's own social card, drawn at build time by the route under `src/pages/og/`, which

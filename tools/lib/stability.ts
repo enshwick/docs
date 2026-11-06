@@ -13,8 +13,16 @@ export class Stability {
   private static readonly pageName = 'stability';
   private static readonly tableRow = /^\|(?<part>[^|\n]+)\|/gmu;
   private static readonly moduleName = /`(?<name>[a-z][a-z0-9_]*)`/gu;
+  private static readonly bareModule = /^[a-z][a-z0-9_]*$/u;
+  /** A Rust path in backticks; `of ` before a bare module name marks it as given for context. */
+  private static readonly itemName =
+    /(?<context>\bof )?`(?<name>[A-Za-z_][A-Za-z0-9_]*(?:::[A-Za-z_][A-Za-z0-9_]*)*)`/gu;
 
-  private constructor(public readonly badges: Readonly<Record<string, StabilityLevel>>) {}
+  private constructor(
+    public readonly badges: Readonly<Record<string, StabilityLevel>>,
+    /** Every module and item the chapter's unstable table names, sorted. */
+    public readonly unstable: readonly string[] = [],
+  ) {}
 
   /** The badges of the pages among `pages` that document one of `modules`. */
   public static of(modules: readonly string[], pages: readonly DeveloperPage[]): Stability {
@@ -38,7 +46,28 @@ export class Stability {
       }),
     );
 
-    return new Stability(badges);
+    return new Stability(badges, Stability.unstableNames(chapter.body));
+  }
+
+  /**
+   * Every name in the first column of the chapter's tables, modules and items alike, such as
+   * `world` and `Knowledge::revoke`, without a module the row names after "of" only for context,
+   * such as `ui` in "the map markers of `ui`".
+   */
+  public static unstableNames(body: string): string[] {
+    const names = new Set<string>();
+
+    for (const row of body.matchAll(Stability.tableRow)) {
+      for (const match of (row.groups?.['part'] ?? '').matchAll(Stability.itemName)) {
+        const name = match.groups?.['name'] ?? '';
+
+        if (match.groups?.['context'] === undefined || !Stability.bareModule.test(name)) {
+          names.add(name);
+        }
+      }
+    }
+
+    return [...names].toSorted();
   }
 
   /** The bare module names in the first column of the chapter's tables: `world`, not `World`. */

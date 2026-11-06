@@ -399,10 +399,6 @@
     "en": "Nexus Mods",
     "uk": "Nexus Mods"
   },
-  "front.download": {
-    "en": "Download Enshwick",
-    "uk": "Завантажити Enshwick"
-  },
   "front.nav.top": {
     "en": "Start",
     "uk": "Початок"
@@ -599,6 +595,18 @@
     "en": "API coverage by game area",
     "uk": "Покриття API за областями гри"
   },
+  "front.makers.levels.q": {
+    "en": "When the API has no call",
+    "uk": "Коли в API немає потрібного виклику"
+  },
+  "front.makers.levels.a": {
+    "en": "A mod reads any game data through reflection, or hooks a game function itself. The loader checks each hook’s target, turns off only a hook a patch broke, and chains hooks so one mod’s hook leaves the others working.",
+    "uk": "Мод читає будь-які дані гри через рефлексію або сам перехоплює функцію гри. Завантажувач перевіряє ціль кожного перехоплення, вимикає лише те, яке зламав патч, і складає перехоплення в ланцюг, тож перехоплення одного мода не заважає іншим."
+  },
+  "front.makers.levels.link": {
+    "en": "Hooks",
+    "uk": "Перехоплення (hooks)"
+  },
   "front.makers.tests.q": {
     "en": "Tests without the game",
     "uk": "Тести без гри"
@@ -671,6 +679,10 @@
     "en": "What comes next",
     "uk": "Що буде далі"
   },
+  "nav.coverage": {
+    "en": "API coverage",
+    "uk": "Покриття API"
+  },
   "nav.aims": {
     "en": "What’s next",
     "uk": "Що далі"
@@ -683,9 +695,25 @@
     "en": "What comes next",
     "uk": "Що буде далі"
   },
-  "coverage.domain": {
-    "en": "Game area",
-    "uk": "Область гри"
+  "coverage.covered-count": {
+    "en": "covered",
+    "uk": "є"
+  },
+  "coverage.capability": {
+    "en": "Capability",
+    "uk": "Можливість"
+  },
+  "coverage.state": {
+    "en": "State",
+    "uk": "Стан"
+  },
+  "coverage.stability": {
+    "en": "Stability",
+    "uk": "Стабільність"
+  },
+  "coverage.api": {
+    "en": "API",
+    "uk": "API"
   },
   "coverage.capability.read": {
     "en": "Read",

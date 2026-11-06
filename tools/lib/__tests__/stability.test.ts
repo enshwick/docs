@@ -34,6 +34,19 @@ describe('Stability', () => {
     ]);
   });
 
+  it('reads every module and item the unstable table names, but not one named for context', () => {
+    expect(Stability.unstableNames(stabilityPage.body)).toEqual([
+      'Field::MaxStackSize',
+      'Load::fog_of_war',
+      'Stats::set_item',
+      'World',
+      'entity_data',
+      'item_data',
+      'map',
+      'world',
+    ]);
+  });
+
   it('marks the page of each public module stable or unstable, by the page name', () => {
     const pages = [stabilityPage, page('dev/map'), page('dev/item-data'), page('dev/settings')];
     const modules = ['map', 'item_data', 'config', 'settings'];

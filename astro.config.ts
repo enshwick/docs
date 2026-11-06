@@ -22,6 +22,7 @@ import { TableFrame } from './src/plugins/rehype-table-frame.ts';
 import { BaseLinks } from './src/plugins/remark-base-links.ts';
 import { ReleaseLinks } from './src/plugins/remark-release-links.ts';
 import { CodeTheme } from './src/site/code-theme.ts';
+import { Coverage } from './src/site/coverage.ts';
 import { Languages } from './src/site/languages.ts';
 import { LastModified } from './src/site/last-modified.ts';
 import { ReleaseArchives } from './src/site/release-archives.ts';
@@ -86,7 +87,10 @@ export default defineConfig({
       // Pages only: no news, image or video entries.
       namespaces: { news: false, image: false, video: false },
       serialize: (item) => {
-        const lastmod = lastModified.of(item.url, siteData.base);
+        // The coverage page changes with its data, which its page file does not track.
+        const lastmod = item.url.endsWith(Coverage.page)
+          ? Coverage.site.updated
+          : lastModified.of(item.url, siteData.base);
         const fallback = item.links?.find(({ lang }) => lang === Languages.site.root.toString());
 
         return {
@@ -253,6 +257,11 @@ export default defineConfig({
             },
           ],
           optionalLinks: [
+            {
+              label: 'API coverage data',
+              url: `${siteData.url}${siteData.base}${Coverage.data}`,
+              description: `the table of ${Coverage.page} as JSON, with its date: which game areas the API reaches, stable or unstable`,
+            },
             {
               label: 'API reference',
               url: 'https://docs.rs/enshwick',

@@ -7,44 +7,68 @@ import { LanguageCode } from '../site/types.ts';
 const parsed = LanguageCode.parse(Astro.currentLocale ?? Languages.site.root.toString());
 const language = parsed.ok ? parsed.value : Languages.site.root;
 const t = (key: string): string => Texts.site.get(key, language);
+const base = import.meta.env.BASE_URL.replace(/\/$/u, '');
+const stability = `${base}/dev/stability/`;
+const covered = (cells: ReadonlyArray<{ status: string }>): number =>
+  cells.filter((cell) => cell.status === 'covered').length;
 ---
 
-<div class="ew-table" tabindex="0"><table>
-  <thead>
-    <tr>
-      <th>{t('coverage.domain')}</th>
-      {Coverage.capabilities.map((capability) => <th>{t(`coverage.capability.${capability}`)}</th>)}
-    </tr>
-  </thead>
-  <tbody>
-    {
-      Coverage.site.domains.map((domain) => (
-        <tr>
-          <th scope="row">{domain.name}</th>
-          {domain.cells.map((cell) => (
-            <td>
-              <strong>{t(`coverage.status.${cell.status}`)}</strong>
-              {cell.items.length > 0 && (
-                <>
-                  <br />
+<div class="ew-faq ew-coverage">
+  {
+    Coverage.site.domains.map((domain) => (
+      <details id={domain.id}>
+        <summary>
+          <span class="ew-coverage__name">{domain.name}</span>
+          <span class="ew-coverage__count">
+            {covered(domain.cells)} / {domain.cells.length} {t('coverage.covered-count')}
+          </span>
+        </summary>
+        <div class="ew-table" tabindex="0"><table>
+          <thead>
+            <tr>
+              <th scope="col">{t('coverage.capability')}</th>
+              <th scope="col">{t('coverage.state')}</th>
+              <th scope="col">{t('coverage.stability')}</th>
+              <th scope="col">{t('coverage.api')}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {domain.cells.map((cell) => (
+              <tr>
+                <th scope="row">{t(`coverage.capability.${cell.capability}`)}</th>
+                <td>{t(`coverage.status.${cell.status}`)}</td>
+                <td>{cell.stability === undefined ? '' : <a href={stability}>{t(`stability.${cell.stability}`)}</a>}</td>
+                <td>
                   {cell.items.map((item, index) => (
                     <>
                       {index > 0 && ', '}
                       <code>{item}</code>
                     </>
                   ))}
-                </>
-              )}
-              {cell.note !== undefined && (
-                <>
-                  <br />
+                  {cell.items.length > 0 && cell.note !== undefined && '; '}
                   {cell.note}
-                </>
-              )}
-            </td>
-          ))}
-        </tr>
-      ))
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table></div>
+      </details>
+    ))
+  }
+</div>
+
+<script>
+  // Opens the area a link names, such as `#loot`, on load and when the anchor changes; every area
+  // starts closed, and without this script the area still opens by hand.
+  const open = (): void => {
+    const id = decodeURIComponent(location.hash.slice(1));
+    const target = id === '' ? null : document.querySelector(`#${CSS.escape(id)}`);
+
+    if (target instanceof HTMLDetailsElement) {
+      target.open = true;
     }
-  </tbody>
-</table></div>
+  };
+
+  document.addEventListener('astro:page-load', open);
+  window.addEventListener('hashchange', open);
+</script>

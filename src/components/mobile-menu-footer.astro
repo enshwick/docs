@@ -16,6 +16,7 @@ const base = import.meta.env.BASE_URL.replace(/\/$/u, '');
 
 <div class="ew-menu-foot">
   <nav class="ew-menu-foot__links" aria-label={t('foot.links')}>
+    <a href={`${base}${Translations.pathIn('/dev/api-coverage/', language)}`}>{t('nav.coverage')}</a>
     <a href={`${base}${Translations.pathIn('/aims/', language)}`}>{t('nav.aims')}</a>
     <a href={Links.site.download.toString()}>{t('nav.download')}</a>
     <a class="ew-foot__service" href={Links.site.github.toString()}><ServiceIcon service="github" />GitHub</a>

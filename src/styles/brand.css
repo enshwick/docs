@@ -467,6 +467,17 @@ header.header {
   font-size: 0.88em;
   overflow-wrap: anywhere;
 }
+/* API coverage: one closed row per game area, as the front page's questions, opening to its table. */
+.ew-coverage summary .ew-coverage__count {
+  margin-inline-start: auto;
+  font-size: var(--text-sm);
+  font-weight: 400;
+  color: var(--color-muted);
+}
+
+.ew-coverage details > .ew-table {
+  margin-bottom: var(--space-lg);
+}
 
 /* Tables: hairline rows inside a frame that scrolls on its own, so the page never does. */
 .sl-markdown-content .ew-table {
