@@ -11,6 +11,7 @@ pub mod __private;
 #[cfg(feature = "test")]
 #[doc(hidden)]
 pub mod fixtures;
+#[cfg(feature = "unstable")]
 pub mod weather;
 `;
 
@@ -47,6 +48,10 @@ describe('ApiMap', () => {
 
     expect(names).not.toContain('__private');
     expect(names).not.toContain('fixtures');
+  });
+
+  it('names the public modules the crate compiles only with the unstable feature', () => {
+    expect(ApiMap.of(lib, pages).gated).toEqual(['weather']);
   });
 
   it('writes one line per module with absolute links', () => {

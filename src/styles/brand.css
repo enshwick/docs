@@ -481,6 +481,17 @@ header.header {
   margin-bottom: var(--space-lg);
 }
 
+/* Starlight's own details look (chevron, left rule, gaps) would double the front page's marker. */
+.sl-markdown-content .ew-coverage details {
+  margin-top: 0;
+  padding-inline-start: 0;
+  border-inline-start: 0;
+}
+
+.sl-markdown-content .ew-coverage summary::before {
+  content: none;
+}
+
 /* Tables: hairline rows inside a frame that scrolls on its own, so the page never does. */
 .sl-markdown-content .ew-table {
   max-width: 100%;

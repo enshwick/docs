@@ -87,10 +87,11 @@ export default defineConfig({
       // Pages only: no news, image or video entries.
       namespaces: { news: false, image: false, video: false },
       serialize: (item) => {
-        // The coverage page changes with its data, which its page file does not track.
+        // The coverage page changes with its data as well as its page file.
+        const own = lastModified.of(item.url, siteData.base);
         const lastmod = item.url.endsWith(Coverage.page)
-          ? Coverage.site.updated
-          : lastModified.of(item.url, siteData.base);
+          ? Coverage.site.latest(own).toISOString()
+          : own;
         const fallback = item.links?.find(({ lang }) => lang === Languages.site.root.toString());
 
         return {
@@ -237,9 +238,10 @@ export default defineConfig({
           customSets: [
             {
               label: 'Mod makers',
-              paths: ['dev/**'],
+              // The aims page sits in the developers' sidebar, so it is listed with them.
+              paths: ['dev/**', 'aims'],
               description:
-                'the guide for writing mods in Rust, Luau and as data packs, with the notes for AI assistants first and the API coverage by game area',
+                'the guide for writing mods in Rust, Luau and as data packs, with the notes for AI assistants first, the API coverage by game area and what the maintainer aims to build next',
             },
             {
               label: 'Players',
@@ -249,7 +251,6 @@ export default defineConfig({
                 'mods/**',
                 'reference/**',
                 'explanation/**',
-                'aims',
                 'errors/**',
               ],
               description:

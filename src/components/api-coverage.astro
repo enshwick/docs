@@ -9,8 +9,6 @@ const language = parsed.ok ? parsed.value : Languages.site.root;
 const t = (key: string): string => Texts.site.get(key, language);
 const base = import.meta.env.BASE_URL.replace(/\/$/u, '');
 const stability = `${base}/dev/stability/`;
-const covered = (cells: ReadonlyArray<{ status: string }>): number =>
-  cells.filter((cell) => cell.status === 'covered').length;
 ---
 
 <div class="ew-faq ew-coverage">
@@ -20,7 +18,8 @@ const covered = (cells: ReadonlyArray<{ status: string }>): number =>
         <summary>
           <span class="ew-coverage__name">{domain.name}</span>
           <span class="ew-coverage__count">
-            {covered(domain.cells)} / {domain.cells.length} {t('coverage.covered-count')}
+            {Coverage.count(domain.cells).covered} / {Coverage.count(domain.cells).of}{' '}
+            {t('coverage.covered-count')}
           </span>
         </summary>
         <div class="ew-table" tabindex="0"><table>
@@ -43,6 +42,12 @@ const covered = (cells: ReadonlyArray<{ status: string }>): number =>
                     <>
                       {index > 0 && ', '}
                       <code>{item}</code>
+                      {cell.unstableItems.includes(item) && (
+                        <>
+                          {' '}
+                          (<a href={stability}>{t('stability.unstable')}</a>)
+                        </>
+                      )}
                     </>
                   ))}
                   {cell.items.length > 0 && cell.note !== undefined && '; '}
@@ -59,9 +64,17 @@ const covered = (cells: ReadonlyArray<{ status: string }>): number =>
 
 <script>
   // Opens the area a link names, such as `#loot`, on load and when the anchor changes; every area
-  // starts closed, and without this script the area still opens by hand.
+  // starts closed, and without this script the area still opens by hand. The router moves to an
+  // anchor on the same page with pushState, which raises no hashchange, so a click checks again.
   const open = (): void => {
-    const id = decodeURIComponent(location.hash.slice(1));
+    let id = '';
+
+    try {
+      id = decodeURIComponent(location.hash.slice(1));
+    } catch {
+      return;
+    }
+
     const target = id === '' ? null : document.querySelector(`#${CSS.escape(id)}`);
 
     if (target instanceof HTMLDetailsElement) {
@@ -71,4 +84,5 @@ const covered = (cells: ReadonlyArray<{ status: string }>): number =>
 
   document.addEventListener('astro:page-load', open);
   window.addEventListener('hashchange', open);
+  document.addEventListener('click', () => setTimeout(open));
 </script>

@@ -22,18 +22,23 @@ export class ApiMap {
   private static readonly publicModule = /^((?:#\[[^\n]*\]\r?\n)*)pub mod ([a-z0-9_]+);/gmu;
   // Hidden modules, such as macro support, are no part of the documented API.
   private static readonly hidden = /#\[doc\(hidden\)\]/u;
+  // A module the crate compiles only with the `unstable` feature is unstable, listed or not.
+  private static readonly gate = /#\[cfg\(feature = "unstable"\)\]/u;
   private static readonly crateName = 'enshwick';
 
   private constructor(
     public readonly modules: readonly ApiModule[],
     private readonly pages: readonly DeveloperPage[],
+    /** The public modules behind the `unstable` feature. */
+    public readonly gated: readonly string[] = [],
   ) {}
 
   /** The map of the crate root `lib`, against the newest version's developer pages. */
   public static of(lib: string, pages: readonly DeveloperPage[]): ApiMap {
-    const names = [...lib.matchAll(ApiMap.publicModule)]
-      .filter((match) => !ApiMap.hidden.test(match[1] ?? ''))
-      .map((match) => match[2] ?? '');
+    const shown = [...lib.matchAll(ApiMap.publicModule)].filter(
+      (match) => !ApiMap.hidden.test(match[1] ?? ''),
+    );
+    const names = shown.map((match) => match[2] ?? '');
 
     return new ApiMap(
       names.map((name) => ({
@@ -43,6 +48,7 @@ export class ApiMap {
           .map(({ slug, title }) => ({ slug, title })),
       })),
       pages,
+      shown.filter((match) => ApiMap.gate.test(match[1] ?? '')).map((match) => match[2] ?? ''),
     );
   }
 
@@ -51,6 +57,7 @@ export class ApiMap {
     return Stability.of(
       this.modules.map((module) => module.name),
       this.pages,
+      this.gated,
     );
   }
 

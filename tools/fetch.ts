@@ -110,6 +110,14 @@ await Bun.write(
   `${generated}/unstable.json`,
   `${JSON.stringify(apiMap.stability.unstable, null, 2)}\n`,
 );
+await Bun.write(
+  `${generated}/api-modules.json`,
+  `${JSON.stringify(
+    apiMap.modules.map((module) => module.name),
+    null,
+    2,
+  )}\n`,
+);
 await Bun.write(`${generated}/smallest-mod.rs`, `${platformChecks.smallestMod()}\n`);
 await Bun.write(`${generated}/dev-sidebar.json`, `${JSON.stringify(developerSidebar, null, 2)}\n`);
 await Bun.write(

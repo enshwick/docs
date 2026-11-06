@@ -62,16 +62,77 @@ describe('Coverage', () => {
     expect(() => Coverage.from(file(rows), [])).toThrow('covered without a module');
   });
 
-  it('marks a covered cell unstable by its module, an item, or an item’s module', () => {
+  it('marks a covered cell unstable by its module, or when every item or item’s module is', () => {
     const unstable = ['world', 'Knowledge::revoke'];
 
     expect(stability('world', ['World'], unstable)).toBe('unstable');
-    expect(stability('knowledge', ['knowledge::get', 'Knowledge::revoke'], unstable)).toBe(
-      'unstable',
-    );
     expect(stability('inventory', ['world::containers'], unstable)).toBe('unstable');
     expect(stability('content', ['content::items', 'Load::world'], unstable)).toBe('stable');
   });
+
+  it('keeps a cell with one unstable item among stable ones stable, and names that item', () => {
+    const rows = area('Knowledge');
+
+    rows[1] = {
+      domain: 'Knowledge',
+      capability: 'change',
+      status: 'covered',
+      module: 'knowledge',
+      items: ['Knowledge::grant', 'Knowledge::revoke'],
+    };
+
+    const cell = Coverage.from(file(rows), ['Knowledge::revoke']).domains[0]?.cells[1];
+
+    expect(cell?.stability).toBe('stable');
+    expect(cell?.unstableItems).toEqual(['Knowledge::revoke']);
+  });
+
+  it('refuses a covered cell whose module the API crate does not have', () => {
+    const rows = area('Items');
+
+    rows[0] = {
+      domain: 'Items',
+      capability: 'read',
+      status: 'covered',
+      module: 'messages',
+      items: ['x'],
+    };
+
+    expect(() => Coverage.from(file(rows), [], ['net', 'content'])).toThrow(
+      'names module messages',
+    );
+  });
+
+  it('counts an area’s covered cells out of those that neither do not apply nor are unsupported', () => {
+    const rows = area('Loot');
+
+    rows[0] = {
+      domain: 'Loot',
+      capability: 'read',
+      status: 'covered',
+      module: 'loot',
+      items: ['x'],
+    };
+    rows[1] = { domain: 'Loot', capability: 'change', status: 'not-applicable' };
+    rows[2] = { domain: 'Loot', capability: 'create', status: 'not-supported' };
+
+    const counts = Coverage.from(file(rows), []).domains.map((domain) =>
+      Coverage.count(domain.cells),
+    );
+
+    expect(counts).toEqual([{ covered: 1, of: 3 }]);
+  });
+
+  it('dates the page by the later of its data and its own file', () => {
+    const coverage = Coverage.from(file(area('Items')), []);
+
+    expect(coverage.latest().toISOString()).toBe('2026-11-06T00:00:00.000Z');
+    expect(coverage.latest('2026-10-01T00:00:00Z').toISOString()).toBe('2026-11-06T00:00:00.000Z');
+    expect(coverage.latest(new Date('2026-12-02T10:00:00Z')).toISOString()).toBe(
+      '2026-12-02T10:00:00.000Z',
+    );
+  });
+
   it('gives a cell that is not covered no stability', () => {
     expect(Coverage.from(file(area('Items')), ['world']).domains[0]?.cells[0]?.stability).toBe(
       undefined,

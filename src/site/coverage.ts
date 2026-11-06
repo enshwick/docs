@@ -1,6 +1,8 @@
 import { AnyString, n } from '@horizon-republic/nominal-types';
 
 import coverageData from '../data/coverage.json' with { type: 'json' };
+// `tools/fetch.ts` writes it too: the public modules of the API crate.
+import modulesData from '../generated/api-modules.json' with { type: 'json' };
 // `tools/fetch.ts` writes it before every build from the book's stability chapter.
 import unstableData from '../generated/unstable.json' with { type: 'json' };
 
@@ -48,9 +50,14 @@ export interface CoverageCell {
   readonly capability: string;
   /** One of the `CoverageStatus` values; the page's label key is `coverage.status.<status>`. */
   readonly status: string;
-  /** Where covered, `stable` or `unstable`, as the book's stability chapter has it. */
+  /**
+   * Where covered, `stable` or `unstable`, as the book's stability chapter and the crate have it: a
+   * cell is unstable when its module or every item it names is.
+   */
   readonly stability: string | undefined;
   readonly items: readonly string[];
+  /** The items of a stable cell that still need the `unstable` feature. */
+  readonly unstableItems: readonly string[];
   readonly note: string | undefined;
 }
 
@@ -79,6 +86,8 @@ export class Coverage {
 
   /** The status whose cell names the API that covers it. */
   private static readonly covered = 'covered';
+  /** The statuses an area's count leaves out, as the API coverage measure does. */
+  private static readonly uncounted = ['not-supported', 'not-applicable'];
   private static readonly stable = 'stable';
   private static readonly unstable = 'unstable';
   private static readonly pathSeparator = '::';
@@ -86,7 +95,7 @@ export class Coverage {
   private static readonly notAnchor = /[^a-z0-9]+/gu;
 
   /** The site's coverage, as `src/data/coverage.json` holds it. */
-  public static readonly site = Coverage.from(coverageData, unstableData);
+  public static readonly site = Coverage.from(coverageData, unstableData, modulesData);
 
   private constructor(
     /** The day the data was last brought up to date, as `YYYY-MM-DD`. */
@@ -95,13 +104,19 @@ export class Coverage {
   ) {}
 
   /**
-   * Parses the rows, groups them by game area in file order, and marks each covered cell unstable
-   * when its module, one of its items or an item's module is among `unstable`.
+   * Parses the rows, groups them by game area in file order, and marks each covered cell stable or
+   * unstable by `unstable`: an item is unstable when it or its module is named there, and a cell
+   * when its module or every item it names is.
    *
    * @throws {TypeError} When the data does not parse, an area misses a capability or repeats one,
-   * or a covered cell names no module or nothing it covers.
+   * or a covered cell names no module, a module not among `modules` where given, or nothing it
+   * covers.
    */
-  public static from(data: unknown, unstable: readonly string[]): Coverage {
+  public static from(
+    data: unknown,
+    unstable: readonly string[],
+    modules?: readonly string[],
+  ): Coverage {
     const parsed = CoverageFile.parse(data);
 
     if (!parsed.ok) {
@@ -109,11 +124,12 @@ export class Coverage {
     }
 
     const unstableNames = new Set(unstable);
+    const known = modules === undefined ? undefined : new Set(modules);
     const byDomain = new Map<string, Map<string, CoverageCell>>();
 
     for (const row of parsed.value.rows) {
       const domain = row.domain.toString();
-      const cell = Coverage.cell(row, unstableNames);
+      const cell = Coverage.cell(row, unstableNames, known);
       const cells = byDomain.get(domain) ?? new Map<string, CoverageCell>();
 
       if (cells.has(cell.capability)) {
@@ -142,6 +158,17 @@ export class Coverage {
     );
   }
 
+  /**
+   * The page's date: the later of the data's day and `page`, the page file's own date, so an edit
+   * to either moves it.
+   */
+  public latest(page?: Date | string): Date {
+    const data = new Date(this.updated);
+    const own = page === undefined ? undefined : new Date(page);
+
+    return own !== undefined && own.getTime() > data.getTime() ? own : data;
+  }
+
   /** The data as `/api-coverage.json` publishes it: the date, the columns and every area. */
   public json(): {
     updated: string;
@@ -153,40 +180,64 @@ export class Coverage {
       capabilities: Coverage.capabilities,
       domains: this.domains.map(({ name, cells }) => ({
         name,
-        cells: cells.map(({ capability, status, stability, items, note }) => ({
+        cells: cells.map(({ capability, status, stability, items, unstableItems, note }) => ({
           capability,
           status,
           ...(stability === undefined ? {} : { stability }),
           ...(items.length === 0 ? {} : { items }),
+          ...(unstableItems.length === 0 ? {} : { unstableItems }),
           ...(note === undefined ? {} : { note }),
         })),
       })),
     };
   }
 
+  /**
+   * How many of an area's cells are covered, out of those the API could cover: Does not apply and
+   * Not supported count in neither.
+   */
+  public static count(cells: readonly CoverageCell[]): { covered: number; of: number } {
+    const counted = cells.filter((cell) => !Coverage.uncounted.includes(cell.status));
+
+    return {
+      covered: counted.filter((cell) => cell.status === Coverage.covered).length,
+      of: counted.length,
+    };
+  }
+
   /** One row as its cell, a covered one stable or unstable by its module and items. */
-  private static cell(row: CoverageRow, unstable: ReadonlySet<string>): CoverageCell {
+  private static cell(
+    row: CoverageRow,
+    unstable: ReadonlySet<string>,
+    modules: ReadonlySet<string> | undefined,
+  ): CoverageCell {
     const capability = row.capability.toString();
     const status = row.status.toString();
     const items = (row.items ?? []).map((item) => item.toString());
     const note = row.note?.toString();
     const module = row.module?.toString();
+    const where = `src/data/coverage.json: ${row.domain.toString()} ${capability}`;
 
     if (status !== Coverage.covered) {
-      return { capability, status, stability: undefined, items, note };
+      return { capability, status, stability: undefined, items, unstableItems: [], note };
     }
 
     if (module === undefined || (items.length === 0 && note === undefined)) {
-      throw new TypeError(
-        `src/data/coverage.json: ${row.domain.toString()} ${capability} is covered without a module and what covers it`,
-      );
+      throw new TypeError(`${where} is covered without a module and what covers it`);
     }
 
-    const stability = [module, ...items].some((name) => Coverage.isUnstable(name, unstable))
-      ? Coverage.unstable
-      : Coverage.stable;
+    if (modules !== undefined && !modules.has(module)) {
+      throw new TypeError(`${where} names module ${module}, which the API crate does not have`);
+    }
 
-    return { capability, status, stability, items, note };
+    const unstableItems = items.filter((item) => Coverage.isUnstable(item, unstable));
+    const whole =
+      Coverage.isUnstable(module, unstable) ||
+      (items.length > 0 && unstableItems.length === items.length);
+
+    return whole
+      ? { capability, status, stability: Coverage.unstable, items, unstableItems: [], note }
+      : { capability, status, stability: Coverage.stable, items, unstableItems, note };
   }
 
   /** Whether a module or item is unstable: named so itself, or its module is, as in `world::props`. */

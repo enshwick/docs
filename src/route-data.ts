@@ -14,7 +14,7 @@ export const onRequest = defineRouteMiddleware((context) => {
   const route = context.locals.starlightRoute;
 
   if (context.url.pathname.endsWith(Coverage.page)) {
-    route.lastUpdated = new Date(Coverage.site.updated);
+    route.lastUpdated = Coverage.site.latest(route.lastUpdated);
   }
 
   if (context.site !== undefined) {

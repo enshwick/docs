@@ -48,7 +48,7 @@ const nodes =
           // Starlight's sidebar entries carry more fields than the breadcrumbs read.
           ...data.article(page, route.sidebar as SidebarItem[], route.siteTitle),
           ...(Astro.url.pathname.endsWith(Coverage.page)
-            ? [data.dataset(page, Coverage.site.updated, Coverage.data)]
+            ? [data.dataset(page, Coverage.site.latest(route.lastUpdated).toISOString(), Coverage.data)]
             : []),
         ];
 // The two faces every first screen sets, in the scripts the page's language needs, fetched early.

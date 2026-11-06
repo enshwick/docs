@@ -750,14 +750,14 @@
       "domain": "Networking and joining",
       "capability": "create",
       "status": "covered",
-      "module": "messages",
+      "module": "net",
       "note": "messages between a mod's parts"
     },
     {
       "domain": "Networking and joining",
       "capability": "events",
       "status": "covered",
-      "module": "messages",
+      "module": "net",
       "items": ["JoinRefused"],
       "note": "a received message"
     },
