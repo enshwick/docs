@@ -8,9 +8,9 @@ const compat = {
       name: 'next',
       api: '1.0.0-alpha.11',
       builds: [
-        { side: 'client', name: '1.0 client (1269579)' },
-        { side: 'client', name: '1.0 client (26082781)', steamBuild: '26082781' },
-        { side: 'server', name: '1.0 server (26083076)', steamBuild: '26083076' },
+        { side: 'client', steamBuild: '26082781' },
+        { side: 'client', gameVersion: '1273043' },
+        { side: 'server', steamBuild: '26083076' },
       ],
     },
   ],
@@ -52,8 +52,8 @@ describe('FrontData.from', () => {
 
   it('lists the newest Steam build of each side', () => {
     expect(FrontData.from(compat, lines, en).gameBuilds).toEqual([
-      { side: 'client', name: '1.0 client (26082781)' },
-      { side: 'server', name: '1.0 server (26083076)' },
+      { side: 'client', steamBuild: '26082781' },
+      { side: 'server', steamBuild: '26083076' },
     ]);
   });
 

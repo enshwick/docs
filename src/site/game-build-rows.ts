@@ -20,7 +20,6 @@ export enum BuildState {
 /** One row of the build table: a build with a report, or a newer game version one side lacks. */
 export interface BuildRow {
   readonly side: string;
-  readonly name: string | undefined;
   readonly steamBuild: string | undefined;
   readonly gameVersion: string | undefined;
   readonly state: BuildState;
@@ -40,7 +39,6 @@ export class GameBuildRows {
 
       return {
         side: build.side.toString(),
-        name: build.name.toString(),
         steamBuild: build.steamBuild?.toString(),
         gameVersion: build.gameVersion?.toString(),
         state:
@@ -60,7 +58,6 @@ export class GameBuildRows {
       )
       .map((side): BuildRow => ({
         side,
-        name: undefined,
         steamBuild: undefined,
         gameVersion: String(newest),
         state: BuildState.Unchecked,

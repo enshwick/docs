@@ -3,7 +3,6 @@ import { Fields } from './fields.ts';
 /** One game build the platform has a compatibility report for. */
 export interface GameBuild {
   readonly side: string;
-  readonly name: string;
   readonly steamBuild: string | undefined;
   readonly gameVersion: string | undefined;
   /** The loader features that are off or partly off on the build, from its report. */
@@ -16,9 +15,6 @@ export interface GameBuild {
  */
 export class GameBuildFiles {
   private static readonly side = 'side';
-  private static readonly buildName = 'build';
-  /** Where the reports of releases up to 1.0.0-alpha.12 keep the build's name. */
-  private static readonly releasedName = 'table';
   private static readonly steamBuild = 'steam_build';
   private static readonly gameVersion = 'game_version';
   private static readonly feature = 'feature';
@@ -38,10 +34,6 @@ export class GameBuildFiles {
 
     return {
       side: fields.at(GameBuildFiles.side).text() ?? file,
-      name:
-        fields.at(GameBuildFiles.buildName).text() ??
-        fields.at(GameBuildFiles.releasedName).text() ??
-        file,
       steamBuild: number(GameBuildFiles.steamBuild),
       gameVersion: number(GameBuildFiles.gameVersion),
       off: (Array.isArray(features) ? features : []).flatMap((feature) => {

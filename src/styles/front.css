@@ -208,7 +208,6 @@
   font-size: var(--text-xs);
   line-height: 1.7;
   color: var(--color-bone);
-  overflow-wrap: anywhere;
 }
 
 .ew-release a {

@@ -5,32 +5,28 @@ import { BuildState, GameBuildRows } from '../game-build-rows.ts';
 
 const oldClient = {
   side: 'client',
-  name: '1.0 client (1269579)',
   gameVersion: '1269579',
   off: ['bases', 'voxels'],
 };
 const client = {
   side: 'client',
-  name: '1.0 client (26082781)',
   steamBuild: '26082781',
   gameVersion: '1273043',
   off: [],
 };
 const server = {
   side: 'server',
-  name: '1.0 server (26083076)',
   steamBuild: '26083076',
   gameVersion: '1273043',
   off: [],
 };
 const newServer = {
   side: 'server',
-  name: '1.0 server (26319703)',
   steamBuild: '26319703',
   gameVersion: '1283531',
   off: [],
 };
-const unreported = { side: 'server', name: '1.0 server (26319703)', gameVersion: '1283531' };
+const unreported = { side: 'server', steamBuild: '26319703', gameVersion: '1283531' };
 
 const parse = (builds: readonly object[]): unknown => ({
   platform: [{ name: 'next', builds }],
@@ -61,12 +57,12 @@ describe('GameBuildRows.of', () => {
   it('states a build working fully, partly, or not checked, newest first', () => {
     const rows = rowsOf([oldClient, client, server, newServer]);
 
-    expect(rows.map((row) => [row.side, row.name, row.gameVersion, row.state])).toEqual([
-      ['server', '1.0 server (26319703)', '1283531', BuildState.Works],
+    expect(rows.map((row) => [row.side, row.steamBuild, row.gameVersion, row.state])).toEqual([
+      ['server', '26319703', '1283531', BuildState.Works],
       ['client', undefined, '1283531', BuildState.Unchecked],
-      ['server', '1.0 server (26083076)', '1273043', BuildState.Works],
-      ['client', '1.0 client (26082781)', '1273043', BuildState.Works],
-      ['client', '1.0 client (1269579)', '1269579', BuildState.Partly],
+      ['server', '26083076', '1273043', BuildState.Works],
+      ['client', '26082781', '1273043', BuildState.Works],
+      ['client', undefined, '1269579', BuildState.Partly],
     ]);
     expect(rows.at(-1)?.off).toEqual(['bases', 'voxels']);
   });

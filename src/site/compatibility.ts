@@ -6,7 +6,6 @@ import { AnyBoolean, AnyString, n } from '@horizon-republic/nominal-types';
  */
 const GameBuild = n.object({
   side: AnyString,
-  name: AnyString,
   steamBuild: n.of(AnyString).optional(),
   gameVersion: n.of(AnyString).optional(),
   off: n.of(AnyString).array().optional(),
