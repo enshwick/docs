@@ -1,7 +1,8 @@
 # enshwick docs
 
-The source of the [enshwick documentation site](https://enshwick.com/):
-how players install and use mods, and how authors write them.
+The source of the [Enshwick documentation site](https://enshwick.com/), the
+modding framework and API for Enshrouded: how players install and use mods with
+its mod loader, and how authors write them.
 
 ## Building
 

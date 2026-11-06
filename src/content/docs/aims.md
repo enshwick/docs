@@ -1,6 +1,6 @@
 ---
 title: What comes next
-description: What the maintainer of Enshwick, the modding framework for Enshrouded, aims to build next. These are aims with no dates; anything may change before 1.0.
+description: What the maintainer of Enshwick, the modding framework for Enshrouded, aims to build next. The aims have no dates, and anything may change before 1.0.
 type: explanation
 ---
 

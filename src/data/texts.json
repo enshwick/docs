@@ -588,7 +588,7 @@
     "uk": "Гра з типами"
   },
   "front.makers.types.a": {
-    "en": "The API’s game types are generated from the game’s own reflection data.",
+    "en": "The API’s game types come from the game’s own reflection data.",
     "uk": "Типи гри в API згенеровано з власних даних рефлексії гри."
   },
   "front.makers.types.link": {
@@ -600,8 +600,8 @@
     "uk": "Коли в API немає потрібного виклику"
   },
   "front.makers.levels.a": {
-    "en": "A mod reads any game data through reflection, or hooks a game function itself. The loader checks each hook’s target, turns off only a hook a patch broke, and chains hooks so one mod’s hook leaves the others working.",
-    "uk": "Мод читає будь-які дані гри через рефлексію або сам перехоплює функцію гри. Завантажувач перевіряє ціль кожного перехоплення, вимикає лише те, яке зламав патч, і складає перехоплення в ланцюг, тож перехоплення одного мода не заважає іншим."
+    "en": "A mod reads any game data through reflection, or hooks a game function itself. The loader checks each hook’s target and turns off only a hook a patch broke. Hooks chain, so one mod’s hook leaves the others working.",
+    "uk": "Мод читає будь-які дані гри через рефлексію або сам перехоплює функцію гри. Завантажувач перевіряє ціль кожного перехоплення й вимикає лише те, яке зламав патч. Перехоплення складаються в ланцюг, тож перехоплення одного мода не заважає іншим."
   },
   "front.makers.levels.link": {
     "en": "Hooks",
