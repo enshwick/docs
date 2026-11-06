@@ -35,7 +35,7 @@ player would need a new look at how those sides work.
 ## How can you help?
 
 To ask for an API or share an idea,
-[open an issue](https://github.com/enshwick/enshwick/issues/new?template=api-request.yml)
+[open an issue](https://github.com/enshwick/enshwick/issues/new/choose)
 on GitHub. Pull requests are welcome too, and the
 [contributing guide](https://github.com/enshwick/enshwick/blob/main/CONTRIBUTING.md)
 explains how they work. The
