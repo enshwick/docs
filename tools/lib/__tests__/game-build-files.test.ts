@@ -22,6 +22,23 @@ describe('GameBuildFiles.read', () => {
       off: ['terrain'],
     });
   });
+
+  it('names a build from the build key of a current report', () => {
+    const current = [
+      'build = "client, game 1269579, executable 69f0e9573b32c24a8838d3fff550824c/410"',
+      'side = "client"',
+    ].join('\n');
+
+    expect(GameBuildFiles.read('client-69f0-410.toml', current).name).toBe(
+      'client, game 1269579, executable 69f0e9573b32c24a8838d3fff550824c/410',
+    );
+  });
+
+  it('falls back to the file name when a report has no name', () => {
+    expect(GameBuildFiles.read('server-1c12-479.toml', 'side = "server"').name).toBe(
+      'server-1c12-479.toml',
+    );
+  });
 });
 
 const build = (name: string, gameVersion: string, steamBuild: string): GameBuild => ({
