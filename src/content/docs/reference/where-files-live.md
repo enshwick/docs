@@ -47,6 +47,9 @@ beside each world's save, named after that file:
 saves. Copy the save and its two folders together, and the world keeps
 everything its mods know.
 
+Steam Cloud does not copy the two folders to your other computers. [Back up
+your worlds](/guides/back-up-saves/) says how to move them.
+
 ## When a new world takes an old name
 
 When you delete a world in the game, the game keeps its two folders. The next
