@@ -16,7 +16,7 @@ export interface GameBuild {
  */
 export class GameBuildFiles {
   private static readonly side = 'side';
-  private static readonly name = 'build';
+  private static readonly buildName = 'build';
   /** Where the reports of releases up to 1.0.0-alpha.12 keep the build's name. */
   private static readonly releasedName = 'table';
   private static readonly steamBuild = 'steam_build';
@@ -39,7 +39,7 @@ export class GameBuildFiles {
     return {
       side: fields.at(GameBuildFiles.side).text() ?? file,
       name:
-        fields.at(GameBuildFiles.name).text() ??
+        fields.at(GameBuildFiles.buildName).text() ??
         fields.at(GameBuildFiles.releasedName).text() ??
         file,
       steamBuild: number(GameBuildFiles.steamBuild),
