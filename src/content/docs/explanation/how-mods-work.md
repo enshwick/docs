@@ -6,14 +6,14 @@ sidebar:
   order: 1
 ---
 
-Enshwick runs mods in Rust, and data packs. A Rust mod runs inside the game
+Enshwick runs mods in Rust and Luau, and data packs. A Rust mod runs inside the game
 with the same rights as the game.
 
 For this reason, it can change a lot. For the same reason, install only mods
 from sources you trust.
 
-Luau mods are in progress. A Luau mod hears events and works with players, but
-it cannot set game rules yet.
+A Luau mod uses the same API as a Rust mod. It runs in a sandbox, so it cannot
+change the game's own code.
 
 ## What happens when the game starts
 

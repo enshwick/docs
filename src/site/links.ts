@@ -17,6 +17,8 @@ export class Links {
     download: Address,
     license: Address,
     issues: Address,
+    ideas: Address,
+    contributing: Address,
     contact: Mailbox,
     security: Mailbox,
   });
@@ -29,6 +31,9 @@ export class Links {
   public readonly download: Address;
   public readonly license: Address;
   public readonly issues: Address;
+  /** A new issue on the platform's repository, where mod makers ask for an API or share an idea. */
+  public readonly ideas: Address;
+  public readonly contributing: Address;
   public readonly contact: Mailbox;
   public readonly security: Mailbox;
 
@@ -45,6 +50,8 @@ export class Links {
       download: this.download,
       license: this.license,
       issues: this.issues,
+      ideas: this.ideas,
+      contributing: this.contributing,
       contact: this.contact,
       security: this.security,
     } = parsed.value);

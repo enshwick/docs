@@ -21,14 +21,37 @@ const t = (key: string): string => Texts.site.get(key, code);
 const data = FrontData.from(compat, modLines, lang);
 const base = import.meta.env.BASE_URL.replace(/\/$/u, '');
 const prefix = code.equals(Languages.site.root) ? base : `${base}/${lang}`;
-const faq = ['safe', 'server', 'linux', 'saves', 'update', 'free'];
 const steps = [1, 2, 3, 4];
 const client = data.gameBuilds.find((build) => build.side === 'client');
 const sections = [
   { id: 'top', key: 'front.nav.top' },
+  { id: 'patch', key: 'front.nav.patch' },
+  { id: 'players', key: 'front.nav.players' },
+  { id: 'makers', key: 'front.nav.makers' },
   { id: 'install', key: 'front.install.title' },
   { id: 'mods', key: 'front.mods.title' },
   { id: 'questions', key: 'front.faq.title' },
+  { id: 'contribute', key: 'front.nav.contribute' },
+];
+const patchFacts = ['find', 'off', 'builds'];
+// Each row: its key under `front.<group>.`, and the page its answer links to, where it has one.
+const players = [
+  { id: 'patch', href: '#patch' },
+  { id: 'clash' },
+  { id: 'join', href: `${prefix}/guides/play-on-a-server/` },
+  { id: 'settings', href: `${prefix}/guides/change-mod-settings/` },
+];
+const makers = [
+  { id: 'together', href: `${prefix}/dev/services/` },
+  { id: 'languages', href: `${prefix}/dev/luau/` },
+  { id: 'types', href: `${prefix}/dev/api-coverage/` },
+  { id: 'tests', href: `${prefix}/dev/testing/` },
+  { id: 'tool', href: `${prefix}/dev/getting-started/` },
+  { id: 'texts', href: `${prefix}/dev/content/texts/` },
+];
+const contribute = [
+  { id: 'api', href: Links.site.ideas.toString() },
+  { id: 'help', href: Links.site.contributing.toString() },
 ];
 
 // The smallest whole mod, as the book compiles it; `tools/fetch.ts` takes it from the book.
@@ -42,9 +65,10 @@ const smallestMod = new Snippet(smallestModSource.trimEnd(), SnippetLanguage.Rus
       <div class="ew-hero__copy">
         <h1 id="ew-title">{t('front.title')}</h1>
         <p class="ew-hero__lead">{t('front.lead')}</p>
-        <a class="ew-button ew-button--primary" href={Links.site.download.toString()}>
-          <span data-nosnippet>{t('front.download')}</span>
-        </a>
+        <div class="ew-actions" data-nosnippet>
+          <a class="ew-button ew-button--primary" href="#install">{t('front.install')}</a>
+          <a class="ew-button ew-button--quiet" href={`${prefix}/dev/getting-started/`}>{t('front.write')}</a>
+        </div>
         {
           data.version !== undefined && (
             <div class="ew-release" data-nosnippet>
@@ -64,10 +88,6 @@ const smallestMod = new Snippet(smallestModSource.trimEnd(), SnippetLanguage.Rus
             </div>
           )
         }
-        <div class="ew-actions" data-nosnippet>
-          <a class="ew-button ew-button--quiet" href={`${prefix}/dev/getting-started/`}>{t('front.write')}</a>
-          <a class="ew-button ew-button--quiet" href={`${prefix}/start/first-modded-game/`}>{t('topic.players')}</a>
-        </div>
         <p class="ew-hero__mods">
           <a href="#mods">{t('front.mods.link')}</a>
         </p>

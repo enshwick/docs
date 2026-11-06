@@ -58,6 +58,8 @@ describe('Links', () => {
         download: 'https://github.com/enshwick/enshwick/releases/latest/download/enshwick.zip',
         license: 'https://github.com/enshwick/enshwick/blob/main/LICENSE',
         issues: 'https://github.com/enshwick/docs/issues/new',
+        ideas: 'https://github.com/enshwick/enshwick/issues/new',
+        contributing: 'https://github.com/enshwick/.github/blob/main/CONTRIBUTING.md',
         contact: 'contact@enshwick.com',
         security: 'security@enshwick.com',
       },

@@ -1,7 +1,7 @@
 {
   "site.description": {
-    "en": "Enshwick loads mods into Enshrouded on your PC or dedicated server. Install ready mods, or write your own in Rust against a typed API.",
-    "uk": "Enshwick завантажує моди в Enshrouded на вашому ПК або виділеному сервері. Встановлюйте готові моди або пишіть власні на Rust з типізованим API."
+    "en": "Enshwick is the modding framework and API for Enshrouded. Its mod loader runs mods on your PC or dedicated server. Write mods in Rust, Luau or as data.",
+    "uk": "Enshwick — фреймворк і API для модів Enshrouded. Його завантажувач запускає моди на ПК або виділеному сервері. Пишіть моди на Rust, Luau або як дані."
   },
   "topic.players": {
     "en": "Play with mods",
@@ -276,16 +276,16 @@
     "uk": "Мова"
   },
   "front.title": {
-    "en": "A modding API for Enshrouded.",
-    "uk": "API для модів Enshrouded."
+    "en": "The modding framework and API for Enshrouded.",
+    "uk": "Фреймворк і API для модів Enshrouded."
   },
   "front.lead": {
-    "en": "Write a mod in Rust against a typed API. Enshwick finds the game’s code. Your mod holds only its rules.",
-    "uk": "Пишіть мод на Rust з типізованим API. Enshwick сам знаходить код гри. У моді лишаються тільки його правила."
+    "en": "Enshwick is a mod loader for your PC and for dedicated servers. Mod makers write mods in Rust, in Luau or as data, against one typed API.",
+    "uk": "Enshwick — завантажувач модів для вашого ПК і для виділених серверів. Автори пишуть моди на Rust, на Luau або як дані, з одним типізованим API."
   },
   "front.write": {
-    "en": "Write a mod",
-    "uk": "Написати мод"
+    "en": "Start a mod",
+    "uk": "Створити мод"
   },
   "front.excerpt.caption": {
     "en": "A whole mod: 16 Flame Altars at every Flame level. This is all it takes.",
@@ -446,6 +446,286 @@
   "front.install.nexus.note": {
     "en": "Choose Mod Manager Download there, and Vortex puts Enshwick into the game folder.",
     "uk": "Виберіть там Mod Manager Download, і Vortex сам покладе Enshwick у теку гри."
+  },
+  "front.install": {
+    "en": "Install",
+    "uk": "Встановити"
+  },
+  "front.nav.patch": {
+    "en": "Patch day",
+    "uk": "День патчу"
+  },
+  "front.nav.players": {
+    "en": "Players",
+    "uk": "Гравцям"
+  },
+  "front.nav.makers": {
+    "en": "Mod makers",
+    "uk": "Авторам модів"
+  },
+  "front.nav.contribute": {
+    "en": "Contribute",
+    "uk": "Долучитися"
+  },
+  "front.patch.title": {
+    "en": "Mods keep working after a game patch",
+    "uk": "Моди працюють і після патчу гри"
+  },
+  "front.patch.lead": {
+    "en": "Enshwick finds each new game build by itself. When a patch breaks something, you learn what broke, and the rest keeps running.",
+    "uk": "Enshwick сам знаходить кожну нову збірку гри. Коли патч щось ламає, ви дізнаєтеся, що саме, а решта працює далі."
+  },
+  "front.patch.find.title": {
+    "en": "No table for each build",
+    "uk": "Без таблиці для кожної збірки"
+  },
+  "front.patch.find.text": {
+    "en": "The loader finds the game’s code through the engine’s own routes. Nobody has to make a table for a new build.",
+    "uk": "Завантажувач знаходить код гри через власні шляхи рушія. Нікому не треба складати таблицю для нової збірки."
+  },
+  "front.patch.off.title": {
+    "en": "Only what broke turns off",
+    "uk": "Вимикається лише зламане"
+  },
+  "front.patch.off.text": {
+    "en": "If a patch moves something a feature needs, only that feature turns off. Chat and the Mods screen name it, and the other mods keep running.",
+    "uk": "Якщо патч зсуває те, що потрібно функції, вимикається лише вона. Чат і екран Mods її називають, а інші моди працюють далі."
+  },
+  "front.patch.builds.title": {
+    "en": "Every build on one page",
+    "uk": "Усі збірки на одній сторінці"
+  },
+  "front.patch.builds.text": {
+    "en": "The compatibility page lists each game build and whether Enshwick works on it.",
+    "uk": "Сторінка сумісності перелічує кожну збірку гри й те, чи працює на ній Enshwick."
+  },
+  "front.patch.builds.link": {
+    "en": "Compatibility by game build",
+    "uk": "Сумісність за збірками гри"
+  },
+  "front.players.title": {
+    "en": "What Enshwick solves for players",
+    "uk": "Що Enshwick вирішує для гравців"
+  },
+  "front.players.patch.q": {
+    "en": "A game patch came out",
+    "uk": "Вийшов патч гри"
+  },
+  "front.players.patch.a": {
+    "en": "Only the parts the patch broke turn off, and Enshwick tells you which ones.",
+    "uk": "Вимикаються лише частини, які патч зламав, і Enshwick каже, які саме."
+  },
+  "front.players.patch.link": {
+    "en": "What happens on patch day",
+    "uk": "Що буває в день патчу"
+  },
+  "front.players.join.link": {
+    "en": "Play on a server with mods",
+    "uk": "Гра на сервері з модами"
+  },
+  "front.players.settings.link": {
+    "en": "Change a mod’s settings",
+    "uk": "Зміна налаштувань мода"
+  },
+  "front.players.clash.q": {
+    "en": "Two mods clash, or one crashes",
+    "uk": "Два моди конфліктують або один падає"
+  },
+  "front.players.clash.a": {
+    "en": "Mods state what they need and what they conflict with, and a fault turns off only the feature it hit.",
+    "uk": "Моди заявляють, що їм потрібно і з чим вони конфліктують, а збій вимикає лише ту функцію, де він стався."
+  },
+  "front.players.join.q": {
+    "en": "You join with the wrong mods",
+    "uk": "Ви заходите не з тими модами"
+  },
+  "front.players.join.a": {
+    "en": "A server-only mod needs nothing on your PC. For the other mods, the game names the mod and version you miss before you join.",
+    "uk": "Серверному моду нічого не треба на вашому ПК. Для решти модів гра ще до входу називає мод і версію, яких вам бракує."
+  },
+  "front.players.settings.q": {
+    "en": "Each world needs other settings",
+    "uk": "Кожному світу потрібні свої налаштування"
+  },
+  "front.players.settings.a": {
+    "en": "Each world keeps its own mod settings beside its save, and you change them in game on the Mods screen.",
+    "uk": "Кожен світ тримає свої налаштування модів поруч зі збереженням, а змінюєте ви їх у грі на екрані Mods."
+  },
+  "front.players.caveat": {
+    "en": "Enshwick coordinates the mods built on it. Mods that change the game by other means run outside it, so Enshwick cannot order or protect them.",
+    "uk": "Enshwick узгоджує моди, створені на ньому. Моди, що змінюють гру іншими способами, працюють поза ним, тож Enshwick не може впорядкувати чи захистити їх."
+  },
+  "front.players.more": {
+    "en": "How mods work, and are they safe?",
+    "uk": "Як працюють моди і чи вони безпечні?"
+  },
+  "front.makers.title": {
+    "en": "What Enshwick gives mod makers",
+    "uk": "Що Enshwick дає авторам модів"
+  },
+  "front.makers.together.q": {
+    "en": "Mods that work together",
+    "uk": "Моди, що працюють разом"
+  },
+  "front.makers.together.a": {
+    "en": "Mods offer each other typed services, events and extension points, so a mod can be a library for other mods.",
+    "uk": "Моди пропонують одне одному типізовані сервіси, події та точки розширення, тож мод може бути бібліотекою для інших модів."
+  },
+  "front.makers.together.link": {
+    "en": "Services",
+    "uk": "Сервіси"
+  },
+  "front.makers.languages.q": {
+    "en": "Rust, Luau, data or C",
+    "uk": "Rust, Luau, дані або C"
+  },
+  "front.makers.languages.a": {
+    "en": "Rust and Luau share one API, a data pack needs no code, and the C header opens the API to any language with a C ABI.",
+    "uk": "Rust і Luau мають один API, пакет даних не потребує коду, а заголовок C відкриває API будь-якій мові з C ABI."
+  },
+  "front.makers.languages.link": {
+    "en": "Luau mods",
+    "uk": "Моди на Luau"
+  },
+  "front.makers.types.q": {
+    "en": "The game, typed",
+    "uk": "Гра з типами"
+  },
+  "front.makers.types.a": {
+    "en": "The API’s game types are generated from the game’s own reflection data.",
+    "uk": "Типи гри в API згенеровано з власних даних рефлексії гри."
+  },
+  "front.makers.types.link": {
+    "en": "API coverage by game area",
+    "uk": "Покриття API за областями гри"
+  },
+  "front.makers.tests.q": {
+    "en": "Tests without the game",
+    "uk": "Тести без гри"
+  },
+  "front.makers.tests.a": {
+    "en": "The fake host runs a mod’s tests on any computer, with no Enshrouded installed.",
+    "uk": "Імітація хоста (fake host) запускає тести мода на будь-якому комп’ютері, навіть без Enshrouded."
+  },
+  "front.makers.tests.link": {
+    "en": "Testing",
+    "uk": "Тестування"
+  },
+  "front.makers.tool.q": {
+    "en": "One tool from first file to install",
+    "uk": "Один інструмент від першого файлу до встановлення"
+  },
+  "front.makers.tool.a": {
+    "en": "cargo enshwick starts a mod, builds it, installs it into the game and writes compatibility reports.",
+    "uk": "cargo enshwick створює мод, збирає його, встановлює в гру й пише звіти про сумісність."
+  },
+  "front.makers.tool.link": {
+    "en": "Getting started",
+    "uk": "Початок роботи"
+  },
+  "front.makers.texts.q": {
+    "en": "Texts in every language",
+    "uk": "Тексти будь-якою мовою"
+  },
+  "front.makers.texts.a": {
+    "en": "A mod’s texts carry named values, and a mod adds a language as one more file.",
+    "uk": "Тексти мода мають іменовані значення, а нову мову мод додає ще одним файлом."
+  },
+  "front.makers.texts.link": {
+    "en": "Texts",
+    "uk": "Тексти"
+  },
+  "front.makers.abi": {
+    "en": "Until 1.0, anything may change between alphas. From 1.0, the aim is an ABI that grows only by additions, so a mod built for an older 1.x keeps loading.",
+    "uk": "До версії 1.0 між альфа-версіями може змінитися будь-що. Від 1.0 мета — ABI, що лише доповнюється, тож мод, зібраний під старішу 1.x, і далі завантажуватиметься."
+  },
+  "front.contribute.title": {
+    "en": "Help shape what comes next",
+    "uk": "Допоможіть вирішити, що буде далі"
+  },
+  "front.contribute.api.q": {
+    "en": "Want an API or have an idea?",
+    "uk": "Потрібен API або маєте ідею?"
+  },
+  "front.contribute.api.a": {
+    "en": "Open an issue on GitHub and describe what your mod needs.",
+    "uk": "Відкрийте issue на GitHub і опишіть, що потрібно вашому моду."
+  },
+  "front.contribute.api.link": {
+    "en": "Open an issue",
+    "uk": "Відкрити issue"
+  },
+  "front.contribute.help.q": {
+    "en": "Want to help?",
+    "uk": "Хочете допомогти?"
+  },
+  "front.contribute.help.a": {
+    "en": "Pull requests are welcome, and the contributing guide explains how they work.",
+    "uk": "Pull requests вітаються, а посібник для учасників пояснює, як вони працюють."
+  },
+  "front.contribute.help.link": {
+    "en": "Contributing guide",
+    "uk": "Посібник для учасників"
+  },
+  "front.contribute.aims": {
+    "en": "What comes next",
+    "uk": "Що буде далі"
+  },
+  "nav.aims": {
+    "en": "What’s next",
+    "uk": "Що далі"
+  },
+  "group.coverage": {
+    "en": "API coverage",
+    "uk": "Покриття API"
+  },
+  "group.aims": {
+    "en": "What comes next",
+    "uk": "Що буде далі"
+  },
+  "coverage.domain": {
+    "en": "Game area",
+    "uk": "Область гри"
+  },
+  "coverage.capability.read": {
+    "en": "Read",
+    "uk": "Читання"
+  },
+  "coverage.capability.change": {
+    "en": "Change",
+    "uk": "Зміна"
+  },
+  "coverage.capability.create": {
+    "en": "Create",
+    "uk": "Створення"
+  },
+  "coverage.capability.events": {
+    "en": "Events",
+    "uk": "Події"
+  },
+  "coverage.capability.ui": {
+    "en": "Interface",
+    "uk": "Інтерфейс"
+  },
+  "coverage.status.covered": {
+    "en": "Covered",
+    "uk": "Є"
+  },
+  "coverage.status.in-work": {
+    "en": "In work",
+    "uk": "У роботі"
+  },
+  "coverage.status.research": {
+    "en": "Researching",
+    "uk": "Досліджується"
+  },
+  "coverage.status.not-supported": {
+    "en": "Not supported",
+    "uk": "Не підтримується"
+  },
+  "coverage.status.not-applicable": {
+    "en": "Does not apply",
+    "uk": "Не стосується"
   },
   "foot.not-affiliated": {
     "en": "Not made by or affiliated with Keen Games. Enshrouded is their trademark.",

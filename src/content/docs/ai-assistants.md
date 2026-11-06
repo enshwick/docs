@@ -15,7 +15,7 @@ guide before you use it.
 | Kind      | What it is                                                                                                                        | Command to start one                        |
 | --------- | --------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------- |
 | Data pack | a folder with `pack.toml` and TOML files that change items, recipes, loot and other game data; no code                            | `cargo enshwick new --data <author>.<name>` |
-| Luau mod  | in progress: a data pack with Luau scripts that hears events and works with players and other mods, but cannot set game rules yet | `cargo enshwick new --luau <author>.<name>` |
+| Luau mod  | a data pack with Luau scripts that reach the Rust API by the same names, in a sandbox without native hooks                        | `cargo enshwick new --luau <author>.<name>` |
 | Rust mod  | a Windows DLL built against the `enshwick` crate, with the full API, hooks included                                               | `cargo enshwick new <author>.<name>`        |
 
 ## Tools
@@ -172,8 +172,9 @@ mod's own defaults. [Testing](/dev/testing/) has full examples.
 
 ## Luau mods
 
-Luau support is in progress. A Luau mod cannot set game rules yet, such as
-rates or limits. A Rust mod can.
+A Luau mod reaches the API of a Rust mod by the same module and function names.
+It runs in a sandbox, so native code (hooks, code patches, raw memory) stays
+with Rust mods.
 
 A Luau mod is a folder with `pack.toml`, `main.luau` and
 `types/enshwick.d.luau`. Copy the folder into the game's `mods` folder as

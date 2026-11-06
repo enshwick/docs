@@ -1,0 +1,38 @@
+---
+title: API coverage by game area
+description: Which areas of Enshrouded the Enshwick API reaches, and how. For each area, see whether a mod can read, change, create, hear events or show an interface.
+type: reference
+slug: dev/api-coverage
+---
+
+import ApiCoverage from '../../components/api-coverage.astro';
+
+Each row is one area of the game, and each column is one thing a mod can do
+there. A covered cell names the API items that do it. The
+[API reference](https://docs.rs/enshwick) documents each one.
+
+## What does each column mean?
+
+| Column    | What a mod can do                                    |
+| --------- | ---------------------------------------------------- |
+| Read      | see the current state                                |
+| Change    | change values and rules of the game                  |
+| Create    | add something of its own, such as an item or recipe |
+| Events    | hear what happened                                   |
+| Interface | show it to a player and let the player act on it     |
+
+## What does each state mean?
+
+| State          | Meaning                                                    |
+| -------------- | ---------------------------------------------------------- |
+| Covered        | the API has calls for it                                   |
+| In work        | the API for it is being built                              |
+| Researching    | the needed facts about the game are being found            |
+| Not supported  | the API does not offer it before 1.0                       |
+| Does not apply | the game has nothing of this kind in that area             |
+
+## Which game areas does the API cover?
+
+<ApiCoverage />
+
+[What comes next](/aims/) lists what Enshwick aims to add.

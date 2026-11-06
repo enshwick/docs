@@ -35,7 +35,8 @@ five changes, and a line naming Enshwick.
 | the site's own short texts | `src/data/texts.json`, every key in every language (checked by a test) |
 | developer versions | `src/data/sources.json` |
 | our mods | the mods repository named in `src/data/sources.json`: every member of its Cargo workspace on `main` with a `docs/player.md`, the folder giving the page's address. A mod without a release yet has no page. `src/data/mods.json` gives each one who needs it and a one-line summary per language; the build fails when that side differs from the mod's page |
-| links outside the site | `src/data/links.json`: GitHub, Nexus Mods, the Vortex extension, the download, the licence, the issue form and the mailboxes |
+| links outside the site | `src/data/links.json`: GitHub, Nexus Mods, the Vortex extension, the download, the licence, the issue forms, the contributing guide and the mailboxes |
+| API coverage | `src/data/coverage.json`: one row per game area and capability, with its status and, where covered, the API items or a note; `src/site/coverage.ts` fails the build when an area misses a capability or repeats one, and `src/components/api-coverage.astro` renders `/dev/api-coverage/` from it |
 | download links | pages and `src/data/links.json` link an archive as `https://github.com/<repository>/releases/latest/download/<archive>`; `tools/fetch.ts` writes the release of each archive, picked as for mod pages, into `src/generated/release-archives.json`, and `src/plugins/remark-release-links.ts` and `src/site/links.ts` pin the links to it, so before 1.0 they reach the newest alpha. The build fails on a link to an archive of the platform or the mods that no release carries, and when the platform has no release with `enshwick.zip` |
 | the site's address | `src/data/site.json`; pages link root-relative (`/guides/install/`) and `src/plugins/remark-base-links.ts` adds the base |
 
