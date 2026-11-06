@@ -1,8 +1,8 @@
 import { AnyBoolean, AnyString, n } from '@horizon-republic/nominal-types';
 
 /**
- * One game build with a build table: its Steam build and game version where the table names them,
- * and the loader features off or partly off on it, absent without report data for the build.
+ * One game build with a compatibility report: its Steam build and game version where the report
+ * names them, and the loader features off or partly off on it, absent in data older than reports.
  */
 const GameBuild = n.object({
   side: AnyString,
@@ -14,7 +14,7 @@ const GameBuild = n.object({
 
 /**
  * The compatibility page's data, `src/generated/compatibility.json`, which `tools/fetch.ts` writes
- * from the platform's build tables and every mod's newest release.
+ * from the platform's compatibility reports and every mod's newest release.
  */
 export const CompatibilityData = n.object({
   platform: n

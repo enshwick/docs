@@ -11,13 +11,13 @@ export enum BuildState {
   Works = 'works',
   /** Some loader features are off; the rest works. */
   Partly = 'partly',
-  /** No table is made for it yet; the loader carries the newest table and turns off what it cannot find. */
+  /** No report covers it yet; the loader finds what it can by routes and patterns and turns off the rest. */
   Unchecked = 'unchecked',
   /** It has a table, but no report of what the loader finds on it. */
   Unreported = 'unreported',
 }
 
-/** One row of the build table: a build with a table, or a newer game version one side lacks. */
+/** One row of the build table: a build with a report, or a newer game version one side lacks. */
 export interface BuildRow {
   readonly side: string;
   readonly name: string | undefined;

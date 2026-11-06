@@ -1,7 +1,7 @@
 import type { GitRef, RepositoryName } from '../../src/site/types.ts';
 import type { DeveloperPage } from './api-map.ts';
 import { ChapterConverter } from './chapter-converter.ts';
-import { Fields } from './fields.ts';
+import { type GameBuild, GameBuildFiles } from './game-build-files.ts';
 import { GitSource } from './git-source.ts';
 import { MdxBody } from './mdx-body.ts';
 import { PageFile } from './page-file.ts';
@@ -19,19 +19,6 @@ export interface PlatformSource {
   readonly book: string;
   readonly versions: readonly DeveloperVersion[];
   readonly pageTypes: Readonly<Record<string, PageType>>;
-}
-
-/** One game build the platform has a build table for. */
-export interface GameBuild {
-  readonly side: string;
-  readonly name: string;
-  readonly steamBuild: string | undefined;
-  readonly gameVersion: string | undefined;
-  /**
-   * The loader features that are off or partly off on the build, from the table's report data;
-   * absent when the version has no report data for it.
-   */
-  readonly off: readonly string[] | undefined;
 }
 
 /** What one platform version supports, for the compatibility page. */
@@ -56,8 +43,7 @@ export class DeveloperArea {
   private static readonly changelog = 'crates/enshwick/CHANGELOG.md';
   private static readonly summary = 'SUMMARY.md';
   private static readonly mainBranch = 'main';
-  private static readonly tables = 'crates/enshwick-gamedata/tables';
-  /** What the loader finds on each table's build, under the table's file name. */
+  /** What the loader finds on each game build, one compatibility report per build. */
   private static readonly reports = 'crates/enshwick-gamedata/reports';
   private static readonly apiManifest = 'crates/enshwick/Cargo.toml';
   private static readonly apiRoot = 'crates/enshwick/src/lib.rs';
@@ -137,7 +123,6 @@ export class DeveloperArea {
     const checkout = await GitSource.checkout(this.source.repository, version.ref, [
       `/${this.source.book}/`,
       `/${DeveloperArea.changelog}`,
-      `/${DeveloperArea.tables}/`,
       `/${DeveloperArea.reports}/`,
       `/${DeveloperArea.apiManifest}`,
       `/${DeveloperArea.apiRoot}`,
@@ -219,27 +204,7 @@ export class DeveloperArea {
     this.newestPages.sort((a, b) => order.indexOf(a.slug) - order.indexOf(b.slug));
   }
 
-  /** The API version and the game builds with a build table at the version's ref. */
-  /** The loader features off or partly off on table `file`'s build, from its report data. */
-  private static async off(
-    checkout: GitSource,
-    file: string,
-  ): Promise<readonly string[] | undefined> {
-    const report = await checkout.read(`${DeveloperArea.reports}/${file}`);
-
-    if (report === undefined) {
-      return undefined;
-    }
-
-    const features = new Fields(Bun.TOML.parse(report)).at('feature').value;
-
-    return (Array.isArray(features) ? features : []).flatMap((feature) => {
-      const name = new Fields(feature).at('name').text();
-
-      return name === undefined ? [] : [name];
-    });
-  }
-
+  /** The API version and the game builds with a compatibility report at the version's ref, oldest first. */
   private static async release(
     version: DeveloperVersion,
     checkout: GitSource,
@@ -248,34 +213,19 @@ export class DeveloperArea {
     const api =
       manifest === undefined ? undefined : /^version\s*=\s*"([^"]+)"/mu.exec(manifest)?.[1];
     const files = await Array.fromAsync(
-      new Bun.Glob('*.toml').scan(checkout.path(DeveloperArea.tables)),
+      new Bun.Glob('*.toml').scan(checkout.path(DeveloperArea.reports)),
     );
     const builds = await Promise.all(
-      files.toSorted().map(async (file): Promise<GameBuild> => {
-        // Only the header: the tables hold 64-bit addresses, which no JavaScript number holds.
-        const text = (await checkout.read(`${DeveloperArea.tables}/${file}`)) ?? '';
-        const header = text.slice(0, text.search(/^\[/mu));
-        const table = new Fields(Bun.TOML.parse(header));
-        const side = table.at('side').text();
-        const name = table.at('name').text();
-        const steamBuild = table.at('steam_build').value;
-        const gameVersion = table.at('game_version').value;
-
-        return {
-          side: side ?? file,
-          name: name ?? file,
-          steamBuild: typeof steamBuild === 'number' ? String(steamBuild) : undefined,
-          gameVersion: typeof gameVersion === 'number' ? String(gameVersion) : undefined,
-          off: await DeveloperArea.off(checkout, file),
-        };
-      }),
+      files.map(async (file) =>
+        GameBuildFiles.read(file, (await checkout.read(`${DeveloperArea.reports}/${file}`)) ?? ''),
+      ),
     );
 
     return {
       name: version.name,
       ref: version.ref.toString(),
       api,
-      builds,
+      builds: GameBuildFiles.ordered(builds),
       lib: await checkout.read(DeveloperArea.apiRoot),
       abi: await checkout.read(DeveloperArea.apiAbi),
       errors: await checkout.read(DeveloperArea.errorsSource),
