@@ -16,7 +16,7 @@ without a rebuild.
 Until 1.0, anything may change between alphas. Back up your saves before you
 update.
 
-## Will texts handle numbers in every language?
+## Will mod texts get plural forms?
 
 I plan to add plural forms to mod texts, by the Unicode CLDR rules. A language
 gets its own forms for one, a few and many, so a line such as "3 items" reads
