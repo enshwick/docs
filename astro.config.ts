@@ -22,6 +22,7 @@ import { TableFrame } from './src/plugins/rehype-table-frame.ts';
 import { BaseLinks } from './src/plugins/remark-base-links.ts';
 import { ReleaseLinks } from './src/plugins/remark-release-links.ts';
 import { CodeTheme } from './src/site/code-theme.ts';
+import { Coverage } from './src/site/coverage.ts';
 import { Languages } from './src/site/languages.ts';
 import { LastModified } from './src/site/last-modified.ts';
 import { ReleaseArchives } from './src/site/release-archives.ts';
@@ -86,7 +87,11 @@ export default defineConfig({
       // Pages only: no news, image or video entries.
       namespaces: { news: false, image: false, video: false },
       serialize: (item) => {
-        const lastmod = lastModified.of(item.url, siteData.base);
+        // The coverage page changes with its data as well as its page file.
+        const own = lastModified.of(item.url, siteData.base);
+        const lastmod = item.url.endsWith(Coverage.page)
+          ? Coverage.site.latest(own).toISOString()
+          : own;
         const fallback = item.links?.find(({ lang }) => lang === Languages.site.root.toString());
 
         return {
@@ -208,11 +213,15 @@ export default defineConfig({
             badge: { text: Texts.site.everyLanguage('badge.developers'), variant: 'note' },
             items: [
               ...developerSidebar,
-              {
-                label: Texts.site.get('group.ai'),
-                translations: Texts.site.translations('group.ai'),
-                link: '/dev/ai-assistants/',
-              },
+              ...[
+                { key: 'group.coverage', link: '/dev/api-coverage/' },
+                { key: 'group.aims', link: '/aims/' },
+                { key: 'group.ai', link: '/dev/ai-assistants/' },
+              ].map(({ key, link }) => ({
+                label: Texts.site.get(key),
+                translations: Texts.site.translations(key),
+                link,
+              })),
             ],
           },
         ]),
@@ -221,7 +230,7 @@ export default defineConfig({
         starlightLlmsTxt({
           projectName: 'Enshwick',
           description:
-            'Enshwick is a modding API platform for the game Enshrouded. Mod makers write mods in Rust against the `enshwick` crate, or as data packs without code. Luau support is in progress: a Luau mod hears events and works with players, chat, timers, inventories, its settings and other mods, but cannot set game rules yet. The Enshwick loader ships with it: players install it once, and it runs every mod in the `mods` folder of the game.',
+            'Enshwick is the modding framework and API for the game Enshrouded, with a mod loader for PCs and dedicated servers. Mod makers write mods in Rust against the `enshwick` crate, in Luau against the same API by the same names, as data packs without code, or in any language with a C ABI through its C header. Mods offer each other typed services, events and extension points. Players install the loader once, and it runs every mod in the `mods` folder of the game.',
           details: [
             `To write a mod, read [For AI assistants](${siteData.url}${siteData.base}/dev/ai-assistants/) first: the kinds of mod, \`cargo enshwick new\`, the \`unstable\` feature and tests with the fake host. The API reference of the \`enshwick\` crate is on [docs.rs](https://docs.rs/enshwick).`,
             ...(apiMap === undefined ? [] : [apiMap]),
@@ -229,9 +238,10 @@ export default defineConfig({
           customSets: [
             {
               label: 'Mod makers',
-              paths: ['dev/**'],
+              // The aims page sits in the developers' sidebar, so it is listed with them.
+              paths: ['dev/**', 'aims'],
               description:
-                'the guide for writing mods in Rust and as data packs, Luau in progress, with the notes for AI assistants first',
+                'the guide for writing mods in Rust, Luau and as data packs, with the notes for AI assistants first, the API coverage by game area and what the maintainer aims to build next',
             },
             {
               label: 'Players',
@@ -248,6 +258,11 @@ export default defineConfig({
             },
           ],
           optionalLinks: [
+            {
+              label: 'API coverage data',
+              url: `${siteData.url}${siteData.base}${Coverage.data}`,
+              description: `the table of ${Coverage.page} as JSON, with its date: which game areas the API reaches, stable or unstable`,
+            },
             {
               label: 'API reference',
               url: 'https://docs.rs/enshwick',

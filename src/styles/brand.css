@@ -325,7 +325,8 @@ header.header {
   }
 }
 
-@media (min-width: 72rem) {
+/* The four places fit beside a whole search field from here, in the longest language, Ukrainian. */
+@media (min-width: 84rem) {
   .ew-bar__nav {
     display: flex;
   }
@@ -467,6 +468,29 @@ header.header {
   font-size: 0.88em;
   overflow-wrap: anywhere;
 }
+/* API coverage: one closed row per game area, as the front page's questions, opening to its table. */
+.ew-coverage summary .ew-coverage__count {
+  margin-inline-start: auto;
+  font-size: var(--text-sm);
+  font-weight: 400;
+  white-space: nowrap;
+  color: var(--color-muted);
+}
+
+.ew-coverage details > .ew-table {
+  margin-bottom: var(--space-lg);
+}
+
+/* Starlight's own details look (chevron, left rule, gaps) would double the front page's marker. */
+.sl-markdown-content .ew-coverage details {
+  margin-top: 0;
+  padding-inline-start: 0;
+  border-inline-start: 0;
+}
+
+.sl-markdown-content .ew-coverage summary::before {
+  content: none;
+}
 
 /* Tables: hairline rows inside a frame that scrolls on its own, so the page never does. */
 .sl-markdown-content .ew-table {
@@ -513,6 +537,12 @@ header.header {
   font-size: var(--text-sm);
   font-weight: 500;
   color: var(--color-faint);
+}
+
+/* A row's own header sits on the row's line, as its cells do. */
+.sl-markdown-content tbody th {
+  padding-block: var(--space-sm);
+  border-bottom-color: var(--color-line);
 }
 
 .sl-markdown-content tr:hover td {

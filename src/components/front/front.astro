@@ -21,14 +21,38 @@ const t = (key: string): string => Texts.site.get(key, code);
 const data = FrontData.from(compat, modLines, lang);
 const base = import.meta.env.BASE_URL.replace(/\/$/u, '');
 const prefix = code.equals(Languages.site.root) ? base : `${base}/${lang}`;
-const faq = ['safe', 'server', 'linux', 'saves', 'update', 'free'];
 const steps = [1, 2, 3, 4];
 const client = data.gameBuilds.find((build) => build.side === 'client');
 const sections = [
   { id: 'top', key: 'front.nav.top' },
+  { id: 'patch', key: 'front.nav.patch' },
+  { id: 'players', key: 'front.nav.players' },
+  { id: 'makers', key: 'front.nav.makers' },
   { id: 'install', key: 'front.install.title' },
   { id: 'mods', key: 'front.mods.title' },
   { id: 'questions', key: 'front.faq.title' },
+  { id: 'contribute', key: 'front.nav.contribute' },
+];
+const patchFacts = ['find', 'off', 'builds'];
+// Each row: its key under `front.<group>.`, and the page its answer links to, where it has one.
+const players = [
+  { id: 'patch', href: '#patch' },
+  { id: 'clash' },
+  { id: 'join', href: `${prefix}/guides/play-on-a-server/` },
+  { id: 'settings', href: `${prefix}/guides/change-mod-settings/` },
+];
+const makers = [
+  { id: 'together', href: `${prefix}/dev/services/` },
+  { id: 'languages', href: `${prefix}/dev/luau/` },
+  { id: 'types', href: `${prefix}/dev/api-coverage/` },
+  { id: 'levels', href: `${prefix}/dev/hooks/` },
+  { id: 'tests', href: `${prefix}/dev/testing/` },
+  { id: 'tool', href: `${prefix}/dev/getting-started/` },
+  { id: 'texts', href: `${prefix}/dev/content/texts/` },
+];
+const contribute = [
+  { id: 'api', href: Links.site.ideas.toString() },
+  { id: 'help', href: Links.site.contributing.toString() },
 ];
 
 // The smallest whole mod, as the book compiles it; `tools/fetch.ts` takes it from the book.
@@ -42,9 +66,10 @@ const smallestMod = new Snippet(smallestModSource.trimEnd(), SnippetLanguage.Rus
       <div class="ew-hero__copy">
         <h1 id="ew-title">{t('front.title')}</h1>
         <p class="ew-hero__lead">{t('front.lead')}</p>
-        <a class="ew-button ew-button--primary" href={Links.site.download.toString()}>
-          <span data-nosnippet>{t('front.download')}</span>
-        </a>
+        <div class="ew-actions" data-nosnippet>
+          <a class="ew-button ew-button--primary" href="#install">{t('front.install')}</a>
+          <a class="ew-button ew-button--quiet" href={`${prefix}/dev/getting-started/`}>{t('front.write')}</a>
+        </div>
         {
           data.version !== undefined && (
             <div class="ew-release" data-nosnippet>
@@ -64,10 +89,6 @@ const smallestMod = new Snippet(smallestModSource.trimEnd(), SnippetLanguage.Rus
             </div>
           )
         }
-        <div class="ew-actions" data-nosnippet>
-          <a class="ew-button ew-button--quiet" href={`${prefix}/dev/getting-started/`}>{t('front.write')}</a>
-          <a class="ew-button ew-button--quiet" href={`${prefix}/start/first-modded-game/`}>{t('topic.players')}</a>
-        </div>
         <p class="ew-hero__mods">
           <a href="#mods">{t('front.mods.link')}</a>
         </p>
@@ -75,14 +96,82 @@ const smallestMod = new Snippet(smallestModSource.trimEnd(), SnippetLanguage.Rus
       <figure class="ew-clearing" aria-labelledby="ew-clearing-caption">
         <figcaption id="ew-clearing-caption">
           {t('front.excerpt.caption')}
-          <a href={`${prefix}/dev/getting-started/#a-first-mod`}>{t('front.excerpt.link')}</a>
+          <a href={`${prefix}/dev/getting-started/#a-rust-mod`}>{t('front.excerpt.link')}</a>
         </figcaption>
         <pre><code set:html={smallestMod} /></pre>
       </figure>
     </div>
   </section>
 
-  <section class="ew-section ew-section--band" id="install" aria-labelledby="ew-install">
+  <section class="ew-section ew-section--band" id="patch" aria-labelledby="ew-patch">
+    <div class="ew-wrap">
+      <h2 id="ew-patch">{t('front.patch.title')}</h2>
+      <p class="ew-patch__lead">{t('front.patch.lead')}</p>
+      <ul class="ew-facts">
+        {
+          patchFacts.map((fact) => (
+            <li>
+              <h3>{t(`front.patch.${fact}.title`)}</h3>
+              <p>{t(`front.patch.${fact}.text`)}</p>
+            </li>
+          ))
+        }
+      </ul>
+      <p class="ew-note">
+        <a href={`${prefix}/reference/compatibility/`}>{t('front.patch.builds.link')}</a>
+      </p>
+    </div>
+  </section>
+
+  <section class="ew-section" id="players" aria-labelledby="ew-players">
+    <div class="ew-wrap">
+      <h2 id="ew-players">{t('front.players.title')}</h2>
+      <ul class="ew-mods ew-points">
+        {
+          players.map((row) => (
+            <li class="ew-mods__row">
+              <h3 class="ew-mods__name">{t(`front.players.${row.id}.q`)}</h3>
+              <p class="ew-mods__line">
+                {t(`front.players.${row.id}.a`)}
+                {row.href !== undefined && (
+                  <a class="ew-points__link" href={row.href}>{t(`front.players.${row.id}.link`)}</a>
+                )}
+              </p>
+            </li>
+          ))
+        }
+      </ul>
+      <p class="ew-note">
+        {t('front.players.caveat')}
+        <a class="ew-points__link" href={`${prefix}/explanation/how-mods-work/`}>{t('front.players.more')}</a>
+      </p>
+    </div>
+  </section>
+
+  <section class="ew-section ew-section--band" id="makers" aria-labelledby="ew-makers">
+    <div class="ew-wrap">
+      <h2 id="ew-makers">{t('front.makers.title')}</h2>
+      <ul class="ew-mods ew-points">
+        {
+          makers.map((row) => (
+            <li class="ew-mods__row">
+              <h3 class="ew-mods__name">{t(`front.makers.${row.id}.q`)}</h3>
+              <p class="ew-mods__line">
+                {t(`front.makers.${row.id}.a`)}
+                <a class="ew-points__link" href={row.href}>{t(`front.makers.${row.id}.link`)}</a>
+              </p>
+            </li>
+          ))
+        }
+      </ul>
+      <p class="ew-note">
+        {t('front.makers.abi')}
+        <a class="ew-points__link" href={`${prefix}/aims/`}>{t('front.contribute.aims')}</a>
+      </p>
+    </div>
+  </section>
+
+  <section class="ew-section" id="install" aria-labelledby="ew-install">
     <div class="ew-wrap">
       <h2 id="ew-install">{t('front.install.title')}</h2>
       <div class="ew-install">
@@ -119,7 +208,7 @@ const smallestMod = new Snippet(smallestModSource.trimEnd(), SnippetLanguage.Rus
     </div>
   </section>
 
-  <section class="ew-section" id="mods" aria-labelledby="ew-mods">
+  <section class="ew-section ew-section--band" id="mods" aria-labelledby="ew-mods">
     <div class="ew-wrap">
       <h2 id="ew-mods">{t('front.mods.title')}</h2>
       <ul class="ew-mods">
@@ -144,12 +233,12 @@ const smallestMod = new Snippet(smallestModSource.trimEnd(), SnippetLanguage.Rus
     </div>
   </section>
 
-  <section class="ew-section ew-section--band" id="questions" aria-labelledby="ew-faq">
+  <section class="ew-section" id="questions" aria-labelledby="ew-faq">
     <div class="ew-wrap ew-faq-wrap">
       <h2 id="ew-faq">{t('front.faq.title')}</h2>
       <div class="ew-faq">
         {
-          faq.map((id) => (
+          FrontData.questions.map((id) => (
             <details id={`faq-${id}`}>
               <summary>{t(`front.faq.${id}.q`)}</summary>
               <p>{t(`front.faq.${id}.a`)}</p>
@@ -157,6 +246,29 @@ const smallestMod = new Snippet(smallestModSource.trimEnd(), SnippetLanguage.Rus
           ))
         }
       </div>
+    </div>
+  </section>
+
+  <section class="ew-section ew-section--band" id="contribute" aria-labelledby="ew-contribute">
+    <div class="ew-wrap">
+      <h2 id="ew-contribute">{t('front.contribute.title')}</h2>
+      <ul class="ew-mods ew-points">
+        {
+          contribute.map((row) => (
+            <li class="ew-mods__row">
+              <h3 class="ew-mods__name">{t(`front.contribute.${row.id}.q`)}</h3>
+              <p class="ew-mods__line">
+                {t(`front.contribute.${row.id}.a`)}
+                <a class="ew-points__link" href={row.href}>{t(`front.contribute.${row.id}.link`)}</a>
+              </p>
+            </li>
+          ))
+        }
+      </ul>
+      <p class="ew-note">
+        <a href={`${prefix}/aims/`}>{t('front.contribute.aims')}</a>
+        <a href={`${prefix}/dev/api-coverage/`}>{t('front.makers.types.link')}</a>
+      </p>
     </div>
   </section>
 

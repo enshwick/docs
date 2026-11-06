@@ -1,0 +1,88 @@
+---
+import { Coverage } from '../site/coverage.ts';
+import { Languages } from '../site/languages.ts';
+import { Texts } from '../site/texts.ts';
+import { LanguageCode } from '../site/types.ts';
+
+const parsed = LanguageCode.parse(Astro.currentLocale ?? Languages.site.root.toString());
+const language = parsed.ok ? parsed.value : Languages.site.root;
+const t = (key: string): string => Texts.site.get(key, language);
+const base = import.meta.env.BASE_URL.replace(/\/$/u, '');
+const stability = `${base}/dev/stability/`;
+---
+
+<div class="ew-faq ew-coverage">
+  {
+    Coverage.site.domains.map((domain) => (
+      <details id={domain.id}>
+        <summary>
+          <span class="ew-coverage__name">{domain.name}</span>
+          <span class="ew-coverage__count">
+            {Coverage.count(domain.cells).covered} / {Coverage.count(domain.cells).of}{' '}
+            {t('coverage.covered-count')}
+          </span>
+        </summary>
+        <div class="ew-table" tabindex="0"><table>
+          <thead>
+            <tr>
+              <th scope="col">{t('coverage.capability')}</th>
+              <th scope="col">{t('coverage.state')}</th>
+              <th scope="col">{t('coverage.stability')}</th>
+              <th scope="col">{t('coverage.api')}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {domain.cells.map((cell) => (
+              <tr>
+                <th scope="row">{t(`coverage.capability.${cell.capability}`)}</th>
+                <td>{t(`coverage.status.${cell.status}`)}</td>
+                <td>{cell.stability === undefined ? '' : <a href={stability}>{t(`stability.${cell.stability}`)}</a>}</td>
+                <td>
+                  {cell.items.map((item, index) => (
+                    <>
+                      {index > 0 && ', '}
+                      <code>{item}</code>
+                      {cell.unstableItems.includes(item) && (
+                        <>
+                          {' '}
+                          (<a href={stability}>{t('stability.unstable')}</a>)
+                        </>
+                      )}
+                    </>
+                  ))}
+                  {cell.items.length > 0 && cell.note !== undefined && '; '}
+                  {cell.note}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table></div>
+      </details>
+    ))
+  }
+</div>
+
+<script>
+  // Opens the area a link names, such as `#loot`, on load and when the anchor changes; every area
+  // starts closed, and without this script the area still opens by hand. The router moves to an
+  // anchor on the same page with pushState, which raises no hashchange, so a click checks again.
+  const open = (): void => {
+    let id = '';
+
+    try {
+      id = decodeURIComponent(location.hash.slice(1));
+    } catch {
+      return;
+    }
+
+    const target = id === '' ? null : document.querySelector(`#${CSS.escape(id)}`);
+
+    if (target instanceof HTMLDetailsElement) {
+      target.open = true;
+    }
+  };
+
+  document.addEventListener('astro:page-load', open);
+  window.addEventListener('hashchange', open);
+  document.addEventListener('click', () => setTimeout(open));
+</script>

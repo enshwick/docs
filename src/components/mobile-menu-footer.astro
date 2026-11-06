@@ -2,6 +2,7 @@
 import { Languages } from '../site/languages.ts';
 import { Links } from '../site/links.ts';
 import { Texts } from '../site/texts.ts';
+import { Translations } from '../site/translations.ts';
 import { LanguageCode } from '../site/types.ts';
 import LanguageSelect from './language-select.astro';
 import ServiceIcon from './service-icon.astro';
@@ -10,10 +11,13 @@ import ServiceIcon from './service-icon.astro';
 const parsed = LanguageCode.parse(Astro.locals.starlightRoute.lang);
 const language = parsed.ok ? parsed.value : Languages.site.root;
 const t = (key: string): string => Texts.site.get(key, language);
+const base = import.meta.env.BASE_URL.replace(/\/$/u, '');
 ---
 
 <div class="ew-menu-foot">
   <nav class="ew-menu-foot__links" aria-label={t('foot.links')}>
+    <a href={`${base}${Translations.pathIn('/dev/api-coverage/', language)}`}>{t('nav.coverage')}</a>
+    <a href={`${base}${Translations.pathIn('/aims/', language)}`}>{t('nav.aims')}</a>
     <a href={Links.site.download.toString()}>{t('nav.download')}</a>
     <a class="ew-foot__service" href={Links.site.github.toString()}><ServiceIcon service="github" />GitHub</a>
     <a class="ew-foot__service" href={Links.site.nexus.toString()}><ServiceIcon service="nexus" />Nexus Mods</a>

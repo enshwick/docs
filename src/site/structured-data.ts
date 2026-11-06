@@ -6,6 +6,13 @@ export type SidebarItem =
   | { type: 'link'; label: string; href: string; isCurrent: boolean }
   | { type: 'group'; label: string; entries: SidebarItem[] };
 
+/** What the home page says about the project, in its own language. */
+export interface HomePage {
+  readonly description: string;
+  /** The questions the page shows with their answers, in the page's order. */
+  readonly questions: ReadonlyArray<{ readonly question: string; readonly answer: string }>;
+}
+
 /** What a documentation page says about itself. */
 export interface ArticlePage {
   readonly path: string;
@@ -30,13 +37,15 @@ export class StructuredData {
   private static readonly nexus = 'https://www.nexusmods.com/site/mods/2511';
   private static readonly logo = '/logo-512.png';
   private static readonly download = 'https://github.com/enshwick/enshwick/releases';
-  private static readonly description =
-    'A mod loader for Enshrouded with the mods built on it, and an API platform for writing mods in Rust.';
+  private static readonly license = 'https://github.com/enshwick/docs/blob/main/LICENSE';
 
   public constructor(private readonly site: string) {}
 
-  /** The home page's nodes: the organization, the website and the application. */
-  public home(lang: string, version: string | undefined): JsonLdNode[] {
+  /**
+   * The home page's nodes: the organization, the website, the application in the page's words, and
+   * the questions the page answers on it.
+   */
+  public home(lang: string, version: string | undefined, page: HomePage): JsonLdNode[] {
     const url = this.url('/');
 
     return [
@@ -61,14 +70,29 @@ export class StructuredData {
         '@context': StructuredData.context,
         '@type': 'SoftwareApplication',
         name: StructuredData.name,
-        description: StructuredData.description,
+        description: page.description,
         url,
         downloadUrl: StructuredData.download,
         applicationCategory: 'GameApplication',
         operatingSystem: 'Windows',
         offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+        inLanguage: lang,
         ...(version === undefined ? {} : { softwareVersion: version }),
       },
+      ...(page.questions.length === 0
+        ? []
+        : [
+            {
+              '@context': StructuredData.context,
+              '@type': 'FAQPage',
+              inLanguage: lang,
+              mainEntity: page.questions.map(({ question, answer }) => ({
+                '@type': 'Question',
+                name: question,
+                acceptedAnswer: { '@type': 'Answer', text: answer },
+              })),
+            },
+          ]),
     ];
   }
 
@@ -114,6 +138,30 @@ export class StructuredData {
         })),
       },
     ];
+  }
+
+  /**
+   * A page that renders a data file the site also publishes: the data set, its date and where to
+   * download it, beside the page's article.
+   */
+  public dataset(page: ArticlePage, updated: string, download: string): JsonLdNode {
+    return {
+      '@context': StructuredData.context,
+      '@type': 'Dataset',
+      name: page.title,
+      ...(page.description === undefined ? {} : { description: page.description }),
+      url: this.url(page.path),
+      inLanguage: page.lang,
+      dateModified: updated,
+      isAccessibleForFree: true,
+      license: StructuredData.license,
+      creator: { '@type': 'Organization', name: StructuredData.name, url: this.url('/') },
+      distribution: {
+        '@type': 'DataDownload',
+        encodingFormat: 'application/json',
+        contentUrl: this.url(download),
+      },
+    };
   }
 
   /** The nodes as the text of a `<script type="application/ld+json">`, safe inside HTML. */
