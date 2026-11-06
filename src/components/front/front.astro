@@ -102,7 +102,75 @@ const smallestMod = new Snippet(smallestModSource.trimEnd(), SnippetLanguage.Rus
     </div>
   </section>
 
-  <section class="ew-section ew-section--band" id="install" aria-labelledby="ew-install">
+  <section class="ew-section ew-section--band" id="patch" aria-labelledby="ew-patch">
+    <div class="ew-wrap">
+      <h2 id="ew-patch">{t('front.patch.title')}</h2>
+      <p class="ew-patch__lead">{t('front.patch.lead')}</p>
+      <ul class="ew-facts">
+        {
+          patchFacts.map((fact) => (
+            <li>
+              <h3>{t(`front.patch.${fact}.title`)}</h3>
+              <p>{t(`front.patch.${fact}.text`)}</p>
+            </li>
+          ))
+        }
+      </ul>
+      <p class="ew-note">
+        <a href={`${prefix}/reference/compatibility/`}>{t('front.patch.builds.link')}</a>
+      </p>
+    </div>
+  </section>
+
+  <section class="ew-section" id="players" aria-labelledby="ew-players">
+    <div class="ew-wrap">
+      <h2 id="ew-players">{t('front.players.title')}</h2>
+      <ul class="ew-mods ew-points">
+        {
+          players.map((row) => (
+            <li class="ew-mods__row">
+              <h3 class="ew-mods__name">{t(`front.players.${row.id}.q`)}</h3>
+              <p class="ew-mods__line">
+                {t(`front.players.${row.id}.a`)}
+                {row.href !== undefined && (
+                  <a class="ew-points__link" href={row.href}>{t(`front.players.${row.id}.link`)}</a>
+                )}
+              </p>
+            </li>
+          ))
+        }
+      </ul>
+      <p class="ew-note">
+        {t('front.players.caveat')}
+        <a class="ew-points__link" href={`${prefix}/explanation/how-mods-work/`}>{t('front.players.more')}</a>
+      </p>
+    </div>
+  </section>
+
+  <section class="ew-section ew-section--band" id="makers" aria-labelledby="ew-makers">
+    <div class="ew-wrap">
+      <h2 id="ew-makers">{t('front.makers.title')}</h2>
+      <ul class="ew-mods ew-points">
+        {
+          makers.map((row) => (
+            <li class="ew-mods__row">
+              <h3 class="ew-mods__name">{t(`front.makers.${row.id}.q`)}</h3>
+              <p class="ew-mods__line">
+                {t(`front.makers.${row.id}.a`)}
+                <a class="ew-points__link" href={row.href}>{t(`front.makers.${row.id}.link`)}</a>
+              </p>
+            </li>
+          ))
+        }
+      </ul>
+      <p class="ew-note">
+        {t('front.makers.abi')}
+        <a class="ew-points__link" href={`${prefix}/aims/`}>{t('front.contribute.aims')}</a>
+      </p>
+    </div>
+  </section>
+
+  <section class="ew-section" id="install" aria-labelledby="ew-install">
     <div class="ew-wrap">
       <h2 id="ew-install">{t('front.install.title')}</h2>
       <div class="ew-install">
@@ -139,7 +207,7 @@ const smallestMod = new Snippet(smallestModSource.trimEnd(), SnippetLanguage.Rus
     </div>
   </section>
 
-  <section class="ew-section" id="mods" aria-labelledby="ew-mods">
+  <section class="ew-section ew-section--band" id="mods" aria-labelledby="ew-mods">
     <div class="ew-wrap">
       <h2 id="ew-mods">{t('front.mods.title')}</h2>
       <ul class="ew-mods">
@@ -164,12 +232,12 @@ const smallestMod = new Snippet(smallestModSource.trimEnd(), SnippetLanguage.Rus
     </div>
   </section>
 
-  <section class="ew-section ew-section--band" id="questions" aria-labelledby="ew-faq">
+  <section class="ew-section" id="questions" aria-labelledby="ew-faq">
     <div class="ew-wrap ew-faq-wrap">
       <h2 id="ew-faq">{t('front.faq.title')}</h2>
       <div class="ew-faq">
         {
-          faq.map((id) => (
+          FrontData.questions.map((id) => (
             <details id={`faq-${id}`}>
               <summary>{t(`front.faq.${id}.q`)}</summary>
               <p>{t(`front.faq.${id}.a`)}</p>
@@ -177,6 +245,29 @@ const smallestMod = new Snippet(smallestModSource.trimEnd(), SnippetLanguage.Rus
           ))
         }
       </div>
+    </div>
+  </section>
+
+  <section class="ew-section ew-section--band" id="contribute" aria-labelledby="ew-contribute">
+    <div class="ew-wrap">
+      <h2 id="ew-contribute">{t('front.contribute.title')}</h2>
+      <ul class="ew-mods ew-points">
+        {
+          contribute.map((row) => (
+            <li class="ew-mods__row">
+              <h3 class="ew-mods__name">{t(`front.contribute.${row.id}.q`)}</h3>
+              <p class="ew-mods__line">
+                {t(`front.contribute.${row.id}.a`)}
+                <a class="ew-points__link" href={row.href}>{t(`front.contribute.${row.id}.link`)}</a>
+              </p>
+            </li>
+          ))
+        }
+      </ul>
+      <p class="ew-note">
+        <a href={`${prefix}/aims/`}>{t('front.contribute.aims')}</a>
+        <a href={`${prefix}/dev/api-coverage/`}>{t('front.makers.types.link')}</a>
+      </p>
     </div>
   </section>
 
