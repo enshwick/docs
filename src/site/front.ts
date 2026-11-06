@@ -34,10 +34,10 @@ type Compat = Extract<ReturnType<typeof CompatibilityData.parse>, { ok: true }>[
 /** Who needs each mod and its lines by language, keyed by the mod's slug. */
 type Lines = Map<string, { side: string; summary: Map<string, string> }>;
 
-/** One of the newest platform release's game builds: its side and its name. */
+/** One of the newest platform release's game builds: its side and its Steam build. */
 interface GameBuild {
   side: string;
-  name: string;
+  steamBuild: string;
 }
 
 /** The front page's data: the newest release, the game builds it runs on and a card per mod. */
@@ -96,11 +96,12 @@ export class FrontData {
   /** The newest platform release's game builds: per side, the newest with a Steam build. */
   private static newestBuilds(newest: Compat['platform'][number] | undefined): GameBuild[] {
     return FrontData.sides.flatMap((side) => {
-      const ofSide = (newest?.builds ?? []).filter((build) => build.side.toString() === side);
-      const steam = ofSide.filter((build) => build.steamBuild !== undefined);
-      const pick = (steam.length > 0 ? steam : ofSide).at(-1);
+      const steamBuild = (newest?.builds ?? [])
+        .filter((build) => build.side.toString() === side)
+        .flatMap((build) => (build.steamBuild === undefined ? [] : [build.steamBuild.toString()]))
+        .at(-1);
 
-      return pick === undefined ? [] : [{ side, name: pick.name.toString() }];
+      return steamBuild === undefined ? [] : [{ side, steamBuild }];
     });
   }
 

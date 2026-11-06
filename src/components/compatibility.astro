@@ -33,7 +33,6 @@ const state = (row: { state: BuildState; off: readonly string[] }): string =>
       <th>{t('compat.version')}</th>
       <th>{t('compat.api')}</th>
       <th>{t('compat.side')}</th>
-      <th>{t('compat.build')}</th>
       <th>{t('compat.steam')}</th>
       <th>{t('compat.game-version')}</th>
       <th>{t('compat.state')}</th>
@@ -47,7 +46,6 @@ const state = (row: { state: BuildState; off: readonly string[] }): string =>
             <td>{release.name}</td>
             <td>{release.api ?? ''}</td>
             <td>{t(`compat.side.${row.side}`)}</td>
-            <td>{row.name ?? ''}</td>
             <td>{row.steamBuild ?? ''}</td>
             <td>{row.gameVersion ?? ''}</td>
             <td>{state(row)}</td>
