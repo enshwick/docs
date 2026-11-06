@@ -1,10 +1,13 @@
 import { dirname, join, normalize } from 'node:path/posix';
 
 import { LanguageSwitch } from './language-switch.ts';
+import type { PageType } from './summary.ts';
 
 /** The front matter and body of one chapter as a site page. */
 export interface ChapterPage {
   readonly title: string;
+  /** The type the chapter's opening comment declares; absent for a file without one, such as the changelog. */
+  readonly type: PageType | undefined;
   readonly description: string | undefined;
   readonly body: string;
   /** Whether the body uses components, so the page is written as MDX. */
@@ -17,6 +20,18 @@ export class ChapterConverter {
   private static readonly mdLink = /\]\(([^)\s]+?\.md)(#[^)\s]*)?\)/gu;
   private static readonly title = /^# (.+)$/mu;
   private static readonly rust = 'rust';
+  /** The comment a chapter opens with, which mdBook hides: `key: value` lines, as enshwick's `cargo xtask check` requires. */
+  private static readonly header = /^<!--\n(.*?)\n-->\n/su;
+  private static readonly headerField = /^(\w+): (.+)$/u;
+  private static readonly typeKey = 'type';
+  private static readonly descriptionKey = 'description';
+  /** Keyed by `PageType`, so the compiler keeps it in step with the union. */
+  private static readonly pageTypes: Readonly<Record<PageType, true>> = {
+    tutorial: true,
+    'how-to': true,
+    reference: true,
+    explanation: true,
+  };
 
   /**
    * @param url the site URL of a chapter by its book path, such as `/dev/content/items/`.
@@ -29,22 +44,79 @@ export class ChapterConverter {
 
   /** The page for the chapter at `path` with the text `markdown`. */
   public convert(path: string, markdown: string): ChapterPage {
-    const titleMatch = ChapterConverter.title.exec(markdown);
+    const header = ChapterConverter.header.exec(markdown);
+    const fields = ChapterConverter.fields(path, header?.[1]);
+    const text = header === null ? markdown : markdown.slice(header[0].length);
+    const titleMatch = ChapterConverter.title.exec(text);
 
     if (titleMatch === null || titleMatch[1] === undefined) {
       throw new Error(`${path}: a chapter opens with a level-one heading`);
     }
 
-    const withoutTitle = markdown.replace(ChapterConverter.title, '').replace(/^\s+/u, '');
+    const withoutTitle = text.replace(ChapterConverter.title, '').replace(/^\s+/u, '');
     const { body, mdx } = this.languages.apply(ChapterConverter.code(withoutTitle));
     const linked = this.links(path, body);
 
     return {
       title: titleMatch[1].trim(),
-      description: ChapterConverter.description(linked),
+      type: ChapterConverter.pageType(path, fields.get(ChapterConverter.typeKey)),
+      description:
+        fields.get(ChapterConverter.descriptionKey) ?? ChapterConverter.description(linked),
       body: linked,
       mdx,
     };
+  }
+
+  /**
+   * The `key: value` lines of a chapter's opening comment.
+   *
+   * @throws {Error} for a line of another shape, naming the chapter.
+   */
+  private static fields(path: string, block: string | undefined): Map<string, string> {
+    const fields = new Map<string, string>();
+
+    for (const line of block?.split('\n') ?? []) {
+      const [, key, value] = ChapterConverter.headerField.exec(line) ?? [];
+
+      if (key === undefined || value === undefined || value.trim() === '') {
+        throw new Error(`${path}: the opening comment has a line that is no "key: value": ${line}`);
+      }
+
+      if (key !== ChapterConverter.typeKey && key !== ChapterConverter.descriptionKey) {
+        throw new Error(`${path}: the opening comment has an unknown key ${key}`);
+      }
+
+      if (fields.has(key)) {
+        throw new Error(`${path}: the opening comment has ${key} twice`);
+      }
+
+      fields.set(key, value.trim());
+    }
+
+    return fields;
+  }
+
+  /**
+   * The declared page type, checked.
+   *
+   * @throws {Error} for a type outside Diátaxis's four, naming the chapter.
+   */
+  private static pageType(path: string, value: string | undefined): PageType | undefined {
+    if (value === undefined) {
+      return undefined;
+    }
+
+    if (!ChapterConverter.isPageType(value)) {
+      throw new Error(
+        `${path}: type ${value} is none of ${Object.keys(ChapterConverter.pageTypes).join(', ')}`,
+      );
+    }
+
+    return value;
+  }
+
+  private static isPageType(value: string): value is PageType {
+    return Object.hasOwn(ChapterConverter.pageTypes, value);
   }
 
   /** mdBook's fence attributes dropped (`rust,ignore` is `rust`), and its hidden lines in Rust examples removed. */

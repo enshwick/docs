@@ -16,6 +16,43 @@ describe('ChapterConverter', () => {
     expect(page.body).toBe('A hook runs first. Then the game.\n');
   });
 
+  it('reads the type and description of the opening comment and leaves it out of the body', () => {
+    const page = converter.convert(
+      'hooks.md',
+      '<!--\ntype: how-to\ndescription: What the search snippet says.\n-->\n\n# Hooks\n\nA hook runs first.\n',
+    );
+
+    expect(page.type).toBe('how-to');
+    expect(page.description).toBe('What the search snippet says.');
+    expect(page.title).toBe('Hooks');
+    expect(page.body).toBe('A hook runs first.\n');
+  });
+
+  it('has no type for a file without the opening comment', () => {
+    expect(converter.convert('hooks.md', '# Hooks\n\nText.\n').type).toBeUndefined();
+  });
+
+  it('refuses an opening comment with an unknown type or a line of another shape', () => {
+    expect(() => converter.convert('hooks.md', '<!--\ntype: guide\n-->\n# Hooks\n')).toThrow(
+      /hooks\.md: type guide is none of tutorial, how-to, reference, explanation/u,
+    );
+    expect(() => converter.convert('hooks.md', '<!--\njust a note\n-->\n# Hooks\n')).toThrow(
+      /hooks\.md: the opening comment has a line that is no "key: value": just a note/u,
+    );
+  });
+
+  it('refuses an unknown key, a repeated key and an empty value in the opening comment', () => {
+    expect(() => converter.convert('hooks.md', '<!--\ndescripton: Text.\n-->\n# Hooks\n')).toThrow(
+      /hooks\.md: the opening comment has an unknown key descripton/u,
+    );
+    expect(() =>
+      converter.convert('hooks.md', '<!--\ntype: how-to\ntype: reference\n-->\n# Hooks\n'),
+    ).toThrow(/hooks\.md: the opening comment has type twice/u);
+    expect(() => converter.convert('hooks.md', '<!--\ndescription:   \n-->\n# Hooks\n')).toThrow(
+      /hooks\.md: the opening comment has a line that is no "key: value"/u,
+    );
+  });
+
   it("drops mdBook's hidden lines and fence attributes from Rust examples only", () => {
     const text = [
       '```rust,no_run',

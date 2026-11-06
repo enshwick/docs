@@ -154,6 +154,7 @@ describe('DistCheck', () => {
     });
 
     expect(await new DistCheck(root, site).run()).toEqual([
+      'dev/hooks/index.html: its description has 6 characters, wants 120 to 160',
       'guides/install/index.html: its description has 6 characters, wants 120 to 160',
       'guides/remove/index.html: its description has 161 characters, wants 120 to 160',
       'index.html: has no description',
