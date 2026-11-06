@@ -501,7 +501,7 @@
   },
   "front.players.title": {
     "en": "What Enshwick solves for players",
-    "uk": "Що Enshwick вирішує для гравців"
+    "uk": "Які проблеми гравців розв’язує Enshwick"
   },
   "front.players.patch.q": {
     "en": "A game patch came out",
@@ -529,15 +529,15 @@
   },
   "front.players.clash.a": {
     "en": "Mods state what they need and what they conflict with, and a fault turns off only the feature it hit.",
-    "uk": "Моди заявляють, що їм потрібно і з чим вони конфліктують, а збій вимикає лише ту функцію, де він стався."
+    "uk": "Моди вказують, що їм потрібно і з чим вони несумісні, а збій вимикає лише ту функцію, де він стався."
   },
   "front.players.join.q": {
     "en": "You join with the wrong mods",
-    "uk": "Ви заходите не з тими модами"
+    "uk": "Ви заходите на сервер не з тими модами"
   },
   "front.players.join.a": {
-    "en": "A server-only mod needs nothing on your PC. For the other mods, the game names the mod and version you miss before you join.",
-    "uk": "Серверному моду нічого не треба на вашому ПК. Для решти модів гра ще до входу називає мод і версію, яких вам бракує."
+    "en": "A server-only mod needs nothing on your PC. If you lack another mod of the server, you do not join, and the main menu names the mod and version you need.",
+    "uk": "Мод лише для сервера нічого не потребує на вашому ПК. Якщо вам бракує іншого мода сервера, ви не заходите, а головне меню називає потрібні мод і версію."
   },
   "front.players.settings.q": {
     "en": "Each world needs other settings",
@@ -545,15 +545,15 @@
   },
   "front.players.settings.a": {
     "en": "Each world keeps its own mod settings beside its save, and you change them in game on the Mods screen.",
-    "uk": "Кожен світ тримає свої налаштування модів поруч зі збереженням, а змінюєте ви їх у грі на екрані Mods."
+    "uk": "Налаштування модів кожного світу лежать поруч із його збереженням, а змінюєте ви їх у грі на екрані Mods."
   },
   "front.players.caveat": {
     "en": "Enshwick coordinates the mods built on it. Mods that change the game by other means run outside it, so Enshwick cannot order or protect them.",
-    "uk": "Enshwick узгоджує моди, створені на ньому. Моди, що змінюють гру іншими способами, працюють поза ним, тож Enshwick не може впорядкувати чи захистити їх."
+    "uk": "Enshwick узгоджує моди, створені на його основі. Моди, що змінюють гру іншими способами, працюють поза ним, тож Enshwick не може ні впорядкувати, ні захистити їх."
   },
   "front.players.more": {
     "en": "How mods work, and are they safe?",
-    "uk": "Як працюють моди і чи вони безпечні?"
+    "uk": "Як працюють моди і чи безпечні вони?"
   },
   "front.makers.title": {
     "en": "What Enshwick gives mod makers",
@@ -565,7 +565,7 @@
   },
   "front.makers.together.a": {
     "en": "Mods offer each other typed services, events and extension points, so a mod can be a library for other mods.",
-    "uk": "Моди пропонують одне одному типізовані сервіси, події та точки розширення, тож мод може бути бібліотекою для інших модів."
+    "uk": "Моди пропонують один одному типізовані сервіси, події та точки розширення, тож мод може бути бібліотекою для інших модів."
   },
   "front.makers.together.link": {
     "en": "Services",
@@ -577,7 +577,7 @@
   },
   "front.makers.languages.a": {
     "en": "Rust and Luau share one API, a data pack needs no code, and the C header opens the API to any language with a C ABI.",
-    "uk": "Rust і Luau мають один API, пакет даних не потребує коду, а заголовок C відкриває API будь-якій мові з C ABI."
+    "uk": "Rust і Luau мають спільний API, пакетові даних не потрібен код, а заголовний файл C відкриває API для будь-якої мови з C ABI."
   },
   "front.makers.languages.link": {
     "en": "Luau mods",
@@ -585,7 +585,7 @@
   },
   "front.makers.types.q": {
     "en": "The game, typed",
-    "uk": "Гра з типами"
+    "uk": "Гра, описана типами"
   },
   "front.makers.types.a": {
     "en": "The API’s game types come from the game’s own reflection data.",
@@ -601,7 +601,7 @@
   },
   "front.makers.levels.a": {
     "en": "A mod reads any game data through reflection, or hooks a game function itself. The loader checks each hook’s target and turns off only a hook a patch broke. Hooks chain, so one mod’s hook leaves the others working.",
-    "uk": "Мод читає будь-які дані гри через рефлексію або сам перехоплює функцію гри. Завантажувач перевіряє ціль кожного перехоплення й вимикає лише те, яке зламав патч. Перехоплення складаються в ланцюг, тож перехоплення одного мода не заважає іншим."
+    "uk": "Мод читає будь-які дані гри через рефлексію або сам перехоплює функцію гри. Завантажувач перевіряє ціль кожного перехоплення й вимикає лише те, яке зламав патч. Перехоплення утворюють ланцюг, тож перехоплення одного мода не заважає іншим."
   },
   "front.makers.levels.link": {
     "en": "Hooks",
@@ -613,7 +613,7 @@
   },
   "front.makers.tests.a": {
     "en": "The fake host runs a mod’s tests on any computer, with no Enshrouded installed.",
-    "uk": "Імітація хоста (fake host) запускає тести мода на будь-якому комп’ютері, навіть без Enshrouded."
+    "uk": "Імітація хоста (fake host) запускає тести мода на будь-якому комп’ютері, навіть без встановленої Enshrouded."
   },
   "front.makers.tests.link": {
     "en": "Testing",
@@ -637,15 +637,15 @@
   },
   "front.makers.texts.a": {
     "en": "A mod’s texts carry named values, and a mod adds a language as one more file.",
-    "uk": "Тексти мода мають іменовані значення, а нову мову мод додає ще одним файлом."
+    "uk": "У текстах мода є іменовані значення, а нову мову мод додає ще одним файлом."
   },
   "front.makers.texts.link": {
     "en": "Texts",
     "uk": "Тексти"
   },
   "front.makers.abi": {
-    "en": "Until 1.0, anything may change between alphas. From 1.0, the aim is an ABI that grows only by additions, so a mod built for an older 1.x keeps loading.",
-    "uk": "До версії 1.0 між альфа-версіями може змінитися будь-що. Від 1.0 мета — ABI, що лише доповнюється, тож мод, зібраний під старішу 1.x, і далі завантажуватиметься."
+    "en": "Until 1.0, anything may change between alphas.",
+    "uk": "До версії 1.0 між альфа-версіями може змінитися будь-що."
   },
   "front.contribute.title": {
     "en": "Help shape what comes next",
@@ -653,15 +653,15 @@
   },
   "front.contribute.api.q": {
     "en": "Want an API or have an idea?",
-    "uk": "Потрібен API або маєте ідею?"
+    "uk": "Бракує API чи маєте ідею?"
   },
   "front.contribute.api.a": {
     "en": "Open an issue on GitHub and describe what your mod needs.",
-    "uk": "Відкрийте issue на GitHub і опишіть, що потрібно вашому моду."
+    "uk": "Відкрийте звернення на GitHub і опишіть, що потрібно вашому моду."
   },
   "front.contribute.api.link": {
     "en": "Open an issue",
-    "uk": "Відкрити issue"
+    "uk": "Відкрити звернення"
   },
   "front.contribute.help.q": {
     "en": "Want to help?",
@@ -669,7 +669,7 @@
   },
   "front.contribute.help.a": {
     "en": "Pull requests are welcome, and the contributing guide explains how they work.",
-    "uk": "Pull requests вітаються, а посібник для учасників пояснює, як вони працюють."
+    "uk": "Надсилайте pull request’и: посібник для учасників пояснює, як це працює."
   },
   "front.contribute.help.link": {
     "en": "Contributing guide",
@@ -697,7 +697,7 @@
   },
   "coverage.covered-count": {
     "en": "covered",
-    "uk": "є"
+    "uk": "покрито"
   },
   "coverage.capability": {
     "en": "Capability",
@@ -737,7 +737,7 @@
   },
   "coverage.status.covered": {
     "en": "Covered",
-    "uk": "Є"
+    "uk": "Покрито"
   },
   "coverage.status.in-work": {
     "en": "In work",
