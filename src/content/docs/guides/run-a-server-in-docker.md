@@ -53,11 +53,12 @@ a set nobody built, and replicas drift apart.
 
 ## Keep the server running after a game update
 
-After a game update, Enshwick finds what it needs on the new game build the same
-way as on every build: by its engine routes and code patterns. Only what they
-miss stays off. With `build_patterns = false` in `enshwick.toml` in the game
-folder, a build that no compatibility report of your Enshwick release covers runs
-without mods instead.
+After a game update, Enshwick finds what it needs as on every build: by its
+engine routes and code patterns. Only what they miss stays off.
+
+Set `build_patterns = false` in `enshwick.toml` in the game folder to run a new build
+without mods instead. A new build is one that no compatibility report of your
+Enshwick release covers.
 
 Rebuild the image once a newer Enshwick reports the build or finds what was
 missing.
