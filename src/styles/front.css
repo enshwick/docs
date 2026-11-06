@@ -382,7 +382,7 @@
   color: var(--color-muted);
 }
 
-/* Patch day: the lead, then three facts side by side, each under a hairline like the lists. */
+/* Patch day: the lead, then its one fact under a hairline like the lists. */
 .ew-patch__lead {
   max-width: 36em;
   margin-bottom: var(--space-2xl);
@@ -391,28 +391,14 @@
   color: var(--color-muted);
 }
 
-.ew-facts {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  gap: var(--space-xl) var(--gap-columns);
-  padding: 0;
-  list-style: none;
-}
-
-.ew-facts li {
-  min-width: 0;
+.ew-fact {
+  max-width: 48em;
   padding-top: var(--space-md);
   border-top: var(--rule-hair) solid var(--color-line-strong);
 }
 
-.ew-facts p {
+.ew-fact p {
   color: var(--color-muted);
-}
-
-@media (min-width: 56rem) {
-  .ew-facts {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
 }
 
 /* Install through Nexus Mods: one wide row with its mark, its name and a note, its colour on the edge. */

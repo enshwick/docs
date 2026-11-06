@@ -33,7 +33,6 @@ const sections = [
   { id: 'questions', key: 'front.faq.title' },
   { id: 'contribute', key: 'front.nav.contribute' },
 ];
-const patchFacts = ['find', 'off', 'builds'];
 // Each row: its key under `front.<group>.`, and the page its answer links to, where it has one.
 const players = [
   { id: 'patch', href: '#patch' },
@@ -107,19 +106,10 @@ const smallestMod = new Snippet(smallestModSource.trimEnd(), SnippetLanguage.Rus
     <div class="ew-wrap">
       <h2 id="ew-patch">{t('front.patch.title')}</h2>
       <p class="ew-patch__lead">{t('front.patch.lead')}</p>
-      <ul class="ew-facts">
-        {
-          patchFacts.map((fact) => (
-            <li>
-              <h3>{t(`front.patch.${fact}.title`)}</h3>
-              <p>{t(`front.patch.${fact}.text`)}</p>
-            </li>
-          ))
-        }
-      </ul>
-      <p class="ew-note">
-        <a href={`${prefix}/reference/compatibility/`}>{t('front.patch.builds.link')}</a>
-      </p>
+      <div class="ew-fact">
+        <h3>{t('front.patch.update.title')}</h3>
+        <p>{t('front.patch.update.text')}</p>
+      </div>
     </div>
   </section>
 
