@@ -288,8 +288,8 @@
     "uk": "Створити мод"
   },
   "front.excerpt.caption": {
-    "en": "A whole mod: 16 Flame Altars at every Flame level. This is all it takes.",
-    "uk": "Увесь мод: 16 вівтарів на кожному рівні полум’я. Більше нічого не треба."
+    "en": "A whole mod: it writes a line to the log and greets each player who joins.",
+    "uk": "Цілий мод: він пише рядок у журнал і вітає кожного гравця, який заходить."
   },
   "front.excerpt.link": {
     "en": "From the developer guide",
