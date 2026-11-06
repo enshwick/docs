@@ -184,8 +184,8 @@
     "uk": "Працює. Частину можливостей вимкнено в:"
   },
   "compat.state.unchecked": {
-    "en": "Not checked yet. Enshwick uses the newest known build and turns off what it cannot find.",
-    "uk": "Ще не перевірено. Enshwick бере найновішу відому збірку і вимикає те, чого не знаходить."
+    "en": "Not checked yet. Enshwick looks for what it needs in this build and turns off what it cannot find.",
+    "uk": "Ще не перевірено. Enshwick шукає потрібне в цій збірці й вимикає те, чого не знаходить."
   },
   "compat.state.unreported": {
     "en": "No report yet.",
