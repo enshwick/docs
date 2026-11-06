@@ -472,12 +472,12 @@
     "uk": "Патч гри може змінити код, на який спираються моди."
   },
   "front.patch.update.title": {
-    "en": "No update for a new build",
-    "uk": "Нова збірка не потребує оновлення"
+    "en": "A new game build needs no Enshwick update",
+    "uk": "Для нової збірки гри не треба оновлювати Enshwick"
   },
   "front.patch.update.text": {
-    "en": "A new game build needs no Enshwick update. If Enshwick cannot find something after the patch, only the feature that needs it turns off. Chat and the Mods screen name that feature, and everything else keeps working.",
-    "uk": "Для нової збірки гри оновлювати Enshwick не треба. Якщо після патчу Enshwick чогось не знаходить, вимикається лише функція, якій це потрібно. Чат і екран Mods називають цю функцію, а все інше працює далі."
+    "en": "If Enshwick cannot find something in a new build, only the mods and features that need it turn off. Chat and the Mods screen name them, and the rest keeps working.",
+    "uk": "Якщо Enshwick чогось не знаходить у новій збірці, вимикаються лише моди й функції, що від цього залежать. Чат і екран Mods їх називають, а решта працює далі."
   },
   "front.players.title": {
     "en": "What Enshwick solves for players",
