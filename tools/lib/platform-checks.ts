@@ -6,9 +6,14 @@ import { IdRule } from './id-rule.ts';
 
 /** The checks that hold the site to the platform's newest version; the build fails when one does not pass. */
 export class PlatformChecks {
-  /** The chapter that holds the smallest whole mod, and the comments that mark it. */
-  private static readonly smallestModPage = 'dev/getting-started';
-  private static readonly smallestModName = 'smallest-mod';
+  /**
+   * The examples the book compiles and marks for the site, by name, each with the chapter that holds
+   * it: the front page shows the smallest whole mod, the page for AI assistants a mod with settings.
+   */
+  private static readonly marked = new Map([
+    ['smallest-mod', 'dev/getting-started'],
+    ['altar-count', 'dev/altars'],
+  ]);
 
   public constructor(
     private readonly newest: PlatformRelease | undefined,
@@ -45,23 +50,22 @@ export class PlatformChecks {
   }
 
   /**
-   * The smallest whole mod the book compiles, which the front page shows.
+   * The code of every example the book marks for the site, by its name.
    *
-   * @throws {Error} when the getting started chapter no longer marks it.
+   * @throws {Error} naming the chapter that no longer marks its example.
    */
-  public smallestMod(): string {
-    const chapter = this.pages.find((page) => page.slug === PlatformChecks.smallestModPage);
-    const code =
-      chapter === undefined
-        ? undefined
-        : new BookSnippet(chapter.body).named(PlatformChecks.smallestModName);
+  public snippets(): Map<string, string> {
+    return new Map(
+      [...PlatformChecks.marked].map(([name, slug]) => {
+        const chapter = this.pages.find((page) => page.slug === slug);
+        const code = chapter === undefined ? undefined : new BookSnippet(chapter.body).named(name);
 
-    if (code === undefined) {
-      throw new Error(
-        `the book's ${PlatformChecks.smallestModPage} chapter marks no ${PlatformChecks.smallestModName} example for the front page`,
-      );
-    }
+        if (code === undefined) {
+          throw new Error(`the book's ${slug} chapter marks no ${name} example for the site`);
+        }
 
-    return code;
+        return [name, code];
+      }),
+    );
   }
 }

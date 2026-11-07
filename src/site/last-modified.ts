@@ -43,7 +43,7 @@ export class LastModified {
 
   /**
    * The dates from `git log --format=%x00%cI --name-only`, newest commit first; `slugs` maps a
-   * content file, such as `ai-assistants.md`, to the slug its front matter gives it, and `stated`
+   * content file, such as `ai-assistants.mdx`, to the slug its front matter gives it, and `stated`
    * a content file to the date its front matter states, which wins over the log.
    */
   public static fromLog(
