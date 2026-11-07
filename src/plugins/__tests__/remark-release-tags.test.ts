@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
+import { RepositoryName } from '../../site/types.ts';
 import { ReleaseTags } from '../remark-release-tags.ts';
 
 const dependency = (tag: string): string =>
@@ -56,5 +57,17 @@ describe('ReleaseTags', () => {
 
   it('refuses data that is not a repository and its tag', () => {
     expect(() => new ReleaseTags({ 'not a repository': 'v1' })).toThrow(/release-tags/u);
+  });
+
+  it('counts a release as a prerelease by its version, not by a package prefix', () => {
+    const platform = new RepositoryName('enshwick/enshwick');
+    const of = (tag: string): boolean =>
+      new ReleaseTags({ 'enshwick/enshwick': tag }).prerelease(platform);
+
+    expect(of('v1.0.0-alpha.13')).toBe(true);
+    expect(of('enshwick-v1.0.0-beta.1')).toBe(true);
+    expect(of('v1.0.0')).toBe(false);
+    expect(of('enshwick-v1.0.0')).toBe(false);
+    expect(new ReleaseTags({}).prerelease(platform)).toBe(false);
   });
 });

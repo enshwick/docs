@@ -1,16 +1,31 @@
 import { statSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 
+import sourcesData from '../src/data/sources.json' with { type: 'json' };
+import { ReleaseTags } from '../src/plugins/remark-release-tags.ts';
 import { Languages } from '../src/site/languages.ts';
 import { Texts } from '../src/site/texts.ts';
+import { Sources } from '../src/site/types.ts';
 import { PageFile } from './lib/page-file.ts';
+import { PinRule } from './lib/pin-rule.ts';
 import { PlayerProse } from './lib/player-prose.ts';
 
 // Checks the site's player pages: the pictures of every page in every language, and the English
 // pages against the countable player writing rules (words players are not told, sentence and
 // paragraph length). A page's average sentence length and reading grade are printed when above
 // their target, without failing. The developer pages under /dev/ are left out. The site's short
-// texts (the front page among them) are checked in every language for the same limits.
+// texts (the front page among them) are checked in every language for the same limits. Every tracked
+// page, developer pages included, is checked for install, dependency and docs.rs lines that would
+// send a reader to another version than the platform's newest; the book pages fetched from enshwick
+// are checked there, by `cargo xtask check`.
+
+const sources = Sources.parse(sourcesData);
+
+if (!sources.ok) {
+  throw new TypeError(`src/data/sources.json: ${JSON.stringify(sources.issues)}`);
+}
+
+const alpha = ReleaseTags.fromGenerated().prerelease(sources.value.platform.repository);
 
 const others = Languages.site.others.map((code) => `${PageFile.contentRoot}/${code}/`);
 const developer = /^slug:\s*dev\//mu;
@@ -39,6 +54,13 @@ const size = (page: string, path: string): number | typeof PlayerProse.missing |
 };
 
 let failed = false;
+
+for (const { file, text } of pages) {
+  for (const { line, message } of PinRule.of(text, alpha).problems) {
+    process.stderr.write(`${file}:${line}: ${message}\n`);
+    failed = true;
+  }
+}
 
 for (const { file, text } of pages.filter((page) => !developer.test(page.text))) {
   for (const problem of PlayerProse.media(
