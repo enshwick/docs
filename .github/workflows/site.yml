@@ -3,8 +3,8 @@
 name: site
 
 on:
-  # Every pull request, so the required check always reports; a draft reports
-  # it skipped, which counts as passed, and marking it ready runs it.
+  # Every ready pull request, so the required check always reports; a draft
+  # runs nothing, and marking it ready runs the check.
   pull_request:
     types: [opened, synchronize, reopened, ready_for_review]
   push:
@@ -22,7 +22,11 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  # Skipped here, a draft reports no `site / build` at all: a skipped one
+  # counts as passed, still once the pull request is marked ready, before
+  # the ready run's own check exists, and on a re-run of the draft's run.
   site:
+    if: github.event.pull_request.draft != true
     uses: ./.github/workflows/docs-site.yml
     permissions:
       contents: read
