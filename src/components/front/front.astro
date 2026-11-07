@@ -25,7 +25,6 @@ const steps = [1, 2, 3, 4];
 const client = data.gameBuilds.find((build) => build.side === 'client');
 const sections = [
   { id: 'top', key: 'front.nav.top' },
-  { id: 'patch', key: 'front.nav.patch' },
   { id: 'players', key: 'front.nav.players' },
   { id: 'makers', key: 'front.nav.makers' },
   { id: 'install', key: 'front.install.title' },
@@ -35,20 +34,20 @@ const sections = [
 ];
 // Each row: its key under `front.<group>.`, and the page its answer links to, where it has one.
 const players = [
-  { id: 'patch', href: '#patch' },
+  { id: 'patch' },
   { id: 'clash' },
   { id: 'fault' },
   { id: 'join', href: `${prefix}/guides/play-on-a-server/` },
-  { id: 'settings', href: `${prefix}/guides/change-mod-settings/` },
+  { id: 'settings', href: `${prefix}/reference/where-files-live/` },
 ];
 const makers = [
-  { id: 'together', href: `${prefix}/dev/services/` },
-  { id: 'languages', href: `${prefix}/dev/luau/` },
-  { id: 'types', href: `${prefix}/dev/api-coverage/` },
-  { id: 'levels', href: `${prefix}/dev/hooks/` },
-  { id: 'tests', href: `${prefix}/dev/testing/` },
+  { id: 'api' },
+  { id: 'patches' },
+  { id: 'together' },
+  { id: 'languages' },
   { id: 'tool', href: `${prefix}/dev/getting-started/` },
-  { id: 'texts', href: `${prefix}/dev/content/texts/` },
+  { id: 'levels' },
+  { id: 'texts' },
 ];
 const contribute = [
   { id: 'api', href: Links.site.ideas.toString() },
@@ -103,17 +102,6 @@ const smallestMod = new Snippet(smallestModSource.trimEnd(), SnippetLanguage.Rus
     </div>
   </section>
 
-  <section class="ew-section ew-section--band" id="patch" aria-labelledby="ew-patch">
-    <div class="ew-wrap">
-      <h2 id="ew-patch">{t('front.patch.title')}</h2>
-      <p class="ew-patch__lead">{t('front.patch.lead')}</p>
-      <div class="ew-fact">
-        <h3>{t('front.patch.update.title')}</h3>
-        <p>{t('front.patch.update.text')}</p>
-      </div>
-    </div>
-  </section>
-
   <section class="ew-section" id="players" aria-labelledby="ew-players">
     <div class="ew-wrap">
       <h2 id="ew-players">{t('front.players.title')}</h2>
@@ -132,10 +120,7 @@ const smallestMod = new Snippet(smallestModSource.trimEnd(), SnippetLanguage.Rus
           ))
         }
       </ul>
-      <p class="ew-note">
-        {t('front.players.caveat')}
-        <a class="ew-points__link" href={`${prefix}/explanation/how-mods-work/`}>{t('front.players.more')}</a>
-      </p>
+      <p class="ew-note">{t('front.players.caveat')}</p>
     </div>
   </section>
 
@@ -149,7 +134,9 @@ const smallestMod = new Snippet(smallestModSource.trimEnd(), SnippetLanguage.Rus
               <h3 class="ew-mods__name">{t(`front.makers.${row.id}.q`)}</h3>
               <p class="ew-mods__line">
                 {t(`front.makers.${row.id}.a`)}
-                <a class="ew-points__link" href={row.href}>{t(`front.makers.${row.id}.link`)}</a>
+                {row.href !== undefined && (
+                  <a class="ew-points__link" href={row.href}>{t(`front.makers.${row.id}.link`)}</a>
+                )}
               </p>
             </li>
           ))
@@ -258,7 +245,6 @@ const smallestMod = new Snippet(smallestModSource.trimEnd(), SnippetLanguage.Rus
       </ul>
       <p class="ew-note">
         <a href={`${prefix}/aims/`}>{t('front.contribute.aims')}</a>
-        <a href={`${prefix}/dev/api-coverage/`}>{t('front.makers.types.link')}</a>
       </p>
     </div>
   </section>
