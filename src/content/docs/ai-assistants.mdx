@@ -9,8 +9,10 @@ import AltarCount from '../../generated/altar-count.md';
 
 Enshwick is a modding API platform for the game Enshrouded. A mod for it is a
 data pack, a Luau mod or a Rust mod. Choose the smallest kind that does the job.
-Check every API name in the [API reference](https://docs.rs/enshwick) or in the
-guide before you use it.
+Check every API name in the guide or in the
+[API source](https://github.com/enshwick/enshwick/tree/main/crates/enshwick/src)
+before you use it. In a mod's folder, `cargo doc -p enshwick --open` builds the
+API reference for the version the mod uses.
 
 ## Kinds of mod
 
@@ -98,7 +100,6 @@ Its code, which the guide compiles in [Altars and bases](/dev/altars/#altars-per
 - From 1.0, the `enshwick` crate follows Semantic Versioning.
 - The `unstable` feature holds young APIs that may change in any release, such
   as `world`, `map`, `actions`, `console`, `script`, `rates` and damage filters.
-  The API reference marks each of these items "Unstable".
 - Turn it on only when the mod needs such an item:
 
   ```toml
@@ -177,8 +178,8 @@ Names follow the Rust API: the event `PlayerJoined` is `events::PlayerJoined`.
 
 ## Where to read more
 
-- [API reference on docs.rs](https://docs.rs/enshwick): every public item of the
-  `enshwick` crate.
+- [API source](https://github.com/enshwick/enshwick/tree/main/crates/enshwick/src):
+  every public item of the `enshwick` crate with its rustdoc.
 - [Introduction](/dev/) to the guide for mod makers.
 - [llms.txt](/llms.txt): the index of the files for language models, with a set
   for mod makers.
