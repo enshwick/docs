@@ -2,13 +2,15 @@ import { statSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 
 import { Languages } from '../src/site/languages.ts';
+import { Texts } from '../src/site/texts.ts';
 import { PageFile } from './lib/page-file.ts';
 import { PlayerProse } from './lib/player-prose.ts';
 
 // Checks the site's player pages: the pictures of every page in every language, and the English
 // pages against the countable player writing rules (words players are not told, sentence and
 // paragraph length). A page's average sentence length and reading grade are printed when above
-// their target, without failing. The developer pages under /dev/ are left out.
+// their target, without failing. The developer pages under /dev/ are left out. The site's short
+// texts (the front page among them) are checked in every language for the same limits.
 
 const others = Languages.site.others.map((code) => `${PageFile.contentRoot}/${code}/`);
 const developer = /^slug:\s*dev\//mu;
@@ -61,6 +63,17 @@ for (const { file, text } of pages.filter((page) => !developer.test(page.text)))
 
   for (const warning of prose.warnings) {
     process.stderr.write(`${file}: warning: ${warning}\n`);
+  }
+}
+
+for (const key of Texts.site.keys) {
+  for (const { code } of Languages.site.all.filter((language) =>
+    Texts.site.has(key, language.code),
+  )) {
+    for (const { message } of PlayerProse.ofText(Texts.site.get(key, code)).errors) {
+      process.stderr.write(`${Texts.file}: ${key} (${code}): ${message}\n`);
+      failed = true;
+    }
   }
 }
 

@@ -27,6 +27,14 @@ describe('PlayerProse', () => {
     ]);
   });
 
+  it('reads a site text as one paragraph, even one that opens like markup', () => {
+    expect(PlayerProse.ofText('One. Два. Three.').errors).toEqual([]);
+    expect(PlayerProse.ofText('- One. Два. Three. Чотири.').errors).toEqual([
+      { line: 1, message: 'a paragraph of 4 sentences; keep it to 3' },
+    ]);
+    expect(PlayerProse.ofText(`Одне ${words(25)}.`).errors).toHaveLength(1);
+  });
+
   it('counts each list item as its own paragraph, wrapped lines included', () => {
     const list = '- One. Two.\n  Three.\n- Four. Five.\n';
 

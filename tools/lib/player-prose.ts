@@ -89,6 +89,11 @@ export class PlayerProse {
     return new PlayerProse(blocks);
   }
 
+  /** Reads one of the site's short texts, such as a front page answer, as a single paragraph. */
+  public static ofText(text: string): PlayerProse {
+    return new PlayerProse([{ line: 1, text: PlayerProse.plain(text) }]);
+  }
+
   /** The findings that fail a page: banned words, long sentences and long paragraphs. */
   public get errors(): ProseFinding[] {
     return this.blocks.flatMap(({ line, text }) => {
