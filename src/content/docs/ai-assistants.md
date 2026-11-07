@@ -22,7 +22,7 @@ guide before you use it.
 
 ```bash
 rustup target add x86_64-pc-windows-msvc
-cargo install cargo-enshwick
+cargo install --git https://github.com/enshwick/enshwick --tag v1.0.0-alpha.13 cargo-enshwick
 ```
 
 A Rust mod needs Rust 1.99 or newer and, on Windows, the MSVC build tools.
@@ -136,7 +136,7 @@ enshwick::declare_mod!(AltarCount);
 
   ```toml
   [dependencies]
-  enshwick = { version = "1", features = ["unstable"] }
+  enshwick = { git = "https://github.com/enshwick/enshwick", tag = "v1.0.0-alpha.13", features = ["unstable"] }
   ```
 
 - In Luau, `enshwick.d.luau` marks the unstable parts, such as the `world`
@@ -151,7 +151,7 @@ on its `test` feature for tests only:
 
 ```toml
 [dev-dependencies]
-enshwick = { version = "1", features = ["test"] }
+enshwick = { git = "https://github.com/enshwick/enshwick", tag = "v1.0.0-alpha.13", features = ["test"] }
 ```
 
 1. Build a `FakeHost` with what the game would answer: symbols, settings text,

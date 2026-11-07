@@ -13,7 +13,8 @@ import { PlatformChecks } from './lib/platform-checks.ts';
 
 // Fills the generated part of the site from its sources before every build: the developer area
 // from the platform's book at each version's ref, the mod pages from each mod's release in the mods repository, and
-// the data of the compatibility page, and the release each download link points at. Generated files
+// the data of the compatibility page, the release each download link points at and the tag the
+// install and dependency lines name. Generated files
 // are never committed.
 
 const generated = 'src/generated';
@@ -120,6 +121,10 @@ await Bun.write(
 );
 await Bun.write(`${generated}/smallest-mod.rs`, `${platformChecks.smallestMod()}\n`);
 await Bun.write(`${generated}/dev-sidebar.json`, `${JSON.stringify(developerSidebar, null, 2)}\n`);
+await Bun.write(
+  `${generated}/release-tags.json`,
+  `${JSON.stringify({ [platform.repository.toString()]: loaderTag }, null, 2)}\n`,
+);
 await Bun.write(
   `${generated}/release-archives.json`,
   `${JSON.stringify(

@@ -21,6 +21,7 @@ import releaseArchivesData from './src/generated/release-archives.json' with { t
 import { TableFrame } from './src/plugins/rehype-table-frame.ts';
 import { BaseLinks } from './src/plugins/remark-base-links.ts';
 import { ReleaseLinks } from './src/plugins/remark-release-links.ts';
+import { ReleaseTags } from './src/plugins/remark-release-tags.ts';
 import { CodeTheme } from './src/site/code-theme.ts';
 import { Coverage } from './src/site/coverage.ts';
 import { Languages } from './src/site/languages.ts';
@@ -72,6 +73,7 @@ export default defineConfig({
       remarkPlugins: [
         new BaseLinks(siteData.base).plugin(),
         new ReleaseLinks(new ReleaseArchives(releaseArchivesData)).plugin(),
+        ReleaseTags.fromGenerated().plugin(),
       ],
       rehypePlugins: [new TableFrame().plugin()],
     }),
