@@ -66,15 +66,9 @@ for (const { file, text } of pages.filter((page) => !developer.test(page.text)))
   }
 }
 
-for (const key of Texts.site.keys) {
-  for (const { code } of Languages.site.all.filter((language) =>
-    Texts.site.has(key, language.code),
-  )) {
-    for (const { message } of PlayerProse.ofText(Texts.site.get(key, code)).errors) {
-      process.stderr.write(`${Texts.file}: ${key} (${code}): ${message}\n`);
-      failed = true;
-    }
-  }
+for (const finding of PlayerProse.ofTexts(Texts.site, Languages.site)) {
+  process.stderr.write(`${Texts.file}: ${finding}\n`);
+  failed = true;
 }
 
 if (failed) {

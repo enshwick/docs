@@ -22,7 +22,7 @@ export class Texts {
     const parsed = Texts.schema.parse(data);
 
     if (!parsed.ok) {
-      throw new TypeError(`src/data/texts.json: ${JSON.stringify(parsed.issues)}`);
+      throw new TypeError(`${Texts.file}: ${JSON.stringify(parsed.issues)}`);
     }
 
     this.entries = new Map(
@@ -45,7 +45,7 @@ export class Texts {
       byLanguage?.get(language.toString()) ?? byLanguage?.get(this.siteLanguages.root.toString());
 
     if (text === undefined) {
-      throw new TypeError(`src/data/texts.json has no "${key}"`);
+      throw new TypeError(`${Texts.file} has no "${key}"`);
     }
 
     return text;

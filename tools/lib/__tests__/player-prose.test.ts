@@ -1,5 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
+import { Languages } from '../../../src/site/languages.ts';
+import { Texts } from '../../../src/site/texts.ts';
 import { PlayerProse } from '../player-prose.ts';
 
 const words = (count: number): string => Array.from({ length: count }, () => 'word').join(' ');
@@ -33,6 +35,37 @@ describe('PlayerProse', () => {
       { line: 1, message: 'a paragraph of 4 sentences; keep it to 3' },
     ]);
     expect(PlayerProse.ofText(`Одне ${words(25)}.`).errors).toHaveLength(1);
+    expect(PlayerProse.of('# One. Two. Three. Four.').errors).toEqual([]);
+    expect(PlayerProse.ofText('# One. Two. Three. Four.').errors).toEqual([
+      { line: 1, message: 'a paragraph of 4 sentences; keep it to 3' },
+    ]);
+  });
+
+  it('ends a sentence after a typographic closing quote', () => {
+    expect(PlayerProse.sentences('Press „Моди“. Then “Mods.” Open it’s menu.')).toEqual([
+      'Press „Моди“.',
+      'Then “Mods.”',
+      'Open it’s menu.',
+    ]);
+  });
+
+  it('checks every text in each language that has its own, and only those', () => {
+    const languages = new Languages([
+      { code: 'en', label: 'English', default: true },
+      { code: 'uk', label: 'Українська' },
+    ]);
+    const texts = new Texts(
+      {
+        'a.short': { en: 'One.', uk: 'Одне. Два. Три. Чотири.' },
+        'b.root': { en: 'One. Two. Three. Four.' },
+      },
+      languages,
+    );
+
+    expect(PlayerProse.ofTexts(texts, languages)).toEqual([
+      'a.short (uk): a paragraph of 4 sentences; keep it to 3',
+      'b.root (en): a paragraph of 4 sentences; keep it to 3',
+    ]);
   });
 
   it('counts each list item as its own paragraph, wrapped lines included', () => {

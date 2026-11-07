@@ -1,3 +1,6 @@
+import type { Languages } from '../../src/site/languages.ts';
+import type { Texts } from '../../src/site/texts.ts';
+
 /** One finding in a page's player text, with the 1-based line it starts on. */
 export interface ProseFinding {
   readonly line: number;
@@ -13,7 +16,8 @@ interface ProseBlock {
 /**
  * The countable part of the player writing rules over one page's Markdown: words players are not
  * told, sentence and paragraph length, readability, and how pictures are given. Use it on the
- * site's English player pages and on each mod's `docs/player.md`.
+ * site's English player pages, on each mod's `docs/player.md`, and on the site's short texts in
+ * every language; the banned words, abbreviations and syllables are English.
  */
 export class PlayerProse {
   /**
@@ -40,9 +44,10 @@ export class PlayerProse {
   private static readonly pictures = /\.(?:webp|avif)$/iu;
   private static readonly loops = /\.(?:mp4|webm)$/iu;
   private static readonly gif = /\.gif$/iu;
-  private static readonly boundary = /[.!?]["')\]»]*\s+(?=["'(`[*«]*[\p{Lu}\p{N}])/gu;
+  /** Closing quotes include `“`, which closes a Ukrainian `„…“` quote. */
+  private static readonly boundary = /[.!?]["')\]»”’“]*\s+(?=["'(`[*«“„‘]*[\p{Lu}\p{N}])/gu;
   /** A short abbreviation whose period ends no sentence. */
-  private static readonly abbreviation = /\b(?:e\.g|i\.e|etc|vs)\.["')\]]*\s+$/iu;
+  private static readonly abbreviation = /\b(?:e\.g|i\.e|etc|vs)\.["')\]»”’“]*\s+$/iu;
 
   private constructor(private readonly blocks: readonly ProseBlock[]) {}
 
@@ -92,6 +97,19 @@ export class PlayerProse {
   /** Reads one of the site's short texts, such as a front page answer, as a single paragraph. */
   public static ofText(text: string): PlayerProse {
     return new PlayerProse([{ line: 1, text: PlayerProse.plain(text) }]);
+  }
+
+  /** The findings over every key of the site's short texts, in each language that has its own text. */
+  public static ofTexts(texts: Texts, languages: Languages): string[] {
+    return texts.keys.flatMap((key) =>
+      languages.all
+        .filter(({ code }) => texts.has(key, code))
+        .flatMap(({ code }) =>
+          PlayerProse.ofText(texts.get(key, code)).errors.map(
+            ({ message }) => `${key} (${code}): ${message}`,
+          ),
+        ),
+    );
   }
 
   /** The findings that fail a page: banned words, long sentences and long paragraphs. */
