@@ -40,6 +40,7 @@ describe('PinRule', () => {
       'Install it with `cargo install cargo-enshwick`.',
       '`cargo install cargo-enshwick`, then add `enshwick = { git = "https://github.com/enshwick/enshwick" }`',
       'cargo add serde && cd enshwick',
+      'cargo build -p cargo-enshwick',
     ].join('\n');
 
     expect(lines(text, true)).toEqual([2, 3]);
