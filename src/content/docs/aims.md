@@ -4,6 +4,8 @@ description: What the maintainer of Enshwick, the modding framework for Enshroud
 type: explanation
 ---
 
+The aim of Enshwick is a framework that does not break when the game updates.
+
 These are the things I would like Enshwick to do next. None of them has a date.
 Until version 1.0, any of them may change.
 
@@ -28,15 +30,15 @@ I would like this site in more languages than English and Ukrainian.
 
 ## Will there be mods for one player only?
 
-Mods that run only on one player's game would be nice to have. Today a mod
-runs on the server, or on the server and on every player's game. Mods for one
-player would need a new look at how those sides work.
+Mods that run only on one player's game would be nice to have. Today a mod runs
+on the server, or on the server and on every player's game. Mods for one player
+would need a new look at how those sides work.
 
 ## How can you help?
 
 To ask for an API or share an idea,
-[open an issue](https://github.com/enshwick/enshwick/issues/new/choose)
-on GitHub. Pull requests are welcome too, and the
+[open an issue](https://github.com/enshwick/enshwick/issues/new/choose) on
+GitHub. Pull requests are welcome too, and the
 [contributing guide](https://github.com/enshwick/enshwick/blob/main/CONTRIBUTING.md)
-explains how they work. The
-[API coverage](/dev/api-coverage/) page shows what the API reaches today.
+explains how they work. The [API coverage](/dev/api-coverage/) page shows what
+the API reaches today.
