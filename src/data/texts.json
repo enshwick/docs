@@ -508,8 +508,8 @@
     "uk": "Налаштування модів"
   },
   "front.players.settings.a": {
-    "en": "In game: the Mods screen, the gear next to the mod. Each world has its own.",
-    "uk": "У грі: екран Mods, шестерня біля мода. У кожного світу свої."
+    "en": "In game: the Mods screen, the settings button next to the mod. Each world has its own.",
+    "uk": "У грі: екран Mods, кнопка налаштувань біля мода. У кожного світу свої."
   },
   "front.players.caveat": {
     "en": "Enshwick has no control over mods made without it.",
