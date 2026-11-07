@@ -9,8 +9,6 @@ permissions: {}
 
 jobs:
   build:
-    # A draft cannot merge, and its work in progress would only fail.
-    if: github.event.pull_request.draft != true
     runs-on: ubuntu-26.04
     timeout-minutes: 20
     permissions:
