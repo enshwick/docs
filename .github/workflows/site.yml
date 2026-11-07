@@ -3,8 +3,10 @@
 name: site
 
 on:
-  # Every pull request, so the required check always reports.
+  # Every pull request, so the required check always reports; a draft reports
+  # it skipped, which counts as passed, and marking it ready runs it.
   pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
   push:
     branches: [main]
     paths-ignore:
