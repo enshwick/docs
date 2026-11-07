@@ -19,6 +19,8 @@ interface MarkdownNode {
 export class ReleaseTags {
   private static readonly schema = n.record(RepositoryName, GitRef);
   private static readonly host = 'github.com/';
+  /** What starts a version's prerelease part, as in `v1.0.0-alpha.13`. */
+  private static readonly prereleaseMark = '-';
   private static readonly codeTypes: ReadonlySet<string> = new Set(['code', 'inlineCode']);
   private static readonly tagged =
     /(--tag |tag = ")v\d+\.\d+\.\d+(?:-[0-9a-z]+(?:\.[0-9a-z]+)*)?(?:\+[0-9a-z]+(?:\.[0-9a-z]+)*)?(?![0-9A-Za-z+-]|\.[0-9A-Za-z])/gu;
@@ -41,6 +43,11 @@ export class ReleaseTags {
   /** The tags `tools/fetch.ts` picked for this build. */
   public static fromGenerated(): ReleaseTags {
     return new ReleaseTags(releaseTagsData);
+  }
+
+  /** Whether the newest release of `repository` is a prerelease, which crates.io and docs.rs never carry. */
+  public prerelease(repository: RepositoryName): boolean {
+    return this.tags.get(repository.toString())?.includes(ReleaseTags.prereleaseMark) ?? false;
   }
 
   /** The remark plugin: a function that returns the tree transformer. */
