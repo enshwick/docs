@@ -5,9 +5,7 @@ type: reference
 slug: dev/ai-assistants
 ---
 
-import { Code } from '@astrojs/starlight/components';
-
-import altarCount from '../../generated/altar-count.rs?raw';
+import AltarCount from '../../generated/altar-count.md';
 
 Enshwick is a modding API platform for the game Enshrouded. A mod for it is a
 data pack, a Luau mod or a Rust mod. Choose the smallest kind that does the job.
@@ -93,7 +91,7 @@ side = "both"
 
 Its code, which the guide compiles in [Altars and bases](/dev/altars/#altars-per-level-and-bases-past-16):
 
-<Code code={altarCount.trimEnd()} lang="rust" />
+<AltarCount />
 
 ## The unstable feature
 

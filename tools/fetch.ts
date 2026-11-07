@@ -120,9 +120,11 @@ await Bun.write(
   )}\n`,
 );
 await Promise.all(
-  [...platformChecks.snippets()].map(([name, code]) =>
+  [...platformChecks.snippets()].flatMap(([name, code]) => [
     Bun.write(`${generated}/${name}.rs`, `${code}\n`),
-  ),
+    // A page imports the Markdown copy, so the site's code highlighting renders it.
+    Bun.write(`${generated}/${name}.md`, `\`\`\`rust\n${code}\n\`\`\`\n`),
+  ]),
 );
 await Bun.write(`${generated}/dev-sidebar.json`, `${JSON.stringify(developerSidebar, null, 2)}\n`);
 await Bun.write(
