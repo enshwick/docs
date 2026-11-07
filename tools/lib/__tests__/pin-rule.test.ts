@@ -20,6 +20,42 @@ describe('PinRule', () => {
     expect(lines(text, false)).toEqual([]);
   });
 
+  it('fails cargo add, docs.rs crate pages and every requirement form as the same lines', () => {
+    const text = [
+      'cargo add enshwick --features unstable',
+      'cargo add --git https://github.com/enshwick/enshwick enshwick',
+      'cargo add --git https://github.com/enshwick/enshwick --tag v1.0.0-alpha.13 enshwick',
+      '[crate](https://docs.rs/crate/enshwick/latest)',
+      'enshwick = ">=1.0, <2"',
+      'enshwick = "1.*"',
+      'cargo add serde',
+    ].join('\n');
+
+    expect(lines(text, true)).toEqual([1, 2, 4, 5, 6]);
+  });
+
+  it('counts only the install command and its own words', () => {
+    const text = [
+      'Run `cargo install cargo-nextest`, then `cargo enshwick new` in enshwick',
+      'Install it with `cargo install cargo-enshwick`.',
+      '`cargo install cargo-enshwick`, then add `enshwick = { git = "https://github.com/enshwick/enshwick" }`',
+      'cargo add serde && cd enshwick',
+    ].join('\n');
+
+    expect(lines(text, true)).toEqual([2, 3]);
+    expect(lines(text, false)).toEqual([3]);
+  });
+
+  it('reads TOML literal strings as basic ones', () => {
+    const text = [
+      "enshwick = { git = 'https://github.com/enshwick/enshwick', tag = 'v1.0.0-alpha.13' }",
+      "enshwick = { git = 'https://github.com/enshwick/enshwick' }",
+      "enshwick = '1'",
+    ].join('\n');
+
+    expect(lines(text, true)).toEqual([2, 3]);
+  });
+
   it("fails a line of the platform's git without a tag or commit in every case", () => {
     const text = [
       'cargo install --git https://github.com/enshwick/enshwick cargo-enshwick',

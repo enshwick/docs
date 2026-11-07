@@ -14,9 +14,10 @@ import { PlayerProse } from './lib/player-prose.ts';
 // pages against the countable player writing rules (words players are not told, sentence and
 // paragraph length). A page's average sentence length and reading grade are printed when above
 // their target, without failing. The developer pages under /dev/ are left out. The site's short
-// texts (the front page among them) are checked in every language for the same limits. Every page, developer pages
-// included, is checked for install, dependency and docs.rs lines that would send a reader to
-// another version than the platform's newest.
+// texts (the front page among them) are checked in every language for the same limits. Every tracked
+// page, developer pages included, is checked for install, dependency and docs.rs lines that would
+// send a reader to another version than the platform's newest; the book pages fetched from enshwick
+// are checked there, by `cargo xtask check`.
 
 const sources = Sources.parse(sourcesData);
 

@@ -14,17 +14,21 @@ export class PinRule {
   /** The platform crates a mod maker installs or depends on. */
   private static readonly crates = ['enshwick', 'cargo-enshwick'];
   private static readonly repository = 'github.com/enshwick/enshwick';
-  private static readonly install = /\bcargo b?install\s/u;
+  private static readonly install = /\bcargo (?:b?install|add)\s+/u;
+  private static readonly separators: ReadonlySet<string> = new Set([';', '&&', '||', '|']);
+  /** Prose punctuation and code span marks around a word of a command. */
+  private static readonly wordEdge = /^[`.,;:()[\]]+|[`.,;:()[\]]+$/gu;
   private static readonly dependency = new RegExp(
     `(?<![\\w@:./-])(?:${PinRule.crates.join('|')})\\s*=(?!=)\\s*(.*)`,
     'u',
   );
   private static readonly docsRs = new RegExp(
-    `docs\\.rs/(?:${PinRule.crates.join('|')})(?![\\w-])`,
+    `docs\\.rs/(?:crate/)?(?:${PinRule.crates.join('|')})(?![\\w-])`,
     'u',
   );
+  /** A Cargo version requirement: comparators such as `>=1.2, <2` or `1.*`, or a bare `*`. */
   private static readonly requirement =
-    /^(?:[=^~<>]=?\s*)?\d+(?:\.\d+){0,2}(?:-[0-9A-Za-z.-]+)?$|^\*$/u;
+    /^\s*(?:(?:[=^~<>]=?\s*)?\d+(?:\.(?:\d+|[*xX])){0,2}(?:-[0-9A-Za-z.-]+)?(?:\+[0-9A-Za-z.-]+)?\s*(?:,\s*|$))+$|^\s*\*\s*$/u;
   private static readonly workspace = /(?:^|[\s,{])workspace\s*=\s*true/u;
   private static readonly flags = { git: '--git', tag: '--tag', rev: '--rev', path: '--path' };
   private static readonly keys = {
@@ -54,11 +58,14 @@ export class PinRule {
   }
 
   private static problem(line: string, alpha: boolean): string | undefined {
-    const pin = PinRule.installPin(line) ?? PinRule.dependencyPin(line);
+    const pins = [PinRule.installPin(line), PinRule.dependencyPin(line)];
 
-    if (pin === PinRule.gitMessage) {
-      return pin;
+    // A git line fails in every case, so another kind on its line must not hide it.
+    if (pins.includes(PinRule.gitMessage)) {
+      return PinRule.gitMessage;
     }
+
+    const pin = pins.find((found) => found !== undefined);
 
     if (!alpha) {
       return undefined;
@@ -67,12 +74,28 @@ export class PinRule {
     return pin ?? (PinRule.docsRs.test(line) ? PinRule.docsRsMessage : undefined);
   }
 
+  /** Only the command's own words count: it ends with its code span or at a shell separator. */
   private static installPin(line: string): string | undefined {
-    if (!PinRule.install.test(line)) {
+    const command = PinRule.install.exec(line);
+
+    if (command === null) {
       return undefined;
     }
 
-    const words = line.split(/\s+/u).map((word) => word.replaceAll('`', ''));
+    const words: string[] = [];
+
+    for (const word of line.slice(command.index + command[0].length).split(/\s+/u)) {
+      if (PinRule.separators.has(word)) {
+        break;
+      }
+
+      words.push(word.replace(PinRule.wordEdge, ''));
+
+      if (word.includes('`')) {
+        break;
+      }
+    }
+
     const namesCrate = words.some((word) =>
       PinRule.crates.some((crate) => word === crate || word.startsWith(`${crate}@`)),
     );
@@ -106,8 +129,10 @@ export class PinRule {
       return undefined;
     }
 
-    if (value.startsWith('"')) {
-      const requirement = value.slice(1).split('"')[0] ?? '';
+    const quote = value[0];
+
+    if (quote === '"' || quote === "'") {
+      const requirement = value.slice(1).split(quote)[0] ?? '';
 
       return PinRule.requirement.test(requirement) ? PinRule.registryMessage : undefined;
     }
@@ -141,8 +166,10 @@ export class PinRule {
     return PinRule.field(table, keys.version) === undefined ? undefined : PinRule.registryMessage;
   }
 
-  /** The string value of `key` in an inline table. */
+  /** The string value of `key` in an inline table, basic or literal. */
   private static field(table: string, key: string): string | undefined {
-    return new RegExp(`(?:^|[\\s,])${key}\\s*=\\s*"([^"]*)"`, 'u').exec(table)?.[1];
+    const found = new RegExp(`(?:^|[\\s,])${key}\\s*=\\s*(?:"([^"]*)"|'([^']*)')`, 'u').exec(table);
+
+    return found?.[1] ?? found?.[2];
   }
 }

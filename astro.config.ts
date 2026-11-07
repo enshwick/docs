@@ -234,7 +234,7 @@ export default defineConfig({
           description:
             'Enshwick is the modding framework and API for the game Enshrouded, with a mod loader for PCs and dedicated servers. Mod makers write mods in Rust against the `enshwick` crate, in Luau against the same API by the same names, as data packs without code, or in any language with a C ABI through its C header. Mods offer each other typed services, events and extension points. Players install the loader once, and it runs every mod in the `mods` folder of the game.',
           details: [
-            `To write a mod, read [For AI assistants](${siteData.url}${siteData.base}/dev/ai-assistants/) first: the kinds of mod, \`cargo enshwick new\`, the \`unstable\` feature and tests with the fake host. The API reference of the \`enshwick\` crate is the rustdoc in its source, listed as API source, which \`cargo doc -p enshwick --open\` builds in a mod's folder.`,
+            `To write a mod, read [For AI assistants](${siteData.url}${siteData.base}/dev/ai-assistants/) first: the kinds of mod, \`cargo enshwick new\`, the \`unstable\` feature and tests with the fake host. The API reference of the \`enshwick\` crate is the rustdoc in its source, listed as API source, which \`cargo doc -p enshwick --open\` builds in a mod's folder with the features the mod turns on.`,
             ...(apiMap === undefined ? [] : [apiMap]),
           ].join('\n\n'),
           customSets: [
