@@ -21,7 +21,7 @@ export class ReleaseTags {
   private static readonly host = 'github.com/';
   private static readonly codeTypes: ReadonlySet<string> = new Set(['code', 'inlineCode']);
   private static readonly tagged =
-    /(--tag |tag = ")v\d+\.\d+\.\d+(?:-[0-9a-z.]+)?(?:\+[0-9a-z.]+)?(?![0-9A-Za-z.+-])/gu;
+    /(--tag |tag = ")v\d+\.\d+\.\d+(?:-[0-9a-z]+(?:\.[0-9a-z]+)*)?(?:\+[0-9a-z]+(?:\.[0-9a-z]+)*)?(?![0-9A-Za-z+-]|\.[0-9A-Za-z])/gu;
 
   private readonly tags: ReadonlyMap<string, string>;
 

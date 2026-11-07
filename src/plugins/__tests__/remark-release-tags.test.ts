@@ -6,6 +6,8 @@ const dependency = (tag: string): string =>
   `enshwick = { git = "https://github.com/enshwick/enshwick", tag = "${tag}", features = ["test"] }`;
 const install = (tag: string): string =>
   `cargo install --git https://github.com/enshwick/enshwick --tag ${tag} cargo-enshwick`;
+const sentence = (tag: string): string =>
+  `Install from https://github.com/enshwick/enshwick with --tag ${tag}.`;
 
 describe('ReleaseTags', () => {
   const tags = new ReleaseTags({ 'enshwick/enshwick': 'v1.0.0-alpha.13' });
@@ -23,6 +25,10 @@ describe('ReleaseTags', () => {
 
     expect(tree.children[0]?.value).toBe(`[dependencies]\n${dependency('v1.0.0-alpha.13')}`);
     expect(tree.children[1]?.children?.[0]?.value).toBe(install('v1.0.0-alpha.13'));
+  });
+
+  it('keeps the period of a sentence that ends on the tag', () => {
+    expect(tags.pin(sentence('v1.0.0-alpha.12'))).toBe(sentence('v1.0.0-alpha.13'));
   });
 
   it('leaves placeholders, other repositories and prose alone', () => {
