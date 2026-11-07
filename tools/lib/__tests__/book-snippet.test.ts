@@ -22,6 +22,14 @@ describe('BookSnippet', () => {
     );
   });
 
+  it('takes the block right after the comment when no closing comment follows', () => {
+    expect(
+      new BookSnippet(
+        '<!-- altar-count -->\n```rust\nstruct A;\n```\n\n```luau\nlocal a\n```\n',
+      ).named('altar-count'),
+    ).toBe('struct A;');
+  });
+
   it('finds nothing when the chapter has no such comments', () => {
     expect(new BookSnippet(chapter).named('another')).toBeUndefined();
   });

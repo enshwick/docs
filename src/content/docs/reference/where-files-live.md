@@ -73,8 +73,11 @@ any log file yourself.
 A log file holds up to 8 MiB. A full file ends with a line that names the next
 file, and the run goes on there.
 
-To ask for help, attach Enshwick's file of the run that went wrong and, after
-a crash, the crash file.
+To ask for help, attach Enshwick's file of the run that went wrong. When a mod
+went wrong, add that mod's file. After a crash, add the crash file.
+
+When Enshwick did not start, it has no file of its own. Attach
+`logs/start.log` instead.
 
 When Enshwick writes one of its files again, it keeps the old one beside it,
 such as `clones.toml.bak`.
