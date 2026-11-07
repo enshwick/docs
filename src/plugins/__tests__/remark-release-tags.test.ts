@@ -43,7 +43,7 @@ describe('ReleaseTags', () => {
 
   it('pins every install and dependency line of the AI assistants page', async () => {
     const page = await Bun.file(
-      new URL('../../content/docs/ai-assistants.md', import.meta.url),
+      new URL('../../content/docs/ai-assistants.mdx', import.meta.url),
     ).text();
     const lines = page
       .split('\n')
