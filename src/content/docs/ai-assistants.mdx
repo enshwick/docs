@@ -5,6 +5,10 @@ type: reference
 slug: dev/ai-assistants
 ---
 
+import { Code } from '@astrojs/starlight/components';
+
+import altarCount from '../../generated/altar-count.rs?raw';
+
 Enshwick is a modding API platform for the game Enshrouded. A mod for it is a
 data pack, a Luau mod or a Rust mod. Choose the smallest kind that does the job.
 Check every API name in the [API reference](https://docs.rs/enshwick) or in the
@@ -62,8 +66,12 @@ A Rust mod needs Rust 1.99 or newer and, on Windows, the MSVC build tools.
 - A mod implements `enshwick::Mod`: `init(load: &mut Load)` sets the mod up.
   `enshwick::declare_mod!(Type)` exports it and builds its manifest from
   `Cargo.toml`.
-- Settings are a type that derives `enshwick::Config`. `load.config()` reads it,
-  and `load.on_config_change` applies an edited file.
+- Settings belong to each world. A settings type is a struct with a `Default`,
+  marked `#[enshwick::config]`. `load.on_settings` gets the defaults during
+  `init` and the world's values each time a world loads. A change applies at
+  the next world load; `load.on_settings_change` also gets each live change.
+  Register the same hooks and content whatever the settings say. See
+  [Settings](/dev/settings/).
 - A mod that changes values a server and its players share sets
   `side = "both"`; a mod only the world's side needs sets `side = "server"`.
   See [The join check](/dev/concepts/join-check/).
@@ -83,48 +91,9 @@ id = "you.my-altar-count"
 side = "both"
 ```
 
-Its code:
+Its code, which the guide compiles in [Altars and bases](/dev/altars/#altars-per-level-and-bases-past-16):
 
-```rust
-use std::sync::atomic::{AtomicU8, Ordering};
-
-use enshwick::{Load, Mod, Off};
-
-/// Flame Altar settings.
-#[derive(serde::Deserialize, serde::Serialize, enshwick::Config)]
-#[serde(deny_unknown_fields)]
-struct Settings {
-    /// Altars allowed at every Flame level, 1 to 16.
-    altars: u8,
-}
-
-impl Default for Settings {
-    fn default() -> Self {
-        Self { altars: 16 }
-    }
-}
-
-static ALTARS: AtomicU8 = AtomicU8::new(16);
-
-fn apply(settings: &Settings) {
-    ALTARS.store(settings.altars.clamp(1, 16), Ordering::Relaxed);
-}
-
-struct AltarCount;
-
-impl Mod for AltarCount {
-    fn init(load: &mut Load<'_>) -> Result<Self, Off> {
-        let settings: Settings = load.config()?;
-        apply(&settings);
-        load.on_altar_limit(|limit| limit.allowed = ALTARS.load(Ordering::Relaxed))?;
-        load.on_config_change(|settings: Settings| apply(&settings))?;
-        enshwick::info!("{} altars per Flame level", settings.altars);
-        Ok(Self)
-    }
-}
-
-enshwick::declare_mod!(AltarCount);
-```
+<Code code={altarCount.trimEnd()} lang="rust" />
 
 ## The unstable feature
 

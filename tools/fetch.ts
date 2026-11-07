@@ -119,7 +119,11 @@ await Bun.write(
     2,
   )}\n`,
 );
-await Bun.write(`${generated}/smallest-mod.rs`, `${platformChecks.smallestMod()}\n`);
+await Promise.all(
+  [...platformChecks.snippets()].map(([name, code]) =>
+    Bun.write(`${generated}/${name}.rs`, `${code}\n`),
+  ),
+);
 await Bun.write(`${generated}/dev-sidebar.json`, `${JSON.stringify(developerSidebar, null, 2)}\n`);
 await Bun.write(
   `${generated}/release-tags.json`,
