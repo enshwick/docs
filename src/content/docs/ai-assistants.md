@@ -22,7 +22,7 @@ guide before you use it.
 
 ```bash
 rustup target add x86_64-pc-windows-msvc
-cargo install cargo-enshwick
+cargo install --git https://github.com/enshwick/enshwick --tag v1.0.0-alpha.13 cargo-enshwick
 ```
 
 A Rust mod needs Rust 1.99 or newer and, on Windows, the MSVC build tools.
