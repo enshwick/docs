@@ -16,7 +16,7 @@ developer pages are versioned per API minor.
 | stability badges on API pages, and Stable or Unstable on the API coverage page | the book's stability chapter and the API crate's public modules | `tools/fetch.ts` writes `src/generated/stability.json`, and every module and item the chapter's unstable table names into `src/generated/unstable.json` |
 | the whole mod on the front page | the example the book's getting started chapter marks with `smallest-mod` comments, compiled there as a doctest | `tools/fetch.ts` writes `src/generated/smallest-mod.rs` and fails when the chapter no longer marks it |
 | a social card per page | each page's title and description | `src/pages/og/` draws them at build time over the same night as the front page |
-| compatibility | the platform's build tables and each mod's `Cargo.toml` at its release | `tools/fetch.ts` writes `src/generated/compatibility.json`, which `src/components/compatibility.astro` renders |
+| compatibility | the platform's compatibility reports and each mod's `Cargo.toml` at its release | `tools/fetch.ts` writes `src/generated/compatibility.json`, which `src/components/compatibility.astro` renders |
 | `llms.txt` | the developer pages, with a map of the API crate's public modules | `tools/fetch.ts` fails when a public module of the API crate has no developer page that names it |
 
 Generated pages are never committed: `tools/fetch.ts` writes them before every
