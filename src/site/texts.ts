@@ -6,6 +6,8 @@ import { LanguageCode, TextKey } from './types.ts';
 
 /** The site's own short texts, from `src/data/texts.json`, one entry per key and language. */
 export class Texts {
+  /** Where the texts live, for messages that point a writer at them. */
+  public static readonly file = 'src/data/texts.json';
   private static readonly schema = n.record(TextKey, n.record(LanguageCode, AnyString));
 
   /** The site's texts, as `src/data/texts.json` holds them. */
@@ -20,7 +22,7 @@ export class Texts {
     const parsed = Texts.schema.parse(data);
 
     if (!parsed.ok) {
-      throw new TypeError(`src/data/texts.json: ${JSON.stringify(parsed.issues)}`);
+      throw new TypeError(`${Texts.file}: ${JSON.stringify(parsed.issues)}`);
     }
 
     this.entries = new Map(
@@ -43,7 +45,7 @@ export class Texts {
       byLanguage?.get(language.toString()) ?? byLanguage?.get(this.siteLanguages.root.toString());
 
     if (text === undefined) {
-      throw new TypeError(`src/data/texts.json has no "${key}"`);
+      throw new TypeError(`${Texts.file} has no "${key}"`);
     }
 
     return text;

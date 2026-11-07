@@ -75,9 +75,10 @@ syntax rules read `.ts` files. `tools/check-prose.ts` fails a player page in any
 picture that is a GIF, is not WebP or AVIF, has no alt text, is missing or is over 200 KB, and an
 English player page on "simply", "just" or "easy", a sentence over 25 words or a paragraph over
 three sentences; it prints a page's average sentence length and reading grade when they pass their
-target, without failing. `tools/check-player-page.ts` holds a mod's pages to the same rules. Git
-hooks run oxfmt, oxlint, markdownlint and
-typos on changed files, and [actionlint](https://github.com/rhysd/actionlint)
+target, without failing. `tools/check-player-page.ts` holds a mod's pages to those rules.
+`tools/check-prose.ts` also holds every text in `src/data/texts.json`, the front page's among
+them, to the same word, sentence and paragraph limits, in each site language that has its own
+text. Git hooks run oxfmt, oxlint, markdownlint and typos on changed files, and [actionlint](https://github.com/rhysd/actionlint)
 and [zizmor](https://docs.zizmor.sh) when a workflow changed.
 
 The maintainers check the prose of English and Ukrainian pages with
