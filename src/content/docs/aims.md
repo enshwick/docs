@@ -18,6 +18,10 @@ without a rebuild.
 Until 1.0, anything may change between alphas. Back up your saves before you
 update.
 
+## Will Enshwick run mods written for EML?
+
+After version 1.0, I would like Enshwick to run mods written for EML.
+
 ## Will mod texts get plural forms?
 
 I plan to add plural forms to mod texts, by the Unicode CLDR rules. A language
