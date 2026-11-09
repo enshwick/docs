@@ -691,6 +691,10 @@
     "en": "Not made by or affiliated with Keen Games. Enshrouded is their trademark.",
     "uk": "Не створений Keen Games і не пов’язаний з ними. Enshrouded — їхня торгова марка."
   },
+  "foot.analytics": {
+    "en": "Anonymous visit counts by Cloudflare Web Analytics. No cookies.",
+    "uk": "Анонімний підрахунок відвідувань через Cloudflare Web Analytics. Без файлів cookie."
+  },
   "front.makers.api.q": {
     "en": "A clear API",
     "uk": "Зрозумілий API"

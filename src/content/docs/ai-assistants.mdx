@@ -37,7 +37,11 @@ A Rust mod needs Rust 1.99 or newer and, on Windows, the MSVC build tools.
 ## Mod ids
 
 - A mod id is `<author>.<name>`. Each part uses `[a-z0-9-]`, and the whole id
-  has at most 64 characters. The name starts with a letter.
+  has at most 64 characters. `cargo enshwick new` also needs the name to start
+  with a letter.
+- Most names a mod declares take its id in front, as `<mod id>:<name>`.
+  [How ids are namespaced](/dev/concepts/ids/) says which kinds, who writes
+  the prefix in Rust and Luau, and every limit.
 - The id names the mod's files: `mods/<id>/` for the mod,
   `<save>-mod-settings/<id>/` and `<save>-mod-data/<id>/` beside each world's
   save for that world's settings and data, and `logs/<id>_<date>_<time>.log`

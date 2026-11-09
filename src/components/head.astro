@@ -14,6 +14,7 @@ import { ModLanguages } from '../site/mod-languages.ts';
 import { type SidebarItem, StructuredData } from '../site/structured-data.ts';
 import { Texts } from '../site/texts.ts';
 import { LanguageCode } from '../site/types.ts';
+import { WebAnalytics } from '../site/web-analytics.ts';
 
 const route = Astro.locals.starlightRoute;
 const id = route.id;
@@ -56,6 +57,7 @@ const fonts = new FirstFonts(Languages.site.root.toString() !== lang).urls;
 // Each page's own social card, drawn at build time by the route under `src/pages/og/`, which
 // names the root home page `index` where Starlight's route gives it an empty id.
 const ogId = route.entry.id === '' ? 'index' : route.entry.id;
+const beacon = WebAnalytics.site.beacon;
 const ogImage =
   Astro.site === undefined || id === '404'
     ? undefined
@@ -65,6 +67,7 @@ const ogImage =
 <Default />
 {fonts.map((href) => <link rel="preload" href={href} as="font" type="font/woff2" crossorigin />)}
 <ClientRouter />
+{beacon !== undefined && <script is:inline defer src={WebAnalytics.script} data-cf-beacon={beacon}></script>}
 <meta name="ew-area" content={area.toString()} />
 {mod && <meta name="ew-mod" />}
 {ogImage !== undefined && <meta property="og:image" content={ogImage} />}

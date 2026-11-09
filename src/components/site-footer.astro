@@ -2,6 +2,7 @@
 import { Links } from '../site/links.ts';
 import { Texts } from '../site/texts.ts';
 import type { LanguageCode } from '../site/types.ts';
+import { WebAnalytics } from '../site/web-analytics.ts';
 import LanguageSelect from './language-select.astro';
 import ServiceIcon from './service-icon.astro';
 
@@ -30,6 +31,7 @@ const t = (key: string): string => Texts.site.get(key, language);
     <p class="ew-foot__legal">
       <a href={Links.site.license.toString()}>{t('foot.license')}</a>
       <span>{t('foot.not-affiliated')}</span>
+      {WebAnalytics.site.on && <span>{t('foot.analytics')}</span>}
     </p>
   </div>
 </footer>
