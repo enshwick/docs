@@ -67,6 +67,7 @@ describe('PlayerProse', () => {
       {
         'a.short': { en: 'One.', uk: 'Одне. Два. Три. Чотири.' },
         'b.root': { en: 'One. Two. Three. Four.' },
+        'c.words': { en: 'Just one.', uk: 'Just одне.' },
       },
       languages,
     );
@@ -74,6 +75,7 @@ describe('PlayerProse', () => {
     expect(PlayerProse.ofTexts(texts, languages)).toEqual([
       'a.short (uk): a paragraph of 4 sentences; keep it to 3',
       'b.root (en): a paragraph of 4 sentences; keep it to 3',
+      'c.words (en): "Just" tells the reader how hard something is',
     ]);
   });
 

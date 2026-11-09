@@ -99,16 +99,21 @@ export class PlayerProse {
     return new PlayerProse([{ line: 1, text: PlayerProse.plain(text) }]);
   }
 
-  /** The findings over every key of the site's short texts, in each language that has its own text. */
+  /**
+   * The findings over every key of the site's short texts, in each language that has its own text;
+   * the banned words only in the root language, which is English.
+   */
   public static ofTexts(texts: Texts, languages: Languages): string[] {
     return texts.keys.flatMap((key) =>
       languages.all
         .filter(({ code }) => texts.has(key, code))
-        .flatMap(({ code }) =>
-          PlayerProse.ofText(texts.get(key, code)).errors.map(
+        .flatMap(({ code, isDefault }) => {
+          const prose = PlayerProse.ofText(texts.get(key, code));
+
+          return (isDefault ? prose.errors : prose.limits).map(
             ({ message }) => `${key} (${code}): ${message}`,
-          ),
-        ),
+          );
+        }),
     );
   }
 
