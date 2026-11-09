@@ -158,6 +158,7 @@ describe('DistCheck', () => {
       'guides/install/index.html: its description has 6 characters, wants 120 to 160',
       'guides/remove/index.html: its description has 161 characters, wants 120 to 160',
       'index.html: has no description',
+      'uk/mods/optimizer/index.html: its description has 6 characters, wants 120 to 160',
     ]);
   });
 
