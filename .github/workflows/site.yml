@@ -14,6 +14,8 @@ on:
       - 'ARCHITECTURE.md'
       - 'LICENSE'
       - 'renovate.json'
+  # The merge queue checks each group of pull requests on top of main.
+  merge_group:
 
 permissions: {}
 
