@@ -1,4 +1,4 @@
-import { PlayerProse } from './player-prose.ts';
+import { Sentences } from './sentences.ts';
 
 /**
  * A page's meta description, the snippet search engines show: 120 to 160 characters, so it is
@@ -31,7 +31,7 @@ export class MetaDescription {
    * sentence follows cut at a word, with an ellipsis. Shorter texts stay short.
    */
   public static pack(texts: readonly string[]): string {
-    const sentences = texts.flatMap((text) => PlayerProse.sentences(text));
+    const sentences = texts.flatMap((text) => Sentences.of(text));
     let packed = '';
 
     for (const sentence of sentences) {

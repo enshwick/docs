@@ -11,9 +11,9 @@ import { PinRule } from './lib/pin-rule.ts';
 import { PlayerProse } from './lib/player-prose.ts';
 
 // Checks the site's player pages: the pictures and the sentence and paragraph length of every page
-// in every language, and the English pages against the words players are not told. An English
-// page's average sentence length and reading grade are printed when above their target, without
-// failing. The developer pages under /dev/ are left out. The site's short
+// in every language, and the English pages against the words players are not told. A page's average
+// sentence length, and an English page's reading grade, are printed when above their target,
+// without failing. The developer pages under /dev/ are left out. The site's short
 // texts (the front page among them) are checked in every language for the same limits. Every tracked
 // page, developer pages included, is checked for install, dependency and docs.rs lines that would
 // send a reader to another version than the platform's newest; the book pages fetched from enshwick
@@ -80,8 +80,7 @@ for (const { file, text } of pages.filter((page) => !developer.test(page.text)))
     failed = true;
   }
 
-  // The average and the grade count English syllables.
-  for (const warning of english ? prose.warnings : []) {
+  for (const warning of english ? prose.warnings : prose.lengthWarnings) {
     process.stderr.write(`${file}: warning: ${warning}\n`);
   }
 }

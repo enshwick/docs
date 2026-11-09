@@ -50,14 +50,6 @@ describe('PlayerProse', () => {
     ]);
   });
 
-  it('ends a sentence after a typographic closing quote', () => {
-    expect(PlayerProse.sentences('Press „Моди“. Then “Mods.” Open it’s menu.')).toEqual([
-      'Press „Моди“.',
-      'Then “Mods.”',
-      'Open it’s menu.',
-    ]);
-  });
-
   it('checks every text in each language that has its own, and only those', () => {
     const languages = new Languages([
       { code: 'en', label: 'English', default: true },
@@ -125,25 +117,13 @@ describe('PlayerProse', () => {
     expect(prose.errors).toEqual([]);
   });
 
-  it('does not end a Ukrainian sentence after див. or напр.', () => {
-    expect(PlayerProse.sentences('Ставте моди, напр. Better Altars, див. Налаштування.')).toEqual([
-      'Ставте моди, напр. Better Altars, див. Налаштування.',
-    ]);
-  });
+  it('warns on a long average without the English grade', () => {
+    const prose = PlayerProse.of(
+      `Одне ${words(15)} internationalization institutionalization characterization.\n`,
+    );
 
-  it('ends a sentence at an ellipsis and at the stops of scripts without capitals', () => {
-    expect(PlayerProse.sentences('Зачекайте… Далі грайте.')).toEqual([
-      'Зачекайте…',
-      'Далі грайте.',
-    ]);
-    expect(PlayerProse.sentences('One. ثانية؟ ثالثة. 第四。第五！')).toEqual([
-      'One.',
-      'ثانية؟',
-      'ثالثة.',
-      '第四。',
-      '第五！',
-    ]);
-    expect(PlayerProse.sentences('पहला। दूसरा।')).toEqual(['पहला।', 'दूसरा।']);
+    expect(prose.lengthWarnings).toEqual(['sentences average 19.0 words; the target is 15']);
+    expect(prose.warnings).toHaveLength(2);
   });
 
   it('ends a sentence before one that opens with a code span', () => {

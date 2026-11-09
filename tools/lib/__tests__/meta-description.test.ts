@@ -54,6 +54,15 @@ describe('MetaDescription', () => {
     ).toBe(whole);
   });
 
+  it('keeps a sentence that ends in an ellipsis whole, and never cuts after it', () => {
+    const whole = `${'а'.repeat(130)}…`;
+
+    expect(MetaDescription.pack([`${whole} Потім ${words(10)}.`])).toBe(whole);
+    expect(MetaDescription.pack(['Enshwick waits… The mod did not start.'])).toBe(
+      'Enshwick waits… The mod did not start.',
+    );
+  });
+
   it('skips an empty text without a doubled space', () => {
     expect(MetaDescription.pack(['E1: X.', '', 'Fix it.'])).toBe('E1: X. Fix it.');
   });

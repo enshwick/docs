@@ -1,5 +1,6 @@
 import type { Languages } from '../../src/site/languages.ts';
 import type { Texts } from '../../src/site/texts.ts';
+import { Sentences } from './sentences.ts';
 
 /** One finding in a page's player text, with the 1-based line it starts on. */
 export interface ProseFinding {
@@ -16,8 +17,8 @@ interface ProseBlock {
 /**
  * The countable part of the player writing rules over one page's Markdown: words players are not
  * told, sentence and paragraph length, readability, and how pictures are given. Use it on the
- * site's English player pages, on each mod's player page in every language, and on the site's
- * short texts in every language; the banned words and syllables are English.
+ * site's player pages, each mod's player pages and the site's short texts, in every language; the
+ * banned words and syllables are English, so `errors` and the grade suit English text only.
  */
 export class PlayerProse {
   /**
@@ -44,16 +45,6 @@ export class PlayerProse {
   private static readonly pictures = /\.(?:webp|avif)$/iu;
   private static readonly loops = /\.(?:mp4|webm)$/iu;
   private static readonly gif = /\.gif$/iu;
-  /**
-   * A stop in any script, then a closing quote or bracket, then the next sentence's first capital,
-   * uncased letter or digit. Closing quotes include `“`, which closes a Ukrainian `„…“` quote; the
-   * full-width stops of CJK need no space after them.
-   */
-  private static readonly boundary =
-    /(?:[.!?…؟।]["')\]»”’“」』]*\s+|[。！？]["')\]»”’“」』]*\s*)(?=["'(`[*«“„‘「『]*[\p{Lu}\p{Lt}\p{Lo}\p{N}])/gu;
-  /** A short abbreviation, English or Ukrainian, whose period ends no sentence. */
-  private static readonly abbreviation =
-    /(?<![\p{L}\p{N}])(?:e\.g|i\.e|etc|vs|див|напр)\.["')\]»”’“]*\s+$/iu;
 
   private constructor(private readonly blocks: readonly ProseBlock[]) {}
 
@@ -138,7 +129,7 @@ export class PlayerProse {
 
   private findings(withBannedWords: boolean): ProseFinding[] {
     return this.blocks.flatMap(({ line, text }) => {
-      const sentences = PlayerProse.sentences(text);
+      const sentences = Sentences.of(text);
       const found: ProseFinding[] = [];
       const banned = withBannedWords ? (text.match(PlayerProse.banned) ?? []) : [];
 
@@ -147,7 +138,7 @@ export class PlayerProse {
       }
 
       for (const sentence of sentences) {
-        const words = PlayerProse.words(sentence).length;
+        const words = Sentences.words(sentence).length;
 
         if (words > PlayerProse.maxSentenceWords) {
           found.push({
@@ -170,16 +161,16 @@ export class PlayerProse {
 
   /** The page's average sentence length in words. */
   public get averageWords(): number {
-    const sentences = this.blocks.flatMap(({ text }) => PlayerProse.sentences(text));
-    const words = sentences.reduce((sum, sentence) => sum + PlayerProse.words(sentence).length, 0);
+    const sentences = this.blocks.flatMap(({ text }) => Sentences.of(text));
+    const words = sentences.reduce((sum, sentence) => sum + Sentences.words(sentence).length, 0);
 
     return sentences.length === 0 ? 0 : words / sentences.length;
   }
 
   /** The page's Flesch-Kincaid grade level. */
   public get grade(): number {
-    const sentences = this.blocks.flatMap(({ text }) => PlayerProse.sentences(text));
-    const words = sentences.flatMap((sentence) => PlayerProse.words(sentence));
+    const sentences = this.blocks.flatMap(({ text }) => Sentences.of(text));
+    const words = sentences.flatMap((sentence) => Sentences.words(sentence));
     const syllables = words.reduce((sum, word) => sum + PlayerProse.syllables(word), 0);
 
     if (words.length === 0) {
@@ -189,19 +180,29 @@ export class PlayerProse {
     return 0.39 * (words.length / sentences.length) + 11.8 * (syllables / words.length) - 15.59;
   }
 
-  /** What a maintainer reads, without failing the page: an average or grade above its target. */
+  /** What a maintainer reads on an English page, without failing it: an average or grade above its target. */
   public get warnings(): string[] {
+    const warnings = this.lengthWarnings;
+
+    if (this.grade > PlayerProse.targetGrade) {
+      warnings.push(
+        `Flesch-Kincaid grade ${this.grade.toFixed(1)}; the target is ${PlayerProse.targetGrade}`,
+      );
+    }
+
+    return warnings;
+  }
+
+  /**
+   * What a maintainer reads on a page in any language, without failing it: an average sentence
+   * length above its target. The grade counts English syllables, so it stays with `warnings`.
+   */
+  public get lengthWarnings(): string[] {
     const warnings: string[] = [];
 
     if (this.averageWords > PlayerProse.targetAverageWords) {
       warnings.push(
         `sentences average ${this.averageWords.toFixed(1)} words; the target is ${PlayerProse.targetAverageWords}`,
-      );
-    }
-
-    if (this.grade > PlayerProse.targetGrade) {
-      warnings.push(
-        `Flesch-Kincaid grade ${this.grade.toFixed(1)}; the target is ${PlayerProse.targetGrade}`,
       );
     }
 
@@ -259,29 +260,6 @@ export class PlayerProse {
       .replaceAll(/[*_]/gu, '')
       .replaceAll(/\s+/gu, ' ')
       .trim();
-  }
-
-  /** Sentences end at a stop of any script, a closing quote or bracket after it allowed, before a capital, uncased letter or digit. */
-  public static sentences(text: string): string[] {
-    const sentences: string[] = [];
-    let start = 0;
-
-    for (const match of text.matchAll(PlayerProse.boundary)) {
-      const end = match.index + match[0].length;
-
-      if (!PlayerProse.abbreviation.test(text.slice(start, end))) {
-        sentences.push(text.slice(start, end).trim());
-        start = end;
-      }
-    }
-
-    sentences.push(text.slice(start).trim());
-
-    return sentences.filter((sentence) => PlayerProse.words(sentence).length > 0);
-  }
-
-  private static words(sentence: string): string[] {
-    return sentence.split(/\s+/u).filter((word) => /[\p{L}\p{N}]/u.test(word));
   }
 
   /** English syllables by vowel groups, a silent final e dropped, at least one per word. */
