@@ -26,7 +26,7 @@ with the game. It passes each request on to the real Windows file, so the game
 works as before.
 
 Enshwick then reads the `mods` folder and starts each mod in it. Before any mod
-changes anything, Enshwick checks the game's version against what it knows.
+changes anything, Enshwick finds the parts of the game that mods change.
 
 A game update can move the parts of the game that mods change. When Enshwick
 cannot find such a part, it turns off the features that need it.
@@ -54,8 +54,11 @@ If they differ, the game tells you which mod and version you need. It does not
 let you into a world that would break.
 [Play on a server](/guides/play-on-a-server/) shows each case.
 
-Other mods change only what you see or do on your own computer, such as a
-camera. You choose those mods yourself on any server.
+Other mods run only where the world runs: on the server, or on your computer
+when you host. You need nothing for them to join.
+
+When you join a server, your own mods that the server does not run stay off
+in that world.
 
 ## Is it safe?
 
@@ -73,7 +76,7 @@ So the safety of a mod with code depends on where it comes from:
 
 - **Our mods** are open source. Anyone can read every line.
 
-  Each file you download is built from that code on our own build machines.
+  Each file you download is built from that code by GitHub's build service.
   Each download comes with a record that ties it to the exact code it came
   from.
 

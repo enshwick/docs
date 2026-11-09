@@ -21,6 +21,8 @@ The game folder is the one that holds `enshrouded.exe` or
 | `mods/<mod id>/`                         | one folder per mod, with the mod's files; a mod runs while its folder is there   |
 | `mods/<mod id>/hold.txt`                 | a hold the mod set: the game stops while the mod does not run                    |
 | `enshwick.toml`                          | the settings of Enshwick itself, such as how much it writes to its logs          |
+| `mod-controls.toml`                      | the keys you chose for mod controls on this computer, only the ones you changed  |
+| `export/<mod id>/`                       | files a mod writes for other tools, such as a wiki or a map                      |
 | `logs/enshwick_<date>_<time>.log`        | the lines of Enshwick itself in one run: which mods loaded and why a mod did not |
 | `logs/<mod id>_<date>_<time>.log`        | the lines of one mod in one run                                                  |
 | `logs/enshwick-crash_<date>_<time>.log`  | one crash, with the mod, Enshwick or the game it came from                       |
