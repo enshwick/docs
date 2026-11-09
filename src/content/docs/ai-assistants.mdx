@@ -1,6 +1,6 @@
 ---
 title: For AI assistants
-description: The facts an AI coding assistant needs to write an Enshwick mod in Rust or Luau, or a data pack, with links to the full page for each topic.
+description: The facts an AI coding assistant needs to write an Enshwick mod in Rust, Luau, C or C++, or a data pack, with links to the full page for each topic.
 type: reference
 slug: dev/ai-assistants
 ---
@@ -8,7 +8,7 @@ slug: dev/ai-assistants
 import AltarCount from '../../generated/altar-count.md';
 
 Enshwick is a modding API platform for the game Enshrouded. A mod for it is a
-data pack, a Luau mod or a Rust mod. Choose the smallest kind that does the job.
+data pack, a Luau mod, a Rust mod or a C or C++ mod. Choose the smallest kind that does the job.
 Check every API name in the guide or in the
 [API source](https://github.com/enshwick/enshwick/tree/main/crates/enshwick/src)
 before you use it. In a mod's folder, `cargo doc -p enshwick --open` builds the
@@ -17,11 +17,12 @@ as `unstable` only once the mod turns that feature on.
 
 ## Kinds of mod
 
-| Kind      | What it is                                                                                                                        | Command to start one                        |
-| --------- | --------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------- |
-| Data pack | a folder with `pack.toml` and TOML files that change items, recipes, loot and other game data; no code                            | `cargo enshwick new --data <author>.<name>` |
-| Luau mod  | a data pack with Luau scripts that reach the Rust API by the same names, in a sandbox without native hooks                        | `cargo enshwick new --luau <author>.<name>` |
-| Rust mod  | a Windows DLL built against the `enshwick` crate, with the full API, hooks included                                               | `cargo enshwick new <author>.<name>`        |
+| Kind         | What it is                                                                                                                    | Command to start one                                        |
+| ------------ | ----------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------- |
+| Data pack    | a folder with `pack.toml` and TOML files that change items, recipes, loot and other game data; no code                        | `cargo enshwick new --data <author>.<name>`                 |
+| Luau mod     | a data pack with Luau scripts that reach the Rust API by the same names, in a sandbox without native hooks                    | `cargo enshwick new --luau <author>.<name>`                 |
+| Rust mod     | a Windows DLL built against the `enshwick` crate, with the full API, hooks included                                           | `cargo enshwick new <author>.<name>`                        |
+| C or C++ mod | a Windows DLL built against `enshwick.h`, the C header of the same API; any language that can call a C ABI works the same way | copy `enshwick.h`, see [Mods in C and C++](/dev/mods-in-c/) |
 
 ## Tools
 
