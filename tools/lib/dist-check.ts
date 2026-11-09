@@ -3,7 +3,6 @@ import { join, posix, sep } from 'node:path';
 import { Languages } from '../../src/site/languages.ts';
 import { Texts } from '../../src/site/texts.ts';
 import { MetaDescription } from './meta-description.ts';
-import { ModPages } from './mod-pages.ts';
 
 /** The checks of a built site that only the build output can answer, each problem as one line. */
 export class DistCheck {
@@ -114,7 +113,7 @@ export class DistCheck {
    * without one gets the site's own from Starlight, so outside a home page that counts as missing.
    */
   private static descriptionOf(page: string, text: string): string[] {
-    if (page === DistCheck.notFound || DistCheck.noindex.test(text) || DistCheck.exempt(page)) {
+    if (page === DistCheck.notFound || DistCheck.noindex.test(text)) {
       return [];
     }
 
@@ -139,19 +138,6 @@ export class DistCheck {
       : [
           `${page}: its description has ${MetaDescription.lengthOf(description)} characters, wants ${MetaDescription.shortest} to ${MetaDescription.longest}`,
         ];
-  }
-
-  /**
-   * Whether the page is a mod page, in any language, whose description comes from a release of the
-   * mods repository.
-   *
-   * shortcut: mod pages are checked only at their source by check-player-page, until each mod's
-   * next release carries a summary that fits; then check them here again.
-   */
-  private static exempt(page: string): boolean {
-    return DistCheck.languagePrefixes.some((prefix) =>
-      page.startsWith(`${prefix}${ModPages.folder}/`),
-    );
   }
 
   private async style(style: string): Promise<string[]> {

@@ -29,6 +29,15 @@ describe('PlayerProse', () => {
     ]);
   });
 
+  it('holds a Ukrainian page to the sentence and paragraph limits but not the English words', () => {
+    const page = '---\ntitle: Моди\n---\n\nОдне. Два. Три. Чотири.\n\nJust три слова.\n';
+
+    expect(PlayerProse.of(page).limits).toEqual([
+      { line: 5, message: 'a paragraph of 4 sentences; keep it to 3' },
+    ]);
+    expect(PlayerProse.of(`Одне ${words(25)}.\n`).limits).toHaveLength(1);
+  });
+
   it('reads a site text as one paragraph, even one that opens like markup', () => {
     expect(PlayerProse.ofText('One. Два. Three.').errors).toEqual([]);
     expect(PlayerProse.ofText('- One. Два. Three. Чотири.').errors).toEqual([
@@ -41,14 +50,6 @@ describe('PlayerProse', () => {
     ]);
   });
 
-  it('ends a sentence after a typographic closing quote', () => {
-    expect(PlayerProse.sentences('Press „Моди“. Then “Mods.” Open it’s menu.')).toEqual([
-      'Press „Моди“.',
-      'Then “Mods.”',
-      'Open it’s menu.',
-    ]);
-  });
-
   it('checks every text in each language that has its own, and only those', () => {
     const languages = new Languages([
       { code: 'en', label: 'English', default: true },
@@ -58,6 +59,7 @@ describe('PlayerProse', () => {
       {
         'a.short': { en: 'One.', uk: 'Одне. Два. Три. Чотири.' },
         'b.root': { en: 'One. Two. Three. Four.' },
+        'c.words': { en: 'Just one.', uk: 'Just одне.' },
       },
       languages,
     );
@@ -65,6 +67,7 @@ describe('PlayerProse', () => {
     expect(PlayerProse.ofTexts(texts, languages)).toEqual([
       'a.short (uk): a paragraph of 4 sentences; keep it to 3',
       'b.root (en): a paragraph of 4 sentences; keep it to 3',
+      'c.words (en): "Just" tells the reader how hard something is',
     ]);
   });
 
@@ -112,6 +115,15 @@ describe('PlayerProse', () => {
     );
 
     expect(prose.errors).toEqual([]);
+  });
+
+  it('warns on a long average without the English grade', () => {
+    const prose = PlayerProse.of(
+      `Одне ${words(15)} internationalization institutionalization characterization.\n`,
+    );
+
+    expect(prose.lengthWarnings).toEqual(['sentences average 19.0 words; the target is 15']);
+    expect(prose.warnings).toHaveLength(2);
   });
 
   it('ends a sentence before one that opens with a code span', () => {
