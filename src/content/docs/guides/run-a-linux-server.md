@@ -25,6 +25,10 @@ The install steps and the Pelican egg ran on game build 26430253, under Wine
    in its environment. Wine and Proton then load the `powrprof.dll` of
    Enshwick.
 
+Proton started outside Steam also needs `STEAM_COMPAT_DATA_PATH` and
+`STEAM_COMPAT_CLIENT_INSTALL_PATH`. The images and panels on these pages set
+both.
+
 Without this variable, Wine and Proton load their own `powrprof.dll`. The server
 then starts without Enshwick and without mods.
 
@@ -36,16 +40,20 @@ A SteamCMD update with `validate` checks only the game's own files. It keeps
 `WINEDLLOVERRIDES` holds a list, separated by semicolons. If your host already
 sets it, add `powrprof=n,b` to the end of the list.
 
-For example, `dbghelp=n,b` becomes `dbghelp=n,b;powrprof=n,b`.
+For example, `version=n,b` becomes `version=n,b;powrprof=n,b`.
 
 ## Check that Enshwick started
 
 Open the `logs` folder beside `enshrouded_server.exe`. Enshwick writes a log
 named `enshwick_<date>_<time>.log` there at every start.
 
-Its first line names the Enshwick version and the Wine version. A line such as
-`ready: 1 of 1 mods running` follows. If there is no such log, the server did
-not get the variable.
+A line near its top names the Enshwick version and the Wine version. A line
+such as `ready: 1 of 1 mods running` follows.
+
+If Enshwick did not start,
+`logs/start.log` says why, as in
+[Where files live](/reference/where-files-live/). If neither log exists, the
+server did not get the variable.
 
 ## Use a hosting panel
 
@@ -58,14 +66,14 @@ server's folder with the panel's file manager or SFTP, then add the variable.
   the server's page in the admin area.
 - **AMP**: its
   [Enshrouded template](https://github.com/CubeCoders/AMPTemplates/blob/main/enshrouded.kvp)
-  sets `WINEDLLOVERRIDES` already. Add
+  sets `WINEDLLOVERRIDES` to `dbghelp=n,b` already. Add
   `powrprof=n,b` to that list, as in
   [Add the variable when your host already sets one](#add-the-variable-when-your-host-already-sets-one).
   This step follows the template and was not run in AMP.
 
 A rented server needs the same variable when it runs on Linux. If its host lets
-you set neither the variable nor the startup command, Enshwick cannot start
-there. A rented server on Windows needs no variable.
+you set neither the variable nor the startup command, ask the host to set the
+variable. A rented server on Windows needs no variable.
 
 ## Use a kernel with ntsync
 

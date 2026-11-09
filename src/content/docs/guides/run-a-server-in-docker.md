@@ -40,7 +40,7 @@ RUN echo "$ENSHWICK_SHA256  enshwick.zip" | sha256sum -c - \
  && unzip -q enshwick.zip -d files
 
 FROM <your Enshrouded server image>
-COPY --from=enshwick /enshwick/files/ <folder that holds enshrouded_server.exe>/
+COPY --from=enshwick --chown=<server user>:<server group> /enshwick/files/ <folder that holds enshrouded_server.exe>/
 ```
 
 Mods of other authors take the same steps with their own release links.
@@ -98,8 +98,10 @@ the file in your own storage, and put it into the image from there, by version.
 ## Run the server on a Linux host
 
 A Linux image runs the Windows server under Wine or Proton. Set
-`WINEDLLOVERRIDES="powrprof=n,b"` in the container's environment, such as with
-`-e` for `docker run`. Without it, the server starts without Enshwick.
+`WINEDLLOVERRIDES` to `powrprof=n,b` in the container's environment, such as
+with `-e WINEDLLOVERRIDES=powrprof=n,b` for `docker run`. In a compose file or
+an env file, write the value without quotes: there the quotes become part of
+the value, and Wine ignores it.
 
 [Run a server on Linux](/guides/run-a-linux-server/) explains the variable and
 the other settings. With a container CPU limit, the
@@ -108,17 +110,21 @@ the other settings. With a container CPU limit, the
 ## Add Enshwick to a common image
 
 These images ran Enshwick on game build 26430253. Each one passes the
-variable from `-e` to the server.
+variable from `-e` to the server. Their tags move, so the runtime column names
+what the image held at that test.
 
-| Image                                        | Runs the server under | Where Enshwick's files go                                                   |
-| -------------------------------------------- | --------------------- | --------------------------------------------------------------------------- |
-| `mornedhels/enshrouded-server:stable-proton` | GE-Proton 11-9        | `/opt/enshrouded/server/` on the game volume, or an image built on this one |
-| `mornedhels/enshrouded-server:stable-wine`   | Wine 11.0             | `/opt/enshrouded/server/` on the game volume, or an image built on this one |
-| `sknnr/enshrouded-dedicated-server`          | GE-Proton 11-9        | `/home/steam/enshrouded/` in an image built on this one                     |
+| Image                                        | Ran the server under | Where Enshwick's files go                      | Owner of the files |
+| -------------------------------------------- | -------------------- | ---------------------------------------------- | ------------------ |
+| `mornedhels/enshrouded-server:stable-proton` | GE-Proton 11-9       | `/opt/enshrouded/server/` on the game volume   | `PUID`, 4711       |
+| `mornedhels/enshrouded-server:stable-wine`   | Wine 11.0            | `/opt/enshrouded/server/` on the game volume   | `PUID`, 4711       |
+| `sknnr/enshrouded-dedicated-server`          | GE-Proton 11-9       | `/home/steam/enshrouded/` in your own image    | 10000              |
 
-The `sknnr` image keeps the game files in the container, not on a volume. So
-Enshwick's files go into an image of your own, as in the template on this page.
+The `mornedhels` images mount the game volume over `/opt/enshrouded`, so files
+built into an image there stay hidden. The `sknnr` image keeps the game files
+in the container, not on a volume. So Enshwick's files go into an image of
+your own, as in the template on this page.
 
-All three run a SteamCMD update with `validate`. It keeps `powrprof.dll` and
-the `mods` folder. Give the files to the user the server runs as, because
-Enshwick writes into `logs/` and `mods/enshwick/`.
+Enshwick writes into `logs/` and `mods/enshwick/`, so the files belong to the
+user the server runs as. All three images run a SteamCMD update with
+`validate`, which
+[keeps Enshwick's files](/guides/run-a-linux-server/#install-the-server-with-enshwick).
