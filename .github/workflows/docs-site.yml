@@ -58,6 +58,7 @@ jobs:
           tools/lib/sentences.ts
           src/site/player-page.ts
           src/site/types.ts
+          src/data/site.json
           || echo "pages=true" >> "$GITHUB_OUTPUT"
 
       # The whole docs folders at any depth: a page's pictures sit beside it.

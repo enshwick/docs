@@ -1,6 +1,7 @@
 import { statSync } from 'node:fs';
 import { basename, dirname, join } from 'node:path';
 
+import siteData from '../src/data/site.json' with { type: 'json' };
 import { MetaDescription } from './lib/meta-description.ts';
 import { PlayerPageSource } from './lib/player-page-source.ts';
 import { PlayerProse } from './lib/player-prose.ts';
@@ -8,7 +9,7 @@ import { PlayerProse } from './lib/player-prose.ts';
 // Checks player pages against the schema the site builds them with:
 // `bun tools/check-player-page.ts <mod>/docs/player.md <mod>/docs/player.uk.md ...`.
 // Every page's summary fits a search snippet, its sentences and paragraphs their length, and its
-// pictures their format, alt text and size. The English page, `player.md`, also avoids the banned words. Prints each problem and exits with 1 when a page fails.
+// pictures their format, alt text and size, and no link goes to the site's old address. The English page, `player.md`, also avoids the banned words. Prints each problem and exits with 1 when a page fails.
 
 const english = 'player.md';
 
@@ -23,11 +24,9 @@ const check = async (file: string): Promise<string[]> => {
       (poster === undefined ? [shot] : [shot, poster]).map((path) => `![${alt}](${path})`),
     )
     .join('\n');
-  const problems = PlayerProse.media(
-    `${text}\n${screenshots}`,
-    size,
-    PlayerProse.maxPictureBytes,
-  ).map((problem) => `${file}: ${problem}`);
+  const problems = PlayerProse.media(`${text}\n${screenshots}`, size, PlayerProse.maxPictureBytes)
+    .concat(PlayerProse.oldLinks(text, siteData.url))
+    .map((problem) => `${file}: ${problem}`);
   const summary = source.data.summary.toString();
 
   // The summary is also the mod page's meta description.

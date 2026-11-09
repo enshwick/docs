@@ -79,7 +79,9 @@ picture that is a GIF, is not WebP or AVIF, has no alt text, is missing or is ov
 sentence over 25 words or a paragraph over three sentences, and an English player page also on
 "simply", "just" or "easy"; it prints a page's average sentence length, and an English page's
 reading grade, when they pass their target, without failing. `tools/check-player-page.ts` holds a
-mod's pages to those rules, and a pull request that changes the page checks, the page schema or the
+mod's pages to those rules and refuses a link to the site's old `enshwick.github.io` address. A
+mod page from a release made before the move still builds: the fetch points its old links at
+this site. A pull request that changes the page checks, the page schema or the
 workflow runs it over every mod page on the mods repository's `main`, after the site's own checks.
 `tools/check-prose.ts` also holds every text in `src/data/texts.json`, the front page's among
 them, to the same sentence and paragraph limits in each site language that has its own text, and

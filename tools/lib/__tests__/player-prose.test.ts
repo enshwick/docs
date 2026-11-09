@@ -167,4 +167,29 @@ describe('PlayerProse', () => {
       'gone.webp: no such file',
     ]);
   });
+
+  it('refuses a link to the old site address and names the new one', () => {
+    const page =
+      'See the [guide](https://enshwick.github.io/docs/guides/install/).\n' +
+      'Or <HTTPS://Enshwick.GitHub.io/docs/uk/>, and the [site](https://enshwick.com/guides/install/).\n';
+
+    expect(PlayerProse.oldLinks(page, 'https://enshwick.com')).toEqual([
+      'https://enshwick.github.io/docs/guides/install/: the site lives at https://enshwick.com; link there',
+      'HTTPS://Enshwick.GitHub.io/docs/uk/: the site lives at https://enshwick.com; link there',
+    ]);
+  });
+
+  it('finds old-address links without a scheme and leaves out the punctuation after them', () => {
+    const page =
+      'Visit enshwick.github.io/docs/guides/install/ today. See //enshwick.github.io/docs/ here.\n' +
+      'Read https://enshwick.github.io/docs/guides/. Or <a href="https://enshwick.github.io/docs/">this</a>.\n' +
+      'Another host: https://enshwick.github.io.example.org/x and https://enshwick.github.io-x.org/.\n';
+
+    expect(PlayerProse.oldLinks(page, 'https://enshwick.com')).toEqual([
+      'enshwick.github.io/docs/guides/install/: the site lives at https://enshwick.com; link there',
+      '//enshwick.github.io/docs/: the site lives at https://enshwick.com; link there',
+      'https://enshwick.github.io/docs/guides/: the site lives at https://enshwick.com; link there',
+      'https://enshwick.github.io/docs/: the site lives at https://enshwick.com; link there',
+    ]);
+  });
 });

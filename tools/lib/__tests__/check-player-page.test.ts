@@ -16,7 +16,9 @@ const runtimeImports = async (file: string, seen = new Set<string>()): Promise<S
   seen.add(file);
 
   const text = await Bun.file(file).text();
-  const targets = [...text.matchAll(/^import (?!type )[^;]*? from '(\.[^']+)';$/gmu)]
+  const targets = [
+    ...text.matchAll(/^import (?!type )[^;]*? from '(\.[^']+)'(?: with \{[^}]*\})?;$/gmu),
+  ]
     .map(([, path]) => join(dirname(file), path ?? ''))
     .filter((target) => !seen.has(target));
 
