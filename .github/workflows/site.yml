@@ -18,7 +18,7 @@ on:
 permissions: {}
 
 concurrency:
-  group: site-${{ github.head_ref || github.ref }}-${{ github.event.pull_request.draft }} # a draft's late run never cancels a ready one
+  group: site-${{ github.event.pull_request.number || github.ref }}-${{ github.event.pull_request.draft }} # a draft's late run never cancels a ready one
   cancel-in-progress: true
 
 jobs:
