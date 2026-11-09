@@ -1,21 +1,79 @@
 ---
 title: Run a server on Linux
-description: Run the Enshrouded dedicated server with Enshwick under Proton on Linux, then tune the kernel, Wine, CPU cores and clock so the server runs fast.
+description: Run the Enshrouded dedicated server with Enshwick under Wine or Proton on Linux, in a hosting panel, and tune the kernel, Wine, CPU cores and clock.
 type: how-to
 sidebar:
   order: 7
 ---
 
 The Enshrouded dedicated server exists for Windows only. A Linux host runs it
-under Proton. The settings on this page remove most of the time Proton adds.
+under Wine or Proton. Enshwick runs there with one environment variable.
+
+The install steps and the Pelican egg ran on game build 26430253, under Wine
+11.0 and GE-Proton 11-9.
 
 ## Install the server with Enshwick
 
-1. Install the dedicated server with SteamCMD, app `2278520`.
-2. [Install Enshwick](/guides/install/) into the folder that holds
+1. Install Wine or Proton on the host. Wine comes from
+   [WineHQ](https://gitlab.winehq.org/wine/wine/-/wikis/Download) or your
+   distribution. GE-Proton comes from
+   [its releases](https://github.com/GloriousEggroll/proton-ge-custom/releases).
+2. Install the dedicated server with SteamCMD, app `2278520`.
+3. [Install Enshwick](/guides/install/) into the folder that holds
    `enshrouded_server.exe`.
-3. Start the server through Proton with `WINEDLLOVERRIDES="powrprof=n,b"` in its
-   environment. Proton then loads the `powrprof.dll` of Enshwick.
+4. Start the server under Wine or Proton with `WINEDLLOVERRIDES="powrprof=n,b"`
+   in its environment. Wine and Proton then load the `powrprof.dll` of
+   Enshwick.
+
+Proton started outside Steam also needs `STEAM_COMPAT_DATA_PATH` and
+`STEAM_COMPAT_CLIENT_INSTALL_PATH`. The images and panels on these pages set
+both.
+
+Without this variable, Wine and Proton load their own `powrprof.dll`. The server
+then starts without Enshwick and without mods.
+
+A SteamCMD update with `validate` checks only the game's own files. It keeps
+`powrprof.dll` and the `mods` folder.
+
+## Add the variable when your host already sets one
+
+`WINEDLLOVERRIDES` holds a list, separated by semicolons. If your host already
+sets it, add `powrprof=n,b` to the end of the list.
+
+For example, `version=n,b` becomes `version=n,b;powrprof=n,b`.
+
+## Check that Enshwick started
+
+Open the `logs` folder beside `enshrouded_server.exe`. Enshwick writes a log
+named `enshwick_<date>_<time>.log` there at every start.
+
+A line near its top names the Enshwick version and the Wine version. A line
+such as `ready: 1 of 1 mods running` follows.
+
+If Enshwick did not start,
+`logs/start.log` says why, as in
+[Where files live](/reference/where-files-live/). If neither log exists, the
+server did not get the variable.
+
+## Use a hosting panel
+
+A panel starts the server with its own command. Put Enshwick's files into the
+server's folder with the panel's file manager or SFTP, then add the variable.
+
+- **Pelican or Pterodactyl**, with the Enshrouded egg: put the variable in
+  front of the startup command. The command then begins with
+  `WINEDLLOVERRIDES="powrprof=n,b" proton run`. An administrator changes it on
+  the server's page in the admin area.
+- **AMP**: its
+  [Enshrouded template](https://github.com/CubeCoders/AMPTemplates/blob/main/enshrouded.kvp)
+  sets `WINEDLLOVERRIDES` to `dbghelp=n,b` already. Add
+  `powrprof=n,b` to that list, as in
+  [Add the variable when your host already sets one](#add-the-variable-when-your-host-already-sets-one).
+  This step follows the template and was not run in AMP.
+
+A rented server needs the same variable when it runs on Linux. If its host lets
+you set neither the variable nor the startup command, ask the host to set the
+variable. A rented server on Windows needs no variable.
 
 ## Use a kernel with ntsync
 

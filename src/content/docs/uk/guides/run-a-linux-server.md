@@ -1,22 +1,79 @@
 ---
 title: Сервер на Linux
-description: Запустіть виділений сервер Enshrouded з Enshwick під Proton у Linux і налаштуйте ядро, Wine та процесор, щоб сервер працював швидко.
+description: Запустіть виділений сервер Enshrouded з Enshwick під Wine або Proton у Linux чи в панелі хостингу і налаштуйте ядро, Wine та процесор.
 type: how-to
 sidebar:
   order: 7
 ---
 
 Виділений сервер Enshrouded існує лише для Windows. На Linux він працює під
-Proton. Налаштування на цій сторінці прибирають більшу частину часу, який додає
-Proton.
+Wine або Proton. Enshwick працює там з однією змінною середовища.
+
+Кроки встановлення і яйце (egg) Pelican перевірено на збірці гри 26430253, під
+Wine 11.0 і GE-Proton 11-9.
 
 ## Встановіть сервер з Enshwick
 
-1. Встановіть виділений сервер через SteamCMD, застосунок `2278520`.
-2. [Встановіть Enshwick](/uk/guides/install/) у теку, де лежить
+1. Встановіть на хост Wine або Proton. Wine можна взяти з
+   [WineHQ](https://gitlab.winehq.org/wine/wine/-/wikis/Download) або з вашого
+   дистрибутива. GE-Proton можна взяти зі
+   [сторінки його випусків](https://github.com/GloriousEggroll/proton-ge-custom/releases).
+2. Встановіть виділений сервер через SteamCMD, застосунок `2278520`.
+3. [Встановіть Enshwick](/uk/guides/install/) у теку, де лежить
    `enshrouded_server.exe`.
-3. Запускайте сервер через Proton із `WINEDLLOVERRIDES="powrprof=n,b"` у змінних
-   середовища. Тоді Proton бере `powrprof.dll` від Enshwick.
+4. Запускайте сервер під Wine або Proton із `WINEDLLOVERRIDES="powrprof=n,b"` у
+   змінних середовища. Тоді Wine і Proton завантажують `powrprof.dll` від
+   Enshwick.
+
+Proton, запущений поза Steam, потребує ще `STEAM_COMPAT_DATA_PATH` і
+`STEAM_COMPAT_CLIENT_INSTALL_PATH`. Образи й панелі з цих сторінок задають
+обидві.
+
+Без цієї змінної Wine і Proton завантажують власний `powrprof.dll`. Тоді сервер
+запускається без Enshwick і без модів.
+
+Оновлення через SteamCMD із `validate` перевіряє лише власні файли гри. Воно
+лишає `powrprof.dll` і теку `mods`.
+
+## Додайте змінну, коли хост уже задає її
+
+`WINEDLLOVERRIDES` містить список, розділений крапками з комою. Якщо ваш хост
+уже задає цю змінну, допишіть `powrprof=n,b` у кінець списку.
+
+Наприклад, `version=n,b` стає `version=n,b;powrprof=n,b`.
+
+## Перевірте, що Enshwick запустився
+
+Відкрийте теку `logs` поруч з `enshrouded_server.exe`. Під час кожного запуску
+Enshwick пише туди журнал `enshwick_<дата>_<час>.log`.
+
+Рядок на його початку називає версію Enshwick і версію Wine. Далі йде рядок на
+кшталт `ready: 1 of 1 mods running`.
+
+Якщо Enshwick не запустився, причину
+пише `logs/start.log`, як описано в
+[Де лежать файли](/uk/reference/where-files-live/). Якщо немає жодного з цих
+журналів, сервер не отримав змінну.
+
+## Скористайтеся панеллю хостингу
+
+Панель запускає сервер власною командою. Покладіть файли Enshwick у теку
+сервера через файловий менеджер панелі або SFTP, а потім додайте змінну.
+
+- **Pelican або Pterodactyl** з яйцем (egg) Enshrouded: поставте змінну перед
+  командою запуску. Тоді команда починається з
+  `WINEDLLOVERRIDES="powrprof=n,b" proton run`. Адміністратор змінює її на
+  сторінці сервера в адміністративній частині панелі.
+- **AMP**: його
+  [шаблон Enshrouded](https://github.com/CubeCoders/AMPTemplates/blob/main/enshrouded.kvp)
+  уже задає `WINEDLLOVERRIDES` зі значенням `dbghelp=n,b`. Допишіть
+  `powrprof=n,b` у цей список, як у розділі
+  [Додайте змінну, коли хост уже задає її](#додайте-змінну-коли-хост-уже-задає-її).
+  Цей крок узято з шаблону, в AMP його не перевіряли.
+
+Орендований сервер на Linux потребує тієї самої змінної. Якщо хостинг не дає
+задати ні змінну, ні команду запуску, попросіть хостинг задати змінну. Орендований
+сервер на Windows не потребує змінної.
 
 ## Візьміть ядро з ntsync
 

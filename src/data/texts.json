@@ -328,8 +328,8 @@
     "uk": "Чи працює це на Linux і Steam Deck?"
   },
   "front.faq.linux.a": {
-    "en": "Yes, through Proton, with one launch option. A Linux server runs the Windows server under Proton too.",
-    "uk": "Так, через Proton, з одним параметром запуску. Сервер на Linux теж запускає Windows-сервер через Proton."
+    "en": "Yes, through Proton, with one launch option. A Linux server runs the Windows server under Wine or Proton.",
+    "uk": "Так, через Proton, з одним параметром запуску. Сервер на Linux запускає Windows-сервер через Wine або Proton."
   },
   "front.faq.free.q": {
     "en": "Is it free and open source?",

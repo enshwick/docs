@@ -40,7 +40,7 @@ RUN echo "$ENSHWICK_SHA256  enshwick.zip" | sha256sum -c - \
  && unzip -q enshwick.zip -d files
 
 FROM <your Enshrouded server image>
-COPY --from=enshwick /enshwick/files/ <folder that holds enshrouded_server.exe>/
+COPY --from=enshwick --chown=<server user>:<server group> /enshwick/files/ <folder that holds enshrouded_server.exe>/
 ```
 
 Моди інших авторів проходять ті самі кроки з власними посиланнями на випуски.
@@ -100,11 +100,35 @@ COPY --from=enshwick /enshwick/files/ <folder that holds enshrouded_server.exe>/
 
 ## Запустіть сервер на хості Linux
 
-Образ на Linux запускає сервер для Windows під Proton. Беріть GE-Proton або
-Proton від Valve, закріплений за версією і запущений поза Steam. Звичайний Wine
-теж підійде, але Proton першим отримує виправлення, потрібні іграм.
+Образ на Linux запускає сервер для Windows під Wine або Proton. Задайте
+`WINEDLLOVERRIDES` зі значенням `powrprof=n,b` у змінних середовища контейнера,
+наприклад `-e WINEDLLOVERRIDES=powrprof=n,b` для `docker run`. У файлі compose
+чи env пишіть значення без лапок: там лапки стають частиною значення, і Wine
+його ігнорує.
 
-[Сервер на Linux](/uk/guides/run-a-linux-server/) показує налаштування, як-от
-`WINEDLLOVERRIDES`. З обмеженням процесора для контейнера
+[Сервер на Linux](/uk/guides/run-a-linux-server/) пояснює цю змінну та інші
+налаштування. З обмеженням процесора для контейнера
 [Optimizer](/uk/mods/optimizer/) запускає не більше робочих потоків, ніж
 дозволяє обмеження.
+
+## Додайте Enshwick у поширений образ
+
+Ці образи запускали Enshwick на збірці гри 26430253. Кожен передає серверу
+змінну з `-e`. Їхні теги змінюються, тож стовпець середовища показує, що було в
+образі під час перевірки.
+
+| Образ                                        | Під чим працював сервер | Куди класти файли Enshwick                     | Власник файлів |
+| -------------------------------------------- | ----------------------- | ---------------------------------------------- | -------------- |
+| `mornedhels/enshrouded-server:stable-proton` | GE-Proton 11-9          | `/opt/enshrouded/server/` на томі гри          | `PUID`, 4711   |
+| `mornedhels/enshrouded-server:stable-wine`   | Wine 11.0               | `/opt/enshrouded/server/` на томі гри          | `PUID`, 4711   |
+| `sknnr/enshrouded-dedicated-server`          | GE-Proton 11-9          | `/home/steam/enshrouded/` у вашому образі      | 10000          |
+
+Образи `mornedhels` монтують том гри поверх `/opt/enshrouded`, тож файли,
+вбудовані туди в образ, не видно. Образ `sknnr` тримає файли гри в контейнері,
+а не на томі. Тож файли Enshwick ідуть у ваш власний образ, як у шаблоні на цій
+сторінці.
+
+Enshwick пише в `logs/` і `mods/enshwick/`, тож власником файлів має бути
+користувач, від якого працює сервер. Усі три образи оновлюють гру через
+SteamCMD із `validate`, яке
+[лишає файли Enshwick](/uk/guides/run-a-linux-server/#встановіть-сервер-з-enshwick).
