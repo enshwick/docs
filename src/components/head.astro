@@ -56,6 +56,13 @@ const fonts = new FirstFonts(Languages.site.root.toString() !== lang).urls;
 // Each page's own social card, drawn at build time by the route under `src/pages/og/`, which
 // names the root home page `index` where Starlight's route gives it an empty id.
 const ogId = route.entry.id === '' ? 'index' : route.entry.id;
+// Cloudflare Web Analytics counts visits without cookies and follows the client router's page
+// swaps itself. Only the deploy build sets the token, so previews and local builds count nothing.
+const analyticsToken = process.env['CF_WEB_ANALYTICS_TOKEN'];
+const beacon =
+  analyticsToken === undefined || analyticsToken === ''
+    ? undefined
+    : JSON.stringify({ token: analyticsToken });
 const ogImage =
   Astro.site === undefined || id === '404'
     ? undefined
@@ -65,6 +72,7 @@ const ogImage =
 <Default />
 {fonts.map((href) => <link rel="preload" href={href} as="font" type="font/woff2" crossorigin />)}
 <ClientRouter />
+{beacon !== undefined && <script is:inline defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon={beacon}></script>}
 <meta name="ew-area" content={area.toString()} />
 {mod && <meta name="ew-mod" />}
 {ogImage !== undefined && <meta property="og:image" content={ogImage} />}
