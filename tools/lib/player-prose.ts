@@ -45,6 +45,8 @@ export class PlayerProse {
   private static readonly pictures = /\.(?:webp|avif)$/iu;
   private static readonly loops = /\.(?:mp4|webm)$/iu;
   private static readonly gif = /\.gif$/iu;
+  /** The site's address before it moved to its own domain. */
+  private static readonly oldSite = /https?:\/\/enshwick\.github\.io\b[^\s)>]*/giu;
 
   private constructor(private readonly blocks: readonly ProseBlock[]) {}
 
@@ -245,6 +247,13 @@ export class PlayerProse {
 
       return problems;
     });
+  }
+
+  /** The links to the site's old address, each told to point at `site`, where the site lives now. */
+  public static oldLinks(markdown: string, site: string): string[] {
+    return [...markdown.matchAll(PlayerProse.oldSite)].map(
+      ([link]) => `${link}: the site lives at ${site}; link there`,
+    );
   }
 
   /**

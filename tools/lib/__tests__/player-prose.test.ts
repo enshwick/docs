@@ -167,4 +167,15 @@ describe('PlayerProse', () => {
       'gone.webp: no such file',
     ]);
   });
+
+  it('refuses a link to the old site address and names the new one', () => {
+    const page =
+      'See the [guide](https://enshwick.github.io/docs/guides/install/).\n' +
+      'Or <HTTPS://Enshwick.GitHub.io/docs/uk/>, and the [site](https://enshwick.com/guides/install/).\n';
+
+    expect(PlayerProse.oldLinks(page, 'https://enshwick.com')).toEqual([
+      'https://enshwick.github.io/docs/guides/install/: the site lives at https://enshwick.com; link there',
+      'HTTPS://Enshwick.GitHub.io/docs/uk/: the site lives at https://enshwick.com; link there',
+    ]);
+  });
 });
