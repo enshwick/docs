@@ -44,10 +44,15 @@ The log names the file.
 Delete `powrprof.dll` from the game folder. The game then starts without
 Enshwick and without any mod.
 
-You may also delete the `mods` folder and `enshwick.toml`.
-The same goes for the `enshwick` files in `logs` and
-the folders that end in `-mod-settings` and `-mod-data` beside your saves. Only
-Enshwick uses them.
+You may also delete `enshwick.toml` and, in the `mods` folder, the `enshwick`
+folder and each Enshwick mod's folder. The same goes for the `enshwick` files
+in `logs` and the folders that end in `-mod-settings` and `-mod-data` beside
+your saves. Only Enshwick uses them.
+
+Some other mod loaders keep their mods in the same `mods` folder. Delete the
+whole folder only when no other loader uses it.
+[Compatibility](/reference/compatibility/#what-stays-when-you-remove-a-loader)
+says which loaders do.
 
 On Linux and Steam Deck, also remove the line you added to the game's **Launch
 options**.

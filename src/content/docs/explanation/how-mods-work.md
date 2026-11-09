@@ -25,6 +25,10 @@ Enshwick puts its own file with that name there, so Enshwick starts together
 with the game. It passes each request on to the real Windows file, so the game
 works as before.
 
+Other mod loaders start with files of other names, so Enshwick can start beside
+them. [Compatibility](/reference/compatibility/#can-enshwick-run-beside-another-mod-loader)
+lists which loaders run together with Enshwick.
+
 Enshwick then reads the `mods` folder and starts each mod in it. Before any mod
 changes anything, Enshwick finds the parts of the game that mods change.
 

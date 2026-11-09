@@ -1,6 +1,6 @@
 ---
 title: Compatibility
-description: Which Enshrouded game builds each Enshwick version runs on, and which Enshwick version each mod needs. A new build appears here once it is checked.
+description: Which Enshrouded game builds each Enshwick version runs on, which Enshwick version each mod needs, and which other mod loaders run beside Enshwick.
 type: reference
 sidebar:
   order: 2
@@ -12,3 +12,64 @@ Each row is one game build that Enshwick knows. The State column says whether En
 After a game update, the new build appears here once it is checked.
 
 <Compatibility />
+
+## Can Enshwick run beside another mod loader?
+
+Yes, beside EMF, Kiln and ShroudForge. Beside EML, the game does not start. Each pair below ran on a dedicated server, game build 26430253, on
+9 November 2026.
+
+| Loader            | Its files in the game folder                                | With Enshwick                                     |
+| ----------------- | ----------------------------------------------------------- | ------------------------------------------------- |
+| EMF 0.6.2         | `dinput8.dll`, `emf`                                        | Both run.                                         |
+| Kiln 0.2.0-dev.20 | `dinput8.dll`, `kiln`                                       | Both run.                                         |
+| ShroudForge 1.7.9 | `dbghelp.dll`, `dinput8.dll`, `winmm.dll`, `shroudforge`    | Both run.                                         |
+| EML 0.2.0         | `dbghelp.dll`                                               | The game does not start. Keep one of the two.     |
+
+Enshwick starts from `powrprof.dll`. No other loader uses that name, so
+installing one never replaces Enshwick's file.
+
+Kiln comes with its own copy of Enshwick. When Enshwick's `powrprof.dll` is in
+the game folder, Kiln leaves the start to it, so the Enshwick you installed
+runs.
+
+## What does Enshwick show when another loader runs?
+
+The **Mods** screen shows a line that names the other loader's files, such
+as "Other mods' files beside the game: dinput8.dll". Enshwick's log in `logs`
+names each of these files too.
+
+Another loader may change a part of the game that an Enshwick feature needs.
+Then Enshwick turns off only that feature and leaves the other loader's change
+in place. When a world loads, a chat line names the file that changed that
+part.
+
+## Why does the game not start beside EML?
+
+EML reads every folder in `mods` as one of its own mods. It needs a file
+`mod.json` in each folder, and Enshwick's folders have none. EML then stops
+before the game starts, and Enshwick never starts either.
+
+EML writes the reason to its log in `logs`, a line with "Error loading mod
+environment". To play, remove EML's `dbghelp.dll` or Enshwick's `powrprof.dll`
+from the game folder.
+
+## What if two loaders use the same file name?
+
+A folder holds only one file of each name. EMF, Kiln and ShroudForge all use
+`dinput8.dll`, and EML and ShroudForge both use `dbghelp.dll`.
+
+Installing one of them can replace the other's file, and the other loader then
+stops running. EMF's installer renames the other `dinput8.dll` and starts it as
+well. Each loader's own guide says how it handles this.
+
+## What stays when you remove a loader?
+
+- **EML** changes the game's own data files. Deleting its `dbghelp.dll` leaves
+  them changed. To restore them, verify the game files in Steam.
+- **EML and ShroudForge** keep their mods in the same `mods` folder as
+  Enshwick. When you remove Enshwick, delete only its own folders there.
+- **Kiln** leaves a file `.kiln-eml.lock` and a folder `shroudforge` in the
+  game folder after a run. Delete them with Kiln's other files.
+
+[Remove a mod or Enshwick](/guides/uninstall/#remove-enshwick) lists Enshwick's
+own files.
