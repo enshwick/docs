@@ -10,10 +10,10 @@ import { PageFile } from './lib/page-file.ts';
 import { PinRule } from './lib/pin-rule.ts';
 import { PlayerProse } from './lib/player-prose.ts';
 
-// Checks the site's player pages: the pictures of every page in every language, and the English
-// pages against the countable player writing rules (words players are not told, sentence and
-// paragraph length). A page's average sentence length and reading grade are printed when above
-// their target, without failing. The developer pages under /dev/ are left out. The site's short
+// Checks the site's player pages: the pictures and the sentence and paragraph length of every page
+// in every language, and the English pages against the words players are not told. An English
+// page's average sentence length and reading grade are printed when above their target, without
+// failing. The developer pages under /dev/ are left out. The site's short
 // texts (the front page among them) are checked in every language for the same limits. Every tracked
 // page, developer pages included, is checked for install, dependency and docs.rs lines that would
 // send a reader to another version than the platform's newest; the book pages fetched from enshwick
@@ -72,18 +72,16 @@ for (const { file, text } of pages.filter((page) => !developer.test(page.text)))
     failed = true;
   }
 
-  if (others.some((folder) => file.startsWith(folder))) {
-    continue;
-  }
-
   const prose = PlayerProse.of(text);
+  const english = !others.some((folder) => file.startsWith(folder));
 
-  for (const { line, message } of prose.errors) {
+  for (const { line, message } of english ? prose.errors : prose.limits) {
     process.stderr.write(`${file}:${line}: ${message}\n`);
     failed = true;
   }
 
-  for (const warning of prose.warnings) {
+  // The average and the grade count English syllables.
+  for (const warning of english ? prose.warnings : []) {
     process.stderr.write(`${file}: warning: ${warning}\n`);
   }
 }

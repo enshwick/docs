@@ -29,6 +29,15 @@ describe('PlayerProse', () => {
     ]);
   });
 
+  it('holds a Ukrainian page to the sentence and paragraph limits but not the English words', () => {
+    const page = '---\ntitle: Моди\n---\n\nОдне. Два. Три. Чотири.\n\nJust три слова.\n';
+
+    expect(PlayerProse.of(page).limits).toEqual([
+      { line: 5, message: 'a paragraph of 4 sentences; keep it to 3' },
+    ]);
+    expect(PlayerProse.of(`Одне ${words(25)}.\n`).limits).toHaveLength(1);
+  });
+
   it('reads a site text as one paragraph, even one that opens like markup', () => {
     expect(PlayerProse.ofText('One. Два. Three.').errors).toEqual([]);
     expect(PlayerProse.ofText('- One. Два. Three. Чотири.').errors).toEqual([

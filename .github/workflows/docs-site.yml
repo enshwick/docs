@@ -30,6 +30,31 @@ jobs:
       - name: Install
         run: bun install --frozen-lockfile --ignore-scripts
 
+      # A pull request that changes the page rules checks every mod page on
+      # the mods repository's main against them, so the mods pin bump that
+      # follows its merge never finds a page the new rules refuse.
+      - name: Scope the mod pages
+        id: scope
+        if: github.event_name == 'pull_request'
+        env:
+          BASE: ${{ github.event.pull_request.base.sha }}
+        run: git diff --quiet "$BASE...HEAD" -- tools/ || echo "pages=true" >> "$GITHUB_OUTPUT"
+
+      # The whole docs folders: a page's pictures sit beside it.
+      - if: steps.scope.outputs.pages == 'true'
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          repository: enshwick/mods
+          ref: main
+          path: .cache/mods
+          persist-credentials: false
+          sparse-checkout: '*/docs/'
+          sparse-checkout-cone-mode: false
+
+      - name: Check the mod pages
+        if: steps.scope.outputs.pages == 'true'
+        run: bun tools/check-player-page.ts .cache/mods/*/docs/player*.md
+
       - name: Build
         env:
           GITHUB_TOKEN: ${{ github.token }}

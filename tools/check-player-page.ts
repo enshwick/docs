@@ -7,8 +7,8 @@ import { PlayerProse } from './lib/player-prose.ts';
 
 // Checks player pages against the schema the site builds them with:
 // `bun tools/check-player-page.ts <mod>/docs/player.md <mod>/docs/player.uk.md ...`.
-// Every page's summary fits a search snippet. The English page, `player.md`, also keeps the countable player writing rules, and every page's
-// pictures their format, alt text and size. Prints each problem and exits with 1 when a page fails.
+// Every page's summary fits a search snippet, its sentences and paragraphs their length, and its
+// pictures their format, alt text and size. The English page, `player.md`, also avoids the banned words. Prints each problem and exits with 1 when a page fails.
 
 const english = 'player.md';
 
@@ -37,11 +37,10 @@ const check = async (file: string): Promise<string[]> => {
     );
   }
 
-  if (basename(file) === english) {
-    problems.push(
-      ...PlayerProse.of(text).errors.map(({ line, message }) => `${file}:${line}: ${message}`),
-    );
-  }
+  const prose = PlayerProse.of(text);
+  const findings = basename(file) === english ? prose.errors : prose.limits;
+
+  problems.push(...findings.map(({ line, message }) => `${file}:${line}: ${message}`));
 
   return problems;
 };

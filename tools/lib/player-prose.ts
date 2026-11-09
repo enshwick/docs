@@ -16,8 +16,8 @@ interface ProseBlock {
 /**
  * The countable part of the player writing rules over one page's Markdown: words players are not
  * told, sentence and paragraph length, readability, and how pictures are given. Use it on the
- * site's English player pages, on each mod's `docs/player.md`, and on the site's short texts in
- * every language; the banned words, abbreviations and syllables are English.
+ * site's English player pages, on each mod's player page in every language, and on the site's
+ * short texts in every language; the banned words, abbreviations and syllables are English.
  */
 export class PlayerProse {
   /**
@@ -112,13 +112,26 @@ export class PlayerProse {
     );
   }
 
-  /** The findings that fail a page: banned words, long sentences and long paragraphs. */
+  /** The findings that fail an English page: banned words, long sentences and long paragraphs. */
   public get errors(): ProseFinding[] {
+    return this.findings(true);
+  }
+
+  /**
+   * The findings that fail a page in any language: long sentences and long paragraphs. The banned
+   * words are English, so a page in another language is held only to these.
+   */
+  public get limits(): ProseFinding[] {
+    return this.findings(false);
+  }
+
+  private findings(withBannedWords: boolean): ProseFinding[] {
     return this.blocks.flatMap(({ line, text }) => {
       const sentences = PlayerProse.sentences(text);
       const found: ProseFinding[] = [];
+      const banned = withBannedWords ? (text.match(PlayerProse.banned) ?? []) : [];
 
-      for (const word of text.match(PlayerProse.banned) ?? []) {
+      for (const word of banned) {
         found.push({ line, message: `"${word}" tells the reader how hard something is` });
       }
 
