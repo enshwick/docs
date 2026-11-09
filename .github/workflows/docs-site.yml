@@ -8,7 +8,43 @@ on:
 permissions: {}
 
 jobs:
+  # A merge queue group whose tree is its pull request's own head passed that
+  # pull request's check, so the queue does not build it again.
+  scope:
+    if: github.event_name == 'merge_group'
+    runs-on: ubuntu-26.04
+    timeout-minutes: 5
+    permissions:
+      contents: read
+    outputs:
+      skip: ${{ steps.scope.outputs.skip }}
+    steps:
+      - name: What is left to prove
+        id: scope
+        env:
+          GROUP: ${{ github.event.merge_group.head_sha }}
+          HEAD_REF: ${{ github.event.merge_group.head_ref }}
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          api() {
+            curl --proto '=https' -sSf -H "Authorization: Bearer $GH_TOKEN" \
+              "https://api.github.com/repos/$GITHUB_REPOSITORY/$1"
+          }
+          reason=""
+          number=$(sed -nE 's|.*/pr-([0-9]+)-[0-9a-f]+$|\1|p' <<< "$HEAD_REF")
+          if [ -n "$number" ]; then
+            head=$(api "pulls/$number" | jq -r .head.sha)
+            if [ "$(api "git/commits/$GROUP" | jq -r .tree.sha)" = "$(api "git/commits/$head" | jq -r .tree.sha)" ]; then
+              reason="the group's tree is pull request #$number's head, whose check passed"
+              echo "nothing to check: $reason" | tee -a "$GITHUB_STEP_SUMMARY"
+            fi
+          fi
+          echo "skip=$reason" >> "$GITHUB_OUTPUT"
+
+  # Skipped scope (every event but the merge queue) leaves the build to run.
   build:
+    needs: scope
+    if: ${{ !cancelled() && needs.scope.outputs.skip == '' }}
     runs-on: ubuntu-26.04
     timeout-minutes: 20
     permissions:
