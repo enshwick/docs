@@ -15,7 +15,7 @@ on:
 permissions: {}
 
 concurrency:
-  group: jira-${{ github.event.pull_request.number || github.event.workflow_run.id }}
+  group: jira-${{ github.event.pull_request.number || github.event.workflow_run.id }}-${{ github.event.pull_request.draft }} # a draft's late run never cancels a ready one
   cancel-in-progress: true
 
 jobs:
@@ -45,7 +45,7 @@ jobs:
           HEAD_REF: ${{ github.event.pull_request.head.ref }}
           RUN_SHA: ${{ github.event.workflow_run.head_sha }}
           RUN_NAME: ${{ github.event.workflow_run.name }}
-          RUN_URL: ${{ github.event.workflow_run.html_url }}-${{ github.event.pull_request.draft }} # a draft's late run never cancels a ready one
+          RUN_URL: ${{ github.event.workflow_run.html_url }}
         run: |
           set -euo pipefail
 
