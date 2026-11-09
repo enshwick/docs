@@ -31,6 +31,10 @@
     "en": "Mods",
     "uk": "Моди"
   },
+  "group.roadmaps": {
+    "en": "What comes next for mods",
+    "uk": "Що буде далі в модах"
+  },
   "group.reference": {
     "en": "Reference",
     "uk": "Довідка"
@@ -106,6 +110,10 @@
   "mod.source": {
     "en": "Source and issues",
     "uk": "Код і звіти про помилки"
+  },
+  "mod.roadmap": {
+    "en": "What comes next",
+    "uk": "Що буде далі"
   },
   "mod.version": {
     "en": "Version on this page",

@@ -1,0 +1,30 @@
+---
+import { getCollection } from 'astro:content';
+
+import { Languages } from '../site/languages.ts';
+import { ModCard } from '../site/mod-card.ts';
+import { Translations } from '../site/translations.ts';
+import { LanguageCode } from '../site/types.ts';
+
+// The mods with a page of aims, one link each, from the root language's pages; a page not yet
+// translated opens in the root language.
+const parsed = LanguageCode.parse(Astro.currentLocale ?? Languages.site.root.toString());
+const language = parsed.ok ? parsed.value : Languages.site.root;
+const base = import.meta.env.BASE_URL.replace(/\/$/u, '');
+const folder = `${ModCard.roadmaps}/`;
+const pages = await getCollection('docs', (page) => page.id.startsWith(folder));
+---
+
+<ul>
+  {
+    pages
+      .toSorted((a, b) => a.id.localeCompare(b.id))
+      .map((page) => (
+        <li>
+          <a href={`${base}${Translations.pathIn(`/${page.id}/`, language)}`}>
+            {page.data.sidebar.label ?? page.data.title}
+          </a>
+        </li>
+      ))
+  }
+</ul>

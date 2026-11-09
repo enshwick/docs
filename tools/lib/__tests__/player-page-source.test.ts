@@ -181,6 +181,15 @@ describe('ModPages.card', () => {
       release: release.tag.toString(),
     });
     expect(card.needs).toBeDefined();
+    expect(card.roadmap).toBeUndefined();
+  });
+
+  it('links the page of aims of a mod that has one, and none for a mod without', async () => {
+    const roadmap = await ModPages.roadmap('admin-tools');
+    const card = ModPages.card(release, PlayerPageSource.parse('test', page), roadmap);
+
+    expect(card.roadmap).toBe('/roadmaps/admin-tools/');
+    expect(await ModPages.roadmap('game-rates')).toBeUndefined();
   });
 
   it('adds a settings section at the end when the page has none', () => {

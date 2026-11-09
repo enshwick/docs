@@ -195,18 +195,12 @@ export default defineConfig({
             label: Texts.site.everyLanguage('topic.players'),
             link: '/start/first-modded-game/',
             icon: 'rocket',
-            items: [
-              group('group.start', 'start'),
-              group('group.guides', 'guides'),
-              ...(existsSync(new URL('./src/content/docs/mods/', import.meta.url))
-                ? [group('group.mods', 'mods')]
-                : []),
-              group('group.reference', 'reference'),
-              ...(existsSync(new URL('./src/content/docs/errors/', import.meta.url))
-                ? [group('group.errors', 'errors')]
-                : []),
-              group('group.explanation', 'explanation'),
-            ],
+            // The mods and errors folders exist only once `bun tools/fetch.ts` has written them.
+            items: ['start', 'guides', 'mods', 'roadmaps', 'reference', 'errors', 'explanation']
+              .filter((folder) =>
+                existsSync(new URL(`./src/content/docs/${folder}/`, import.meta.url)),
+              )
+              .map((folder) => group(`group.${folder}`, folder)),
           },
           {
             label: Texts.site.everyLanguage('topic.developers'),
@@ -250,13 +244,13 @@ export default defineConfig({
               paths: [
                 'start/**',
                 'guides/**',
-                'mods/**',
+                '{mods,roadmaps}/**',
                 'reference/**',
                 'explanation/**',
                 'errors/**',
               ],
               description:
-                'how to install, update and remove Enshwick, play on a server, back up worlds, every mod and its settings, where files live and the error codes',
+                'how to install, update and remove Enshwick, play on a server, back up worlds, every mod and its settings, what comes next for some mods, where files live and the error codes',
             },
           ],
           optionalLinks: [

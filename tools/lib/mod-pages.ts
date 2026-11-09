@@ -3,7 +3,7 @@ import { posix } from 'node:path';
 
 import siteData from '../../src/data/site.json' with { type: 'json' };
 import { Languages } from '../../src/site/languages.ts';
-import { type ModCardData, modCardSchema } from '../../src/site/mod-card.ts';
+import { ModCard, type ModCardData, modCardSchema } from '../../src/site/mod-card.ts';
 import { Texts } from '../../src/site/texts.ts';
 import type { GitRef, LanguageCode, RepositoryName } from '../../src/site/types.ts';
 import type { GitSource } from './git-source.ts';
@@ -155,15 +155,27 @@ export class ModPages {
         description: source.data.summary.toString(),
         type: 'reference',
         editUrl: `${release.repository.url}/edit/${ModSources.mainBranch}/${path}`,
-        mod: ModPages.card(release, source),
+        mod: ModPages.card(release, source, await ModPages.roadmap(release.slug)),
       },
       ModPages.body(release, language, source),
       await checkout.lastChanged(path),
     ).write();
   }
 
+  /**
+   * The site path of the mod's page of aims, committed in the root language under
+   * `roadmaps/<slug>.md`, or `undefined` when the mod has none.
+   */
+  public static async roadmap(slug: string): Promise<string | undefined> {
+    const exists = await Bun.file(
+      `${PageFile.contentRoot}/${ModCard.roadmaps}/${slug}.md`,
+    ).exists();
+
+    return exists ? `/${ModCard.roadmaps}/${slug}/` : undefined;
+  }
+
   /** What the mod card at the head of the page shows, kept in the page's front matter. */
-  public static card(release: ModRelease, source: PlayerPageSource): ModCardData {
+  public static card(release: ModRelease, source: PlayerPageSource, roadmap?: string): ModCardData {
     return modCardSchema.parse({
       id: source.data.id.toString(),
       needs: source.data.needs.toString(),
@@ -173,6 +185,7 @@ export class ModPages {
       release: release.tag.toString(),
       ...(release.version === undefined ? {} : { version: release.version }),
       ...(release.api === undefined ? {} : { api: release.api }),
+      ...(roadmap === undefined ? {} : { roadmap }),
     });
   }
 
