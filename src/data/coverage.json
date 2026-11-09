@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-06",
+  "updated": "2026-11-09",
   "rows": [
     {
       "domain": "Items",
@@ -13,8 +13,8 @@
       "capability": "change",
       "status": "covered",
       "module": "content",
-      "items": ["content::changes", "Field::MaxStackSize"],
-      "note": "item fields and stack size"
+      "items": ["content::changes", "Field::MaxStackSize", "content::removal"],
+      "note": "item fields and stack size; remove, disable and re-key vanilla content"
     },
     {
       "domain": "Items",
@@ -47,7 +47,7 @@
       "capability": "change",
       "status": "covered",
       "module": "content",
-      "items": ["content::recipes::change", "recipes::rules"]
+      "items": ["content::recipes::change", "content::recipes::disable"]
     },
     {
       "domain": "Recipes",
@@ -171,7 +171,14 @@
     {
       "domain": "Survivors and NPCs",
       "capability": "ui",
-      "status": "in-work"
+      "status": "covered",
+      "module": "ui",
+      "items": [
+        "Load::extend_screen_for",
+        "Frame::screen_host_template",
+        "Frame::screen_host_position"
+      ],
+      "note": "panels on the screens of survivors and stations made from chosen templates, with the template and position of each"
     },
     {
       "domain": "Flame Altars",
@@ -192,8 +199,9 @@
       "domain": "Flame Altars",
       "capability": "create",
       "status": "covered",
-      "module": "content",
-      "note": "Flame Altar kinds of a mod"
+      "module": "altars",
+      "items": ["Load::add_flame_altar", "Load::limit_altar_level"],
+      "note": "Flame Altar kinds of a mod and the level limit of each kind"
     },
     {
       "domain": "Flame Altars",
@@ -212,7 +220,7 @@
       "capability": "read",
       "status": "covered",
       "module": "world",
-      "items": ["world::props", "prop_state", "capture"]
+      "items": ["world::props", "PropState", "capture"]
     },
     {
       "domain": "Building and props",
@@ -268,8 +276,9 @@
       "domain": "Terrain and voxels",
       "capability": "events",
       "status": "covered",
-      "module": "events",
-      "items": ["ChunkLoaded", "ChunkUnloaded"]
+      "module": "voxels",
+      "items": ["Load::on_voxels_changed", "TerrainPageLoaded", "TerrainPageUnloaded"],
+      "note": "a mod can store the changes and write them back when the world loads"
     },
     {
       "domain": "Terrain and voxels",
@@ -390,7 +399,10 @@
     {
       "domain": "Skills and experience",
       "capability": "create",
-      "status": "in-work"
+      "status": "covered",
+      "module": "content",
+      "items": ["Load::add_skill_node", "Load::add_perk"],
+      "note": "in the node slots the game leaves free; a save keeps 256 nodes on server 399, and the game's own tree uses 243"
     },
     {
       "domain": "Skills and experience",
@@ -402,7 +414,10 @@
     {
       "domain": "Skills and experience",
       "capability": "ui",
-      "status": "in-work"
+      "status": "covered",
+      "module": "content",
+      "items": ["Load::add_skill_node"],
+      "note": "mod nodes in the skill tree"
     },
     {
       "domain": "Combat and enemies",
@@ -455,7 +470,10 @@
     {
       "domain": "Knowledge",
       "capability": "create",
-      "status": "in-work"
+      "status": "covered",
+      "module": "content",
+      "items": ["Load::add_knowledge"],
+      "note": "with skill points and experience"
     },
     {
       "domain": "Knowledge",
@@ -467,7 +485,10 @@
     {
       "domain": "Knowledge",
       "capability": "ui",
-      "status": "in-work"
+      "status": "covered",
+      "module": "content",
+      "items": ["Load::add_journal_page"],
+      "note": "journal pages of a mod"
     },
     {
       "domain": "Quests",
@@ -479,12 +500,17 @@
     {
       "domain": "Quests",
       "capability": "change",
-      "status": "in-work"
+      "status": "covered",
+      "module": "content",
+      "items": ["Load::change_quest"],
+      "note": "vanilla quests and their rewards"
     },
     {
       "domain": "Quests",
       "capability": "create",
-      "status": "in-work"
+      "status": "covered",
+      "module": "content",
+      "items": ["Load::add_quest"]
     },
     {
       "domain": "Quests",
@@ -496,7 +522,10 @@
     {
       "domain": "Quests",
       "capability": "ui",
-      "status": "in-work"
+      "status": "covered",
+      "module": "content",
+      "items": ["Load::add_quest", "Load::add_journal_page"],
+      "note": "quests in the journal"
     },
     {
       "domain": "Map and fog",
@@ -593,7 +622,7 @@
       "capability": "events",
       "status": "covered",
       "module": "chat",
-      "items": ["ChatSaid"],
+      "items": ["Load::on_chat_said", "Load::on_chat"],
       "note": "a chat filter that may rewrite a line"
     },
     {
@@ -680,12 +709,18 @@
     {
       "domain": "Sound",
       "capability": "change",
-      "status": "in-work"
+      "status": "covered",
+      "module": "sound",
+      "items": ["Load::change_sound"],
+      "note": "changes chain in load order"
     },
     {
       "domain": "Sound",
       "capability": "create",
-      "status": "in-work"
+      "status": "covered",
+      "module": "sound",
+      "items": ["Load::add_sound"],
+      "note": "48 kHz WAV files, also from a pack's sounds.toml"
     },
     {
       "domain": "Sound",
@@ -704,7 +739,7 @@
       "capability": "read",
       "status": "covered",
       "module": "state",
-      "items": ["state::Store", "WorldLoaded", "WorldSaved"]
+      "items": ["state::WorldStore", "WorldLoaded", "WorldSaved"]
     },
     {
       "domain": "Saves and worlds",
