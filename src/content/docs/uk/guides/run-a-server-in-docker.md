@@ -102,7 +102,7 @@ COPY --from=enshwick /enshwick/files/ <folder that holds enshrouded_server.exe>/
 
 Образ на Linux запускає сервер для Windows під Wine або Proton. Задайте
 `WINEDLLOVERRIDES="powrprof=n,b"` у змінних середовища контейнера, наприклад
-через `-e` для `docker run`. Без неї сервер запускається без Enshwick.
+через `-e` для `docker run`. Без цієї змінної сервер запускається без Enshwick.
 
 [Сервер на Linux](/uk/guides/run-a-linux-server/) пояснює цю змінну та інші
 налаштування. З обмеженням процесора для контейнера
@@ -124,5 +124,5 @@ COPY --from=enshwick /enshwick/files/ <folder that holds enshrouded_server.exe>/
 ідуть у ваш власний образ, як у шаблоні на цій сторінці.
 
 Усі три оновлюють гру через SteamCMD із `validate`. Таке оновлення лишає
-`powrprof.dll` і теку `mods`. Віддайте файли користувачу, від якого працює
-сервер, бо Enshwick пише в `mods/enshwick/`.
+`powrprof.dll` і теку `mods`. Зробіть власником файлів користувача, від якого
+працює сервер, бо Enshwick пише в `logs/` і `mods/enshwick/`.

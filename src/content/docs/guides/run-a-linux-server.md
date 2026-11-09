@@ -9,8 +9,8 @@ sidebar:
 The Enshrouded dedicated server exists for Windows only. A Linux host runs it
 under Wine or Proton. Enshwick runs there with one environment variable.
 
-The steps on this page ran on game build 26430253, under Wine 11.0 and
-GE-Proton 11-9.
+The install steps and the Pelican egg ran on game build 26430253, under Wine
+11.0 and GE-Proton 11-9.
 
 ## Install the server with Enshwick
 
@@ -61,6 +61,7 @@ server's folder with the panel's file manager or SFTP, then add the variable.
   sets `WINEDLLOVERRIDES` already. Add
   `powrprof=n,b` to that list, as in
   [Add the variable when your host already sets one](#add-the-variable-when-your-host-already-sets-one).
+  This step follows the template and was not run in AMP.
 
 A rented server needs the same variable when it runs on Linux. If its host lets
 you set neither the variable nor the startup command, Enshwick cannot start

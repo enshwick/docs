@@ -121,4 +121,4 @@ Enshwick's files go into an image of your own, as in the template on this page.
 
 All three run a SteamCMD update with `validate`. It keeps `powrprof.dll` and
 the `mods` folder. Give the files to the user the server runs as, because
-Enshwick writes into `mods/enshwick/`.
+Enshwick writes into `logs/` and `mods/enshwick/`.
