@@ -7,17 +7,14 @@ import { Languages } from '../site/languages.ts';
 import { Links } from '../site/links.ts';
 import { Texts } from '../site/texts.ts';
 import { Translations } from '../site/translations.ts';
-import { LanguageCode } from '../site/types.ts';
 import LanguageSelect from './language-select.astro';
 import ServiceIcon from './service-icon.astro';
 
 // One bar on every page, the front page included: where to go, search, the outside places, download.
 const route = Astro.locals.starlightRoute;
-const parsed = LanguageCode.parse(route.lang);
-const language = parsed.ok ? parsed.value : Languages.site.root;
+const language = Languages.site.of(route.lang);
 const t = (key: string): string => Texts.site.get(key, language);
-const base = import.meta.env.BASE_URL.replace(/\/$/u, '');
-const href = (path: string): string => `${base}${Translations.pathIn(path, language)}`;
+const href = (path: string): string => Translations.href(path, language);
 const area = Area.of(route.id).toString();
 // The coverage and aims pages each have their own item in the bar, apart from their area's, in any language.
 const coverage = /^([a-z-]+\/)?dev\/api-coverage$/u.test(route.id);

@@ -22,10 +22,12 @@ import { TableFrame } from './src/plugins/rehype-table-frame.ts';
 import { BaseLinks } from './src/plugins/remark-base-links.ts';
 import { ReleaseLinks } from './src/plugins/remark-release-links.ts';
 import { ReleaseTags } from './src/plugins/remark-release-tags.ts';
+import { Area } from './src/site/area.ts';
 import { CodeTheme } from './src/site/code-theme.ts';
 import { Coverage } from './src/site/coverage.ts';
 import { Languages } from './src/site/languages.ts';
 import { LastModified } from './src/site/last-modified.ts';
+import { ModRoadmaps } from './src/site/mod-roadmaps.ts';
 import { ReleaseArchives } from './src/site/release-archives.ts';
 import { SitemapFile } from './src/site/sitemap-file.ts';
 import { Texts } from './src/site/texts.ts';
@@ -45,11 +47,14 @@ const developerSidebar: Sidebar = existsSync(developerSidebarFile)
 const apiMapFile = new URL('./src/generated/api-map.md', import.meta.url);
 const apiMap = existsSync(apiMapFile) ? readFileSync(apiMapFile, 'utf8') : undefined;
 
-const group = (key: string, directory: string): Sidebar[number] => ({
-  label: Texts.site.get(key),
-  translations: Texts.site.translations(key),
-  items: [{ autogenerate: { directory } }],
-});
+// A folder exists only once `bun tools/fetch.ts` has written it, as mods and errors are.
+const playerGroups: Sidebar = Area.playerFolders
+  .filter((folder) => existsSync(new URL(`./src/content/docs/${folder}/`, import.meta.url)))
+  .map((folder) => ({
+    label: Texts.site.get(`group.${folder}`),
+    translations: Texts.site.translations(`group.${folder}`),
+    items: [{ autogenerate: { directory: folder } }],
+  }));
 
 const locales = Object.fromEntries(
   Languages.site.all.map(({ code, label, isDefault }) => [
@@ -195,12 +200,7 @@ export default defineConfig({
             label: Texts.site.everyLanguage('topic.players'),
             link: '/start/first-modded-game/',
             icon: 'rocket',
-            // The mods and errors folders exist only once `bun tools/fetch.ts` has written them.
-            items: ['start', 'guides', 'mods', 'roadmaps', 'reference', 'errors', 'explanation']
-              .filter((folder) =>
-                existsSync(new URL(`./src/content/docs/${folder}/`, import.meta.url)),
-              )
-              .map((folder) => group(`group.${folder}`, folder)),
+            items: playerGroups,
           },
           {
             label: Texts.site.everyLanguage('topic.developers'),
@@ -244,7 +244,7 @@ export default defineConfig({
               paths: [
                 'start/**',
                 'guides/**',
-                '{mods,roadmaps}/**',
+                `{mods,${ModRoadmaps.folder}}/**`,
                 'reference/**',
                 'explanation/**',
                 'errors/**',

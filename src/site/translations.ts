@@ -99,6 +99,11 @@ export class Translations {
     return language.equals(Languages.site.root) ? original : `/${language}${original}`;
   }
 
+  /** The link to the page at `path` in `language`, under the site's base address. */
+  public static href(path: string, language: LanguageCode): string {
+    return `${import.meta.env.BASE_URL.replace(/\/$/u, '')}${Translations.pathIn(path, language)}`;
+  }
+
   /** The default language's path of a page at `path`. */
   private static originalPath(path: string): string {
     const [, first = '', ...rest] = path.split('/');

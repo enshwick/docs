@@ -15,8 +15,6 @@ export const modCardSchema = z.object({
   release: z.string(),
   version: z.string().optional(),
   api: z.string().optional(),
-  /** The site path of the mod's page of aims, such as `/roadmaps/admin-tools/`, when it has one. */
-  roadmap: z.string().optional(),
 });
 
 /** One mod's card facts. */
@@ -24,9 +22,6 @@ export type ModCardData = z.input<typeof modCardSchema>;
 
 /** The links on a mod's card, worked out from its card facts. */
 export class ModCard {
-  /** The content folder of the mods' pages of aims, one `<mod folder>.md` per mod that has one. */
-  public static readonly roadmaps = 'roadmaps';
-
   /**
    * Where a mod's own archive is: `<package>.zip` in its release. Each mod ships alone; no archive
    * holds several.

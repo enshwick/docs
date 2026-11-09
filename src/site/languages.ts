@@ -1,6 +1,5 @@
 import languagesData from '../data/languages.json' with { type: 'json' };
-import type { LanguageCode } from './types.ts';
-import { LanguageEntry } from './types.ts';
+import { LanguageCode, LanguageEntry } from './types.ts';
 
 /** The site's languages, read once from `src/data/languages.json`; the first marked default is the root. */
 export class Languages {
@@ -40,6 +39,15 @@ export class Languages {
     }
 
     return root.code;
+  }
+
+  /** The site language `code` names, such as a route's or `Astro.currentLocale`, else the root. */
+  public of(code?: string): LanguageCode {
+    const parsed = LanguageCode.parse(code ?? this.root.toString());
+
+    return parsed.ok && this.all.some((language) => language.code.equals(parsed.value))
+      ? parsed.value
+      : this.root;
   }
 
   /** Every language other than the root, each served under its own folder. */

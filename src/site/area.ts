@@ -1,10 +1,22 @@
 import { AnyString, n } from '@horizon-republic/nominal-types';
 
 import { Languages } from './languages.ts';
+import { ModRoadmaps } from './mod-roadmaps.ts';
 
 /** The part of the site a page belongs to: the player area at the root, or the developer area. */
 export class Area extends AnyString.subtype('docs.Area', n.oneOf('players', 'dev')) {
   private static readonly developerFolder = 'dev';
+
+  /** The player area's content folders, one sidebar group each, in sidebar order. */
+  public static readonly playerFolders: readonly string[] = [
+    'start',
+    'guides',
+    'mods',
+    ModRoadmaps.folder,
+    'reference',
+    'errors',
+    'explanation',
+  ];
 
   /** The area of a page by its content id, such as `uk/dev/hooks`. */
   public static of(id: string): Area {
