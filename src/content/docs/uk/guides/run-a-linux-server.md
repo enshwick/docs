@@ -14,10 +14,14 @@ GE-Proton 11-9.
 
 ## Встановіть сервер з Enshwick
 
-1. Встановіть виділений сервер через SteamCMD, застосунок `2278520`.
-2. [Встановіть Enshwick](/uk/guides/install/) у теку, де лежить
+1. Встановіть на хост Wine або Proton. Wine є на
+   [WineHQ](https://gitlab.winehq.org/wine/wine/-/wikis/Download) або у вашому
+   дистрибутиві. GE-Proton є в
+   [його випусках](https://github.com/GloriousEggroll/proton-ge-custom/releases).
+2. Встановіть виділений сервер через SteamCMD, застосунок `2278520`.
+3. [Встановіть Enshwick](/uk/guides/install/) у теку, де лежить
    `enshrouded_server.exe`.
-3. Запускайте сервер під Wine або Proton із `WINEDLLOVERRIDES="powrprof=n,b"` у
+4. Запускайте сервер під Wine або Proton із `WINEDLLOVERRIDES="powrprof=n,b"` у
    змінних середовища. Тоді Wine і Proton беруть `powrprof.dll` від Enshwick.
 
 Без цієї змінної Wine і Proton беруть власний `powrprof.dll`. Тоді сервер
@@ -51,7 +55,9 @@ Enshwick пише туди журнал `enshwick_<дата>_<час>.log`.
   командою запуску. Тоді команда починається з
   `WINEDLLOVERRIDES="powrprof=n,b" proton run`. Адміністратор змінює її на
   сторінці сервера в адмінській частині панелі.
-- **AMP**: його шаблон Enshrouded уже задає `WINEDLLOVERRIDES`. Допишіть
+- **AMP**: його
+  [шаблон Enshrouded](https://github.com/CubeCoders/AMPTemplates/blob/main/enshrouded.kvp)
+  уже задає `WINEDLLOVERRIDES`. Допишіть
   `powrprof=n,b` у цей список, як у розділі
   [Додайте змінну, коли хост уже задає її](#додайте-змінну-коли-хост-уже-задає-її).
 

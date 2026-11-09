@@ -14,10 +14,14 @@ GE-Proton 11-9.
 
 ## Install the server with Enshwick
 
-1. Install the dedicated server with SteamCMD, app `2278520`.
-2. [Install Enshwick](/guides/install/) into the folder that holds
+1. Install Wine or Proton on the host. Wine comes from
+   [WineHQ](https://gitlab.winehq.org/wine/wine/-/wikis/Download) or your
+   distribution. GE-Proton comes from
+   [its releases](https://github.com/GloriousEggroll/proton-ge-custom/releases).
+2. Install the dedicated server with SteamCMD, app `2278520`.
+3. [Install Enshwick](/guides/install/) into the folder that holds
    `enshrouded_server.exe`.
-3. Start the server under Wine or Proton with `WINEDLLOVERRIDES="powrprof=n,b"`
+4. Start the server under Wine or Proton with `WINEDLLOVERRIDES="powrprof=n,b"`
    in its environment. Wine and Proton then load the `powrprof.dll` of
    Enshwick.
 
@@ -52,7 +56,9 @@ server's folder with the panel's file manager or SFTP, then add the variable.
   front of the startup command. The command then begins with
   `WINEDLLOVERRIDES="powrprof=n,b" proton run`. An administrator changes it on
   the server's page in the admin area.
-- **AMP**: its Enshrouded template sets `WINEDLLOVERRIDES` already. Add
+- **AMP**: its
+  [Enshrouded template](https://github.com/CubeCoders/AMPTemplates/blob/main/enshrouded.kvp)
+  sets `WINEDLLOVERRIDES` already. Add
   `powrprof=n,b` to that list, as in
   [Add the variable when your host already sets one](#add-the-variable-when-your-host-already-sets-one).
 
