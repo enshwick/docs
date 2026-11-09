@@ -49,7 +49,16 @@ export class FrontData {
    * The questions the front page answers, in its order; each has `front.faq.<id>.q` and `.a` in
    * the site's texts, and the page's structured data states the same ones.
    */
-  public static readonly questions = ['safe', 'server', 'linux', 'saves', 'update', 'free'];
+  public static readonly questions = [
+    'loader',
+    'languages',
+    'safe',
+    'server',
+    'linux',
+    'saves',
+    'update',
+    'free',
+  ];
 
   /** The sides the front page names a game build for, in the order it shows them. */
   private static readonly sides = ['client', 'server'];

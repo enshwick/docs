@@ -6,8 +6,8 @@ sidebar:
   order: 1
 ---
 
-Enshwick runs mods in Rust and Luau, and data packs. A Rust mod runs inside the game
-with the same rights as the game.
+Enshwick runs mods in Rust, Luau, C and C++, and data packs. A Rust, C or C++
+mod runs inside the game with the same rights as the game.
 
 For this reason, it can change a lot. For the same reason, install only mods
 from sources you trust.
@@ -59,8 +59,9 @@ camera. You choose those mods yourself on any server.
 
 ## Is it safe?
 
-A Rust mod can do anything the game can do on your computer. It can read and
-write your files and reach the network. Enshwick does not lock a Rust mod in.
+A Rust, C or C++ mod can do anything the game can do on your computer. It can
+read and write your files and reach the network. Enshwick does not lock such a
+mod in.
 
 A Luau mod runs in a sandbox. It reaches the game only through Enshwick. The
 sandbox does not make a Luau mod safe: it can still write files the game may
@@ -68,7 +69,7 @@ write.
 
 A data pack holds no code, and a server sends you only data, never code.
 
-So the safety of a Rust or Luau mod depends on where it comes from:
+So the safety of a mod with code depends on where it comes from:
 
 - **Our mods** are open source. Anyone can read every line.
 

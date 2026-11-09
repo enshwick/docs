@@ -1,7 +1,7 @@
 {
   "site.description": {
-    "en": "Enshwick is the modding framework and API for Enshrouded. Its mod loader runs mods on your PC or dedicated server. Write mods in Rust, Luau or as data.",
-    "uk": "Enshwick — фреймворк і API для модів Enshrouded. Його завантажувач запускає моди на ПК або виділеному сервері. Пишіть моди на Rust, Luau або як дані."
+    "en": "Enshwick is the modding framework and API for Enshrouded. Its mod loader runs mods on your PC or dedicated server. Write mods in Rust, Luau, C, C++ or as data.",
+    "uk": "Enshwick — фреймворк і API для модів Enshrouded. Його завантажувач запускає моди на ПК або виділеному сервері. Пишіть моди на Rust, Luau, C, C++ або як дані."
   },
   "topic.players": {
     "en": "Play with mods",
@@ -236,8 +236,8 @@
     "uk": "Чи це безпечно?"
   },
   "front.faq.safe.a": {
-    "en": "Our mods are open source. Each download is tied to the code it came from. A Rust mod runs with the game’s rights, so install mods only from authors you trust.",
-    "uk": "Наші моди мають відкритий код. Кожне завантаження пов’язане з кодом, з якого його зібрано. Мод на Rust має ті самі права, що й гра, тож ставте моди лише від авторів, яким довіряєте."
+    "en": "Our mods are open source. Each download is tied to the code it came from. A Rust, C or C++ mod runs with the game’s rights, so install mods only from authors you trust.",
+    "uk": "Наші моди мають відкритий код. Кожне завантаження пов’язане з кодом, з якого його зібрано. Мод на Rust, C чи C++ має ті самі права, що й гра, тож ставте моди лише від авторів, яким довіряєте."
   },
   "front.mods.title": {
     "en": "Mods",
@@ -520,8 +520,8 @@
     "uk": "У грі: екран Mods, кнопка налаштувань біля мода. У кожного світу свої."
   },
   "front.players.caveat": {
-    "en": "Enshwick has no control over mods made without it.",
-    "uk": "Моди, зроблені без Enshwick, він не контролює."
+    "en": "Enshwick has no control over mods made without it. Another tool may load Enshwick, but then we cannot promise the load order, a broken part turning off alone or mods taking turns. You may do it at your own risk, but we do not recommend it.",
+    "uk": "Моди, зроблені без Enshwick, він не контролює. Інший інструмент може завантажити Enshwick, але тоді ми не гарантуємо порядок завантаження, вимкнення лише зламаної частини і роботу модів по черзі. Так можна на ваш ризик, але ми цього не радимо."
   },
   "front.makers.title": {
     "en": "For mod makers",
@@ -536,12 +536,16 @@
     "uk": "Мод може бути бібліотекою для інших модів."
   },
   "front.makers.languages.q": {
-    "en": "Your language",
-    "uk": "Ваша мова"
+    "en": "Supported languages for mods",
+    "uk": "Мови для модів"
   },
   "front.makers.languages.a": {
-    "en": "Rust, Luau, or plain data with no code. Any other language through C.",
-    "uk": "Rust, Luau або просто дані без коду. Через C — будь-яка інша."
+    "en": "Rust, Luau, or plain data with no code. C and C++ through the C header, and we test both. Other languages that can export C functions work the same way, but we do not test them.",
+    "uk": "Rust, Luau або просто дані без коду. C і C++ — через заголовок C, і ми перевіряємо обидві мови. Інші мови, що вміють експортувати функції C, працюють так само, але ми їх не перевіряємо."
+  },
+  "front.makers.languages.link": {
+    "en": "Mods in C and C++",
+    "uk": "Моди на C і C++"
   },
   "front.makers.levels.q": {
     "en": "Not in the API? Take it from the game directly",
@@ -702,5 +706,21 @@
   "front.makers.patches.a": {
     "en": "You do not rebuild it for every game update.",
     "uk": "Його не треба перезбирати під кожне оновлення гри."
+  },
+  "front.faq.loader.q": {
+    "en": "Why is Enshwick also a mod loader?",
+    "uk": "Чому Enshwick — ще й завантажувач модів?"
+  },
+  "front.faq.loader.a": {
+    "en": "Some parts work only when Enshwick itself loads the mods. Mods start in the order their authors ask for, and a broken part of a mod turns off alone. Mods that change the same thing take turns instead of overwriting each other.",
+    "uk": "Деякі частини працюють, лише коли моди завантажує сам Enshwick. Моди запускаються в порядку, який задали їхні автори, а зламана частина мода вимикається сама. Моди, що змінюють одне й те саме, працюють по черзі, а не перезаписують одне одного."
+  },
+  "front.faq.languages.q": {
+    "en": "Which languages can I write mods in?",
+    "uk": "Якими мовами можна писати моди?"
+  },
+  "front.faq.languages.a": {
+    "en": "Rust and Luau, or plain data files with no code. C and C++ work through the C header, and we test both. Other languages that can export C functions work the same way, but we do not test them.",
+    "uk": "Rust і Luau або прості файли даних без коду. C і C++ працюють через заголовок C, і ми перевіряємо обидві мови. Інші мови, що вміють експортувати функції C, працюють так само, але ми їх не перевіряємо."
   }
 }
