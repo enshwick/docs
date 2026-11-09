@@ -13,7 +13,7 @@
       "capability": "change",
       "status": "covered",
       "module": "content",
-      "items": ["content::changes", "Field::MaxStackSize"],
+      "items": ["content::changes", "Field::MaxStackSize", "content::removal"],
       "note": "item fields and stack size; remove, disable and re-key vanilla content"
     },
     {
@@ -47,7 +47,7 @@
       "capability": "change",
       "status": "covered",
       "module": "content",
-      "items": ["content::recipes::change", "recipes::rules"]
+      "items": ["content::recipes::change", "content::recipes::disable"]
     },
     {
       "domain": "Recipes",
@@ -178,7 +178,7 @@
         "Frame::screen_host_template",
         "Frame::screen_host_position"
       ],
-      "note": "panels on the screen of one survivor or station, with its template and position"
+      "note": "panels on the screens of survivors and stations made from chosen templates, with the template and position of each"
     },
     {
       "domain": "Flame Altars",
@@ -199,7 +199,8 @@
       "domain": "Flame Altars",
       "capability": "create",
       "status": "covered",
-      "module": "content",
+      "module": "altars",
+      "items": ["Load::add_flame_altar", "Load::limit_altar_level"],
       "note": "Flame Altar kinds of a mod and the level limit of each kind"
     },
     {
@@ -277,7 +278,7 @@
       "status": "covered",
       "module": "voxels",
       "items": ["Load::on_voxels_changed", "TerrainPageLoaded", "TerrainPageUnloaded"],
-      "note": "changes replay when a chunk loads"
+      "note": "a mod can store the changes and write them back when the world loads"
     },
     {
       "domain": "Terrain and voxels",
@@ -401,7 +402,7 @@
       "status": "covered",
       "module": "content",
       "items": ["Load::add_skill_node", "Load::add_perk"],
-      "note": "within the game's limit of 256 nodes"
+      "note": "in the node slots the game leaves free; a save keeps 256 nodes on server 399, and the game's own tree uses 243"
     },
     {
       "domain": "Skills and experience",
@@ -738,7 +739,7 @@
       "capability": "read",
       "status": "covered",
       "module": "state",
-      "items": ["state::Store", "WorldLoaded", "WorldSaved"]
+      "items": ["state::WorldStore", "WorldLoaded", "WorldSaved"]
     },
     {
       "domain": "Saves and worlds",
