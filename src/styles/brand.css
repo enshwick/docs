@@ -1162,7 +1162,7 @@ mobile-starlight-toc summary .toggle {
   margin: 0;
 }
 
-/* The licence and the disclaimer: one line of small type. */
+/* The footer's notices: one line of small type. */
 .ew-foot__legal {
   display: flex;
   flex-wrap: wrap;

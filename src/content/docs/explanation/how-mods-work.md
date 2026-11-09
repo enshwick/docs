@@ -36,8 +36,8 @@ The rest keeps running. Enshwick writes what it turned off to its log.
 ## What a mod can change
 
 Each mod asks Enshwick for the parts of the game it wants to change, such as a
-recipe or the comfort of a chair. Enshwick knows where those parts are in each
-version of the game. A mod does not have to guess.
+recipe or the comfort of a chair. Enshwick finds those parts in the game, so a
+mod does not have to look for them.
 
 When two or more mods change the same thing, Enshwick puts them in a chain. Each
 mod gets its turn.
@@ -55,7 +55,7 @@ let you into a world that would break.
 [Play on a server](/guides/play-on-a-server/) shows each case.
 
 Other mods run only where the world runs: on the server, or on your computer
-when you host. You need nothing for them to join.
+when you host. You do not need these mods to join.
 
 When you join a server, your own mods that the server does not run stay off
 in that world.

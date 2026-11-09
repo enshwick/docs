@@ -18,7 +18,10 @@ bun run check    # types, lint, tests and the built site in dist/
 
 `bun run build` checks out the sources the site collects, so it needs
 network access to GitHub. The site runs on a Cloudflare Worker
-(`wrangler.jsonc`); Cloudflare Workers Builds deploys `main`, and CI only checks and builds. [ARCHITECTURE.md](ARCHITECTURE.md) says which
+(`wrangler.jsonc`); Cloudflare Workers Builds deploys `main`, and CI only checks and builds.
+The deploy build sets `CF_WEB_ANALYTICS_TOKEN`, which turns on Cloudflare Web
+Analytics and the footer line about it; without it the site counts nothing.
+[ARCHITECTURE.md](ARCHITECTURE.md) says which
 pages are written here and which come from other repositories.
 
 ## Contributing
