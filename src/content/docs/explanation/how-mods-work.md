@@ -33,6 +33,10 @@ cannot find such a part, it turns off the features that need it.
 
 The rest keeps running. Enshwick writes what it turned off to its log.
 
+Enshwick does not support another mod loader in the same game folder.
+[Compatibility](/reference/compatibility/#does-enshwick-support-another-mod-loader)
+says what Enshwick does when one changes the game.
+
 ## What a mod can change
 
 Each mod asks Enshwick for the parts of the game it wants to change, such as a
