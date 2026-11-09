@@ -226,7 +226,7 @@ export default defineConfig({
         starlightLlmsTxt({
           projectName: 'Enshwick',
           description:
-            'Enshwick is the modding framework and API for the game Enshrouded, with a mod loader for PCs and dedicated servers. Mod makers write mods in Rust against the `enshwick` crate, in Luau against the same API by the same names, as data packs without code, or in C and C++ through its C header, which the platform tests on every change; any other language that can call a C ABI works the same way. Mods offer each other typed services, events and extension points. Players install the loader once, and it runs every mod in the `mods` folder of the game. When Enshwick itself loads the game, it orders mods by their `requires`, `after` and `breaks`, turns off only the mod that fails, and chains mods that hook the same function in load order instead of letting one overwrite another.',
+            'Enshwick is the modding framework and API for the game Enshrouded, with a mod loader for PCs and dedicated servers. Mod makers write mods in Rust against the `enshwick` crate, in Luau against the same API by the same names, as data packs without code, or in C and C++ through its C header of the ABI, which the platform tests; any other language that builds a Windows DLL exporting C functions works the same way, untested. Mods offer each other typed services, events and extension points. Players install the loader once, and it runs every mod in the `mods` folder of the game. When Enshwick itself loads the mods, it orders them by their `requires` and `after`, skips a mod whose `breaks` names a loaded one, turns off only the feature that fails, and chains mods that hook the same function, by priority and then load order, instead of letting one overwrite another.',
           details: [
             `To write a mod, read [For AI assistants](${siteData.url}${siteData.base}/dev/ai-assistants/) first: the kinds of mod, \`cargo enshwick new\`, the \`unstable\` feature and tests with the fake host. The API reference of the \`enshwick\` crate is the rustdoc in its source, listed as API source, which \`cargo doc -p enshwick --open\` builds in a mod's folder with the features the mod turns on.`,
             ...(apiMap === undefined ? [] : [apiMap]),
@@ -267,7 +267,7 @@ export default defineConfig({
             {
               label: 'Source and examples',
               url: 'https://github.com/enshwick/enshwick',
-              description: 'the platform, with mods in Rust, Luau, C, C++ and data packs',
+              description: 'the platform, with example mods of every kind in `examples/`',
             },
           ],
           promote: [
