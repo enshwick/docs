@@ -51,8 +51,6 @@ your saves. Only Enshwick uses them.
 
 Some other mod loaders keep their mods in the same `mods` folder. Delete the
 whole folder only when no other loader uses it.
-[Compatibility](/reference/compatibility/#what-stays-when-you-remove-a-loader)
-says which loaders do.
 
 On Linux and Steam Deck, also remove the line you added to the game's **Launch
 options**.
