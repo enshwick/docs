@@ -1,0 +1,27 @@
+---
+import { getCollection } from 'astro:content';
+
+import { Languages } from '../site/languages.ts';
+import { ModRoadmaps } from '../site/mod-roadmaps.ts';
+import { Translations } from '../site/translations.ts';
+
+// The mods with a page of aims, one link each; the aims page's section around it has no other text.
+const language = Languages.site.of(Astro.currentLocale);
+const links = ModRoadmaps.from(await getCollection('docs')).links(language);
+
+if (links.length === 0) {
+  throw new Error(
+    `no page of aims in src/content/docs/${ModRoadmaps.folder}/: remove the aims page's section that lists them`,
+  );
+}
+---
+
+<ul>
+  {
+    links.map((link) => (
+      <li>
+        <a href={Translations.href(link.path, language)}>{link.label}</a>
+      </li>
+    ))
+  }
+</ul>

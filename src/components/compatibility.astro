@@ -4,7 +4,6 @@ import { CompatibilityData } from '../site/compatibility.ts';
 import { BuildState, GameBuildRows } from '../site/game-build-rows.ts';
 import { Languages } from '../site/languages.ts';
 import { Texts } from '../site/texts.ts';
-import { LanguageCode } from '../site/types.ts';
 
 const data = CompatibilityData.parse(raw);
 
@@ -13,8 +12,7 @@ if (!data.ok) {
 }
 
 const { platform, mods } = data.value;
-const parsed = LanguageCode.parse(Astro.currentLocale ?? Languages.site.root.toString());
-const language = parsed.ok ? parsed.value : Languages.site.root;
+const language = Languages.site.of(Astro.currentLocale);
 const t = (key: string): string => Texts.site.get(key, language);
 const prefix = language.equals(Languages.site.root) ? '' : `/${language}`;
 const base = import.meta.env.BASE_URL.replace(/\/$/u, '');
