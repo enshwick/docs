@@ -13,14 +13,17 @@ After a game update, the new build appears here once it is checked.
 
 <Compatibility />
 
-## Can Enshwick run beside another mod loader?
+## Does Enshwick support another mod loader?
 
 No. Enshwick does not support another mod loader in the same game folder.
 
 If the game misbehaves or does not start while another loader is installed,
-remove that loader.
+remove that loader. Some loaders change the game's data files. If the problem
+stays, verify the game files in Steam.
 
-Another loader may change a part of the game that an Enshwick feature needs.
-Then Enshwick turns off only that feature and leaves the other change in place.
-The log, the **Mods** screen and a chat line when you join name the file that
-made the change.
+When Enshwick starts, it checks the parts of the game its features need. If
+another program already changed one, Enshwick turns off only the features on
+that part and leaves the change in place. The log names the file that made the
+change when Enshwick can tell which one.
+
+Enshwick does not check changes made after it starts.

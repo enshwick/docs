@@ -25,10 +25,6 @@ Enshwick puts its own file with that name there, so Enshwick starts together
 with the game. It passes each request on to the real Windows file, so the game
 works as before.
 
-Enshwick does not support another mod loader in the same game folder.
-[Compatibility](/reference/compatibility/#can-enshwick-run-beside-another-mod-loader)
-says what Enshwick does when one changes the game.
-
 Enshwick then reads the `mods` folder and starts each mod in it. Before any mod
 changes anything, Enshwick finds the parts of the game that mods change.
 
@@ -36,6 +32,10 @@ A game update can move the parts of the game that mods change. When Enshwick
 cannot find such a part, it turns off the features that need it.
 
 The rest keeps running. Enshwick writes what it turned off to its log.
+
+Enshwick does not support another mod loader in the same game folder.
+[Compatibility](/reference/compatibility/#does-enshwick-support-another-mod-loader)
+says what Enshwick does when one changes the game.
 
 ## What a mod can change
 
