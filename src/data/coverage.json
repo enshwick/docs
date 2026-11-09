@@ -213,7 +213,10 @@
     {
       "domain": "Flame Altars",
       "capability": "ui",
-      "status": "in-work"
+      "status": "covered",
+      "module": "ui",
+      "items": ["Load::extend_screen_for"],
+      "note": "panels on the Flame Altar screen"
     },
     {
       "domain": "Building and props",
@@ -269,8 +272,7 @@
     {
       "domain": "Terrain and voxels",
       "capability": "create",
-      "status": "not-supported",
-      "note": "new terrain materials"
+      "status": "in-work"
     },
     {
       "domain": "Terrain and voxels",
@@ -345,8 +347,7 @@
     {
       "domain": "Players and accounts",
       "capability": "ui",
-      "status": "not-supported",
-      "note": "an admin interface"
+      "status": "in-work"
     },
     {
       "domain": "Character stats and buffs",
