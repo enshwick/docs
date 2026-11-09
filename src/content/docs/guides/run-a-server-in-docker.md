@@ -97,10 +97,28 @@ the file in your own storage, and put it into the image from there, by version.
 
 ## Run the server on a Linux host
 
-A Linux image runs the Windows server under Proton. Use GE-Proton or Valve's
-Proton, pinned by version and run outside Steam. Plain Wine works too, but
-Proton carries the fixes games need first.
+A Linux image runs the Windows server under Wine or Proton. Set
+`WINEDLLOVERRIDES="powrprof=n,b"` in the container's environment, such as with
+`-e` for `docker run`. Without it, the server starts without Enshwick.
 
-[Run a server on Linux](/guides/run-a-linux-server/) shows the settings, such as
-`WINEDLLOVERRIDES`. With a container CPU limit, the
+[Run a server on Linux](/guides/run-a-linux-server/) explains the variable and
+the other settings. With a container CPU limit, the
 [Optimizer](/mods/optimizer/) starts no more task workers than the limit allows.
+
+## Add Enshwick to a common image
+
+These images ran Enshwick on game build 26430253. Each one passes the
+variable from `-e` to the server.
+
+| Image                                        | Runs the server under | Where Enshwick's files go                                                   |
+| -------------------------------------------- | --------------------- | --------------------------------------------------------------------------- |
+| `mornedhels/enshrouded-server:stable-proton` | GE-Proton 11-9        | `/opt/enshrouded/server/` on the game volume, or an image built on this one |
+| `mornedhels/enshrouded-server:stable-wine`   | Wine 11.0             | `/opt/enshrouded/server/` on the game volume, or an image built on this one |
+| `sknnr/enshrouded-dedicated-server`          | GE-Proton 11-9        | `/home/steam/enshrouded/` in an image built on this one                     |
+
+The `sknnr` image keeps the game files in the container, not on a volume. So
+Enshwick's files go into an image of your own, as in the template on this page.
+
+All three run a SteamCMD update with `validate`. It keeps `powrprof.dll` and
+the `mods` folder. Give the files to the user the server runs as, because
+Enshwick writes into `mods/enshwick/`.

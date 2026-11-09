@@ -100,11 +100,29 @@ COPY --from=enshwick /enshwick/files/ <folder that holds enshrouded_server.exe>/
 
 ## Запустіть сервер на хості Linux
 
-Образ на Linux запускає сервер для Windows під Proton. Беріть GE-Proton або
-Proton від Valve, закріплений за версією і запущений поза Steam. Звичайний Wine
-теж підійде, але Proton першим отримує виправлення, потрібні іграм.
+Образ на Linux запускає сервер для Windows під Wine або Proton. Задайте
+`WINEDLLOVERRIDES="powrprof=n,b"` у змінних середовища контейнера, наприклад
+через `-e` для `docker run`. Без неї сервер запускається без Enshwick.
 
-[Сервер на Linux](/uk/guides/run-a-linux-server/) показує налаштування, як-от
-`WINEDLLOVERRIDES`. З обмеженням процесора для контейнера
+[Сервер на Linux](/uk/guides/run-a-linux-server/) пояснює цю змінну та інші
+налаштування. З обмеженням процесора для контейнера
 [Optimizer](/uk/mods/optimizer/) запускає не більше робочих потоків, ніж
 дозволяє обмеження.
+
+## Додайте Enshwick у поширений образ
+
+Ці образи запускали Enshwick на збірці гри 26430253. Кожен передає серверу
+змінну з `-e`.
+
+| Образ                                        | Під чим працює сервер | Куди класти файли Enshwick                                              |
+| -------------------------------------------- | --------------------- | ----------------------------------------------------------------------- |
+| `mornedhels/enshrouded-server:stable-proton` | GE-Proton 11-9        | `/opt/enshrouded/server/` на томі гри або в образі на основі цього      |
+| `mornedhels/enshrouded-server:stable-wine`   | Wine 11.0             | `/opt/enshrouded/server/` на томі гри або в образі на основі цього      |
+| `sknnr/enshrouded-dedicated-server`          | GE-Proton 11-9        | `/home/steam/enshrouded/` в образі на основі цього                      |
+
+Образ `sknnr` тримає файли гри в контейнері, а не на томі. Тож файли Enshwick
+ідуть у ваш власний образ, як у шаблоні на цій сторінці.
+
+Усі три оновлюють гру через SteamCMD із `validate`. Таке оновлення лишає
+`powrprof.dll` і теку `mods`. Віддайте файли користувачу, від якого працює
+сервер, бо Enshwick пише в `mods/enshwick/`.
