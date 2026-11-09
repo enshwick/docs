@@ -78,8 +78,8 @@ picture that is a GIF, is not WebP or AVIF, has no alt text, is missing or is ov
 sentence over 25 words or a paragraph over three sentences, and an English player page also on
 "simply", "just" or "easy"; it prints an English page's average sentence length and reading grade
 when they pass their target, without failing. `tools/check-player-page.ts` holds a mod's pages to
-those rules, and a pull request that changes `tools/` runs it over every mod page on the mods
-repository's `main`.
+those rules, and a pull request that changes `tools/`, `src/site/` or a dependency runs it over
+every mod page on the mods repository's `main`.
 `tools/check-prose.ts` also holds every text in `src/data/texts.json`, the front page's among
 them, to the same word, sentence and paragraph limits, in each site language that has its own
 text. Git hooks run oxfmt, oxlint, markdownlint and typos on changed files, and [actionlint](https://github.com/rhysd/actionlint)

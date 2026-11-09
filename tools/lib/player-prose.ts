@@ -17,7 +17,7 @@ interface ProseBlock {
  * The countable part of the player writing rules over one page's Markdown: words players are not
  * told, sentence and paragraph length, readability, and how pictures are given. Use it on the
  * site's English player pages, on each mod's player page in every language, and on the site's
- * short texts in every language; the banned words, abbreviations and syllables are English.
+ * short texts in every language; the banned words and syllables are English.
  */
 export class PlayerProse {
   /**
@@ -44,10 +44,16 @@ export class PlayerProse {
   private static readonly pictures = /\.(?:webp|avif)$/iu;
   private static readonly loops = /\.(?:mp4|webm)$/iu;
   private static readonly gif = /\.gif$/iu;
-  /** Closing quotes include `“`, which closes a Ukrainian `„…“` quote. */
-  private static readonly boundary = /[.!?]["')\]»”’“]*\s+(?=["'(`[*«“„‘]*[\p{Lu}\p{N}])/gu;
-  /** A short abbreviation whose period ends no sentence. */
-  private static readonly abbreviation = /\b(?:e\.g|i\.e|etc|vs)\.["')\]»”’“]*\s+$/iu;
+  /**
+   * A stop in any script, then a closing quote or bracket, then the next sentence's first capital,
+   * uncased letter or digit. Closing quotes include `“`, which closes a Ukrainian `„…“` quote; the
+   * full-width stops of CJK need no space after them.
+   */
+  private static readonly boundary =
+    /(?:[.!?…؟।]["')\]»”’“」』]*\s+|[。！？]["')\]»”’“」』]*\s*)(?=["'(`[*«“„‘「『]*[\p{Lu}\p{Lt}\p{Lo}\p{N}])/gu;
+  /** A short abbreviation, English or Ukrainian, whose period ends no sentence. */
+  private static readonly abbreviation =
+    /(?<![\p{L}\p{N}])(?:e\.g|i\.e|etc|vs|див|напр)\.["')\]»”’“]*\s+$/iu;
 
   private constructor(private readonly blocks: readonly ProseBlock[]) {}
 
@@ -255,7 +261,7 @@ export class PlayerProse {
       .trim();
   }
 
-  /** Sentences end at `.`, `!` or `?`, a closing quote or bracket after it allowed, before a capital or digit in any script. */
+  /** Sentences end at a stop of any script, a closing quote or bracket after it allowed, before a capital, uncased letter or digit. */
   public static sentences(text: string): string[] {
     const sentences: string[] = [];
     let start = 0;

@@ -125,6 +125,27 @@ describe('PlayerProse', () => {
     expect(prose.errors).toEqual([]);
   });
 
+  it('does not end a Ukrainian sentence after див. or напр.', () => {
+    expect(PlayerProse.sentences('Ставте моди, напр. Better Altars, див. Налаштування.')).toEqual([
+      'Ставте моди, напр. Better Altars, див. Налаштування.',
+    ]);
+  });
+
+  it('ends a sentence at an ellipsis and at the stops of scripts without capitals', () => {
+    expect(PlayerProse.sentences('Зачекайте… Далі грайте.')).toEqual([
+      'Зачекайте…',
+      'Далі грайте.',
+    ]);
+    expect(PlayerProse.sentences('One. ثانية؟ ثالثة. 第四。第五！')).toEqual([
+      'One.',
+      'ثانية؟',
+      'ثالثة.',
+      '第四。',
+      '第五！',
+    ]);
+    expect(PlayerProse.sentences('पहला। दूसरा।')).toEqual(['पहला।', 'दूसरा।']);
+  });
+
   it('ends a sentence before one that opens with a code span', () => {
     expect(
       PlayerProse.of('Open the folder. `powrprof.dll` loads first. Then play.\n').errors,
