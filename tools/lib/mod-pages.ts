@@ -36,6 +36,8 @@ export class ModPages {
   /** Where loops and their posters are served from, beside the pages under the same address. */
   public static readonly publicFolder = `public/${ModPages.folder}`;
   private static readonly images = 'images';
+  /** The site's old address, which pages of mods released before the move still link. */
+  private static readonly oldSite = 'https://enshwick.github.io/docs/';
   private static readonly heading = '## ';
   private static readonly file = `${ModSources.docs}/${ModSources.page}.md`;
 
@@ -183,10 +185,9 @@ export class ModPages {
     source: PlayerPageSource,
   ): string {
     const t = (key: string): string => Texts.site.get(key, language);
-    const body = ModPages.withMedia(release, source).replaceAll(
-      `](${ModPages.images}/`,
-      `](./${release.slug}/${ModPages.images}/`,
-    );
+    const body = ModPages.withMedia(release, source)
+      .replaceAll(`](${ModPages.images}/`, `](./${release.slug}/${ModPages.images}/`)
+      .replaceAll(`](${ModPages.oldSite}`, '](/');
     const table = ModPages.settingsTable(source.data, t);
 
     if (table === undefined) {

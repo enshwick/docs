@@ -167,6 +167,16 @@ ${version}`;
 
     expect(body).not.toContain(':::note');
   });
+
+  it('points links to the old site address at the same page on this site', () => {
+    const old =
+      `${page}\nThe [guide](https://enshwick.github.io/docs/guides/install/) and ` +
+      '[uk](https://enshwick.github.io/docs/uk/guides/install/).\n';
+    const body = ModPages.body(release, Languages.site.root, PlayerPageSource.parse('test', old));
+
+    expect(body).toContain('The [guide](/guides/install/) and [uk](/uk/guides/install/).');
+    expect(body).not.toContain('enshwick.github.io');
+  });
 });
 
 describe('ModPages.card', () => {
