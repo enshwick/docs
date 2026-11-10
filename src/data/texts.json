@@ -548,8 +548,8 @@
     "uk": "Чи сповільнює Enshwick гру?"
   },
   "front.faq.speed.a": {
-    "en": "Enshwick and Rust, C and C++ mods run as native code, like the game. A mod's link into the middle of a game function adds about 5 to 9 nanoseconds each time the game passes it. A Luau script runs in an interpreter, and a call costs about a microsecond.",
-    "uk": "Enshwick і моди на Rust, C і C++ працюють як нативний код, як і гра. Привʼязка мода посеред функції гри додає приблизно 5–9 наносекунд щоразу, коли гра її проходить. Скрипт Luau працює в інтерпретаторі, і виклик коштує приблизно мікросекунду."
+    "en": "Enshwick and mods made in Rust, C or C++ run as compiled code, like the game itself. Enshwick is built to add little work to each frame. Mods made as Luau scripts run through an interpreter, so they run slower.",
+    "uk": "Enshwick і моди на Rust, C чи C++ працюють як скомпільований код, як і сама гра. Enshwick зроблено так, щоб він додавав мало роботи до кожного кадру. Моди-скрипти на Luau працюють через інтерпретатор, тому вони повільніші."
   },
   "front.makers.languages.link": {
     "en": "Mods in C and C++",

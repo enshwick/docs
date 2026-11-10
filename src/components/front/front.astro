@@ -2,6 +2,7 @@
 import compat from '../../generated/compatibility.json';
 import modLines from '../../data/mods.json';
 import smallestModSource from '../../generated/smallest-mod.rs?raw';
+import { Coverage } from '../../site/coverage.ts';
 import { FrontData } from '../../site/front.ts';
 import { Languages } from '../../site/languages.ts';
 import { Links } from '../../site/links.ts';
@@ -40,7 +41,7 @@ const players = [
   { id: 'settings', href: `${prefix}/reference/where-files-live/` },
 ];
 const makers = [
-  { id: 'api', href: `${prefix}/api-coverage/` },
+  { id: 'api', href: `${prefix}${Coverage.page}` },
   { id: 'patches' },
   { id: 'together' },
   { id: 'languages', href: `${prefix}/dev/mods-in-c/` },

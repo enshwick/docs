@@ -7,8 +7,7 @@ sidebar:
 ---
 
 The [MIT licence](https://github.com/enshwick/enshwick/blob/main/LICENSE)
-covers Enshwick's code. It does not cover the name Enshwick. This page says who
-may ship a build under that name.
+covers Enshwick's code. It does not cover the name Enshwick.
 
 ## Who may build and ship the code?
 

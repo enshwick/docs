@@ -73,6 +73,17 @@ describe('GameBuildFiles.newest', () => {
     ]);
   });
 
+  it('takes a newer report without a game version as newest by its Steam build', () => {
+    const unread: GameBuild = {
+      side: 'server',
+      steamBuild: '26500000',
+      gameVersion: undefined,
+      off: [],
+    };
+
+    expect(GameBuildFiles.newest([unread, build('1287369', '26430253')])).toEqual([unread]);
+  });
+
   it('has nothing for no reports', () => {
     expect(GameBuildFiles.newest([])).toEqual([]);
   });

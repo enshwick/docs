@@ -9,7 +9,7 @@ sidebar:
 The Enshrouded dedicated server exists for Windows only. A Linux host runs it
 under Wine or Proton. Enshwick runs there with one environment variable.
 
-The install steps and the Pelican egg ran on game build 26430253, under Wine
+The install steps and the Pelican egg ran on game version 1287369, under Wine
 11.0 and GE-Proton 11-9.
 
 ## Install the server with Enshwick
@@ -138,4 +138,4 @@ Enshwick keeps the newest 10 crash files, as in
 copy its file before the server stops 10 more times.
 
 Under GE-Proton 11-9, Enshwick writes no crash file at a stop. Both results
-come from game build 26430253.
+come from game version 1287369.

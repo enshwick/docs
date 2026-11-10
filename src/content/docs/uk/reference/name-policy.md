@@ -7,8 +7,7 @@ sidebar:
 ---
 
 [Ліцензія MIT](https://github.com/enshwick/enshwick/blob/main/LICENSE)
-стосується коду Enshwick. Назви Enshwick вона не стосується. Ця сторінка каже,
-хто може поширювати збірку під цією назвою.
+стосується коду Enshwick. Назви Enshwick вона не стосується.
 
 ## Хто може збирати й поширювати код?
 
