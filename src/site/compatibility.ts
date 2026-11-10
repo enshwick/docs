@@ -24,7 +24,7 @@ export const CompatibilityData = n.object({
       slug: AnyString,
       name: AnyString,
       repository: AnyString,
-      tag: AnyString,
+      tag: n.of(AnyString).optional(),
       page: AnyBoolean,
       version: n.of(AnyString).optional(),
       api: n.of(AnyString).optional(),

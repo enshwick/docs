@@ -137,7 +137,9 @@ await Bun.write(
     {
       [platform.repository.toString()]: { [`${loaderPackage}.zip`]: loaderTag },
       [mods.repository.toString()]: Object.fromEntries(
-        modReleases.map((release) => [`${release.package}.zip`, release.tag]),
+        modReleases.flatMap((release) =>
+          release.tag === undefined ? [] : [[`${release.package}.zip`, release.tag]],
+        ),
       ),
     },
     null,

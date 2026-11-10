@@ -10,8 +10,8 @@ export interface ModCardFacts {
   /** Who needs the mod: `server`, `everyone` or `client`. */
   needs: string;
   repository: string;
-  /** The release the site reads the mod at. */
-  tag: string;
+  /** The release the site reads the mod at; a mod without a release is read from `main`. */
+  tag?: string;
   version?: string;
   /** The Enshwick API the mod needs, where its release names one. */
   api?: string;
@@ -57,7 +57,6 @@ export class FrontData {
     'linux',
     'saves',
     'update',
-    'free',
   ];
 
   /** The sides the front page names a game build for, in the order it shows them. */
@@ -146,9 +145,12 @@ export class FrontData {
       line,
       needs: entry.side,
       repository: mod.repository.toString(),
-      tag: mod.tag.toString(),
       page: mod.page.value,
     };
+
+    if (mod.tag !== undefined) {
+      card.tag = mod.tag.toString();
+    }
 
     if (mod.version !== undefined) {
       card.version = mod.version.toString();

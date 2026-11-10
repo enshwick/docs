@@ -2,8 +2,8 @@
   "admin-tools": {
     "side": "server",
     "summary": {
-      "en": "Server admins manage players and the world from the game. It comes with 1.0.",
-      "uk": "Адміністратори сервера керують гравцями й світом у грі. Вийде разом з 1.0."
+      "en": "Server admins manage players and the world from the game.",
+      "uk": "Адміністратори сервера керують гравцями й світом у грі."
     }
   },
   "area-loot": {

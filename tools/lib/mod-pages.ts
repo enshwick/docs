@@ -20,7 +20,8 @@ export interface ModRelease {
   readonly folder: string;
   /** The mod's Cargo package, which names its archive. */
   readonly package: string;
-  readonly tag: GitRef;
+  /** The mod's newest release; a mod without one has its page read from `main` and no download. */
+  readonly tag: GitRef | undefined;
   readonly version: string | undefined;
   readonly api: string | undefined;
   readonly needs: string | undefined;
@@ -58,13 +59,8 @@ export class ModPages {
   private async buildMod(mod: ModSource): Promise<ModRelease | undefined> {
     const { repository } = this.sources;
 
-    if (mod.tag === undefined) {
-      ModPages.note(`${repository} has no release of ${mod.package} yet; no page`);
-
-      return undefined;
-    }
-
-    const checkout = await this.sources.checkout(mod.tag);
+    const ref = mod.tag ?? ModSources.mainBranch;
+    const checkout = await this.sources.checkout(ref);
     const known = {
       slug: posix.basename(mod.folder),
       repository,
@@ -75,8 +71,10 @@ export class ModPages {
         await checkout.read(`${mod.folder}/${ModSources.manifest}`),
         await checkout.read(ModSources.manifest),
       ),
+      // An unreleased mod's manifest carries a development version no player can download.
+      ...(mod.tag === undefined ? { version: undefined } : {}),
     };
-    const origin = `${repository}@${mod.tag} ${mod.folder}/${ModPages.file}`;
+    const origin = `${repository}@${ref} ${mod.folder}/${ModPages.file}`;
     const rootText = await checkout.read(`${mod.folder}/${ModPages.file}`);
 
     if (rootText === undefined) {
@@ -131,7 +129,7 @@ export class ModPages {
     const text = await checkout.read(`${release.folder}/${file}`);
 
     if (text !== undefined) {
-      const origin = `${release.repository}@${release.tag} ${release.folder}/${file}`;
+      const origin = `${release.repository}@${release.tag ?? ModSources.mainBranch} ${release.folder}/${file}`;
 
       await this.writePage(release, checkout, language, PlayerPageSource.parse(origin, text), file);
     }
@@ -172,7 +170,7 @@ export class ModPages {
       repository: release.repository.toString(),
       folder: release.folder,
       package: release.package,
-      release: release.tag.toString(),
+      ...(release.tag === undefined ? {} : { release: release.tag.toString() }),
       ...(release.version === undefined ? {} : { version: release.version }),
       ...(release.api === undefined ? {} : { api: release.api }),
     });

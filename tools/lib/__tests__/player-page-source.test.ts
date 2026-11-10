@@ -188,9 +188,18 @@ describe('ModPages.card', () => {
       repository: release.repository.toString(),
       folder: release.folder,
       package: release.package,
-      release: release.tag.toString(),
+      release: release.tag?.toString(),
     });
     expect(card.needs).toBeDefined();
+  });
+
+  it('gives a mod without a release no release, so its card shows no download', () => {
+    const card = ModPages.card(
+      { ...release, tag: undefined },
+      PlayerPageSource.parse('test', page),
+    );
+
+    expect(card).not.toHaveProperty('release');
   });
 
   it('adds a settings section at the end when the page has none', () => {
