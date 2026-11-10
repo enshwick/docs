@@ -34,13 +34,7 @@ type Compat = Extract<ReturnType<typeof CompatibilityData.parse>, { ok: true }>[
 /** Who needs each mod and its lines by language, keyed by the mod's slug. */
 type Lines = Map<string, { side: string; summary: Map<string, string> }>;
 
-/** One of the newest platform release's game builds: its side and its Steam build. */
-interface GameBuild {
-  side: string;
-  steamBuild: string;
-}
-
-/** The front page's data: the newest release, the game builds it runs on and a card per mod. */
+/** The front page's data: the newest release and a card per mod. */
 export class FrontData {
   /** The language every mod line must have. */
   private static readonly root = 'en';
@@ -52,6 +46,7 @@ export class FrontData {
   public static readonly questions = [
     'loader',
     'languages',
+    'speed',
     'safe',
     'server',
     'linux',
@@ -59,20 +54,15 @@ export class FrontData {
     'update',
   ];
 
-  /** The sides the front page names a game build for, in the order it shows them. */
-  private static readonly sides = ['client', 'server'];
-
   /** The Enshwick API of the newest platform release, where there is one. */
   public readonly version?: string;
-  public readonly gameBuilds: GameBuild[];
   public readonly mods: ModCardFacts[];
 
-  private constructor(version: string | undefined, gameBuilds: GameBuild[], mods: ModCardFacts[]) {
+  private constructor(version: string | undefined, mods: ModCardFacts[]) {
     if (version !== undefined) {
       this.version = version;
     }
 
-    this.gameBuilds = gameBuilds;
     this.mods = mods;
   }
 
@@ -104,19 +94,7 @@ export class FrontData {
     const newest = parsedCompat.value.platform[0];
     const mods = parsedCompat.value.mods.map((mod) => FrontData.modCard(mod, byMod, language));
 
-    return new FrontData(newest?.api?.toString(), FrontData.newestBuilds(newest), mods);
-  }
-
-  /** The newest platform release's game builds: per side, the newest with a Steam build. */
-  private static newestBuilds(newest: Compat['platform'][number] | undefined): GameBuild[] {
-    return FrontData.sides.flatMap((side) => {
-      const steamBuild = (newest?.builds ?? [])
-        .filter((build) => build.side.toString() === side)
-        .flatMap((build) => (build.steamBuild === undefined ? [] : [build.steamBuild.toString()]))
-        .at(-1);
-
-      return steamBuild === undefined ? [] : [{ side, steamBuild }];
-    });
+    return new FrontData(newest?.api?.toString(), mods);
   }
 
   /** One mod's card, its line in `language` or English, its side checked against its page. */

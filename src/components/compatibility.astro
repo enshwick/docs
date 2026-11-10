@@ -1,7 +1,6 @@
 ---
 import raw from '../generated/compatibility.json';
 import { CompatibilityData } from '../site/compatibility.ts';
-import { BuildState, GameBuildRows } from '../site/game-build-rows.ts';
 import { Languages } from '../site/languages.ts';
 import { Texts } from '../site/texts.ts';
 
@@ -18,41 +17,41 @@ const prefix = language.equals(Languages.site.root) ? '' : `/${language}`;
 const base = import.meta.env.BASE_URL.replace(/\/$/u, '');
 const feature = (name: string): string =>
   Texts.site.has(`compat.feature.${name}`, Languages.site.root) ? t(`compat.feature.${name}`) : name;
-const state = (row: { state: BuildState; off: readonly string[] }): string =>
-  row.state === BuildState.Partly
-    ? `${t('compat.state.partly')} ${row.off.map(feature).join(', ')}`
-    : t(`compat.state.${row.state}`);
+const state = (off: ReadonlyArray<{ toString(): string }>): string =>
+  off.length === 0
+    ? t('compat.state.works')
+    : `${t('compat.state.partly')} ${off.map((name) => feature(name.toString())).join(', ')}`;
+const day = new Intl.DateTimeFormat(language.toString(), { dateStyle: 'long', timeZone: 'UTC' });
+const checked = platform[0]?.checked ?? [];
 ---
 
-<h2>{t('compat.platform')}</h2>
-<div class="ew-table" tabindex="0"><table>
-  <thead>
-    <tr>
-      <th>{t('compat.version')}</th>
-      <th>{t('compat.api')}</th>
-      <th>{t('compat.side')}</th>
-      <th>{t('compat.steam')}</th>
-      <th>{t('compat.game-version')}</th>
-      <th>{t('compat.state')}</th>
-    </tr>
-  </thead>
-  <tbody>
-    {
-      platform.flatMap((release) =>
-        GameBuildRows.of(release.builds).map((row) => (
+{
+  checked.length > 0 && (
+    <>
+      <h2>{t('compat.platform')}</h2>
+      <div class="ew-table" tabindex="0"><table>
+        <thead>
           <tr>
-            <td>{release.name}</td>
-            <td>{release.api ?? ''}</td>
-            <td>{t(`compat.side.${row.side}`)}</td>
-            <td>{row.steamBuild ?? ''}</td>
-            <td>{row.gameVersion ?? ''}</td>
-            <td>{state(row)}</td>
+            <th>{t('compat.side')}</th>
+            <th>{t('compat.game-version')}</th>
+            <th>{t('compat.state')}</th>
+            <th>{t('compat.checked')}</th>
           </tr>
-        )),
-      )
-    }
-  </tbody>
-</table></div>
+        </thead>
+        <tbody>
+          {checked.map((build) => (
+            <tr>
+              <td>{t(`compat.side.${build.side.toString()}`)}</td>
+              <td>{build.gameVersion?.toString() ?? ''}</td>
+              <td>{state(build.off)}</td>
+              <td>{build.checked === undefined ? '' : day.format(new Date(build.checked.toString()))}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table></div>
+    </>
+  )
+}
 
 <h2>{t('compat.mods')}</h2>
 <div class="ew-table" tabindex="0"><table>

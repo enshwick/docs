@@ -19,7 +19,7 @@ developer pages are versioned per API minor.
 | the mod with settings on the page for AI assistants | the example the book's altars chapter marks with an `altar-count` comment, compiled there as a doctest | `tools/fetch.ts` writes `src/generated/altar-count.md` and fails when the chapter no longer marks it |
 | a social card per page | each page's title and description | `src/pages/og/` draws them at build time over the same night as the front page |
 | a social card per repository of the project, for its social preview on GitHub | `src/data/repositories.json` | `src/site/repositories.ts` gives `src/pages/og/github/` each one's title and description, which `src/site/repository-card.ts` draws at 1280x640 at `/og/github/<name>.png` |
-| compatibility | the platform's compatibility reports and each mod's `Cargo.toml` at its release | `tools/fetch.ts` writes `src/generated/compatibility.json`, which `src/components/compatibility.astro` renders |
+| compatibility | the newest compatibility report of each side at the newest platform release, and each mod's `Cargo.toml` at its release | `tools/fetch.ts` writes `src/generated/compatibility.json`, which `src/components/compatibility.astro` renders |
 | `llms.txt` | the developer pages, with a map of the API crate's public modules | `tools/fetch.ts` fails when a public module of the API crate has no developer page that names it |
 
 Generated pages are never committed: `tools/fetch.ts` writes them before every

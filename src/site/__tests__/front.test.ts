@@ -7,10 +7,9 @@ const compat = {
     {
       name: 'next',
       api: '1.0.0-alpha.11',
-      builds: [
-        { side: 'client', steamBuild: '26082781' },
-        { side: 'client', gameVersion: '1273043' },
-        { side: 'server', steamBuild: '26083076' },
+      checked: [
+        { side: 'client', gameVersion: '1287369', off: [], checked: '2026-11-08' },
+        { side: 'server', gameVersion: '1287369', off: ['bases'] },
       ],
     },
   ],
@@ -50,13 +49,6 @@ describe('FrontData.from', () => {
     expect(FrontData.from(compat, lines, en).version).toBe('1.0.0-alpha.11');
   });
 
-  it('lists the newest Steam build of each side', () => {
-    expect(FrontData.from(compat, lines, en).gameBuilds).toEqual([
-      { side: 'client', steamBuild: '26082781' },
-      { side: 'server', steamBuild: '26083076' },
-    ]);
-  });
-
   it('builds a card per mod with its line in the asked language and English as fallback', () => {
     const cards = FrontData.from(compat, lines, uk).mods;
 
@@ -70,7 +62,6 @@ describe('FrontData.from', () => {
     const data = FrontData.from({ ...compat, platform: [] }, lines, en);
 
     expect(data.version).toBeUndefined();
-    expect(data.gameBuilds).toEqual([]);
   });
 
   it('throws naming mods.json when a mod has no line', () => {

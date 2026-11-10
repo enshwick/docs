@@ -124,24 +124,16 @@
     "uk": "Зроблено на Enshwick. Спершу встановіть Enshwick, як показує інструкція."
   },
   "compat.platform": {
-    "en": "Does Enshwick work on my game build?",
-    "uk": "Чи працює Enshwick на моїй збірці гри?"
-  },
-  "compat.version": {
-    "en": "Enshwick version",
-    "uk": "Версія Enshwick"
-  },
-  "compat.api": {
-    "en": "API",
-    "uk": "API"
+    "en": "Which game version was Enshwick last checked on?",
+    "uk": "На якій версії гри Enshwick перевірили востаннє?"
   },
   "compat.side": {
     "en": "Side",
     "uk": "Сторона"
   },
-  "compat.steam": {
-    "en": "Steam build",
-    "uk": "Збірка Steam"
+  "compat.checked": {
+    "en": "Checked on",
+    "uk": "Дата перевірки"
   },
   "compat.mods": {
     "en": "Mods and the Enshwick API they need",
@@ -186,14 +178,6 @@
   "compat.state.partly": {
     "en": "Works. Some features are off in:",
     "uk": "Працює. Частину можливостей вимкнено в:"
-  },
-  "compat.state.unchecked": {
-    "en": "Not checked yet. Enshwick looks for what it needs in this build and turns off what it cannot find.",
-    "uk": "Ще не перевірено. Enshwick шукає потрібне в цій збірці й вимикає те, чого не знаходить."
-  },
-  "compat.state.unreported": {
-    "en": "No report yet.",
-    "uk": "Звіту ще немає."
   },
   "compat.feature.bases": {
     "en": "bases",
@@ -310,6 +294,14 @@
   "front.tech.api": {
     "en": "Enshwick",
     "uk": "Enshwick"
+  },
+  "front.tech.game": {
+    "en": "Game",
+    "uk": "Гра"
+  },
+  "front.tech.latest": {
+    "en": "latest version",
+    "uk": "остання версія"
   },
   "front.tech.link": {
     "en": "Compatibility",
@@ -534,6 +526,30 @@
   "front.makers.languages.a": {
     "en": "Rust, Luau, or plain data with no code. C and C++ through the C header, and we test both. Other languages that can export C functions work the same way, but we do not test them.",
     "uk": "Rust, Luau або просто дані без коду. C і C++ — через заголовок C, і ми перевіряємо обидві мови. Інші мови, що вміють експортувати функції C, працюють так само, але ми їх не перевіряємо."
+  },
+  "front.makers.speed.q": {
+    "en": "Native speed for native mods",
+    "uk": "Нативна швидкість для нативних модів"
+  },
+  "front.makers.speed.a": {
+    "en": "Rust, C and C++ mods run as native code, like the game itself, with no garbage collector. Luau scripts run in an interpreter and cost more per call. Write code that runs on every frame natively.",
+    "uk": "Моди на Rust, C і C++ працюють як нативний код, як і сама гра, без збирача сміття. Скрипти Luau працюють в інтерпретаторі, і кожен виклик коштує більше. Код, що працює щокадру, пишіть нативно."
+  },
+  "front.makers.speed.link": {
+    "en": "Performance",
+    "uk": "Продуктивність"
+  },
+  "front.makers.api.link": {
+    "en": "API coverage",
+    "uk": "Покриття API"
+  },
+  "front.faq.speed.q": {
+    "en": "Does Enshwick slow the game down?",
+    "uk": "Чи сповільнює Enshwick гру?"
+  },
+  "front.faq.speed.a": {
+    "en": "Enshwick and Rust, C and C++ mods run as native code, like the game. A mod's link into the middle of a game function adds about 5 to 9 nanoseconds each time the game passes it. A Luau script runs in an interpreter, and a call costs about a microsecond.",
+    "uk": "Enshwick і моди на Rust, C і C++ працюють як нативний код, як і гра. Привʼязка мода посеред функції гри додає приблизно 5–9 наносекунд щоразу, коли гра її проходить. Скрипт Luau працює в інтерпретаторі, і виклик коштує приблизно мікросекунду."
   },
   "front.makers.languages.link": {
     "en": "Mods in C and C++",
