@@ -109,7 +109,8 @@ COPY --from=enshwick --chown=<server user>:<server group> /enshwick/files/ <fold
 [Сервер на Linux](/uk/guides/run-a-linux-server/) пояснює цю змінну та інші
 налаштування. З обмеженням процесора для контейнера
 [Optimizer](/uk/mods/optimizer/) запускає не більше робочих потоків, ніж
-дозволяє обмеження.
+дозволяє обмеження. Під Wine 11.0 кожна зупинка контейнера пише файл збою, як
+[пояснює сторінка про Linux](/uk/guides/run-a-linux-server/#чому-сервер-під-wine-пише-файл-збою-під-час-кожної-зупинки).
 
 ## Додайте Enshwick у поширений образ
 

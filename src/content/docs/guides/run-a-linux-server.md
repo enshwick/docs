@@ -119,3 +119,23 @@ a line of advice.
 
 For a server in Docker or Kubernetes, see
 [Run a server in Docker or Kubernetes](/guides/run-a-server-in-docker/).
+
+## Why does a server under Wine write a crash file at every stop?
+
+Under Wine 11.0, the game itself crashes at the end of every stop. A server
+without Enshwick crashes there too. The crash comes after the game saves the
+world, and the world keeps everything.
+
+The game writes its own crash dump into its `crash_dumps` folder. Enshwick
+writes `logs/enshwick-crash_<date>_<time>.log`. The line in that file says
+`the game itself crashed: no mod's or loader's code on the stack`.
+
+That line also names `sechost.dll`, a part of Wine. At the next start,
+Enshwick's log warns `the game crashed in the last session`.
+
+Enshwick keeps the newest 10 crash files, as in
+[Where files live](/reference/where-files-live/). After a crash during play,
+copy its file before the server stops 10 more times.
+
+Under GE-Proton 11-9, Enshwick writes no crash file at a stop. Both results
+come from game build 26430253.

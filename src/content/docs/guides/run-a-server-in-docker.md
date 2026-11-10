@@ -105,7 +105,9 @@ the value, and Wine ignores it.
 
 [Run a server on Linux](/guides/run-a-linux-server/) explains the variable and
 the other settings. With a container CPU limit, the
-[Optimizer](/mods/optimizer/) starts no more task workers than the limit allows.
+[Optimizer](/mods/optimizer/) starts no more task workers than the limit allows. Under Wine 11.0, every
+container stop writes a crash file, as
+[the Linux page explains](/guides/run-a-linux-server/#why-does-a-server-under-wine-write-a-crash-file-at-every-stop).
 
 ## Add Enshwick to a common image
 
