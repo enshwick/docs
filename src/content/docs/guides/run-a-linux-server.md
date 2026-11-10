@@ -55,6 +55,20 @@ If Enshwick did not start,
 [Where files live](/reference/where-files-live/). If neither log exists, the
 server did not get the variable.
 
+## Why does the server write a crash file at every stop?
+
+Under Wine 11, the game itself crashes at the end of every stop, with or
+without Enshwick. The crash comes after the world is saved, so nothing is
+lost.
+
+The game writes a crash dump into `crash_dumps`. Enshwick writes
+`logs/enshwick-crash_<date>_<time>.log`. Its line says
+`the game itself crashed: no mod's or loader's code on the stack` and names
+`sechost.dll`, a part of Wine.
+
+Under GE-Proton 11-9 the stop does not crash. Both were seen on game build
+26430253.
+
 ## Use a hosting panel
 
 A panel starts the server with its own command. Put Enshwick's files into the
