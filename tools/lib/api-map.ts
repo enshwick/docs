@@ -18,13 +18,20 @@ export interface ApiModule {
  * lists it, and the build fails when a module has no page, so the two stay in step.
  */
 export class ApiMap {
-  // The attribute lines above each module, so a `#[doc(hidden)]` one is left out.
-  private static readonly publicModule = /^((?:#\[[^\n]*\]\r?\n)*)pub mod ([a-z0-9_]+);/gmu;
+  /**
+   * A module the crate declares, or one it re-exports whole from an internal crate, with the attribute
+   * lines above it, so a `#[doc(hidden)]` one is left out. The same rule as `public_modules` in
+   * enshwick's `cargo xtask check`.
+   */
+  private static readonly publicModule =
+    /^((?:#\[[^\n]*\]\r?\n)*)pub (?:mod ([a-z0-9_]+)|use (enshwick_[a-z0-9_]+)::([a-z_]+));/gmu;
   // Hidden modules, such as macro support, are no part of the documented API.
   private static readonly hidden = /#\[doc\(hidden\)\]/u;
   // A module the crate compiles only with the `unstable` feature is unstable, listed or not.
   private static readonly gate = /#\[cfg\(feature = "unstable"\)\]/u;
   private static readonly crateName = 'enshwick';
+  /** The macro crate's lowercase items are macros, not modules. */
+  private static readonly macroCrate = 'enshwick_macros';
 
   private constructor(
     public readonly modules: readonly ApiModule[],
@@ -35,21 +42,36 @@ export class ApiMap {
 
   /** The map of the crate root `lib`, against the newest version's developer pages. */
   public static of(lib: string, pages: readonly DeveloperPage[]): ApiMap {
-    const shown = [...lib.matchAll(ApiMap.publicModule)].filter(
-      (match) => !ApiMap.hidden.test(match[1] ?? ''),
-    );
-    const names = shown.map((match) => match[2] ?? '');
+    const shown = ApiMap.declared(lib).filter(({ attributes }) => !ApiMap.hidden.test(attributes));
 
     return new ApiMap(
-      names.map((name) => ({
+      shown.map(({ name }) => ({
         name,
         pages: pages
           .filter((page) => ApiMap.mentions(page.body, name))
           .map(({ slug, title }) => ({ slug, title })),
       })),
       pages,
-      shown.filter((match) => ApiMap.gate.test(match[1] ?? '')).map((match) => match[2] ?? ''),
+      shown.filter(({ attributes }) => ApiMap.gate.test(attributes)).map(({ name }) => name),
     );
+  }
+
+  /** The internal crate, such as `enshwick_abi`, the crate root `lib` re-exports module `name` from, if any. */
+  public static origin(lib: string, name: string): string | undefined {
+    return ApiMap.declared(lib).find((module) => module.name === name)?.crate;
+  }
+
+  /** Every module the crate root declares or re-exports, hidden ones included. */
+  private static declared(
+    lib: string,
+  ): Array<{ attributes: string; name: string; crate: string | undefined }> {
+    return [...lib.matchAll(ApiMap.publicModule)]
+      .filter((match) => match[3] !== ApiMap.macroCrate)
+      .map((match) => ({
+        attributes: match[1] ?? '',
+        name: match[2] ?? match[4] ?? '',
+        crate: match[3],
+      }));
   }
 
   /** The stability badge of each page that documents one module, from the stability chapter. */

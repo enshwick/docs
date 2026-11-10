@@ -24,6 +24,12 @@ describe('PlatformChecks', () => {
     );
   });
 
+  it('fails the build when the newest version has no ABI module to read the mod id rules from', () => {
+    expect(() => new PlatformChecks(undefined, pages).run()).toThrow(
+      "no examples of the mod id rules found in the API crate's abi.rs",
+    );
+  });
+
   it('fails the build naming the chapter that no longer marks its example', () => {
     expect(() => new PlatformChecks(undefined, pages.slice(0, 1)).snippets()).toThrow(
       "the book's dev/altars chapter marks no altar-count example for the site",

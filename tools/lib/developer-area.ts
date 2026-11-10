@@ -4,6 +4,7 @@ import { type ChapterPage, ChapterConverter } from './chapter-converter.ts';
 import { GameBuildFiles } from './game-build-files.ts';
 import { GitSource } from './git-source.ts';
 import { MdxBody } from './mdx-body.ts';
+import { ModuleFile } from './module-file.ts';
 import { PageFile } from './page-file.ts';
 import { type PageType, type SidebarEntry, Summary } from './summary.ts';
 
@@ -63,7 +64,10 @@ export class DeveloperArea {
   private static readonly dayLength = 10;
   private static readonly apiManifest = 'crates/enshwick/Cargo.toml';
   private static readonly apiRoot = 'crates/enshwick/src/lib.rs';
-  private static readonly apiAbi = 'crates/enshwick/src/abi.rs';
+  /** The workspace manifest, which says where each internal crate of the API lives. */
+  private static readonly workspaceManifest = 'Cargo.toml';
+  /** The module whose `is_valid_id` examples hold the mod id rules. */
+  private static readonly abiModule = 'abi';
   public static readonly errorsSource = 'crates/internal/loader/src/errors.toml';
 
   /** The newest version's pages, filled by `build()`. */
@@ -136,7 +140,7 @@ export class DeveloperArea {
       `/${DeveloperArea.reports}/`,
       `/${DeveloperArea.apiManifest}`,
       `/${DeveloperArea.apiRoot}`,
-      `/${DeveloperArea.apiAbi}`,
+      `/${DeveloperArea.workspaceManifest}`,
       `/${DeveloperArea.errorsSource}`,
     ]);
     const summary = Summary.parse(await this.require(checkout, DeveloperArea.summary));
@@ -251,17 +255,32 @@ export class DeveloperArea {
           .slice(0, DeveloperArea.dayLength),
       })),
     );
+    const lib = await checkout.read(DeveloperArea.apiRoot);
 
     return {
       name: version.name,
       ref: version.ref.toString(),
       api,
       checked,
-      lib: await checkout.read(DeveloperArea.apiRoot),
-      abi: await checkout.read(DeveloperArea.apiAbi),
+      lib,
+      abi: await DeveloperArea.abi(checkout, lib ?? ''),
       errors: await checkout.read(DeveloperArea.errorsSource),
       errorsUpdated: await checkout.lastChanged(DeveloperArea.errorsSource),
     };
+  }
+
+  /** The ABI module's text, wherever the version keeps it: in the API crate or the internal crate it re-exports. */
+  private static async abi(checkout: GitSource, lib: string): Promise<string | undefined> {
+    const workspace = await checkout.read(DeveloperArea.workspaceManifest);
+    const path = ModuleFile.path(lib, workspace, DeveloperArea.abiModule);
+
+    if (path === undefined) {
+      return undefined;
+    }
+
+    await checkout.widen([`/${path}`]);
+
+    return checkout.read(path);
   }
 
   /** A file of the book that must exist at the version's ref. */

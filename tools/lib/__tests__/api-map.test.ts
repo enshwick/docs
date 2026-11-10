@@ -54,6 +54,30 @@ describe('ApiMap', () => {
     expect(ApiMap.of(lib, pages).gated).toEqual(['weather']);
   });
 
+  it('counts a module re-exported whole from an internal crate, but not a macro or a hidden one', () => {
+    const recut = `#[doc(inline)]
+pub use enshwick_values::shape;
+pub use enshwick_macros::hook;
+pub use enshwick_macros::Shape;
+#[doc(hidden)]
+pub use enshwick_core::internals;
+pub use abi::{Entity, ItemId};
+pub mod stats;
+`;
+
+    expect(ApiMap.of(recut, pages).modules.map((module) => module.name)).toEqual([
+      'shape',
+      'stats',
+    ]);
+  });
+
+  it('names the internal crate a module is re-exported from', () => {
+    const recut = 'pub use enshwick_abi::abi;\npub mod stats;\n';
+
+    expect(ApiMap.origin(recut, 'abi')).toBe('enshwick_abi');
+    expect(ApiMap.origin(recut, 'stats')).toBeUndefined();
+  });
+
   it('writes one line per module with absolute links', () => {
     expect(ApiMap.of(lib, pages).markdown('https://site/docs')).toContain(
       '- `enshwick::stats`: [Stats](https://site/docs/dev/stats/)',
