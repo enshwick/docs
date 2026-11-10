@@ -57,11 +57,10 @@ After a game update, Enshwick looks for what it needs in the new game build, as
 on every build. Only what it does not find stays off.
 
 To run a new build without mods instead, set `build_patterns = false` in
-`enshwick.toml` in the game folder. A new build is one that your Enshwick release
-has no compatibility report for. The [compatibility page](/reference/compatibility/)
-lists the builds with a report.
+`enshwick.toml` in the game folder. A new build is a game build your Enshwick
+release was not checked on, even when the game version stays the same.
 
-Rebuild the image once a newer Enshwick has a report for the build. Without
+Rebuild the image once a newer Enshwick release is checked on the new build. Without
 `build_patterns = false`, a newer Enshwick that finds what was missing is enough.
 
 ## Keep worlds on a volume
@@ -111,7 +110,7 @@ container stop writes a crash file, as
 
 ## Add Enshwick to a common image
 
-These images ran Enshwick on game build 26430253. Each one passes the
+These images ran Enshwick on game version 1287369. Each one passes the
 variable from `-e` to the server. Their tags move, so the runtime column names
 what the image held at that test.
 

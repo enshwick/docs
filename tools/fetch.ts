@@ -101,7 +101,7 @@ await Bun.write(
 );
 await Bun.write(
   `${generated}/compatibility.json`,
-  `${JSON.stringify({ platform: developerArea.releases.map(({ lib: _lib, errors: _errors, errorsUpdated: _errorsUpdated, abi: _abi, ...release }) => release), mods: modReleases }, null, 2)}\n`,
+  `${JSON.stringify({ platform: developerArea.releases.slice(0, 1).map(({ lib: _lib, errors: _errors, errorsUpdated: _errorsUpdated, abi: _abi, ...release }) => release), mods: modReleases }, null, 2)}\n`,
 );
 await Bun.write(
   `${generated}/stability.json`,

@@ -2,6 +2,7 @@
 import compat from '../../generated/compatibility.json';
 import modLines from '../../data/mods.json';
 import smallestModSource from '../../generated/smallest-mod.rs?raw';
+import { Coverage } from '../../site/coverage.ts';
 import { FrontData } from '../../site/front.ts';
 import { Languages } from '../../site/languages.ts';
 import { Links } from '../../site/links.ts';
@@ -22,7 +23,6 @@ const data = FrontData.from(compat, modLines, lang);
 const base = import.meta.env.BASE_URL.replace(/\/$/u, '');
 const prefix = code.equals(Languages.site.root) ? base : `${base}/${lang}`;
 const steps = [1, 2, 3, 4];
-const client = data.gameBuilds.find((build) => build.side === 'client');
 const sections = [
   { id: 'top', key: 'front.nav.top' },
   { id: 'players', key: 'front.nav.players' },
@@ -41,10 +41,11 @@ const players = [
   { id: 'settings', href: `${prefix}/reference/where-files-live/` },
 ];
 const makers = [
-  { id: 'api' },
+  { id: 'api', href: `${prefix}${Coverage.page}` },
   { id: 'patches' },
   { id: 'together' },
   { id: 'languages', href: `${prefix}/dev/mods-in-c/` },
+  { id: 'speed', href: `${prefix}/dev/concepts/performance/` },
   { id: 'tool', href: `${prefix}/dev/getting-started/` },
   { id: 'levels' },
   { id: 'texts' },
@@ -77,12 +78,10 @@ const smallestMod = new Snippet(smallestModSource.trimEnd(), SnippetLanguage.Rus
                   <dt>{t('front.tech.api')}</dt>
                   <dd>{data.version}</dd>
                 </div>
-                {client !== undefined && (
-                  <div>
-                    <dt>{t('compat.steam')}</dt>
-                    <dd>{client.steamBuild}</dd>
-                  </div>
-                )}
+                <div>
+                  <dt>{t('front.tech.game')}</dt>
+                  <dd>{t('front.tech.latest')}</dd>
+                </div>
               </dl>
               <a href={`${prefix}/reference/compatibility/`}>{t('front.tech.link')}</a>
             </div>

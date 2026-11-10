@@ -1,23 +1,24 @@
 import { AnyBoolean, AnyString, n } from '@horizon-republic/nominal-types';
 
 /**
- * One game build with a compatibility report: its Steam build and game version where the report
- * names them, and the loader features off or partly off on it, absent in data older than reports.
+ * The game version one side was last checked on, from its newest compatibility report: the
+ * features off or partly off on it, and the day, `YYYY-MM-DD`, the report last changed.
  */
-const GameBuild = n.object({
+const CheckedBuild = n.object({
   side: AnyString,
-  steamBuild: n.of(AnyString).optional(),
   gameVersion: n.of(AnyString).optional(),
-  off: n.of(AnyString).array().optional(),
+  off: n.of(AnyString).array(),
+  checked: n.of(AnyString).optional(),
 });
 
 /**
  * The compatibility page's data, `src/generated/compatibility.json`, which `tools/fetch.ts` writes
- * from the platform's compatibility reports and every mod's newest release.
+ * from the newest platform release's newest compatibility report of each side and every mod's
+ * newest release. Enshwick supports the latest game version, so no older build is published.
  */
 export const CompatibilityData = n.object({
   platform: n
-    .object({ name: AnyString, api: n.of(AnyString).optional(), builds: GameBuild.array() })
+    .object({ name: AnyString, api: n.of(AnyString).optional(), checked: CheckedBuild.array() })
     .array(),
   mods: n
     .object({

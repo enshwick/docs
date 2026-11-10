@@ -1,6 +1,6 @@
 ---
 title: Compatibility
-description: Which Enshrouded game builds each Enshwick version runs on, and which Enshwick version each mod needs. A new build appears here once it is checked.
+description: Enshwick supports the latest version of Enshrouded. See the game version it was last checked on, what happens after a game update, and the API each mod needs.
 type: reference
 sidebar:
   order: 2
@@ -8,10 +8,21 @@ sidebar:
 
 import Compatibility from '../../../components/compatibility.astro';
 
-Each row is one game build that Enshwick knows. The State column says whether Enshwick works on it.
-After a game update, the new build appears here once it is checked.
+Enshwick supports the latest version of Enshrouded, for the game and the dedicated server.
+The table names the game version Enshwick was last checked on.
 
 <Compatibility />
+
+## What happens after a game update?
+
+You do not need a new Enshwick after a game update.
+A server can choose to run a new build without mods instead, as [Run a server in Docker or Kubernetes](/guides/run-a-server-in-docker/) shows.
+
+When the game starts, Enshwick looks for the parts of the game its features need.
+If a part changed, Enshwick turns off only the features that need it.
+Everything else keeps working.
+
+The chat and the Mods screen name each feature that is off.
 
 ## Does Enshwick support another mod loader?
 

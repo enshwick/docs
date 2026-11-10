@@ -33,8 +33,8 @@ describe('GameBuildFiles.read', () => {
   });
 });
 
-const build = (gameVersion: string, steamBuild: string): GameBuild => ({
-  side: 'server',
+const build = (gameVersion: string, steamBuild: string, side = 'server'): GameBuild => ({
+  side,
   steamBuild,
   gameVersion,
   off: [],
@@ -55,5 +55,36 @@ describe('GameBuildFiles.ordered', () => {
       '26319800',
       '26430253',
     ]);
+  });
+});
+
+describe('GameBuildFiles.newest', () => {
+  it('keeps only the newest build of each side, client first', () => {
+    const builds = [
+      build('1287369', '26430253'),
+      build('1287369', '26430625', 'client'),
+      build('1273043', '26083076'),
+      build('1273043', '26082781', 'client'),
+    ];
+
+    expect(GameBuildFiles.newest(builds).map((b) => [b.side, b.steamBuild])).toEqual([
+      ['client', '26430625'],
+      ['server', '26430253'],
+    ]);
+  });
+
+  it('takes a newer report without a game version as newest by its Steam build', () => {
+    const unread: GameBuild = {
+      side: 'server',
+      steamBuild: '26500000',
+      gameVersion: undefined,
+      off: [],
+    };
+
+    expect(GameBuildFiles.newest([unread, build('1287369', '26430253')])).toEqual([unread]);
+  });
+
+  it('has nothing for no reports', () => {
+    expect(GameBuildFiles.newest([])).toEqual([]);
   });
 });

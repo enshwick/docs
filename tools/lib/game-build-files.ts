@@ -44,11 +44,28 @@ export class GameBuildFiles {
     };
   }
 
-  /** `builds` oldest first, by game version, then Steam build, so the last of a side is its newest. */
-  public static ordered(builds: readonly GameBuild[]): GameBuild[] {
+  /**
+   * `builds` oldest first, so the last of a side is its newest: by Steam build when both have one,
+   * since it grows with every build, else by game version, then Steam build.
+   */
+  public static ordered<T extends GameBuild>(builds: readonly T[]): T[] {
     const version = (build: GameBuild): number => Number(build.gameVersion ?? 0);
     const steam = (build: GameBuild): number => Number(build.steamBuild ?? 0);
 
-    return builds.toSorted((a, b) => version(a) - version(b) || steam(a) - steam(b));
+    return builds.toSorted((a, b) =>
+      a.steamBuild !== undefined && b.steamBuild !== undefined
+        ? steam(a) - steam(b)
+        : version(a) - version(b) || steam(a) - steam(b),
+    );
+  }
+
+  /**
+   * The newest build of each side, sides in name order: Enshwick supports the latest game version,
+   * and the reports of older builds stay a test record the site does not publish.
+   */
+  public static newest<T extends GameBuild>(builds: readonly T[]): T[] {
+    const bySide = new Map(GameBuildFiles.ordered(builds).map((build) => [build.side, build]));
+
+    return [...bySide.values()].toSorted((a, b) => a.side.localeCompare(b.side));
   }
 }
