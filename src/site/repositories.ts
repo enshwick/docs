@@ -41,15 +41,22 @@ export class Repositories {
       throw new TypeError(`${Repositories.file}: ${JSON.stringify(parsed.issues)}`);
     }
 
-    this.cards = Object.fromEntries(
-      Object.entries(parsed.value).map(([repository, entry]) => [
-        Repositories.cardPath(new RepositoryName(repository)),
-        {
-          title: entry.title.toString(),
-          description: entry.description?.toString() ?? texts.get(Repositories.siteDescription),
-        },
-      ]),
+    const cards = Object.entries(parsed.value).map(
+      ([repository, entry]) =>
+        [
+          Repositories.cardPath(new RepositoryName(repository)),
+          {
+            title: entry.title.toString(),
+            description: entry.description?.toString() ?? texts.get(Repositories.siteDescription),
+          },
+        ] as const,
     );
+
+    this.cards = Object.fromEntries(cards);
+
+    if (Object.keys(this.cards).length !== cards.length) {
+      throw new TypeError(`${Repositories.file}: two repositories share one card`);
+    }
   }
 
   private static cardPath(repository: RepositoryName): string {

@@ -30,6 +30,12 @@ describe('the repositories', () => {
     expect(Object.keys(repositories.cards)).toEqual(['github/github']);
   });
 
+  it('refuses two repositories whose cards would share a name', () => {
+    const data = { 'enshwick/.github': { title: 'A' }, 'enshwick/github': { title: 'B' } };
+
+    expect(() => new Repositories(data, texts)).toThrow(Repositories.file);
+  });
+
   it('refuses a description longer than GitHub takes', () => {
     const data = { 'enshwick/mods': { title: 'Enshwick mods', description: 'a'.repeat(351) } };
 
