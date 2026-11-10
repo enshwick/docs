@@ -35,7 +35,10 @@ export class OgCard {
     [OgKind.Mod]: '<rect x="0" y="948" width="1600" height="12" fill="#8c8fd6"/>',
     [OgKind.Error]: '<rect x="0" y="0" width="14" height="960" fill="#ff8a3d"/>',
   };
-  private static readonly fonts = [
+  /** The brand's mark every card opens with. */
+  public static readonly logo = './src/assets/brand/mark-512.png';
+  /** The display serif and body faces the cards set their text in. */
+  public static readonly fonts = [
     './node_modules/@fontsource/cormorant-garamond/files/cormorant-garamond-latin-600-normal.woff',
     './node_modules/@fontsource/cormorant-garamond/files/cormorant-garamond-cyrillic-600-normal.woff',
     './node_modules/@fontsource/ibm-plex-sans/files/ibm-plex-sans-latin-400-normal.woff',
@@ -43,7 +46,7 @@ export class OgCard {
   ];
 
   /** The brand's colours as the image library takes them. */
-  private static readonly colors = {
+  public static readonly colors = {
     basalt: [20, 18, 26],
     bone: [233, 225, 211],
     muted: [189, 182, 201],
@@ -74,6 +77,15 @@ export class OgCard {
   }
 
   private static async background(kind: OgKind): Promise<string> {
+    const path = `${OgCard.backgroundFolder}/night-${kind}.png`;
+
+    await sharp(await OgCard.night(kind, OgCard.width, OgCard.height)).toFile(path);
+
+    return `./${path}`;
+  }
+
+  /** Draws the night a card of `kind` lies on, at any size, as a PNG. */
+  public static night(kind: OgKind, width: number, height: number): Promise<Buffer> {
     const [back, front] = Night.hero.ridges;
     const stars = Night.hero.stars
       .map(
@@ -81,7 +93,7 @@ export class OgCard {
           `<circle cx="${star.x}" cy="${star.y}" r="${star.radius * 1.4}" fill="#e9e1d3" opacity="${star.opacity}"/>`,
       )
       .join('');
-    const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${OgCard.width}" height="${OgCard.height}" viewBox="0 60 1600 840" preserveAspectRatio="xMidYMax slice">
+    const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 60 1600 840" preserveAspectRatio="xMidYMax slice">
 <defs>
 <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0f0d1f"/><stop offset=".45" stop-color="#14121c"/><stop offset="1" stop-color="#14121a"/></linearGradient>
 <radialGradient id="glow" cx=".5" cy="-.1" r=".7"><stop offset="0" stop-color="#3d3770" stop-opacity=".35"/><stop offset="1" stop-color="#3d3770" stop-opacity="0"/></radialGradient>
@@ -91,11 +103,8 @@ export class OgCard {
 ${stars}<path d="${back.path}" fill="#17141f"/><path d="${front.path}" fill="#0f0d14"/>
 <rect y="0" width="1600" height="960" fill="url(#veil)"/>${OgCard.edges[kind]}
 </svg>`;
-    const path = `${OgCard.backgroundFolder}/night-${kind}.png`;
 
-    await sharp(Buffer.from(svg)).png().toFile(path);
-
-    return `./${path}`;
+    return sharp(Buffer.from(svg)).png().toBuffer();
   }
 
   /** The card's options for the image library, over the night of its kind among `backgrounds`. */
@@ -108,7 +117,7 @@ ${stars}<path d="${back.path}" fill="#17141f"/><path d="${front.path}" fill="#0f
       description: this.page.description ?? '',
       bgGradient: [[...OgCard.colors.basalt]],
       bgImage: { path: backgrounds[this.kind], fit: 'cover', position: 'center' },
-      logo: { path: './src/assets/brand/mark-512.png', size: [72] },
+      logo: { path: OgCard.logo, size: [72] },
       padding: 72,
       fonts: OgCard.fonts,
       font: {

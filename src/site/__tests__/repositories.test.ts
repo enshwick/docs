@@ -12,7 +12,7 @@ describe('the repositories', () => {
     const repositories = new Repositories({ 'enshwick/enshwick': { title: 'Enshwick' } }, texts);
 
     expect(repositories.cards).toEqual({
-      'github/enshwick': { title: 'Enshwick', description: 'The site in one line.' },
+      enshwick: { title: 'Enshwick', description: 'The site in one line.' },
     });
   });
 
@@ -22,13 +22,13 @@ describe('the repositories', () => {
       texts,
     );
 
-    expect(repositories.cards['github/mods']?.description).toBe('Our mods.');
+    expect(repositories.cards['mods']?.description).toBe('Our mods.');
   });
 
   it('names a card without the dot a repository’s name opens with', () => {
     const repositories = new Repositories({ 'enshwick/.github': { title: 'On GitHub' } }, texts);
 
-    expect(Object.keys(repositories.cards)).toEqual(['github/github']);
+    expect(Object.keys(repositories.cards)).toEqual(['github']);
   });
 
   it('refuses two repositories whose cards would share a name', () => {
@@ -68,13 +68,11 @@ describe('the repositories', () => {
     );
   });
 
-  it('puts the cards beside the pages', () => {
+  it('leaves the pages as they are when no page takes a card’s path', () => {
     const repositories = new Repositories({ 'enshwick/mods': { title: 'Enshwick mods' } }, texts);
+    const pages = { 'guides/install': { title: 'Install' } };
 
-    expect(Object.keys(repositories.beside({ 'guides/install': { title: 'Install' } }))).toEqual([
-      'guides/install',
-      'github/mods',
-    ]);
+    expect(repositories.beside(pages)).toBe(pages);
   });
 
   it('refuses a page whose id is the path of a repository card', () => {

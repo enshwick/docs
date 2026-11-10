@@ -4,8 +4,8 @@ import { getCollection } from 'astro:content';
 import { OgCard } from '../../site/og-card.ts';
 import { Repositories } from '../../site/repositories.ts';
 
-// A social card per page at `/og/<page id>.png` and per repository at `/og/github/<name>.png`,
-// over the night the hero draws.
+// A social card per page at `/og/<page id>.png`, over the night the hero draws; the repositories'
+// cards are drawn by `github/[name].png.ts`.
 const entries = await getCollection('docs');
 const backgrounds = await OgCard.backgrounds();
 

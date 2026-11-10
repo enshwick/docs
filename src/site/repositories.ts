@@ -35,13 +35,13 @@ export class Repositories {
 
   /** The text key of the description a repository without its own carries. */
   private static readonly siteDescription = 'site.description';
-  /** The folder of the repositories' social cards under `/og/`. */
+  /** The folder of the repositories' social cards under `/og/`, as `src/pages/og/` names it. */
   private static readonly cardFolder = 'github';
   /** The dot a repository's name may open with, which a card's file name leaves out. */
   private static readonly leadingDot = /^\./u;
   /**
-   * A card name served at `/og/github/<name>.png` as it stands: the og route cuts a name at its
-   * last dot and serves `index` as the folder itself, so neither may appear.
+   * A card name served at `/og/github/<name>.png` as it stands: a dot would read as a file
+   * extension and `index` as the folder itself, so neither may appear.
    */
   private static readonly servedName = /^(?!index$)[A-Za-z0-9_-]+$/u;
   private static readonly sharedCard = 'two repositories share one card';
@@ -52,7 +52,7 @@ export class Repositories {
   /** The project's repositories, as `src/data/repositories.json` holds them. */
   public static readonly site = new Repositories(repositoriesData, Texts.site);
 
-  /** A social card per repository, keyed by its path under `/og/`, such as `github/mods`. */
+  /** A social card per repository, keyed by its name under `/og/github/`, such as `mods`. */
   public readonly cards: Readonly<Record<string, OgPage>>;
 
   public constructor(data: unknown, texts: Texts) {
@@ -65,7 +65,7 @@ export class Repositories {
     const cards = Object.entries(parsed.value).map(
       ([repository, entry]) =>
         [
-          Repositories.cardPath(new RepositoryName(repository)),
+          Repositories.cardName(new RepositoryName(repository)),
           {
             title: entry.title.toString(),
             description: (entry.description ?? Repositories.siteOwn(texts)).toString(),
@@ -81,17 +81,19 @@ export class Repositories {
   }
 
   /**
-   * The og route's pages with every repository card beside them; a page whose id is a card's path
-   * would lose its own card, so it is refused.
+   * The og route's pages, as they are once checked to leave every repository card's path free:
+   * a page whose id is a card's path would be drawn over that card, so it is refused.
    */
-  public beside<Page>(pages: Readonly<Record<string, Page>>): Record<string, Page | OgPage> {
-    const taken = Object.keys(this.cards).find((path) => Object.hasOwn(pages, path));
+  public beside<Pages extends Readonly<Record<string, unknown>>>(pages: Pages): Pages {
+    const taken = Object.keys(this.cards)
+      .map((name) => `${Repositories.cardFolder}/${name}`)
+      .find((path) => Object.hasOwn(pages, path));
 
     if (taken !== undefined) {
       throw new TypeError(`${Repositories.file}: ${Repositories.pageCard}: ${taken}`);
     }
 
-    return { ...pages, ...this.cards };
+    return pages;
   }
 
   /** The site's description, checked as an About box takes it, for a repository without its own. */
@@ -105,13 +107,13 @@ export class Repositories {
     return parsed.value;
   }
 
-  private static cardPath(repository: RepositoryName): string {
+  private static cardName(repository: RepositoryName): string {
     const name = repository.name.replace(Repositories.leadingDot, '');
 
     if (!Repositories.servedName.test(name)) {
       throw new TypeError(`${Repositories.file}: ${Repositories.unservedCard}: ${repository}`);
     }
 
-    return `${Repositories.cardFolder}/${name}`;
+    return name;
   }
 }
