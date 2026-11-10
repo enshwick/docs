@@ -18,6 +18,7 @@ developer pages are versioned per API minor.
 | the whole mod on the front page | the example the book's getting started chapter marks with `smallest-mod` comments, compiled there as a doctest | `tools/fetch.ts` writes `src/generated/smallest-mod.rs` and fails when the chapter no longer marks it |
 | the mod with settings on the page for AI assistants | the example the book's altars chapter marks with an `altar-count` comment, compiled there as a doctest | `tools/fetch.ts` writes `src/generated/altar-count.md` and fails when the chapter no longer marks it |
 | a social card per page | each page's title and description | `src/pages/og/` draws them at build time over the same night as the front page |
+| a social card per repository of the project, for its social preview on GitHub | `src/data/repositories.json` | `src/site/repositories.ts` gives `src/pages/og/` each one's title and description, drawn at `/og/github/<name>.png` |
 | compatibility | the platform's compatibility reports and each mod's `Cargo.toml` at its release | `tools/fetch.ts` writes `src/generated/compatibility.json`, which `src/components/compatibility.astro` renders |
 | `llms.txt` | the developer pages, with a map of the API crate's public modules | `tools/fetch.ts` fails when a public module of the API crate has no developer page that names it |
 
@@ -37,6 +38,7 @@ five changes, and a line naming Enshwick.
 | the site's own short texts | `src/data/texts.json`, every key in every language (checked by a test) |
 | developer versions | `src/data/sources.json` |
 | our mods | the mods repository named in `src/data/sources.json`: every member of its Cargo workspace on `main` with a `docs/player.md`, the folder giving the page's address. A mod without a release yet has no page. `src/data/mods.json` gives each one who needs it and a one-line summary per language; the build fails when that side differs from the mod's page |
+| the project's repositories | `src/data/repositories.json`: each one's title and the description of its About box on GitHub; one without a description carries `site.description` of `src/data/texts.json` |
 | links outside the site | `src/data/links.json`: GitHub, Nexus Mods, the Vortex extension, the download, the licence, the issue forms, the contributing guide and the mailboxes |
 | API coverage | `src/data/coverage.json`: one row per game area and capability, with its status and, where covered, the API items or a note; `src/site/coverage.ts` fails the build when an area misses a capability or repeats one, and `src/components/api-coverage.astro` renders `/dev/api-coverage/` from it |
 | download links | pages and `src/data/links.json` link an archive as `https://github.com/<repository>/releases/latest/download/<archive>`; `tools/fetch.ts` writes the release of each archive, picked as for mod pages, into `src/generated/release-archives.json`, and `src/plugins/remark-release-links.ts` and `src/site/links.ts` pin the links to it, so before 1.0 they reach the newest alpha. The build fails on a link to an archive of the platform or the mods that no release carries, and when the platform has no release with `enshwick.zip` |

@@ -1,8 +1,8 @@
-# enshwick docs
+# Enshwick docs
 
-The source of the [Enshwick documentation site](https://enshwick.com/), the
-modding framework and API for Enshrouded: how players install and use mods with
-its mod loader, and how authors write them.
+Source of [enshwick.com](https://enshwick.com/), the site of Enshwick, the
+modding framework and API for Enshrouded: guides for players and server admins,
+docs for mod makers.
 
 ## Building
 
@@ -23,6 +23,23 @@ The deploy build sets `CF_WEB_ANALYTICS_TOKEN`, which turns on Cloudflare Web
 Analytics and the footer line about it; without it the site counts nothing.
 [ARCHITECTURE.md](ARCHITECTURE.md) says which
 pages are written here and which come from other repositories.
+
+## The project's words on GitHub
+
+The site is the source of the words the project's GitHub pages repeat.
+
+- `site.description` in `src/data/texts.json` is the description of Enshwick.
+  The organization's profile, its About text, the enshwick repository's About
+  text and its README open with it.
+- `src/data/repositories.json` holds the title of each repository and the
+  description in its About box.
+- The build draws a social preview image per repository from those words, in the
+  look of the site's own cards: `https://enshwick.com/og/github/<name>.png`, such
+  as [`/og/github/mods.png`](https://enshwick.com/og/github/mods.png). The
+  `.github` repository's image is `/og/github/github.png`.
+
+After a change to those words, set the description in the repository's settings
+and upload the new image as its social preview.
 
 ## Contributing
 
