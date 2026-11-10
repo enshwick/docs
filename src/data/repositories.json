@@ -12,7 +12,7 @@
   },
   "enshwick/vortex-extension": {
     "title": "Enshwick Vortex extension",
-    "description": "Vortex extension that installs Enshwick, the modding framework and API for Enshrouded, and Enshwick mods into the game folder."
+    "description": "Vortex extension that installs Enshwick and Enshwick mods into the game folder. Enshwick is the modding framework and API for Enshrouded."
   },
   "enshwick/.github": {
     "title": "Enshwick on GitHub",

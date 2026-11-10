@@ -10,9 +10,8 @@ const entries = await getCollection('docs');
 const backgrounds = await OgCard.backgrounds();
 
 export const { getStaticPaths, GET } = await OGImageRoute({
-  pages: {
-    ...Object.fromEntries(entries.map((entry) => [entry.id, entry.data])),
-    ...Repositories.site.cards,
-  },
+  pages: Repositories.site.beside(
+    Object.fromEntries(entries.map((entry) => [entry.id, entry.data])),
+  ),
   getImageOptions: (_, page) => new OgCard(page).options(backgrounds),
 });
