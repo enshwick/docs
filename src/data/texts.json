@@ -328,16 +328,8 @@
     "uk": "Чи працює це на Linux і Steam Deck?"
   },
   "front.faq.linux.a": {
-    "en": "Yes, through Proton, with one launch option. A Linux server runs the Windows server under Wine or Proton.",
-    "uk": "Так, через Proton, з одним параметром запуску. Сервер на Linux запускає Windows-сервер через Wine або Proton."
-  },
-  "front.faq.free.q": {
-    "en": "Is it free and open source?",
-    "uk": "Чи це безкоштовно і з відкритим кодом?"
-  },
-  "front.faq.free.a": {
-    "en": "Yes. Enshwick and our mods are free. Their code is open under the MIT licence.",
-    "uk": "Так. Enshwick і наші моди безкоштовні. Їхній код відкритий за ліцензією MIT."
+    "en": "Yes, through Proton, with one launch option. A Linux server runs the Windows server under Wine or Proton. We recommend Proton.",
+    "uk": "Так, через Proton, з одним параметром запуску. Сервер на Linux запускає Windows-сервер через Wine або Proton. Ми рекомендуємо Proton."
   },
   "mod.card": {
     "en": "About this mod",

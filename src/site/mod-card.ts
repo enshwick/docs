@@ -12,7 +12,8 @@ export const modCardSchema = z.object({
   repository: z.string(),
   folder: z.string(),
   package: z.string(),
-  release: z.string(),
+  /** The mod's newest release tag; a mod without a release has none and no download. */
+  release: z.string().optional(),
   version: z.string().optional(),
   api: z.string().optional(),
 });
@@ -26,7 +27,9 @@ export class ModCard {
    * Where a mod's own archive is: `<package>.zip` in its release. Each mod ships alone; no archive
    * holds several.
    */
-  public static archive(mod: Pick<ModCardData, 'repository' | 'release' | 'package'>): string {
+  public static archive(
+    mod: Pick<ModCardData, 'repository' | 'package'> & { release: string },
+  ): string {
     return `https://github.com/${mod.repository}/releases/download/${mod.release}/${mod.package}.zip`;
   }
 
