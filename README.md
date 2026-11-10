@@ -37,6 +37,9 @@ The site is the source of the words the project's GitHub pages repeat.
   look of the site's own cards: `https://enshwick.com/og/github/<name>.png`, such
   as [`/og/github/mods.png`](https://enshwick.com/og/github/mods.png). The
   `.github` repository's image is `/og/github/github.png`.
+- Each image is 1280x640, the size GitHub asks for, with its text inside the
+  middle 1200x600. The text gets smaller to fit; a title and description that
+  still do not fit fail the build.
 
 After a change to those words, set the description in the repository's settings
 and upload the new image as its social preview.

@@ -18,7 +18,7 @@ developer pages are versioned per API minor.
 | the whole mod on the front page | the example the book's getting started chapter marks with `smallest-mod` comments, compiled there as a doctest | `tools/fetch.ts` writes `src/generated/smallest-mod.rs` and fails when the chapter no longer marks it |
 | the mod with settings on the page for AI assistants | the example the book's altars chapter marks with an `altar-count` comment, compiled there as a doctest | `tools/fetch.ts` writes `src/generated/altar-count.md` and fails when the chapter no longer marks it |
 | a social card per page | each page's title and description | `src/pages/og/` draws them at build time over the same night as the front page |
-| a social card per repository of the project, for its social preview on GitHub | `src/data/repositories.json` | `src/site/repositories.ts` gives `src/pages/og/` each one's title and description, drawn at `/og/github/<name>.png` |
+| a social card per repository of the project, for its social preview on GitHub | `src/data/repositories.json` | `src/site/repositories.ts` gives `src/pages/og/github/` each one's title and description, which `src/site/repository-card.ts` draws at 1280x640 at `/og/github/<name>.png` |
 | compatibility | the platform's compatibility reports and each mod's `Cargo.toml` at its release | `tools/fetch.ts` writes `src/generated/compatibility.json`, which `src/components/compatibility.astro` renders |
 | `llms.txt` | the developer pages, with a map of the API crate's public modules | `tools/fetch.ts` fails when a public module of the API crate has no developer page that names it |
 
