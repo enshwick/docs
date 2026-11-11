@@ -20,11 +20,11 @@ export interface ApiModule {
 export class ApiMap {
   /**
    * A module the crate declares, or one it re-exports whole from an internal crate, with the attribute
-   * lines above it, so a `#[doc(hidden)]` one is left out. The same rule as `public_modules` in
-   * enshwick's `cargo xtask check`.
+   * lines above it, so a `#[doc(hidden)]` one is left out. A re-export may name the module alone with
+   * `::{self}`, which a module beside a macro of the same name needs.
    */
   private static readonly publicModule =
-    /^((?:#\[[^\n]*\]\r?\n)*)pub (?:mod ([a-z0-9_]+)|use (enshwick_[a-z0-9_]+)::([a-z_]+)(?:::\{self\})?);/gmu;
+    /^((?:#\[[^\n]*\]\r?\n)*)pub (?:mod ([a-z0-9_]+)|use (enshwick_[a-z0-9_]+)::([a-z0-9_]+)(?:::\{self\})?);/gmu;
   // Hidden modules, such as macro support, are no part of the documented API.
   private static readonly hidden = /#\[doc\(hidden\)\]/u;
   // A module the crate compiles only with the `unstable` feature is unstable, listed or not.

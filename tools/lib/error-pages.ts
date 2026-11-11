@@ -2,6 +2,7 @@ import { ErrorCode, ErrorsSource } from '../../src/site/errors.ts';
 import { Languages } from '../../src/site/languages.ts';
 import { Texts } from '../../src/site/texts.ts';
 import type { LanguageCode } from '../../src/site/types.ts';
+import type { GitSource } from './git-source.ts';
 import { MetaDescription } from './meta-description.ts';
 import { PageFile } from './page-file.ts';
 
@@ -12,11 +13,15 @@ type StepEntry = NonNullable<Errors['step']>[number];
 type ErrorText = Pick<ErrorEntry, 'title' | 'cause' | 'fix'>;
 type StepText = Pick<StepEntry, 'question'>;
 
-/** The loader's `errors.toml` of one platform version, with the path the version keeps it at. */
+/** The loader's `errors.toml` of one platform version, with its path and last change there. */
 export interface ErrorsFile {
   readonly source: string;
   readonly text: string;
+  readonly updated: Date | undefined;
 }
+
+/** What `ErrorPages.locate` needs of a platform version's checkout. */
+export type ErrorsCheckout = Pick<GitSource, 'glob' | 'read' | 'lastChanged'>;
 
 /**
  * A page per loader error code at `/errors/<code>/`, and the "game won't start" steps as the
@@ -38,24 +43,34 @@ export class ErrorPages {
     next: 'errors.next',
   } as const;
 
-  /** Where each layout of the platform keeps the loader's `errors.toml`, the newest layout first. */
-  public static readonly sources = [
-    'crates/runtime/loader/src/errors.toml',
-    'crates/internal/loader/src/errors.toml',
-  ];
+  /**
+   * Where the platform keeps the loader's `errors.toml`, as a sparse-checkout and glob pattern, so
+   * the site follows the loader crate wherever a recut of the workspace moves it.
+   */
+  public static readonly source = 'crates/**/loader/src/errors.toml';
 
   private constructor(private readonly errors: Errors) {}
 
-  /** The `errors.toml` at the first of `sources` a version has, or `undefined` when it has none. */
-  public static async locate(
-    read: (path: string) => Promise<string | undefined>,
-  ): Promise<ErrorsFile | undefined> {
-    const texts = await Promise.all(ErrorPages.sources.map(read));
-    const index = texts.findIndex((text) => text !== undefined);
-    const text = texts[index];
-    const source = ErrorPages.sources[index];
+  /**
+   * The version's `errors.toml`, or `undefined` when it has none.
+   *
+   * @throws {TypeError} when more than one file matches, since either could hold stale texts.
+   */
+  public static async locate(checkout: ErrorsCheckout): Promise<ErrorsFile | undefined> {
+    const found = await checkout.glob(ErrorPages.source);
 
-    return text === undefined || source === undefined ? undefined : { source, text };
+    if (found.length > 1) {
+      throw new TypeError(
+        `more than one errors.toml matches ${ErrorPages.source}: ${found.join(', ')}`,
+      );
+    }
+
+    const [source] = found;
+    const text = source === undefined ? undefined : await checkout.read(source);
+
+    return source === undefined || text === undefined
+      ? undefined
+      : { source, text, updated: await checkout.lastChanged(source) };
   }
 
   /** Reads the loader's `errors.toml`. */

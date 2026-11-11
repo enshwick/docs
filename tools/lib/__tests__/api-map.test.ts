@@ -78,6 +78,12 @@ pub mod stats;
     expect(ApiMap.origin(recut, 'config')).toBe('enshwick_base');
   });
 
+  it('counts a re-exported module whose name has a digit', () => {
+    const recut = 'pub use enshwick_base::i18n;\npub use enshwick_base::l10n::{self};\n';
+
+    expect(ApiMap.of(recut, pages).modules.map((module) => module.name)).toEqual(['i18n', 'l10n']);
+  });
+
   it('names the internal crate a module is re-exported from', () => {
     const recut = 'pub use enshwick_abi::abi;\npub mod stats;\n';
 

@@ -46,8 +46,6 @@ export interface PlatformRelease {
   readonly abi: string | undefined;
   /** The loader's error codes, `errors.toml`, where the version has them. */
   readonly errors: ErrorsFile | undefined;
-  /** When `errors.toml` last changed at the version's ref. */
-  readonly errorsUpdated: Date | undefined;
 }
 
 /** The developer area: every version of the platform's book, the newest at `/dev/`, older ones under `/dev/<version>/`. */
@@ -141,7 +139,7 @@ export class DeveloperArea {
       `/${DeveloperArea.apiManifest}`,
       `/${DeveloperArea.apiRoot}`,
       `/${DeveloperArea.workspaceManifest}`,
-      ...ErrorPages.sources.map((source) => `/${source}`),
+      `/${ErrorPages.source}`,
     ]);
     const summary = Summary.parse(await this.require(checkout, DeveloperArea.summary));
     const index = summary.chapters[0]?.chapter.path;
@@ -256,7 +254,6 @@ export class DeveloperArea {
       })),
     );
     const lib = await checkout.read(DeveloperArea.apiRoot);
-    const errors = await ErrorPages.locate((path) => checkout.read(path));
 
     return {
       name: version.name,
@@ -265,8 +262,7 @@ export class DeveloperArea {
       checked,
       lib,
       abi: await DeveloperArea.abi(checkout, lib ?? ''),
-      errors,
-      errorsUpdated: errors === undefined ? undefined : await checkout.lastChanged(errors.source),
+      errors: await ErrorPages.locate(checkout),
     };
   }
 

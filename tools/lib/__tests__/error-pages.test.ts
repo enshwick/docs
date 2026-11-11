@@ -2,35 +2,50 @@ import { describe, expect, it } from 'vitest';
 
 import { Languages } from '../../../src/site/languages.ts';
 import { Texts } from '../../../src/site/texts.ts';
-import { ErrorPages } from '../error-pages.ts';
+import { type ErrorsCheckout, ErrorPages } from '../error-pages.ts';
 
-/** A version's files, read as a sparse checkout reads them: `undefined` for a missing one. */
-const versionWith =
-  (files: Record<string, string>) =>
-  (path: string): Promise<string | undefined> =>
-    Promise.resolve(files[path]);
+const updated = new Date('2026-06-07T08:09:10Z');
+
+/** A version's files as its sparse checkout holds them, matched by the real glob. */
+const versionWith = (files: Record<string, string>): ErrorsCheckout => ({
+  glob: (pattern) =>
+    Promise.resolve(Object.keys(files).filter((path) => new Bun.Glob(pattern).match(path))),
+  read: (path) => Promise.resolve(files[path]),
+  lastChanged: () => Promise.resolve(updated),
+});
 
 describe('ErrorPages.locate', () => {
-  it('reads the loader under crates/runtime, where the platform keeps it now', async () => {
-    const read = versionWith({ 'crates/runtime/loader/src/errors.toml': 'runtime' });
+  it('finds the loader under crates/runtime, where the recut moves it', async () => {
+    const version = versionWith({ 'crates/runtime/loader/src/errors.toml': 'runtime' });
 
-    expect(await ErrorPages.locate(read)).toEqual({
+    expect(await ErrorPages.locate(version)).toEqual({
       source: 'crates/runtime/loader/src/errors.toml',
       text: 'runtime',
+      updated,
     });
   });
 
-  it('falls back to crates/internal for a version from before the move', async () => {
-    const read = versionWith({ 'crates/internal/loader/src/errors.toml': 'internal' });
+  it('finds the loader under crates/internal, where enshwick kept it before', async () => {
+    const version = versionWith({ 'crates/internal/loader/src/errors.toml': 'internal' });
 
-    expect(await ErrorPages.locate(read)).toEqual({
+    expect(await ErrorPages.locate(version)).toEqual({
       source: 'crates/internal/loader/src/errors.toml',
       text: 'internal',
+      updated,
     });
   });
 
   it('finds nothing in a version without the file', async () => {
     expect(await ErrorPages.locate(versionWith({}))).toBeUndefined();
+  });
+
+  it('refuses a version with two loaders, rather than pick stale texts', async () => {
+    const version = versionWith({
+      'crates/internal/loader/src/errors.toml': 'stale',
+      'crates/runtime/loader/src/errors.toml': 'runtime',
+    });
+
+    await expect(ErrorPages.locate(version)).rejects.toThrow(/more than one/u);
   });
 });
 

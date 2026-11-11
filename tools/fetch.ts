@@ -79,16 +79,12 @@ const errors = developerArea.releases[0]?.errors;
 
 if (errors === undefined) {
   // Without the file every error code the loader prints would link to a missing page.
-  throw new TypeError(
-    `${platform.repository} has no errors.toml at any of: ${ErrorPages.sources.join(', ')}`,
-  );
+  throw new TypeError(`${platform.repository} has no errors.toml matching ${ErrorPages.source}`);
 }
 
 const errorPages = ErrorPages.parse(errors.source, errors.text);
 
-await Promise.all(
-  errorPages.pages(developerArea.releases[0]?.errorsUpdated).map((page) => page.write()),
-);
+await Promise.all(errorPages.pages(errors.updated).map((page) => page.write()));
 const untranslated = errorPages.missing();
 
 if (untranslated.length > 0) {
@@ -105,7 +101,7 @@ await Bun.write(
 );
 await Bun.write(
   `${generated}/compatibility.json`,
-  `${JSON.stringify({ platform: developerArea.releases.slice(0, 1).map(({ lib: _lib, errors: _errors, errorsUpdated: _errorsUpdated, abi: _abi, ...release }) => release), mods: modReleases }, null, 2)}\n`,
+  `${JSON.stringify({ platform: developerArea.releases.slice(0, 1).map(({ lib: _lib, errors: _errors, abi: _abi, ...release }) => release), mods: modReleases }, null, 2)}\n`,
 );
 await Bun.write(
   `${generated}/stability.json`,
