@@ -36,6 +36,11 @@ describe('generated page dates', () => {
     await git(['commit', '--quiet', '--no-gpg-sign', '-m', 'first'], '2026-01-02T03:04:05Z');
     await Bun.write(join(root, 'book/new.md'), '# New, again\n');
     await git(['commit', '--quiet', '--no-gpg-sign', '-am', 'second'], '2026-05-06T07:08:09Z');
+    await Bun.write(join(root, 'crates/internal/loader/errors.toml'), '[[error]]\n');
+    await git(['add', '.']);
+    await git(['commit', '--quiet', '--no-gpg-sign', '-m', 'third'], '2026-06-07T08:09:10Z');
+    await git(['mv', 'crates/internal', 'crates/runtime']);
+    await git(['commit', '--quiet', '--no-gpg-sign', '-m', 'move'], '2026-09-10T11:12:13Z');
   });
 
   afterAll(async () => {
@@ -48,6 +53,12 @@ describe('generated page dates', () => {
     );
     expect(await new GitHistory(root).lastChanged('book/new.md')).toEqual(
       new Date('2026-05-06T07:08:09Z'),
+    );
+  });
+
+  it('dates a moved file by its last edit, not by the move', async () => {
+    expect(await new GitHistory(root).lastChanged('crates/runtime/loader/errors.toml')).toEqual(
+      new Date('2026-06-07T08:09:10Z'),
     );
   });
 

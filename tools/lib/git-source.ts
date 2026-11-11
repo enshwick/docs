@@ -1,5 +1,5 @@
 import { rm } from 'node:fs/promises';
-import { join } from 'node:path';
+import { join, sep } from 'node:path';
 
 import type { GitRef, RepositoryName } from '../../src/site/types.ts';
 import { GitHistory } from './git-history.ts';
@@ -66,6 +66,13 @@ export class GitSource {
     const file = Bun.file(this.path(relative));
 
     return (await file.exists()) ? file.text() : undefined;
+  }
+
+  /** The checkout's files that match a glob, relative to its root and `/`-separated on every system. */
+  public async glob(pattern: string): Promise<string[]> {
+    const found = await Array.fromAsync(new Bun.Glob(pattern).scan({ cwd: this.root }));
+
+    return found.map((path) => path.split(sep).join('/'));
   }
 
   private static async git(args: readonly string[]): Promise<void> {
