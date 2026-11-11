@@ -12,6 +12,12 @@ type StepEntry = NonNullable<Errors['step']>[number];
 type ErrorText = Pick<ErrorEntry, 'title' | 'cause' | 'fix'>;
 type StepText = Pick<StepEntry, 'question'>;
 
+/** The loader's `errors.toml` of one platform version, with the path the version keeps it at. */
+export interface ErrorsFile {
+  readonly source: string;
+  readonly text: string;
+}
+
 /**
  * A page per loader error code at `/errors/<code>/`, and the "game won't start" steps as the
  * folder's index, in every site language the source translates them to.
@@ -32,7 +38,25 @@ export class ErrorPages {
     next: 'errors.next',
   } as const;
 
+  /** Where each layout of the platform keeps the loader's `errors.toml`, the newest layout first. */
+  public static readonly sources = [
+    'crates/runtime/loader/src/errors.toml',
+    'crates/internal/loader/src/errors.toml',
+  ];
+
   private constructor(private readonly errors: Errors) {}
+
+  /** The `errors.toml` at the first of `sources` a version has, or `undefined` when it has none. */
+  public static async locate(
+    read: (path: string) => Promise<string | undefined>,
+  ): Promise<ErrorsFile | undefined> {
+    const texts = await Promise.all(ErrorPages.sources.map(read));
+    const index = texts.findIndex((text) => text !== undefined);
+    const text = texts[index];
+    const source = ErrorPages.sources[index];
+
+    return text === undefined || source === undefined ? undefined : { source, text };
+  }
 
   /** Reads the loader's `errors.toml`. */
   public static parse(origin: string, text: string): ErrorPages {

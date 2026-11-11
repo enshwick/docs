@@ -76,24 +76,28 @@ const platformChecks = new PlatformChecks(developerArea.releases[0], developerAr
 const apiMap = platformChecks.run();
 
 const errors = developerArea.releases[0]?.errors;
-const errorPages =
-  errors === undefined ? undefined : ErrorPages.parse(DeveloperArea.errorsSource, errors);
+
+if (errors === undefined) {
+  // Without the file every error code the loader prints would link to a missing page.
+  throw new TypeError(
+    `${platform.repository} has no errors.toml at any of: ${ErrorPages.sources.join(', ')}`,
+  );
+}
+
+const errorPages = ErrorPages.parse(errors.source, errors.text);
 
 await Promise.all(
-  (errorPages?.pages(developerArea.releases[0]?.errorsUpdated) ?? []).map((page) => page.write()),
+  errorPages.pages(developerArea.releases[0]?.errorsUpdated).map((page) => page.write()),
 );
-const untranslated = errorPages?.missing() ?? [];
+const untranslated = errorPages.missing();
 
 if (untranslated.length > 0) {
   // The build log is where a missing translation shows; its page falls back to the root language.
   // oxlint-disable-next-line no-console
-  console.warn(`${DeveloperArea.errorsSource} has no text for: ${untranslated.join(', ')}`);
+  console.warn(`${errors.source} has no text for: ${untranslated.join(', ')}`);
 }
 
-await Bun.write(
-  `${generated}/errors.json`,
-  `${JSON.stringify(errorPages?.index() ?? [], null, 2)}\n`,
-);
+await Bun.write(`${generated}/errors.json`, `${JSON.stringify(errorPages.index(), null, 2)}\n`);
 
 await Bun.write(
   `${generated}/api-map.md`,

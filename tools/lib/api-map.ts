@@ -24,7 +24,7 @@ export class ApiMap {
    * enshwick's `cargo xtask check`.
    */
   private static readonly publicModule =
-    /^((?:#\[[^\n]*\]\r?\n)*)pub (?:mod ([a-z0-9_]+)|use (enshwick_[a-z0-9_]+)::([a-z_]+));/gmu;
+    /^((?:#\[[^\n]*\]\r?\n)*)pub (?:mod ([a-z0-9_]+)|use (enshwick_[a-z0-9_]+)::([a-z_]+)(?:::\{self\})?);/gmu;
   // Hidden modules, such as macro support, are no part of the documented API.
   private static readonly hidden = /#\[doc\(hidden\)\]/u;
   // A module the crate compiles only with the `unstable` feature is unstable, listed or not.

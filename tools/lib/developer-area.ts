@@ -1,6 +1,7 @@
 import type { GitRef, RepositoryName } from '../../src/site/types.ts';
 import type { DeveloperPage } from './api-map.ts';
 import { type ChapterPage, ChapterConverter } from './chapter-converter.ts';
+import { type ErrorsFile, ErrorPages } from './error-pages.ts';
 import { GameBuildFiles } from './game-build-files.ts';
 import { GitSource } from './git-source.ts';
 import { MdxBody } from './mdx-body.ts';
@@ -44,7 +45,7 @@ export interface PlatformRelease {
   /** The API crate's ABI module, `abi.rs`, which documents the id rules. */
   readonly abi: string | undefined;
   /** The loader's error codes, `errors.toml`, where the version has them. */
-  readonly errors: string | undefined;
+  readonly errors: ErrorsFile | undefined;
   /** When `errors.toml` last changed at the version's ref. */
   readonly errorsUpdated: Date | undefined;
 }
@@ -68,7 +69,6 @@ export class DeveloperArea {
   private static readonly workspaceManifest = 'Cargo.toml';
   /** The module whose `is_valid_id` examples hold the mod id rules. */
   private static readonly abiModule = 'abi';
-  public static readonly errorsSource = 'crates/internal/loader/src/errors.toml';
 
   /** The newest version's pages, filled by `build()`. */
   public readonly newestPages: DeveloperPage[] = [];
@@ -141,7 +141,7 @@ export class DeveloperArea {
       `/${DeveloperArea.apiManifest}`,
       `/${DeveloperArea.apiRoot}`,
       `/${DeveloperArea.workspaceManifest}`,
-      `/${DeveloperArea.errorsSource}`,
+      ...ErrorPages.sources.map((source) => `/${source}`),
     ]);
     const summary = Summary.parse(await this.require(checkout, DeveloperArea.summary));
     const index = summary.chapters[0]?.chapter.path;
@@ -256,6 +256,7 @@ export class DeveloperArea {
       })),
     );
     const lib = await checkout.read(DeveloperArea.apiRoot);
+    const errors = await ErrorPages.locate((path) => checkout.read(path));
 
     return {
       name: version.name,
@@ -264,8 +265,8 @@ export class DeveloperArea {
       checked,
       lib,
       abi: await DeveloperArea.abi(checkout, lib ?? ''),
-      errors: await checkout.read(DeveloperArea.errorsSource),
-      errorsUpdated: await checkout.lastChanged(DeveloperArea.errorsSource),
+      errors,
+      errorsUpdated: errors === undefined ? undefined : await checkout.lastChanged(errors.source),
     };
   }
 
