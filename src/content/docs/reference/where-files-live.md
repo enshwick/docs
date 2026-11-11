@@ -17,6 +17,7 @@ The game folder is the one that holds `enshrouded.exe` or
 | Path                                     | What it holds                                                                    |
 | ---------------------------------------- | -------------------------------------------------------------------------------- |
 | `powrprof.dll`                           | the file that starts Enshwick with the game                                      |
+| `LICENSE`                                | the licence of Enshwick, which comes with it                                     |
 | `mods/enshwick/`                         | Enshwick itself, `enshwick.dll`, and the files it keeps for this installation    |
 | `mods/<mod id>/`                         | one folder per mod, with the mod's files; a mod runs while its folder is there   |
 | `mods/<mod id>/hold.txt`                 | a hold the mod set: the game stops while the mod does not run                    |

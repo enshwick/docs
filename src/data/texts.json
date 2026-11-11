@@ -204,8 +204,8 @@
     "uk": "Чи не зіпсує це мої збереження?"
   },
   "front.faq.saves.a": {
-    "en": "Mods keep their own data in folders beside the game’s save, never inside it. Once you delete powrprof.dll, the game starts as it did before.",
-    "uk": "Моди тримають свої дані в теках поруч зі збереженням гри, ніколи не в ньому. Щойно ви видалите powrprof.dll, гра запускатиметься так, як раніше."
+    "en": "Enshwick changes none of the game’s files on disk. A world opened without Enshwick loses the items that mods added. Back up your worlds before you remove Enshwick or a mod.",
+    "uk": "Enshwick не змінює жодного файлу гри на диску. Світ, відкритий без Enshwick, втрачає предмети, які додали моди. Перш ніж прибрати Enshwick або мод, зробіть резервну копію світів."
   },
   "front.faq.update.q": {
     "en": "What happens after a game update?",

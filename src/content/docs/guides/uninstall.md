@@ -1,14 +1,48 @@
 ---
 title: Remove a mod or Enshwick
-description: Turn one mod off, delete it with its world data, or take Enshwick out of the game folder. Your game saves stay as they are in every case.
+description: Turn one mod off, delete it, or remove Enshwick. Back up your worlds first, since a world opened without its mods loses some of what they added.
 type: how-to
 sidebar:
   order: 3
 ---
 
-Your game saves stay as they are in every case. Close the game or stop the
-server first. Then turn one mod off, delete it, or remove Enshwick with every
-mod.
+Before you remove a mod or Enshwick, back up your worlds, as
+[Back up your worlds](/guides/back-up-saves/) shows. Close the game or stop the
+server. Then turn one mod off, delete it, or remove Enshwick with every mod.
+
+## What does a world lose without its mods?
+
+Enshwick changes none of the game's files on disk. But the game saves what mods
+change in a world inside that world's save. Such changes are the items that mods
+add, stacks larger than the game allows, terrain, and the experience of
+characters.
+
+When you remove one mod and keep Enshwick:
+
+- Each item that the mod added stays as "Item of a removed mod". Install the mod
+  again, and the item comes back.
+- An object that the mod copied from the game's own, and that you placed, loads
+  as the game's object it copies.
+- Stacks keep the counts that the world was saved with.
+- A mod that set a hold stops the game before the world loads, as
+  [Open a world that a removed mod holds](#open-a-world-that-a-removed-mod-holds)
+  shows.
+
+When you remove Enshwick:
+
+- The world loses every item that mods added. The next save keeps the loss.
+- Each stack larger than the game allows shrinks to the game's own size. The
+  next save keeps the smaller count.
+- With Better Altars, only the first 16 altars work as bases.
+- Weather that a mod added can show as other weather until it ends.
+- Characters keep their experience, levels and skill points.
+- Terrain that a mod changed inside a base stays.
+
+On a dedicated server, the game keeps its settings in `enshrouded_server.json`.
+Game settings that a mod changed stay there after you remove the mod or
+Enshwick.
+
+To get a world back as it was, put back your copy of it, Enshwick and its mods.
 
 ## Turn off one mod
 

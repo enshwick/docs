@@ -91,8 +91,8 @@ So the safety of a mod with code depends on where it comes from:
 - **Never run a mod file someone sent you in a chat** if you do not know where
   it was built.
 
-Enshwick leaves the game's files on disk as they are. Delete `powrprof.dll`, and
-the game starts exactly as it did before.
+Enshwick changes the game in memory and changes none of the game's files on
+disk. Delete `powrprof.dll`, and the game starts without Enshwick.
 [Remove a mod or Enshwick](/guides/uninstall/) shows how.
 
 At each start, Enshwick asks GitHub once whether a newer Enshwick exists. It
@@ -107,7 +107,13 @@ of its page. To turn the question off, set `release_check = false` in
 
 Some mods keep their own data for a world, such as who owns a chest. They keep
 it in a folder beside the world's save, such as `world0-mod-data` beside
-`world0.ksd`, never inside the save.
+`world0.ksd`.
+
+The game saves the rest of what mods change in a world, such as the items they
+add, inside the save. A world opened without Enshwick loses the items that mods
+added, as
+[What does a world lose without its mods?](/guides/uninstall/#what-does-a-world-lose-without-its-mods)
+shows.
 
 A copy of the save folder takes both. [Back up your worlds](/guides/back-up-saves/)
 shows how.
