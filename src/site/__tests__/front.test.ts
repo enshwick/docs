@@ -64,10 +64,16 @@ describe('FrontData.from', () => {
     expect(data.version).toBeUndefined();
   });
 
-  it('throws naming mods.json when a mod has no line', () => {
-    expect(() => FrontData.from(compat, { 'area-loot': lines['area-loot'] }, en)).toThrow(
-      /mods\.json.*build-camera/u,
-    );
+  it('presents only the mods that mods.json names, in the order of their pages', () => {
+    const cards = FrontData.from(compat, { 'build-camera': lines['build-camera'] }, en).mods;
+
+    expect(cards.map((card) => card.slug)).toEqual(['build-camera']);
+  });
+
+  it('throws naming mods.json when it names a mod without a page', () => {
+    const extra = { ...lines, 'no-such-mod': lines['area-loot'] };
+
+    expect(() => FrontData.from(compat, extra, en)).toThrow(/mods\.json.*no-such-mod/u);
   });
 });
 

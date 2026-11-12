@@ -22,7 +22,10 @@ export interface ModCardFacts {
 /** Who needs a mod: the server alone, the server and every player, or one player's game. */
 const Side = AnyString.subtype('docs.ModSide', n.oneOf('server', 'everyone', 'client'));
 
-/** `src/data/mods.json`: per mod, who needs it and one line per language. */
+/**
+ * `src/data/mods.json`: the mods the front page presents, each with who needs it and one line per
+ * language; a mod left out keeps its own page.
+ */
 const ModLines = n.record(
   AnyString,
   n.object({ side: Side, summary: n.record(AnyString, AnyString) }),
@@ -34,7 +37,7 @@ type Compat = Extract<ReturnType<typeof CompatibilityData.parse>, { ok: true }>[
 /** Who needs each mod and its lines by language, keyed by the mod's slug. */
 type Lines = Map<string, { side: string; summary: Map<string, string> }>;
 
-/** The front page's data: the newest release and a card per mod. */
+/** The front page's data: the newest release and a card per mod it presents. */
 export class FrontData {
   /** The language every mod line must have. */
   private static readonly root = 'en';
@@ -91,8 +94,17 @@ export class FrontData {
         },
       ]),
     );
+    const known = new Set(parsedCompat.value.mods.map((mod) => mod.slug.toString()));
+    const unknown = [...byMod.keys()].filter((slug) => !known.has(slug));
+
+    if (unknown.length > 0) {
+      throw new TypeError(`src/data/mods.json: no mod page for ${unknown.join(', ')}`);
+    }
+
     const newest = parsedCompat.value.platform[0];
-    const mods = parsedCompat.value.mods.map((mod) => FrontData.modCard(mod, byMod, language));
+    const mods = parsedCompat.value.mods
+      .filter((mod) => byMod.has(mod.slug.toString()))
+      .map((mod) => FrontData.modCard(mod, byMod, language));
 
     return new FrontData(newest?.api?.toString(), mods);
   }
