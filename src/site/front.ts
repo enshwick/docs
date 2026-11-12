@@ -22,7 +22,10 @@ export interface ModCardFacts {
 /** Who needs a mod: the server alone, the server and every player, or one player's game. */
 const Side = AnyString.subtype('docs.ModSide', n.oneOf('server', 'everyone', 'client'));
 
-/** `src/data/mods.json`: per mod, who needs it and one line per language. */
+/**
+ * `src/data/mods.json`: the mods the front page presents, each with who needs it and one line per
+ * language; a mod left out keeps its own page.
+ */
 const ModLines = n.record(
   AnyString,
   n.object({ side: Side, summary: n.record(AnyString, AnyString) }),
@@ -31,13 +34,18 @@ const ModLines = n.record(
 /** The parsed compatibility data. */
 type Compat = Extract<ReturnType<typeof CompatibilityData.parse>, { ok: true }>['value'];
 
-/** Who needs each mod and its lines by language, keyed by the mod's slug. */
-type Lines = Map<string, { side: string; summary: Map<string, string> }>;
+/** Who needs one mod and its lines by language. */
+type ModLine = { side: string; summary: Map<string, string> };
 
-/** The front page's data: the newest release and a card per mod. */
+/** Each presented mod's line, keyed by the mod's slug. */
+type Lines = Map<string, ModLine>;
+
+/** The front page's data: the newest release and a card per mod it presents. */
 export class FrontData {
   /** The language every mod line must have. */
   private static readonly root = 'en';
+  /** The file that names the presented mods, as build errors name it. */
+  private static readonly linesFile = 'src/data/mods.json';
 
   /**
    * The questions the front page answers, in its order; each has `front.faq.<id>.q` and `.a` in
@@ -77,7 +85,7 @@ export class FrontData {
     const parsedLines = ModLines.parse(lines);
 
     if (!parsedLines.ok) {
-      throw new TypeError(`src/data/mods.json: ${JSON.stringify(parsedLines.issues)}`);
+      throw new TypeError(`${FrontData.linesFile}: ${JSON.stringify(parsedLines.issues)}`);
     }
 
     const byMod: Lines = new Map(
@@ -91,8 +99,19 @@ export class FrontData {
         },
       ]),
     );
+    const known = new Set(parsedCompat.value.mods.map((mod) => mod.slug.toString()));
+    const strangers = [...byMod.keys()].filter((slug) => !known.has(slug));
+
+    if (strangers.length > 0) {
+      throw new TypeError(`${FrontData.linesFile}: no such mod: ${strangers.join(', ')}`);
+    }
+
     const newest = parsedCompat.value.platform[0];
-    const mods = parsedCompat.value.mods.map((mod) => FrontData.modCard(mod, byMod, language));
+    const mods = parsedCompat.value.mods.flatMap((mod) => {
+      const entry = byMod.get(mod.slug.toString());
+
+      return entry === undefined ? [] : [FrontData.modCard(mod, entry, language)];
+    });
 
     return new FrontData(newest?.api?.toString(), mods);
   }
@@ -100,20 +119,19 @@ export class FrontData {
   /** One mod's card, its line in `language` or English, its side checked against its page. */
   private static modCard(
     mod: Compat['mods'][number],
-    lines: Lines,
+    entry: ModLine,
     language: string,
   ): ModCardFacts {
     const slug = mod.slug.toString();
-    const entry = lines.get(slug);
-    const line = entry?.summary.get(language) ?? entry?.summary.get(FrontData.root);
+    const line = entry.summary.get(language) ?? entry.summary.get(FrontData.root);
 
-    if (entry === undefined || line === undefined) {
-      throw new TypeError(`src/data/mods.json: no line for ${slug}`);
+    if (line === undefined) {
+      throw new TypeError(`${FrontData.linesFile}: no ${FrontData.root} line for ${slug}`);
     }
 
     if (mod.needs !== undefined && mod.needs.toString() !== entry.side) {
       throw new TypeError(
-        `src/data/mods.json: ${slug} is for "${entry.side}", its page says "${mod.needs.toString()}"`,
+        `${FrontData.linesFile}: ${slug} is for "${entry.side}", its page says "${mod.needs.toString()}"`,
       );
     }
 

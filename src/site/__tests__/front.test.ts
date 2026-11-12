@@ -64,10 +64,31 @@ describe('FrontData.from', () => {
     expect(data.version).toBeUndefined();
   });
 
-  it('throws naming mods.json when a mod has no line', () => {
-    expect(() => FrontData.from(compat, { 'area-loot': lines['area-loot'] }, en)).toThrow(
-      /mods\.json.*build-camera/u,
-    );
+  it('presents only the mods that mods.json names', () => {
+    const cards = FrontData.from(compat, { 'build-camera': lines['build-camera'] }, en).mods;
+
+    expect(cards.map((card) => card.slug)).toEqual(['build-camera']);
+  });
+
+  it('presents the mods in the order of their pages, not of mods.json', () => {
+    const reversed = { 'build-camera': lines['build-camera'], 'area-loot': lines['area-loot'] };
+
+    expect(FrontData.from(compat, reversed, en).mods.map((card) => card.slug)).toEqual([
+      'area-loot',
+      'build-camera',
+    ]);
+  });
+
+  it('throws naming mods.json when it names a mod the mods repository does not have', () => {
+    const extra = { ...lines, 'no-such-mod': lines['area-loot'] };
+
+    expect(() => FrontData.from(compat, extra, en)).toThrow(/mods\.json.*no-such-mod/u);
+  });
+
+  it('throws naming mods.json when a mod has neither the asked language nor English', () => {
+    const ukOnly = { ...lines, 'area-loot': { ...lines['area-loot'], summary: { uk: 'Лут.' } } };
+
+    expect(() => FrontData.from(compat, ukOnly, en)).toThrow(/mods\.json.*area-loot/u);
   });
 });
 
