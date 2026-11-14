@@ -42,7 +42,7 @@ describe('StructuredData', () => {
     expect(graph[0]).toMatchObject({
       url: `${site}/`,
       email: 'contact@enshwick.com',
-      sameAs: ['https://github.com/enshwick', 'https://www.nexusmods.com/site/mods/2511'],
+      sameAs: ['https://github.com/enshwick'],
     });
     expect(graph[2]).toMatchObject({
       applicationCategory: 'GameApplication',

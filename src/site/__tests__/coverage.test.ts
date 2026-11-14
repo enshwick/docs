@@ -70,6 +70,14 @@ describe('Coverage', () => {
     expect(stability('content', ['content::items', 'Load::world'], unstable)).toBe('stable');
   });
 
+  it('marks an item unstable by any prefix of its path, its type included, but not an inner module alone', () => {
+    const unstable = ['Damage', 'interactions::Targets', 'items'];
+
+    expect(stability('inventory', ['Damage::scale'], unstable)).toBe('unstable');
+    expect(stability('inventory', ['interactions::Targets::target'], unstable)).toBe('unstable');
+    expect(stability('content', ['content::items::Foo'], unstable)).toBe('stable');
+  });
+
   it('keeps a cell with one unstable item among stable ones stable, and names that item', () => {
     const rows = area('Knowledge');
 

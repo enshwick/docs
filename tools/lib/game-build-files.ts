@@ -7,6 +7,8 @@ export interface GameBuild {
   readonly gameVersion: string | undefined;
   /** The loader features that are off or partly off on the build, from its report. */
   readonly off: readonly string[];
+  /** The day `cargo xtask compat` checked the build, `YYYY-MM-DD`; reports before that field have none. */
+  readonly checked: string | undefined;
 }
 
 /**
@@ -19,6 +21,8 @@ export class GameBuildFiles {
   private static readonly gameVersion = 'game_version';
   private static readonly feature = 'feature';
   private static readonly featureName = 'name';
+  private static readonly checked = 'checked';
+  private static readonly day = /^\d{4}-\d{2}-\d{2}$/u;
 
   /** The build of report `file` from its text. */
   public static read(file: string, report: string): GameBuild {
@@ -31,8 +35,10 @@ export class GameBuildFiles {
     };
 
     const features = fields.at(GameBuildFiles.feature).value;
+    const checked = fields.at(GameBuildFiles.checked).text();
 
     return {
+      checked: checked !== undefined && GameBuildFiles.day.test(checked) ? checked : undefined,
       side: fields.at(GameBuildFiles.side).text() ?? file,
       steamBuild: number(GameBuildFiles.steamBuild),
       gameVersion: number(GameBuildFiles.gameVersion),

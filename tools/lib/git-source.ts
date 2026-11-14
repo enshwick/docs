@@ -16,12 +16,14 @@ export class GitSource {
 
   /**
    * Checks out only `paths` of the repository at `ref`; a fresh copy every time, since refs move. The
-   * history comes along without file contents, so each file can be dated by its own last commit.
+   * history comes along without file contents, so each file can be dated by its own last commit;
+   * `history: false` takes the ref's commit alone, for a caller that dates nothing.
    */
   public static async checkout(
     repository: RepositoryName,
     ref: GitRef,
     paths: readonly string[],
+    { history = true }: { readonly history?: boolean } = {},
   ): Promise<GitSource> {
     const root = join(
       GitSource.cacheRoot,
@@ -36,6 +38,7 @@ export class GitSource {
       '--quiet',
       '--single-branch',
       '--filter=blob:none',
+      ...(history ? [] : ['--depth=1']),
       '--sparse',
       `--branch=${ref}`,
       `${repository.url}.git`,

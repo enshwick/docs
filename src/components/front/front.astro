@@ -9,7 +9,6 @@ import { Links } from '../../site/links.ts';
 import { Snippet, SnippetLanguage } from '../../site/snippet.ts';
 import { Texts } from '../../site/texts.ts';
 import NightSky from '../night-sky.astro';
-import ServiceIcon from '../service-icon.astro';
 
 interface Props {
   /** The page's language code; the root language has none in its path. */
@@ -34,7 +33,7 @@ const sections = [
 ];
 // Each row: its key under `front.<group>.`, and the page its answer links to, where it has one.
 const players = [
-  { id: 'patch' },
+  { id: 'patch', href: `${prefix}/dev/concepts/game-updates/` },
   { id: 'clash' },
   { id: 'fault' },
   { id: 'join', href: `${prefix}/guides/play-on-a-server/` },
@@ -42,10 +41,11 @@ const players = [
 ];
 const makers = [
   { id: 'api', href: `${prefix}${Coverage.page}` },
-  { id: 'patches' },
+  { id: 'patches', href: `${prefix}/dev/concepts/game-updates/` },
   { id: 'together' },
   { id: 'languages', href: `${prefix}/dev/mods-in-c/` },
   { id: 'speed', href: `${prefix}/dev/concepts/performance/` },
+  { id: 'checks', href: `${prefix}/dev/actions/` },
   { id: 'tool', href: `${prefix}/dev/getting-started/` },
   { id: 'levels' },
   { id: 'texts' },
@@ -152,16 +152,6 @@ const smallestMod = new Snippet(smallestModSource.trimEnd(), SnippetLanguage.Rus
     <div class="ew-wrap">
       <h2 id="ew-install">{t('front.install.title')}</h2>
       <div class="ew-install">
-        <div class="ew-install__way">
-          <h3>{t('front.install.auto')}</h3>
-          <a class="ew-nexus" href={Links.site.nexus.toString()}>
-            <ServiceIcon service="nexus" />
-            <span class="ew-nexus__text">
-              <span class="ew-nexus__name">{t('front.ways.nexus')}</span>
-              <span class="ew-nexus__note">{t('front.install.nexus.note')}</span>
-            </span>
-          </a>
-        </div>
         <div class="ew-install__way">
           <h3>{t('front.install.manual')}</h3>
           <ol class="ew-steps">

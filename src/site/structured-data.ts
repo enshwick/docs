@@ -34,7 +34,6 @@ export class StructuredData {
   private static readonly alternateNames = ['enshwick', 'enshwick.com'];
   private static readonly email = 'contact@enshwick.com';
   private static readonly github = 'https://github.com/enshwick';
-  private static readonly nexus = 'https://www.nexusmods.com/site/mods/2511';
   private static readonly logo = '/logo-512.png';
   private static readonly download = 'https://github.com/enshwick/enshwick/releases';
   private static readonly license = 'https://github.com/enshwick/docs/blob/main/LICENSE';
@@ -56,7 +55,7 @@ export class StructuredData {
         url,
         logo: this.url(StructuredData.logo),
         email: StructuredData.email,
-        sameAs: [StructuredData.github, StructuredData.nexus],
+        sameAs: [StructuredData.github],
       },
       {
         '@context': StructuredData.context,
