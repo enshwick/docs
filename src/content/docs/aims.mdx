@@ -22,21 +22,22 @@ update.
 
 ## Which languages will mods use after 1.0?
 
-After version 1.0, I would like WebAssembly to be the one way to write mods in
-more languages. It is the first thing I plan after 1.0.
+After version 1.0, I would like mods in more languages, such as Zig, Go, C#,
+JavaScript and Python. They would come through WebAssembly. It is the first
+thing I plan after 1.0.
 
-At 1.0, you write mods in Rust, C, C++ and Luau.
+Today you write mods in Rust, C, C++ and Luau, or as data with no code. Other
+languages that can export C functions work too, but we do not test them.
 
-A WebAssembly mod can come from any language that builds to WebAssembly, such as
-Rust, C, C++, Zig, Go, C#, JavaScript, TypeScript or Python. Each language would
-join when its WebAssembly tools are stable.
+A WebAssembly mod could come from any language that has WebAssembly tools. Each
+language would join when its tools are stable.
 
-A WebAssembly mod would run in a sandbox, as a Luau mod does. It would reach the
-game only through Enshwick, and an error in it would stop that mod, not the
-game. Its author could reload it without a restart of the game or the server.
+A WebAssembly mod would run in a
+[sandbox](/explanation/how-mods-work/#is-it-safe), as a Luau mod does. It would
+reach the game only through Enshwick. As with Luau, the sandbox would not make
+the mod safe.
 
-C# mods would also run as native code, with the whole API, but without the
-sandbox or the reload.
+A C# mod could also be a native mod, as a Rust mod is, with the whole API.
 
 ## Will Enshwick run mods written for EML?
 
@@ -56,7 +57,7 @@ I would like this site in more languages than English and Ukrainian.
 
 I would like mod authors to reload their mod while they develop it, without
 restarting the game or the server. It would work for every kind of mod that
-Enshwick runs, data packs included.
+Enshwick runs, data packs and WebAssembly mods included.
 
 It would be for development on the author's own test world, not for players or
 live servers. Today a changed mod needs a restart of the game or the server.
