@@ -212,8 +212,8 @@
     "uk": "Що буде після оновлення гри?"
   },
   "front.faq.update.a": {
-    "en": "What Enshwick cannot find in the new version of the game, it turns off and names in chat. Everything else keeps working.",
-    "uk": "Що Enshwick не знайде в новій версії гри, він вимкне і покаже в чаті. Решта працює."
+    "en": "Enshwick reads the game’s own description of its data each time the game starts, so it needs no update of its own. What it cannot find in the new version, it turns off and names in chat. Everything else keeps working.",
+    "uk": "Enshwick читає власний опис даних гри щоразу, коли гра запускається, тож власного оновлення йому не треба. Що він не знайде в новій версії, він вимкне і покаже в чаті. Решта працює."
   },
   "front.faq.safe.q": {
     "en": "Is it safe?",
@@ -387,10 +387,6 @@
     "en": "Enshwick is in alpha: version 1.0 is not out yet.",
     "uk": "Enshwick в альфа-версії: версія 1.0 ще не вийшла."
   },
-  "front.ways.nexus": {
-    "en": "Nexus Mods",
-    "uk": "Nexus Mods"
-  },
   "front.nav.top": {
     "en": "Start",
     "uk": "Початок"
@@ -402,10 +398,6 @@
   "front.install.title": {
     "en": "How to use",
     "uk": "Як користуватися"
-  },
-  "front.install.auto": {
-    "en": "Automatic",
-    "uk": "Автоматично"
   },
   "front.install.manual": {
     "en": "Manual",
@@ -430,10 +422,6 @@
   "front.mods.link": {
     "en": "Mods by the Enshwick team",
     "uk": "Моди від команди Enshwick"
-  },
-  "front.install.nexus.note": {
-    "en": "Choose Mod Manager Download there, and Vortex puts Enshwick into the game folder.",
-    "uk": "Виберіть там Mod Manager Download, і Vortex сам покладе Enshwick у теку гри."
   },
   "front.install": {
     "en": "Install",
@@ -460,8 +448,12 @@
     "uk": "Гра оновилась — граєте далі"
   },
   "front.players.patch.a": {
-    "en": "What Enshwick cannot find in the new version of the game, it turns off and names in chat. Everything else keeps working.",
-    "uk": "Що Enshwick не знайде в новій версії гри, він вимкне і покаже в чаті. Решта працює."
+    "en": "The game describes its own data, and Enshwick reads that description each time the game starts. So a game update needs no Enshwick update, and most mods keep working. What Enshwick cannot find in the new version, it turns off and names in chat.",
+    "uk": "Гра описує власні дані, і Enshwick читає цей опис щоразу, коли гра запускається. Тож оновлення гри не потребує оновлення Enshwick, і більшість модів працює далі. Що Enshwick не знайде в новій версії, він вимкне і покаже в чаті."
+  },
+  "front.players.patch.link": {
+    "en": "Why it keeps working",
+    "uk": "Чому він працює далі"
   },
   "front.players.join.link": {
     "en": "How to join",
@@ -511,6 +503,18 @@
     "en": "For mod makers",
     "uk": "Авторам модів"
   },
+  "front.makers.checks.q": {
+    "en": "The server checks every action a mod declares",
+    "uk": "Сервер перевіряє кожну дію, яку оголошує мод"
+  },
+  "front.makers.checks.a": {
+    "en": "A player runs a mod’s actions with its buttons and keys. The server checks each run again: who may run it, how often and from how far.",
+    "uk": "Гравець запускає дії мода його кнопками й клавішами. Сервер ще раз перевіряє кожен запуск: хто може його виконати, як часто і з якої відстані."
+  },
+  "front.makers.checks.link": {
+    "en": "Player actions",
+    "uk": "Дії гравців"
+  },
   "front.makers.together.q": {
     "en": "Mods work together",
     "uk": "Моди працюють разом"
@@ -532,8 +536,8 @@
     "uk": "Нативна швидкість для нативних модів"
   },
   "front.makers.speed.a": {
-    "en": "Rust, C and C++ mods run as native code, like the game itself, with no garbage collector. Luau scripts run in an interpreter and cost more per call. Write code that runs on every frame natively.",
-    "uk": "Моди на Rust, C і C++ працюють як нативний код, як і сама гра, без збирача сміття. Скрипти Luau працюють в інтерпретаторі, і кожен виклик коштує більше. Код, що працює щокадру, пишіть нативно."
+    "en": "Rust, C and C++ mods run as native code, like the game itself, with no garbage collector. In a running game, one call into an event handler costs about 1 microsecond, mostly the processor fetching the mod’s code and data. Luau scripts run in an interpreter, which does more work per call, so write code that runs on every frame natively.",
+    "uk": "Моди на Rust, C і C++ працюють як нативний код, як і сама гра, без збирача сміття. У запущеній грі один виклик обробника подій коштує близько 1 мікросекунди, здебільшого на те, щоб процесор отримав код і дані мода. Скрипти Luau працюють в інтерпретаторі, який робить більше роботи на кожен виклик, тож код, що працює щокадру, пишіть нативно."
   },
   "front.makers.speed.link": {
     "en": "Performance",
@@ -548,8 +552,8 @@
     "uk": "Чи сповільнює Enshwick гру?"
   },
   "front.faq.speed.a": {
-    "en": "Enshwick and mods made in Rust, C or C++ run as compiled code, like the game itself. Enshwick is built to add little work to each frame. Mods made as Luau scripts run through an interpreter, so they run slower.",
-    "uk": "Enshwick і моди на Rust, C чи C++ працюють як скомпільований код, як і сама гра. Enshwick зроблено так, щоб він додавав мало роботи до кожного кадру. Моди-скрипти на Luau працюють через інтерпретатор, тому вони повільніші."
+    "en": "Enshwick and mods made in Rust, C or C++ run as compiled code, like the game itself. Enshwick’s code that runs on each frame is written not to allocate memory, take locks or write logs. Mods made as Luau scripts run through an interpreter, so they run slower.",
+    "uk": "Enshwick і моди на Rust, C чи C++ працюють як скомпільований код, як і сама гра. Код Enshwick, що працює щокадру, написаний так, щоб не виділяти памʼять, не брати блокувань і не писати журналів. Моди-скрипти на Luau працюють через інтерпретатор, тому вони повільніші."
   },
   "front.makers.languages.link": {
     "en": "Mods in C and C++",
@@ -716,8 +720,12 @@
     "uk": "Мод на нашому API переживає патчі"
   },
   "front.makers.patches.a": {
-    "en": "You do not rebuild it for every game update.",
-    "uk": "Його не треба перезбирати під кожне оновлення гри."
+    "en": "You do not rebuild it for every game update. Enshwick reads the game’s own description of its data and finds what an update moved.",
+    "uk": "Його не треба перезбирати під кожне оновлення гри. Enshwick читає власний опис даних гри і знаходить те, що оновлення перемістило."
+  },
+  "front.makers.patches.link": {
+    "en": "How it works",
+    "uk": "Як це працює"
   },
   "front.faq.loader.q": {
     "en": "Why is Enshwick also a mod loader?",

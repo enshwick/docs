@@ -340,7 +340,7 @@
   line-height: 1.15;
 }
 
-/* Install: automatic through a service, or by hand in four steps. */
+/* Install: by hand in four steps. */
 .ew-install {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
@@ -399,55 +399,6 @@
 
 .ew-fact p {
   color: var(--color-muted);
-}
-
-/* Install through Nexus Mods: one wide row with its mark, its name and a note, its colour on the edge. */
-.ew-front .ew-nexus {
-  display: flex;
-  gap: var(--space-md);
-  align-items: center;
-  padding: var(--space-lg);
-  border: var(--rule-hair) solid var(--color-nexus-edge);
-  border-radius: var(--radius-control);
-  background: var(--color-veil);
-  box-shadow: var(--shadow-quiet);
-  text-decoration: none;
-  transition:
-    border-color var(--dur-short) var(--ease-out),
-    background-color var(--dur-short) var(--ease-out);
-}
-
-.ew-front .ew-nexus:hover {
-  border-color: var(--color-nexus);
-  background: var(--color-nexus-wash);
-}
-
-.ew-nexus .ew-service-icon {
-  width: 40px;
-  height: 40px;
-}
-
-.ew-nexus__text {
-  display: grid;
-  gap: var(--space-2xs);
-}
-
-.ew-nexus__name {
-  font-family: var(--font-display);
-  font-size: var(--text-xl);
-  font-weight: 600;
-  color: var(--color-bone);
-}
-
-.ew-nexus__note {
-  font-size: var(--text-sm);
-  color: var(--color-muted);
-}
-
-@media (min-width: 56rem) {
-  .ew-install {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
 }
 
 /* Mods: one compact list, each row a link with the name and a short line beside it. */

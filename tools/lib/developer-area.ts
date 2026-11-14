@@ -1,8 +1,8 @@
 import type { GitRef, RepositoryName } from '../../src/site/types.ts';
 import type { DeveloperPage } from './api-map.ts';
 import { type ChapterPage, ChapterConverter } from './chapter-converter.ts';
+import { type CheckedBuild, CheckedBuilds } from './checked-builds.ts';
 import { type ErrorsFile, ErrorPages } from './error-pages.ts';
-import { GameBuildFiles } from './game-build-files.ts';
 import { GitSource } from './git-source.ts';
 import { MdxBody } from './mdx-body.ts';
 import { ModuleFile } from './module-file.ts';
@@ -20,17 +20,6 @@ export interface PlatformSource {
   readonly repository: RepositoryName;
   readonly book: string;
   readonly versions: readonly DeveloperVersion[];
-}
-
-/**
- * The game version one side was last checked on: its newest compatibility report, the features
- * off on it and the day the report last changed, `YYYY-MM-DD`.
- */
-export interface CheckedBuild {
-  readonly side: string;
-  readonly gameVersion: string | undefined;
-  readonly off: readonly string[];
-  readonly checked: string | undefined;
 }
 
 /** What one platform version supports, for the compatibility page. */
@@ -57,10 +46,6 @@ export class DeveloperArea {
     'What changed in each release of the enshwick crate, the API every mod builds against: what was added, changed, removed and fixed.';
   private static readonly summary = 'SUMMARY.md';
   private static readonly mainBranch = 'main';
-  /** What the loader finds on each game build, one compatibility report per build. */
-  private static readonly reports = 'crates/enshwick-gamedata/reports';
-  /** The length of `YYYY-MM-DD`, the day part of an ISO date. */
-  private static readonly dayLength = 10;
   private static readonly apiManifest = 'crates/enshwick/Cargo.toml';
   private static readonly apiRoot = 'crates/enshwick/src/lib.rs';
   /** The workspace manifest, which says where each internal crate of the API lives. */
@@ -135,7 +120,7 @@ export class DeveloperArea {
     const checkout = await GitSource.checkout(this.source.repository, version.ref, [
       `/${this.source.book}/`,
       `/${DeveloperArea.changelog}`,
-      `/${DeveloperArea.reports}/`,
+      `/${CheckedBuilds.reports}/`,
       `/${DeveloperArea.apiManifest}`,
       `/${DeveloperArea.apiRoot}`,
       `/${DeveloperArea.workspaceManifest}`,
@@ -229,37 +214,13 @@ export class DeveloperArea {
     const manifest = await checkout.read(DeveloperArea.apiManifest);
     const api =
       manifest === undefined ? undefined : /^version\s*=\s*"([^"]+)"/mu.exec(manifest)?.[1];
-    const files = await Array.fromAsync(
-      new Bun.Glob('*.toml').scan(checkout.path(DeveloperArea.reports)),
-    );
-    const builds = await Promise.all(
-      files.map(async (file) =>
-        Object.assign(
-          GameBuildFiles.read(
-            file,
-            (await checkout.read(`${DeveloperArea.reports}/${file}`)) ?? '',
-          ),
-          { file },
-        ),
-      ),
-    );
-    const checked = await Promise.all(
-      GameBuildFiles.newest(builds).map(async ({ side, gameVersion, off, file }) => ({
-        side,
-        gameVersion,
-        off,
-        checked: (await checkout.lastChanged(`${DeveloperArea.reports}/${file}`))
-          ?.toISOString()
-          .slice(0, DeveloperArea.dayLength),
-      })),
-    );
     const lib = await checkout.read(DeveloperArea.apiRoot);
 
     return {
       name: version.name,
       ref: version.ref.toString(),
       api,
-      checked,
+      checked: await CheckedBuilds.of(checkout),
       lib,
       abi: await DeveloperArea.abi(checkout, lib ?? ''),
       errors: await ErrorPages.locate(checkout),

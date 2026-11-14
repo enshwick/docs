@@ -4,6 +4,7 @@ import siteData from '../src/data/site.json' with { type: 'json' };
 import sourcesData from '../src/data/sources.json' with { type: 'json' };
 import { Languages } from '../src/site/languages.ts';
 import { Sources } from '../src/site/types.ts';
+import { CheckedBuilds } from './lib/checked-builds.ts';
 import { DeveloperArea } from './lib/developer-area.ts';
 import { ErrorPages } from './lib/error-pages.ts';
 import { GitHubReleases } from './lib/github-releases.ts';
@@ -72,6 +73,9 @@ if (loaderTag === undefined) {
   throw new TypeError(`${platform.repository} has no release with ${loaderPackage}.zip`);
 }
 
+// The compatibility page names what the newest release was checked on, not what `main` holds now.
+const releaseChecked = await CheckedBuilds.at(platform.repository, loaderTag);
+
 const platformChecks = new PlatformChecks(developerArea.releases[0], developerArea.newestPages);
 const apiMap = platformChecks.run();
 
@@ -101,7 +105,7 @@ await Bun.write(
 );
 await Bun.write(
   `${generated}/compatibility.json`,
-  `${JSON.stringify({ platform: developerArea.releases.slice(0, 1).map(({ lib: _lib, errors: _errors, abi: _abi, ...release }) => release), mods: modReleases }, null, 2)}\n`,
+  `${JSON.stringify({ platform: developerArea.releases.slice(0, 1).map(({ lib: _lib, errors: _errors, abi: _abi, ...release }) => Object.assign(release, { checked: releaseChecked })), mods: modReleases }, null, 2)}\n`,
 );
 await Bun.write(
   `${generated}/stability.json`,

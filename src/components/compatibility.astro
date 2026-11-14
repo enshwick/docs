@@ -23,6 +23,7 @@ const state = (off: ReadonlyArray<{ toString(): string }>): string =>
     : `${t('compat.state.partly')} ${off.map((name) => feature(name.toString())).join(', ')}`;
 const day = new Intl.DateTimeFormat(language.toString(), { dateStyle: 'long', timeZone: 'UTC' });
 const checked = platform[0]?.checked ?? [];
+const dated = checked.some((build) => build.checked !== undefined);
 ---
 
 {
@@ -35,7 +36,7 @@ const checked = platform[0]?.checked ?? [];
             <th>{t('compat.side')}</th>
             <th>{t('compat.game-version')}</th>
             <th>{t('compat.state')}</th>
-            <th>{t('compat.checked')}</th>
+            {dated && <th>{t('compat.checked')}</th>}
           </tr>
         </thead>
         <tbody>
@@ -44,7 +45,7 @@ const checked = platform[0]?.checked ?? [];
               <td>{t(`compat.side.${build.side.toString()}`)}</td>
               <td>{build.gameVersion?.toString() ?? ''}</td>
               <td>{state(build.off)}</td>
-              <td>{build.checked === undefined ? '' : day.format(new Date(build.checked.toString()))}</td>
+              {dated && <td>{build.checked === undefined ? '' : day.format(new Date(build.checked.toString()))}</td>}
             </tr>
           ))}
         </tbody>

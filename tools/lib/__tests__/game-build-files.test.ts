@@ -2,6 +2,9 @@ import { describe, expect, it } from 'vitest';
 
 import { type GameBuild, GameBuildFiles } from '../game-build-files.ts';
 
+/** A server report that records `checked`, written as TOML. */
+const checkedReport = (checked: string): string => `side = "server"\nchecked = ${checked}\n`;
+
 describe('GameBuildFiles.read', () => {
   it('reads a report without its build label, which players do not need', () => {
     const report = [
@@ -25,7 +28,14 @@ describe('GameBuildFiles.read', () => {
       steamBuild: '26082781',
       gameVersion: '1273043',
       off: ['bases'],
+      checked: undefined,
     });
+  });
+
+  it('reads the day the build was checked, and ignores a value that is not a day', () => {
+    expect(GameBuildFiles.read('s.toml', checkedReport('"2026-11-14"')).checked).toBe('2026-11-14');
+    expect(GameBuildFiles.read('s.toml', checkedReport('"yesterday"')).checked).toBeUndefined();
+    expect(GameBuildFiles.read('s.toml', checkedReport('20261114')).checked).toBeUndefined();
   });
 
   it('keeps its own class name for logs and errors', () => {
@@ -38,6 +48,7 @@ const build = (gameVersion: string, steamBuild: string, side = 'server'): GameBu
   steamBuild,
   gameVersion,
   off: [],
+  checked: undefined,
 });
 
 describe('GameBuildFiles.ordered', () => {
@@ -79,6 +90,7 @@ describe('GameBuildFiles.newest', () => {
       steamBuild: '26500000',
       gameVersion: undefined,
       off: [],
+      checked: undefined,
     };
 
     expect(GameBuildFiles.newest([unread, build('1287369', '26430253')])).toEqual([unread]);

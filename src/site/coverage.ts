@@ -91,7 +91,6 @@ export class Coverage {
   private static readonly stable = 'stable';
   private static readonly unstable = 'unstable';
   private static readonly pathSeparator = '::';
-  private static readonly moduleName = /^[a-z][a-z0-9_]*$/u;
   private static readonly notAnchor = /[^a-z0-9]+/gu;
 
   /** The site's coverage, as `src/data/coverage.json` holds it. */
@@ -240,10 +239,15 @@ export class Coverage {
       : { capability, status, stability: Coverage.stable, items, unstableItems, note };
   }
 
-  /** Whether a module or item is unstable: named so itself, or its module is, as in `world::props`. */
+  /**
+   * Whether a module or item is unstable: it is named so, or a prefix of its path is, such as its
+   * module in `world::props` or its type in `Damage::scale`; the book's stability rule matches the same.
+   */
   private static isUnstable(name: string, unstable: ReadonlySet<string>): boolean {
-    const [first = ''] = name.split(Coverage.pathSeparator);
+    const parts = name.split(Coverage.pathSeparator);
 
-    return unstable.has(name) || (Coverage.moduleName.test(first) && unstable.has(first));
+    return parts.some((_, end) =>
+      unstable.has(parts.slice(0, end + 1).join(Coverage.pathSeparator)),
+    );
   }
 }

@@ -13,7 +13,6 @@ import { Address, Mailbox } from './types.ts';
 export class Links {
   private static readonly schema = n.object({
     github: Address,
-    nexus: Address,
     download: Address,
     license: Address,
     issues: Address,
@@ -27,7 +26,6 @@ export class Links {
   public static readonly site = new Links(linksData, new ReleaseArchives(releaseArchivesData));
 
   public readonly github: Address;
-  public readonly nexus: Address;
   public readonly download: Address;
   public readonly license: Address;
   public readonly issues: Address;
@@ -46,7 +44,6 @@ export class Links {
 
     ({
       github: this.github,
-      nexus: this.nexus,
       download: this.download,
       license: this.license,
       issues: this.issues,

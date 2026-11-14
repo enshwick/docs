@@ -19,7 +19,6 @@ const t = (key: string): string => Texts.site.get(key, language);
   <div class="ew-foot__body">
     <nav class="ew-foot__links" aria-label={t('foot.links')}>
       <a class="ew-foot__service" href={Links.site.github.toString()}><ServiceIcon service="github" />GitHub</a>
-      <a class="ew-foot__service" href={Links.site.nexus.toString()}><ServiceIcon service="nexus" />Nexus Mods</a>
     </nav>
     <p class="ew-foot__mail">
       <a href={Links.site.contact.mailto()}>{Links.site.contact.toString()}</a>

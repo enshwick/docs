@@ -54,7 +54,6 @@ describe('Links', () => {
     const links = new Links(
       {
         github: 'https://github.com/enshwick',
-        nexus: 'https://www.nexusmods.com/site/mods/2511',
         download: 'https://github.com/enshwick/enshwick/releases/latest/download/enshwick.zip',
         license: 'https://github.com/enshwick/enshwick/blob/main/LICENSE',
         issues: 'https://github.com/enshwick/docs/issues/new',
