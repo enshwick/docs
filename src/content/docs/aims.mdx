@@ -20,6 +20,25 @@ without a rebuild.
 Until 1.0, anything may change between alphas. Back up your saves before you
 update.
 
+## Which languages will mods use after 1.0?
+
+After version 1.0, I would like mods in more languages, such as Zig, Go, C#,
+JavaScript and Python. They would come through WebAssembly. It is the first
+thing I plan after 1.0.
+
+Today you write mods in Rust, C, C++ and Luau, or as data with no code. Other
+languages that can export C functions work too, but we do not test them.
+
+A WebAssembly mod could come from any language that has WebAssembly tools. Each
+language would join when its tools are stable.
+
+A WebAssembly mod would run in a
+[sandbox](/explanation/how-mods-work/#is-it-safe), as a Luau mod does. It would
+reach the game only through Enshwick. As with Luau, the sandbox would not make
+the mod safe.
+
+A C# mod could also be a native mod, as a Rust mod is, with the whole API.
+
 ## Will Enshwick run mods written for EML?
 
 After version 1.0, I would like Enshwick to run mods written for EML.
@@ -38,7 +57,7 @@ I would like this site in more languages than English and Ukrainian.
 
 I would like mod authors to reload their mod while they develop it, without
 restarting the game or the server. It would work for every kind of mod that
-Enshwick runs, data packs included.
+Enshwick runs, data packs and WebAssembly mods included.
 
 It would be for development on the author's own test world, not for players or
 live servers. Today a changed mod needs a restart of the game or the server.
