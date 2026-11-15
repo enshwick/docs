@@ -21,10 +21,14 @@ export class ApiMap {
   /**
    * A module the crate declares, or one it re-exports whole from an internal crate, with the attribute
    * lines above it, so a `#[doc(hidden)]` one is left out. A re-export may name the module alone with
-   * `::{self}`, which a module beside a macro of the same name needs.
+   * `::{self}` or `::{self as <name>}` under its own name, which a module beside a macro of the same
+   * name needs.
    */
   private static readonly publicModule =
-    /^((?:#\[[^\n]*\]\r?\n)*)pub (?:mod ([a-z0-9_]+)|use (enshwick_[a-z0-9_]+)::([a-z0-9_]+)(?:::\{self\})?);/gmu;
+    /^((?:#\[[^\n]*\]\r?\n)*)pub (?:mod ([a-z0-9_]+)|use (enshwick_[a-z0-9_]+)::([a-z0-9_]+)(?:::\{self(?: as ([a-z0-9_]+))?\})?);/gmu;
+  /** Every re-export through `self` in any spelling, so one `publicModule` cannot read fails the build. */
+  private static readonly selfReexport =
+    /^pub use enshwick_[a-z0-9_]+::[a-z0-9_]+::\{[^}]*\bself\b[^}]*\};/gmu;
   // Hidden modules, such as macro support, are no part of the documented API.
   private static readonly hidden = /#\[doc\(hidden\)\]/u;
   // A module the crate compiles only with the `unstable` feature is unstable, listed or not.
@@ -65,7 +69,20 @@ export class ApiMap {
   private static declared(
     lib: string,
   ): Array<{ attributes: string; name: string; crate: string | undefined }> {
-    return [...lib.matchAll(ApiMap.publicModule)]
+    const read = [...lib.matchAll(ApiMap.publicModule)].filter(
+      (match) => match[5] === undefined || match[5] === match[4],
+    );
+    const unread = [...lib.matchAll(ApiMap.selfReexport)]
+      .map(([line]) => line)
+      .filter((line) => !read.some(([match]) => match.endsWith(line)));
+
+    if (unread.length > 0) {
+      throw new Error(
+        `the API map reads a module re-export only as ::{self} or ::{self as <its own name>}: ${unread.join(' ')}`,
+      );
+    }
+
+    return read
       .filter((match) => match[3] !== ApiMap.macroCrate)
       .map((match) => ({
         attributes: match[1] ?? '',
