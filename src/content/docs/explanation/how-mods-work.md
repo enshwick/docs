@@ -103,6 +103,33 @@ If a newer Enshwick exists, the **Mods** screen shows its version and the addres
 of its page. To turn the question off, set `release_check = false` in
 `enshwick.toml` in the game folder.
 
+## Is my Enshwick an official build?
+
+Look at the **Mods** screen. If it shows **Unofficial build**, your build is
+not an official one. At each start, the log also says `official build` or
+`unofficial build`.
+
+An official build is an `enshwick.zip` from the
+[releases page](https://github.com/enshwick/enshwick/releases), unchanged.
+[What is an official build?](/reference/name-policy/#what-is-an-official-build)
+says which files carry its signature.
+
+At each start, Enshwick checks the signature of its own files, and it runs
+either way. Releases made before Enshwick signed its files have no signature,
+so they show the mark too.
+
+The check runs inside Enshwick itself, so a changed Enshwick can hide the mark.
+To be sure a download is ours,
+[check the download](https://github.com/enshwick/.github/blob/main/SECURITY.md#check-a-download).
+
+An unofficial build came from somewhere else, or something changed its files.
+We cannot vouch for such a build. If you report a problem with one, say that
+your build is unofficial.
+
+To get an official build, download Enshwick from the releases page again. A
+build you made from the code yourself shows as unofficial too. That is
+expected, and [the name policy](/reference/name-policy/) says how to name it.
+
 ## Your worlds
 
 Some mods keep their own data for a world, such as who owns a chest. They keep

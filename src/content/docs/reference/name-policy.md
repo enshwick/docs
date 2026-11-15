@@ -20,10 +20,18 @@ An official build is the files of an `enshwick.zip` from the
 [releases page](https://github.com/enshwick/enshwick/releases), unchanged. A
 build you compiled yourself, or changed in any way, is not an official build.
 
+The files of an official build carry a signature made with our key:
+`powrprof.dll.sig` beside `powrprof.dll`, and `mods/enshwick/enshwick.dll.sig`
+beside `enshwick.dll`. Enshwick names any other build unofficial in its log and
+on the **Mods** screen.
+[Is my Enshwick an official build?](/explanation/how-mods-work/#is-my-enshwick-an-official-build)
+explains what that means.
+
 ## Who may ship a build under the name Enshwick?
 
 Anyone may bundle an official build under the name Enshwick. Copying its files
-into your own archive is fine.
+into your own archive is fine. Keep each `.sig` file beside the file it signs,
+or Enshwick names your bundle unofficial.
 
 ## What if your build is not an official build?
 

@@ -12,8 +12,8 @@ carries them at the versions you chose.
 
 ## Put the files into the image
 
-Put `powrprof.dll` and the `mods` folder into the image beside the server. A
-volume mounted there works too.
+Put `powrprof.dll`, its signature `powrprof.dll.sig` and the `mods` folder into
+the image beside the server. A volume mounted there works too.
 
 - `enshwick.zip` holds Enshwick and no mod. Each mod comes in an archive of its
   own, from the releases of its project.
