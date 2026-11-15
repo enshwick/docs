@@ -71,19 +71,31 @@ pub mod stats;
     ]);
   });
 
-  it('counts a module re-exported alone with {self} beside a macro of the same name', () => {
-    const recut = 'pub use enshwick_base::config::{self};\npub use enshwick_macros::config;\n';
+  it.each(['{self}', '{self as config}'])(
+    'counts a module re-exported alone with %s beside a macro of the same name',
+    (alone) => {
+      const recut = `pub use enshwick_base::config::${alone};\npub use enshwick_macros::config;\n`;
 
-    expect(ApiMap.of(recut, pages).modules.map((module) => module.name)).toEqual(['config']);
-    expect(ApiMap.origin(recut, 'config')).toBe('enshwick_base');
+      expect(ApiMap.of(recut, pages).modules.map((module) => module.name)).toEqual(['config']);
+      expect(ApiMap.origin(recut, 'config')).toBe('enshwick_base');
+    },
+  );
+
+  it('reads the gate and inline attributes above a module re-exported with {self as name}', () => {
+    const recut = `#[cfg(feature = "unstable")]
+#[doc(inline)]
+pub use enshwick_core::script::{self as script};
+`;
+
+    expect(ApiMap.of(recut, pages).gated).toEqual(['script']);
   });
 
-  it('counts a module re-exported alone and named again with {self as name}', () => {
-    const recut =
-      'pub use enshwick_base::config::{self as config};\npub use enshwick_macros::config;\n';
-
-    expect(ApiMap.of(recut, pages).modules.map((module) => module.name)).toEqual(['config']);
-    expect(ApiMap.origin(recut, 'config')).toBe('enshwick_base');
+  it.each([
+    'pub use enshwick_abi::raw_abi::{self as abi};',
+    'pub use enshwick_base::config::{ self as config };',
+    'pub use enshwick_base::config::{self, Config};',
+  ])('refuses a module re-export it cannot read: %s', (line) => {
+    expect(() => ApiMap.of(`${line}\n`, pages)).toThrow(line);
   });
 
   it('counts a re-exported module whose name has a digit', () => {
