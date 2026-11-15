@@ -105,22 +105,30 @@ of its page. To turn the question off, set `release_check = false` in
 
 ## Is my Enshwick an official build?
 
-An official build is an `enshwick.zip` from the
-[releases page](https://github.com/enshwick/enshwick/releases), unchanged. Each
-official build carries a signature made with our own key. Nobody else has that
-key.
+Look at the **Mods** screen. If it shows **Unofficial build**, your build is
+not an official one. At each start, the log also says `official build` or
+`unofficial build`.
 
-At each start, Enshwick checks the signature of its own files. If a signature
-is missing or does not match, Enshwick still runs. Its log then says
-`unofficial build`, and the **Mods** screen shows **Unofficial build** at the
-top.
+An official build is an `enshwick.zip` from the
+[releases page](https://github.com/enshwick/enshwick/releases), unchanged.
+[What is an official build?](/reference/name-policy/#what-is-an-official-build)
+says which files carry its signature.
+
+At each start, Enshwick checks the signature of its own files, and it runs
+either way. Releases made before Enshwick signed its files have no signature,
+so they show the mark too.
+
+The check runs inside Enshwick itself, so a changed Enshwick can hide the mark.
+To be sure a download is ours,
+[check the download](https://github.com/enshwick/.github/blob/main/SECURITY.md#check-a-download).
 
 An unofficial build came from somewhere else, or something changed its files.
-We cannot vouch for such a build, or help with problems in it. To get an
-official build, download Enshwick from the releases page again.
+We cannot vouch for such a build. If you report a problem with one, say that
+your build is unofficial.
 
-A build you made from the code yourself shows as unofficial too. That is
-expected. [The name policy](/reference/name-policy/) says how to name it.
+To get an official build, download Enshwick from the releases page again. A
+build you made from the code yourself shows as unofficial too. That is
+expected, and [the name policy](/reference/name-policy/) says how to name it.
 
 ## Your worlds
 
