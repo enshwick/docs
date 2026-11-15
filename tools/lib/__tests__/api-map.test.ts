@@ -78,6 +78,14 @@ pub mod stats;
     expect(ApiMap.origin(recut, 'config')).toBe('enshwick_base');
   });
 
+  it('counts a module re-exported alone and named again with {self as name}', () => {
+    const recut =
+      'pub use enshwick_base::config::{self as config};\npub use enshwick_macros::config;\n';
+
+    expect(ApiMap.of(recut, pages).modules.map((module) => module.name)).toEqual(['config']);
+    expect(ApiMap.origin(recut, 'config')).toBe('enshwick_base');
+  });
+
   it('counts a re-exported module whose name has a digit', () => {
     const recut = 'pub use enshwick_base::i18n;\npub use enshwick_base::l10n::{self};\n';
 

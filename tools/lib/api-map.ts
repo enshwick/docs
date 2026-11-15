@@ -21,10 +21,11 @@ export class ApiMap {
   /**
    * A module the crate declares, or one it re-exports whole from an internal crate, with the attribute
    * lines above it, so a `#[doc(hidden)]` one is left out. A re-export may name the module alone with
-   * `::{self}`, which a module beside a macro of the same name needs.
+   * `::{self}`, which a module beside a macro of the same name needs, or with `::{self as <name>}`,
+   * since rustdoc 1.100 files a bare `{self}` under a module called `self`.
    */
   private static readonly publicModule =
-    /^((?:#\[[^\n]*\]\r?\n)*)pub (?:mod ([a-z0-9_]+)|use (enshwick_[a-z0-9_]+)::([a-z0-9_]+)(?:::\{self\})?);/gmu;
+    /^((?:#\[[^\n]*\]\r?\n)*)pub (?:mod ([a-z0-9_]+)|use (enshwick_[a-z0-9_]+)::([a-z0-9_]+)(?:::\{self(?: as ([a-z0-9_]+))?\})?);/gmu;
   // Hidden modules, such as macro support, are no part of the documented API.
   private static readonly hidden = /#\[doc\(hidden\)\]/u;
   // A module the crate compiles only with the `unstable` feature is unstable, listed or not.
@@ -69,7 +70,7 @@ export class ApiMap {
       .filter((match) => match[3] !== ApiMap.macroCrate)
       .map((match) => ({
         attributes: match[1] ?? '',
-        name: match[2] ?? match[4] ?? '',
+        name: match[2] ?? match[5] ?? match[4] ?? '',
         crate: match[3],
       }));
   }
