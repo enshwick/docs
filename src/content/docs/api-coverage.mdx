@@ -6,15 +6,29 @@ slug: dev/api-coverage
 ---
 
 import ApiCoverage from '../../components/api-coverage.astro';
+import ApiCoverageTotals from '../../components/api-coverage-totals.astro';
 
 Each row is one area of the game. Open it to see what a mod can do there, and
 which API items do it. The
 [API source](https://github.com/enshwick/enshwick/tree/main/crates/enshwick/src)
 documents each item, and [`/api-coverage.json`](/api-coverage.json) holds the same data.
 
+## How much of the game does the API cover?
+
+<ApiCoverageTotals />
+
 ## Which game areas does the API cover?
 
 <ApiCoverage />
+
+## Which game areas come after 1.0?
+
+These areas are planned after version 1.0. Until each one has its own API, a
+mod reads and changes the game data of most of them by the game's own names.
+[What comes next](/aims/#which-game-areas-will-the-api-reach-after-10) lists
+them by group.
+
+<ApiCoverage later />
 
 ## What does each capability mean?
 
@@ -33,6 +47,7 @@ documents each item, and [`/api-coverage.json`](/api-coverage.json) holds the sa
 | Covered        | the API has calls for it                        |
 | In work        | the API for it is being built                   |
 | Researching    | the needed facts about the game are being found |
+| Planned after 1.0 | the API for it comes after version 1.0       |
 | Not supported  | the API does not offer it                       |
 | Does not apply | the game has nothing of this kind in that area  |
 

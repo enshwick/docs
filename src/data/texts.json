@@ -699,6 +699,22 @@
     "en": "Does not apply",
     "uk": "Не стосується"
   },
+  "coverage.status.planned": {
+    "en": "Planned after 1.0",
+    "uk": "Заплановано після 1.0"
+  },
+  "coverage.total.one": {
+    "en": "Capabilities in the areas for version 1.0",
+    "uk": "Можливості в частинах гри для версії 1.0"
+  },
+  "coverage.total.all": {
+    "en": "Capabilities in all areas, with those planned after 1.0",
+    "uk": "Можливості в усіх частинах гри разом із запланованими після 1.0"
+  },
+  "coverage.total.grows": {
+    "en": "These totals count the game areas that matter to mods and that we have found so far. When we find more, the totals grow, so the percentage can drop before it rises.",
+    "uk": "Ці підсумки враховують частини гри, важливі для модів, які ми знайшли досі. Коли знайдемо нові, підсумки зростуть, тож відсоток може спершу впасти."
+  },
   "foot.not-affiliated": {
     "en": "Not made by or affiliated with Keen Games. Enshrouded is their trademark.",
     "uk": "Не створений Keen Games і не пов’язаний з ними. Enshrouded — їхня торгова марка."

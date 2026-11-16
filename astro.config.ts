@@ -257,7 +257,7 @@ export default defineConfig({
             {
               label: 'API coverage data',
               url: `${siteData.url}${siteData.base}${Coverage.data}`,
-              description: `the table of ${Coverage.page} as JSON, with its date: which game areas the API reaches, stable or unstable`,
+              description: `the table of ${Coverage.page} as JSON, with its date: which game areas the API reaches, stable or unstable, and the areas planned after 1.0, marked later`,
             },
             {
               label: 'API source',

@@ -15,7 +15,7 @@ const Capability = AnyString.subtype(
 /** How far the API reaches one capability of one game area. */
 const CoverageStatus = AnyString.subtype(
   'docs.CoverageStatus',
-  n.oneOf('covered', 'in-work', 'research', 'not-supported', 'not-applicable'),
+  n.oneOf('covered', 'in-work', 'research', 'planned', 'not-supported', 'not-applicable'),
 );
 
 /** A day as `YYYY-MM-DD`. */
@@ -39,11 +39,11 @@ const CoverageFile = n.object({
     .array(),
 });
 
+/** `src/data/coverage.json`, parsed. */
+type CoverageValue = Extract<ReturnType<typeof CoverageFile.parse>, { ok: true }>['value'];
+
 /** One row of `src/data/coverage.json`, parsed. */
-type CoverageRow = Extract<
-  ReturnType<typeof CoverageFile.parse>,
-  { ok: true }
->['value']['rows'][number];
+type CoverageRow = CoverageValue['rows'][number];
 
 /** One cell of the coverage table, as the page and `/api-coverage.json` show it. */
 export interface CoverageCell {
@@ -66,6 +66,11 @@ export interface CoverageDomain {
   /** The area's anchor on the page, from its name: `weather-time-and-shroud`. */
   readonly id: string;
   readonly name: string;
+  /**
+   * Whether the area is planned after 1.0, outside the table 1.0 aims to cover in full: it has a
+   * cell planned after 1.0.
+   */
+  readonly later: boolean;
   readonly cells: readonly CoverageCell[];
 }
 
@@ -86,21 +91,33 @@ export class Coverage {
 
   /** The status whose cell names the API that covers it. */
   private static readonly covered = 'covered';
+  /** The status that puts a cell, and with it its area, after 1.0. */
+  private static readonly planned = 'planned';
   /** The statuses an area's count leaves out, as the API coverage measure does. */
   private static readonly uncounted = ['not-supported', 'not-applicable'];
   private static readonly stable = 'stable';
   private static readonly unstable = 'unstable';
   private static readonly pathSeparator = '::';
   private static readonly notAnchor = /[^a-z0-9]+/gu;
+  private static readonly anchorEdge = /^-+|-+$/gu;
 
   /** The site's coverage, as `src/data/coverage.json` holds it. */
   public static readonly site = Coverage.from(coverageData, unstableData, modulesData);
+
+  /** The areas for 1.0, in file order. */
+  public readonly forOne: readonly CoverageDomain[];
+
+  /** The areas planned after 1.0, in file order. */
+  public readonly afterOne: readonly CoverageDomain[];
 
   private constructor(
     /** The day the data was last brought up to date, as `YYYY-MM-DD`. */
     public readonly updated: string,
     public readonly domains: readonly CoverageDomain[],
-  ) {}
+  ) {
+    this.forOne = domains.filter((domain) => !domain.later);
+    this.afterOne = domains.filter((domain) => domain.later);
+  }
 
   /**
    * Parses the rows, groups them by game area in file order, and marks each covered cell stable or
@@ -142,8 +159,12 @@ export class Coverage {
     return new Coverage(
       parsed.value.updated.toString(),
       [...byDomain].map(([name, cells]) => ({
-        id: name.toLowerCase().replaceAll(Coverage.notAnchor, '-'),
+        id: name
+          .toLowerCase()
+          .replaceAll(Coverage.notAnchor, '-')
+          .replaceAll(Coverage.anchorEdge, ''),
         name,
+        later: [...cells.values()].some((cell) => cell.status === Coverage.planned),
         cells: Coverage.capabilities.map((capability) => {
           const cell = cells.get(capability);
 
@@ -172,13 +193,14 @@ export class Coverage {
   public json(): {
     updated: string;
     capabilities: readonly string[];
-    domains: Array<{ name: string; cells: object[] }>;
+    domains: Array<{ name: string; later?: true; cells: object[] }>;
   } {
     return {
       updated: this.updated,
       capabilities: Coverage.capabilities,
-      domains: this.domains.map(({ name, cells }) => ({
+      domains: this.domains.map(({ name, later, cells }) => ({
         name,
+        ...(later ? { later } : {}),
         cells: cells.map(({ capability, status, stability, items, unstableItems, note }) => ({
           capability,
           status,
@@ -202,6 +224,16 @@ export class Coverage {
       covered: counted.filter((cell) => cell.status === Coverage.covered).length,
       of: counted.length,
     };
+  }
+
+  /** How many cells of `domains` are covered, out of those counted, as `count` counts one area. */
+  public static total(domains: readonly CoverageDomain[]): { covered: number; of: number } {
+    return Coverage.count(domains.flatMap((domain) => domain.cells));
+  }
+
+  /** The covered share of a count as a whole percentage, or `undefined` when it counts nothing. */
+  public static percent({ covered, of }: { covered: number; of: number }): number | undefined {
+    return of === 0 ? undefined : Math.round((covered * 100) / of);
   }
 
   /** One row as its cell, a covered one stable or unstable by its module and items. */

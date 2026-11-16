@@ -3,6 +3,12 @@ import { Coverage } from '../site/coverage.ts';
 import { Languages } from '../site/languages.ts';
 import { Texts } from '../site/texts.ts';
 
+interface Props {
+  /** Shows the areas planned after 1.0 instead of those for 1.0. */
+  later?: boolean;
+}
+
+const { later = false } = Astro.props;
 const language = Languages.site.of(Astro.currentLocale);
 const t = (key: string): string => Texts.site.get(key, language);
 const base = import.meta.env.BASE_URL.replace(/\/$/u, '');
@@ -11,7 +17,7 @@ const stability = `${base}/dev/stability/`;
 
 <div class="ew-faq ew-coverage">
   {
-    Coverage.site.domains.map((domain) => (
+    (later ? Coverage.site.afterOne : Coverage.site.forOne).map((domain) => (
       <details id={domain.id}>
         <summary>
           <span class="ew-coverage__name">{domain.name}</span>
