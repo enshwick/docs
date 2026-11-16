@@ -1,5 +1,25 @@
 {
   "updated": "2026-11-16",
+  "later": [
+    "Animals, pets and mounts",
+    "Farming and growth",
+    "Fishing",
+    "Survival conditions",
+    "Logic, puzzles, doors and traps",
+    "World queries",
+    "Water and power",
+    "Resource nodes",
+    "Instruments and songs",
+    "Production queues",
+    "Movement and traversal",
+    "Game systems (mod ECS programs)",
+    "Appearance",
+    "NPC dialogue",
+    "Creature behaviour",
+    "Abilities and spells",
+    "Visuals: models, textures, VFX, animation",
+    "Camera"
+  ],
   "rows": [
     {
       "domain": "Items",
@@ -866,6 +886,462 @@
       "status": "covered",
       "module": "config",
       "note": "settings per world behind each mod's gear"
+    },
+    {
+      "domain": "Animals, pets and mounts",
+      "capability": "read",
+      "status": "planned"
+    },
+    {
+      "domain": "Animals, pets and mounts",
+      "capability": "change",
+      "status": "planned"
+    },
+    {
+      "domain": "Animals, pets and mounts",
+      "capability": "create",
+      "status": "planned"
+    },
+    {
+      "domain": "Animals, pets and mounts",
+      "capability": "events",
+      "status": "planned"
+    },
+    {
+      "domain": "Animals, pets and mounts",
+      "capability": "ui",
+      "status": "planned"
+    },
+    {
+      "domain": "Farming and growth",
+      "capability": "read",
+      "status": "planned"
+    },
+    {
+      "domain": "Farming and growth",
+      "capability": "change",
+      "status": "planned"
+    },
+    {
+      "domain": "Farming and growth",
+      "capability": "create",
+      "status": "planned"
+    },
+    {
+      "domain": "Farming and growth",
+      "capability": "events",
+      "status": "planned"
+    },
+    {
+      "domain": "Farming and growth",
+      "capability": "ui",
+      "status": "not-applicable"
+    },
+    {
+      "domain": "Fishing",
+      "capability": "read",
+      "status": "planned"
+    },
+    {
+      "domain": "Fishing",
+      "capability": "change",
+      "status": "planned"
+    },
+    {
+      "domain": "Fishing",
+      "capability": "create",
+      "status": "planned"
+    },
+    {
+      "domain": "Fishing",
+      "capability": "events",
+      "status": "planned"
+    },
+    {
+      "domain": "Fishing",
+      "capability": "ui",
+      "status": "not-applicable"
+    },
+    {
+      "domain": "Survival conditions",
+      "capability": "read",
+      "status": "planned"
+    },
+    {
+      "domain": "Survival conditions",
+      "capability": "change",
+      "status": "planned"
+    },
+    {
+      "domain": "Survival conditions",
+      "capability": "create",
+      "status": "planned"
+    },
+    {
+      "domain": "Survival conditions",
+      "capability": "events",
+      "status": "planned"
+    },
+    {
+      "domain": "Survival conditions",
+      "capability": "ui",
+      "status": "not-applicable"
+    },
+    {
+      "domain": "Logic, puzzles, doors and traps",
+      "capability": "read",
+      "status": "planned"
+    },
+    {
+      "domain": "Logic, puzzles, doors and traps",
+      "capability": "change",
+      "status": "planned"
+    },
+    {
+      "domain": "Logic, puzzles, doors and traps",
+      "capability": "create",
+      "status": "planned"
+    },
+    {
+      "domain": "Logic, puzzles, doors and traps",
+      "capability": "events",
+      "status": "planned"
+    },
+    {
+      "domain": "Logic, puzzles, doors and traps",
+      "capability": "ui",
+      "status": "not-applicable"
+    },
+    {
+      "domain": "World queries",
+      "capability": "read",
+      "status": "planned"
+    },
+    {
+      "domain": "World queries",
+      "capability": "change",
+      "status": "planned"
+    },
+    {
+      "domain": "World queries",
+      "capability": "create",
+      "status": "planned"
+    },
+    {
+      "domain": "World queries",
+      "capability": "events",
+      "status": "planned"
+    },
+    {
+      "domain": "World queries",
+      "capability": "ui",
+      "status": "not-applicable"
+    },
+    {
+      "domain": "Water and power",
+      "capability": "read",
+      "status": "planned"
+    },
+    {
+      "domain": "Water and power",
+      "capability": "change",
+      "status": "planned"
+    },
+    {
+      "domain": "Water and power",
+      "capability": "create",
+      "status": "planned"
+    },
+    {
+      "domain": "Water and power",
+      "capability": "events",
+      "status": "planned"
+    },
+    {
+      "domain": "Water and power",
+      "capability": "ui",
+      "status": "not-applicable"
+    },
+    {
+      "domain": "Resource nodes",
+      "capability": "read",
+      "status": "planned"
+    },
+    {
+      "domain": "Resource nodes",
+      "capability": "change",
+      "status": "planned"
+    },
+    {
+      "domain": "Resource nodes",
+      "capability": "create",
+      "status": "planned"
+    },
+    {
+      "domain": "Resource nodes",
+      "capability": "events",
+      "status": "planned"
+    },
+    {
+      "domain": "Resource nodes",
+      "capability": "ui",
+      "status": "not-applicable"
+    },
+    {
+      "domain": "Instruments and songs",
+      "capability": "read",
+      "status": "planned"
+    },
+    {
+      "domain": "Instruments and songs",
+      "capability": "change",
+      "status": "planned"
+    },
+    {
+      "domain": "Instruments and songs",
+      "capability": "create",
+      "status": "planned"
+    },
+    {
+      "domain": "Instruments and songs",
+      "capability": "events",
+      "status": "planned"
+    },
+    {
+      "domain": "Instruments and songs",
+      "capability": "ui",
+      "status": "not-applicable"
+    },
+    {
+      "domain": "Production queues",
+      "capability": "read",
+      "status": "planned"
+    },
+    {
+      "domain": "Production queues",
+      "capability": "change",
+      "status": "planned"
+    },
+    {
+      "domain": "Production queues",
+      "capability": "create",
+      "status": "not-applicable"
+    },
+    {
+      "domain": "Production queues",
+      "capability": "events",
+      "status": "planned"
+    },
+    {
+      "domain": "Production queues",
+      "capability": "ui",
+      "status": "not-applicable"
+    },
+    {
+      "domain": "Movement and traversal",
+      "capability": "read",
+      "status": "planned"
+    },
+    {
+      "domain": "Movement and traversal",
+      "capability": "change",
+      "status": "planned"
+    },
+    {
+      "domain": "Movement and traversal",
+      "capability": "create",
+      "status": "not-applicable"
+    },
+    {
+      "domain": "Movement and traversal",
+      "capability": "events",
+      "status": "planned"
+    },
+    {
+      "domain": "Movement and traversal",
+      "capability": "ui",
+      "status": "not-applicable"
+    },
+    {
+      "domain": "Game systems (mod ECS programs)",
+      "capability": "read",
+      "status": "not-applicable"
+    },
+    {
+      "domain": "Game systems (mod ECS programs)",
+      "capability": "change",
+      "status": "planned"
+    },
+    {
+      "domain": "Game systems (mod ECS programs)",
+      "capability": "create",
+      "status": "planned"
+    },
+    {
+      "domain": "Game systems (mod ECS programs)",
+      "capability": "events",
+      "status": "not-applicable"
+    },
+    {
+      "domain": "Game systems (mod ECS programs)",
+      "capability": "ui",
+      "status": "not-applicable"
+    },
+    {
+      "domain": "Appearance",
+      "capability": "read",
+      "status": "planned"
+    },
+    {
+      "domain": "Appearance",
+      "capability": "change",
+      "status": "planned"
+    },
+    {
+      "domain": "Appearance",
+      "capability": "create",
+      "status": "planned"
+    },
+    {
+      "domain": "Appearance",
+      "capability": "events",
+      "status": "not-applicable"
+    },
+    {
+      "domain": "Appearance",
+      "capability": "ui",
+      "status": "planned"
+    },
+    {
+      "domain": "NPC dialogue",
+      "capability": "read",
+      "status": "planned"
+    },
+    {
+      "domain": "NPC dialogue",
+      "capability": "change",
+      "status": "planned"
+    },
+    {
+      "domain": "NPC dialogue",
+      "capability": "create",
+      "status": "planned"
+    },
+    {
+      "domain": "NPC dialogue",
+      "capability": "events",
+      "status": "planned"
+    },
+    {
+      "domain": "NPC dialogue",
+      "capability": "ui",
+      "status": "covered",
+      "module": "ui",
+      "items": ["Load::extend_screen", "HudScreenType::NpcDialog"],
+      "note": "panels on the game’s dialogue screen; client only"
+    },
+    {
+      "domain": "Creature behaviour",
+      "capability": "read",
+      "status": "planned"
+    },
+    {
+      "domain": "Creature behaviour",
+      "capability": "change",
+      "status": "planned"
+    },
+    {
+      "domain": "Creature behaviour",
+      "capability": "create",
+      "status": "planned"
+    },
+    {
+      "domain": "Creature behaviour",
+      "capability": "events",
+      "status": "planned"
+    },
+    {
+      "domain": "Creature behaviour",
+      "capability": "ui",
+      "status": "not-applicable"
+    },
+    {
+      "domain": "Abilities and spells",
+      "capability": "read",
+      "status": "planned"
+    },
+    {
+      "domain": "Abilities and spells",
+      "capability": "change",
+      "status": "planned"
+    },
+    {
+      "domain": "Abilities and spells",
+      "capability": "create",
+      "status": "planned"
+    },
+    {
+      "domain": "Abilities and spells",
+      "capability": "events",
+      "status": "planned"
+    },
+    {
+      "domain": "Abilities and spells",
+      "capability": "ui",
+      "status": "not-applicable"
+    },
+    {
+      "domain": "Visuals: models, textures, VFX, animation",
+      "capability": "read",
+      "status": "not-applicable"
+    },
+    {
+      "domain": "Visuals: models, textures, VFX, animation",
+      "capability": "change",
+      "status": "planned"
+    },
+    {
+      "domain": "Visuals: models, textures, VFX, animation",
+      "capability": "create",
+      "status": "planned"
+    },
+    {
+      "domain": "Visuals: models, textures, VFX, animation",
+      "capability": "events",
+      "status": "not-applicable"
+    },
+    {
+      "domain": "Visuals: models, textures, VFX, animation",
+      "capability": "ui",
+      "status": "planned"
+    },
+    {
+      "domain": "Camera",
+      "capability": "read",
+      "status": "planned"
+    },
+    {
+      "domain": "Camera",
+      "capability": "change",
+      "status": "covered",
+      "module": "input",
+      "items": ["CommandAction::Look"],
+      "note": "turns the local player’s camera; client only"
+    },
+    {
+      "domain": "Camera",
+      "capability": "create",
+      "status": "not-applicable"
+    },
+    {
+      "domain": "Camera",
+      "capability": "events",
+      "status": "not-applicable"
+    },
+    {
+      "domain": "Camera",
+      "capability": "ui",
+      "status": "not-applicable"
     }
   ]
 }

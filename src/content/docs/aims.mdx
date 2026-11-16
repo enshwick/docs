@@ -43,6 +43,62 @@ A C# mod could also be a native mod, as a Rust mod is, with the whole API.
 
 After version 1.0, I would like Enshwick to run mods written for EML.
 
+## Which game areas will the API reach after 1.0?
+
+For version 1.0, the API aims to cover every area on the
+[API coverage](/dev/api-coverage/) page. After 1.0, I would like it to reach
+these areas of the game too. Today a mod can reach them only by the game's own
+names, without an API made for them.
+
+The living world:
+
+- **Animals, pets and mounts**: tame, breed, feed and ride animals.
+- **Farming and growth**: change how plants grow, and add plants and harvests.
+- **Fishing**: change what a player catches and where, and add fish and fishing
+  spots.
+- **Resource nodes**: change what a node drops and when it comes back, and add
+  new kinds of nodes.
+- **Water and power**: water sources and drains, and power from waterwheels and
+  windmills.
+
+Survival and movement:
+
+- **Survival conditions**: cold, drowning, wetness, hunger, thirst, comfort and
+  dangerous areas.
+- **Movement and traversal**: tune the glider and the grappling hook, and see
+  how a player moves.
+- **Camera**: see where a player's camera looks. A mod can already turn the
+  camera of the local player.
+
+Building and crafting:
+
+- **Production queues**: the queues of smelters and cooking stations, their
+  progress, and a finished batch.
+- **Logic, puzzles, doors and traps**: signals, puzzles, locked doors and traps,
+  for dungeon and puzzle mods.
+
+Creatures, people and combat:
+
+- **Creature behaviour**: factions, aggression, and how creatures notice
+  players.
+- **Abilities and spells**: new abilities and spells, and their effects.
+- **NPC dialogue**: what survivors and other characters say, new answers, and
+  the answer a player picks. A mod can already add panels to the dialogue
+  screen.
+
+Looks and sound:
+
+- **Appearance**: character looks, dyes and vanity pieces.
+- **Visuals**: models, textures, visual effects and animations.
+- **Instruments and songs**: songs, and what a player plays.
+
+Tools for mod authors:
+
+- **World queries**: find the ground, what a line hits, what is near a point,
+  and a path between two points.
+- **Game systems**: run a mod's own logic before, after or instead of the
+  game's, and raise the game's own events.
+
 ## Will mod texts get plural forms?
 
 I plan to add plural forms to mod texts, by the Unicode CLDR rules. A language

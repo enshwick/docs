@@ -131,6 +131,30 @@ describe('Coverage', () => {
     expect(counts).toEqual([{ covered: 1, of: 3 }]);
   });
 
+  it('counts a planned cell as not covered, and totals 1.0 areas apart from those after it', () => {
+    const loot = Coverage.capabilities.map((capability) => ({
+      domain: 'Loot',
+      capability,
+      status: 'covered',
+      module: 'loot',
+      items: ['x'],
+    }));
+    const rows = [...loot, ...area('Fishing', 'planned')];
+    const coverage = Coverage.from({ ...file(rows), later: ['Fishing'] }, []);
+
+    expect(coverage.areas(false).map((domain) => domain.name)).toEqual(['Loot']);
+    expect(coverage.areas(true).map((domain) => domain.name)).toEqual(['Fishing']);
+    expect(Coverage.total(coverage.areas(false))).toEqual({ covered: 5, of: 5 });
+    expect(Coverage.total(coverage.domains)).toEqual({ covered: 5, of: 10 });
+    expect(coverage.json().domains.map((domain) => domain.later)).toEqual([undefined, true]);
+  });
+
+  it('refuses an area planned after 1.0 that has no rows', () => {
+    expect(() => Coverage.from({ ...file(area('Items')), later: ['Fishing'] }, [])).toThrow(
+      'Fishing is planned after 1.0 but has no rows',
+    );
+  });
+
   it('dates the page by the later of its data and its own file', () => {
     const coverage = Coverage.from(file(area('Items')), []);
 

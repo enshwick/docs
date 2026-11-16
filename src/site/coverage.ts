@@ -15,18 +15,20 @@ const Capability = AnyString.subtype(
 /** How far the API reaches one capability of one game area. */
 const CoverageStatus = AnyString.subtype(
   'docs.CoverageStatus',
-  n.oneOf('covered', 'in-work', 'research', 'not-supported', 'not-applicable'),
+  n.oneOf('covered', 'in-work', 'research', 'planned', 'not-supported', 'not-applicable'),
 );
 
 /** A day as `YYYY-MM-DD`. */
 const Day = AnyString.subtype('docs.Day', /^\d{4}-\d{2}-\d{2}$/u);
 
 /**
- * `src/data/coverage.json`: the day it was last brought up to date, and one row per game area and
- * capability; a covered row names the API module that holds it and its items or a note.
+ * `src/data/coverage.json`: the day it was last brought up to date, the areas planned after 1.0,
+ * and one row per game area and capability; a covered row names the API module that holds it and
+ * its items or a note.
  */
 const CoverageFile = n.object({
   updated: Day,
+  later: n.of(AnyString).array().optional(),
   rows: n
     .object({
       domain: AnyString,
@@ -39,11 +41,11 @@ const CoverageFile = n.object({
     .array(),
 });
 
+/** `src/data/coverage.json`, parsed. */
+type CoverageValue = Extract<ReturnType<typeof CoverageFile.parse>, { ok: true }>['value'];
+
 /** One row of `src/data/coverage.json`, parsed. */
-type CoverageRow = Extract<
-  ReturnType<typeof CoverageFile.parse>,
-  { ok: true }
->['value']['rows'][number];
+type CoverageRow = CoverageValue['rows'][number];
 
 /** One cell of the coverage table, as the page and `/api-coverage.json` show it. */
 export interface CoverageCell {
@@ -66,6 +68,8 @@ export interface CoverageDomain {
   /** The area's anchor on the page, from its name: `weather-time-and-shroud`. */
   readonly id: string;
   readonly name: string;
+  /** Whether the area is planned after 1.0, outside the table 1.0 aims to cover in full. */
+  readonly later: boolean;
   readonly cells: readonly CoverageCell[];
 }
 
@@ -108,7 +112,7 @@ export class Coverage {
    * when its module or every item it names is.
    *
    * @throws {TypeError} When the data does not parse, an area misses a capability or repeats one,
-   * or a covered cell names no module, a module not among `modules` where given, or nothing it
+   * an area planned after 1.0 has no rows, or a covered cell names no module, a module not among `modules` where given, or nothing it
    * covers.
    */
   public static from(
@@ -139,11 +143,14 @@ export class Coverage {
       byDomain.set(domain, cells);
     }
 
+    const later = Coverage.later(parsed.value.later, byDomain);
+
     return new Coverage(
       parsed.value.updated.toString(),
       [...byDomain].map(([name, cells]) => ({
         id: name.toLowerCase().replaceAll(Coverage.notAnchor, '-'),
         name,
+        later: later.has(name),
         cells: Coverage.capabilities.map((capability) => {
           const cell = cells.get(capability);
 
@@ -172,13 +179,14 @@ export class Coverage {
   public json(): {
     updated: string;
     capabilities: readonly string[];
-    domains: Array<{ name: string; cells: object[] }>;
+    domains: Array<{ name: string; later?: true; cells: object[] }>;
   } {
     return {
       updated: this.updated,
       capabilities: Coverage.capabilities,
-      domains: this.domains.map(({ name, cells }) => ({
+      domains: this.domains.map(({ name, later, cells }) => ({
         name,
+        ...(later ? { later } : {}),
         cells: cells.map(({ capability, status, stability, items, unstableItems, note }) => ({
           capability,
           status,
@@ -202,6 +210,32 @@ export class Coverage {
       covered: counted.filter((cell) => cell.status === Coverage.covered).length,
       of: counted.length,
     };
+  }
+
+  /** The areas for 1.0, or with `later` those planned after it, in file order. */
+  public areas(later: boolean): readonly CoverageDomain[] {
+    return this.domains.filter((domain) => domain.later === later);
+  }
+
+  /** How many cells of `domains` are covered, out of those counted, as `count` counts one area. */
+  public static total(domains: readonly CoverageDomain[]): { covered: number; of: number } {
+    return Coverage.count(domains.flatMap((domain) => domain.cells));
+  }
+
+  /** The names of the areas planned after 1.0, each one an area with rows. */
+  private static later(
+    names: CoverageValue['later'],
+    areas: ReadonlyMap<string, unknown>,
+  ): Set<string> {
+    const later = new Set((names ?? []).map((name) => name.toString()));
+
+    for (const name of later) {
+      if (!areas.has(name)) {
+        throw new TypeError(`src/data/coverage.json: ${name} is planned after 1.0 but has no rows`);
+      }
+    }
+
+    return later;
   }
 
   /** One row as its cell, a covered one stable or unstable by its module and items. */
