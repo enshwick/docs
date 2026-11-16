@@ -402,7 +402,10 @@
     {
       "domain": "Character stats and buffs",
       "capability": "ui",
-      "status": "in-work"
+      "status": "covered",
+      "module": "stats",
+      "items": ["stats::StatGroup", "StatDef::group", "StatDef::in_group"],
+      "note": "mod stats in rows on the Character screen and in item tooltips"
     },
     {
       "domain": "Skills and experience",
@@ -750,7 +753,10 @@
     {
       "domain": "Sound",
       "capability": "events",
-      "status": "in-work"
+      "status": "covered",
+      "module": "sound",
+      "items": ["Load::on_notify", "Effects::notify"],
+      "note": "the server's notify events, which place sounds in the world, and notifiers a mod raises"
     },
     {
       "domain": "Sound",
