@@ -35,8 +35,13 @@
       "capability": "ui",
       "status": "covered",
       "module": "ui",
-      "items": ["Load::extend_item_tooltip"],
-      "note": "lines a mod adds to an item's tooltip"
+      "items": [
+        "Load::extend_item_tooltip",
+        "Frame::item_slot",
+        "Frame::hovered_slot",
+        "ui::SlotInput"
+      ],
+      "note": "tooltip lines for items with an entity of their own, and item slots in mod windows; client only"
     },
     {
       "domain": "Recipes",
@@ -278,7 +283,7 @@
       "status": "covered",
       "module": "terrain",
       "items": ["Load::add_terrain_material"],
-      "note": "new terrain materials, with a vanilla one as their look on clients without the mod"
+      "note": "new terrain materials with a game material's look, from a mod of both sides; a world loaded without the mod keeps a game material in their place"
     },
     {
       "domain": "Terrain and voxels",
@@ -356,7 +361,7 @@
       "status": "covered",
       "module": "actions",
       "items": ["actions::Window"],
-      "note": "admin windows such as a player list, shown also on clients that run only the loader"
+      "note": "windows of a server mod, such as a player list, for players who may run every action they name, also on clients that run only the loader"
     },
     {
       "domain": "Character stats and buffs",
@@ -690,8 +695,8 @@
       "capability": "change",
       "status": "covered",
       "module": "interactions",
-      "items": ["Load::interaction_prompt"],
-      "note": "a game verb or the mod's own text on an object's prompt, with the vanilla action replaced"
+      "items": ["Load::prompt", "interactions::ObjectPrompt"],
+      "note": "on the prompt of objects placed from an item: a game verb, the mod's own text on clients with Enshwick, or the game's empty action in place of the object's own"
     },
     {
       "domain": "Input and interactions",
