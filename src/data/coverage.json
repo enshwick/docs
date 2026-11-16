@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-09",
+  "updated": "2026-11-16",
   "rows": [
     {
       "domain": "Items",
@@ -272,7 +272,10 @@
     {
       "domain": "Terrain and voxels",
       "capability": "create",
-      "status": "in-work"
+      "status": "covered",
+      "module": "terrain",
+      "items": ["Load::add_terrain_material"],
+      "note": "new terrain materials, with a vanilla one as their look on clients without the mod"
     },
     {
       "domain": "Terrain and voxels",
@@ -347,7 +350,10 @@
     {
       "domain": "Players and accounts",
       "capability": "ui",
-      "status": "in-work"
+      "status": "covered",
+      "module": "actions",
+      "items": ["actions::Window"],
+      "note": "admin windows such as a player list, shown also on clients that run only the loader"
     },
     {
       "domain": "Character stats and buffs",
@@ -679,7 +685,10 @@
     {
       "domain": "Input and interactions",
       "capability": "change",
-      "status": "in-work"
+      "status": "covered",
+      "module": "interactions",
+      "items": ["Load::interaction_prompt"],
+      "note": "a game verb or the mod's own text on an object's prompt, with the vanilla action replaced"
     },
     {
       "domain": "Input and interactions",
