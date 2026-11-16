@@ -33,7 +33,10 @@
     {
       "domain": "Items",
       "capability": "ui",
-      "status": "research"
+      "status": "covered",
+      "module": "ui",
+      "items": ["Load::extend_item_tooltip"],
+      "note": "lines a mod adds to an item's tooltip"
     },
     {
       "domain": "Recipes",
