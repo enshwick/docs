@@ -13,7 +13,7 @@
       "capability": "change",
       "status": "covered",
       "module": "content",
-      "items": ["content::changes", "Field::MaxStackSize", "content::removal"],
+      "items": ["content::changes", "content::changes::Field::MaxStackSize", "content::removal"],
       "note": "item fields and stack size; remove, disable and re-key vanilla content"
     },
     {
@@ -28,7 +28,7 @@
       "capability": "events",
       "status": "covered",
       "module": "events",
-      "items": ["HandleEquipmentSlotChangedEvent", "LootInteractionEvent"]
+      "items": ["game_events::HandleEquipmentSlotChangedEvent", "game_events::LootInteractionEvent"]
     },
     {
       "domain": "Items",
@@ -55,21 +55,25 @@
       "capability": "change",
       "status": "covered",
       "module": "content",
-      "items": ["content::recipes::change", "content::recipes::disable"]
+      "items": ["content::recipes::change_recipes_in", "content::recipes::disable"]
     },
     {
       "domain": "Recipes",
       "capability": "create",
       "status": "covered",
       "module": "content",
-      "items": ["Load::add_recipe", "derive_recipes"]
+      "items": ["Load::add_recipe", "Load::derive_recipes"]
     },
     {
       "domain": "Recipes",
       "capability": "events",
       "status": "covered",
       "module": "events",
-      "items": ["CraftRecipeEvent", "CraftRecipeSuccessEvent", "vetoes::on_craft"]
+      "items": [
+        "game_events::CraftRecipeEvent",
+        "game_events::CraftRecipeSuccessEvent",
+        "Load::on_craft"
+      ]
     },
     {
       "domain": "Recipes",
@@ -83,7 +87,7 @@
       "capability": "read",
       "status": "covered",
       "module": "content",
-      "items": ["content::vanilla::station", "workshop"]
+      "items": ["content::vanilla::station", "content::vanilla::workshop"]
     },
     {
       "domain": "Crafting stations",
@@ -105,7 +109,7 @@
       "capability": "events",
       "status": "covered",
       "module": "events",
-      "items": ["CraftRecipeEvent"]
+      "items": ["game_events::CraftRecipeEvent"]
     },
     {
       "domain": "Crafting stations",
@@ -126,14 +130,14 @@
       "capability": "change",
       "status": "covered",
       "module": "rates",
-      "items": ["loot_tables", "rates"]
+      "items": ["content::loot_tables", "rates"]
     },
     {
       "domain": "Loot",
       "capability": "create",
       "status": "covered",
       "module": "loot",
-      "items": ["loot::drops"],
+      "items": ["loot::Drop"],
       "note": "mod items at an exact chance"
     },
     {
@@ -141,7 +145,7 @@
       "capability": "events",
       "status": "covered",
       "module": "loot",
-      "items": ["LootInteractionEvent", "loot::on_loot_pass"]
+      "items": ["game_events::LootInteractionEvent", "Load::on_loot_pass"]
     },
     {
       "domain": "Loot",
@@ -153,28 +157,32 @@
       "capability": "read",
       "status": "covered",
       "module": "survivors",
-      "items": ["survivors", "survivors::workshop"]
+      "items": ["survivors", "survivors::WorkshopSurvivor"]
     },
     {
       "domain": "Survivors and NPCs",
       "capability": "change",
       "status": "covered",
       "module": "survivors",
-      "items": ["on_survivor_lookup", "on_survivor_bed_check", "effects::npc_command"]
+      "items": [
+        "Load::on_survivor_lookup",
+        "Load::on_survivor_bed_check",
+        "effects::Effects::npc_command"
+      ]
     },
     {
       "domain": "Survivors and NPCs",
       "capability": "create",
       "status": "covered",
       "module": "effects",
-      "items": ["effects::spawn", "survivors::add_summon_item"]
+      "items": ["effects::Effects::spawn", "Load::add_summon_item"]
     },
     {
       "domain": "Survivors and NPCs",
       "capability": "events",
       "status": "covered",
       "module": "survivors",
-      "items": ["on_summon", "on_summoned", "on_survivor_status"]
+      "items": ["Load::on_summon", "Load::on_summoned", "Load::on_survivor_status"]
     },
     {
       "domain": "Survivors and NPCs",
@@ -201,7 +209,7 @@
       "capability": "change",
       "status": "covered",
       "module": "altars",
-      "items": ["base_limit", "raise_base_limit", "on_altar_limit"]
+      "items": ["base_limit", "Load::raise_base_limit", "Load::on_altar_limit"]
     },
     {
       "domain": "Flame Altars",
@@ -216,7 +224,7 @@
       "capability": "events",
       "status": "covered",
       "module": "altars",
-      "items": ["AltarsChanged", "FlameAltarEvent", "on_altar_zone"]
+      "items": ["events::AltarsChanged", "game_events::FlameAltarEvent", "Load::on_altar_zone"]
     },
     {
       "domain": "Flame Altars",
@@ -231,14 +239,19 @@
       "capability": "read",
       "status": "covered",
       "module": "world",
-      "items": ["world::props", "PropState", "capture"]
+      "items": ["world::World::props_in", "PropState", "world::World::capture"]
     },
     {
       "domain": "Building and props",
       "capability": "change",
       "status": "covered",
       "module": "world",
-      "items": ["place_prop", "remove_prop", "place_block", "transactions"]
+      "items": [
+        "world::Transaction::place_prop",
+        "world::Transaction::remove_prop",
+        "world::Transaction::place_block",
+        "world::World::transaction"
+      ]
     },
     {
       "domain": "Building and props",
@@ -252,7 +265,12 @@
       "capability": "events",
       "status": "covered",
       "module": "vetoes",
-      "items": ["BuildingPlaced", "BuildingRemoved", "vetoes::on_build", "can_build"]
+      "items": [
+        "events::BuildingPlaced",
+        "events::BuildingRemoved",
+        "Load::on_build",
+        "world::World::can_build"
+      ]
     },
     {
       "domain": "Building and props",
@@ -267,14 +285,14 @@
       "capability": "read",
       "status": "covered",
       "module": "voxels",
-      "items": ["voxels", "terrain::materials"]
+      "items": ["voxels", "terrain::Terrain::materials"]
     },
     {
       "domain": "Terrain and voxels",
       "capability": "change",
       "status": "covered",
       "module": "terrain",
-      "items": ["write_voxels"],
+      "items": ["world::Transaction::write_voxels"],
       "note": "add, dig and flatten terrain"
     },
     {
@@ -290,7 +308,11 @@
       "capability": "events",
       "status": "covered",
       "module": "voxels",
-      "items": ["Load::on_voxels_changed", "TerrainPageLoaded", "TerrainPageUnloaded"],
+      "items": [
+        "Load::on_voxels_changed",
+        "events::TerrainPageLoaded",
+        "events::TerrainPageUnloaded"
+      ],
       "note": "a mod can store the changes and write them back when the world loads"
     },
     {
@@ -303,14 +325,14 @@
       "capability": "read",
       "status": "covered",
       "module": "inventory",
-      "items": ["inventory", "world::containers"]
+      "items": ["inventory", "world::World::containers"]
     },
     {
       "domain": "Inventory and containers",
       "capability": "change",
       "status": "covered",
       "module": "inventory",
-      "items": ["set_item", "content::containers"]
+      "items": ["inventory::Inventories::submit", "content::containers"]
     },
     {
       "domain": "Inventory and containers",
@@ -325,7 +347,11 @@
       "capability": "events",
       "status": "covered",
       "module": "events",
-      "items": ["HandleEquipmentSlotChangedEvent", "LootInteractionEvent", "Interaction::moved"],
+      "items": [
+        "game_events::HandleEquipmentSlotChangedEvent",
+        "game_events::LootInteractionEvent",
+        "interactions::Interaction::moved"
+      ],
       "note": "every inventory move reaches the interaction filters with its stack, amount, containers and slots"
     },
     {
@@ -341,7 +367,11 @@
       "capability": "read",
       "status": "covered",
       "module": "world",
-      "items": ["world::players", "player_by_key", "players_named"]
+      "items": [
+        "world::World::players",
+        "world::World::player_by_key",
+        "world::World::players_named"
+      ]
     },
     {
       "domain": "Players and accounts",
@@ -375,14 +405,14 @@
       "capability": "read",
       "status": "covered",
       "module": "world",
-      "items": ["world::stats", "stats", "buffs"]
+      "items": ["stats::Stats", "stats", "buffs"]
     },
     {
       "domain": "Character stats and buffs",
       "capability": "change",
       "status": "covered",
       "module": "stats",
-      "items": ["set_health", "heal"],
+      "items": ["world::World::set_health", "world::World::heal"],
       "note": "add buffs and define stats"
     },
     {
@@ -390,14 +420,14 @@
       "capability": "create",
       "status": "covered",
       "module": "stats",
-      "items": ["stats::define_stat", "affixes"]
+      "items": ["Load::define_stat", "affixes"]
     },
     {
       "domain": "Character stats and buffs",
       "capability": "events",
       "status": "covered",
       "module": "stats",
-      "items": ["stats::on_stats_changed"]
+      "items": ["Load::on_stats_changed"]
     },
     {
       "domain": "Character stats and buffs",
@@ -412,14 +442,14 @@
       "capability": "read",
       "status": "covered",
       "module": "world",
-      "items": ["world::stats", "progress"]
+      "items": ["stats::Stats", "progress"]
     },
     {
       "domain": "Skills and experience",
       "capability": "change",
       "status": "covered",
       "module": "rates",
-      "items": ["rates", "progress::on_skill", "on_experience"]
+      "items": ["rates", "Load::on_skill", "Load::on_experience"]
     },
     {
       "domain": "Skills and experience",
@@ -434,7 +464,7 @@
       "capability": "events",
       "status": "covered",
       "module": "events",
-      "items": ["LevelUpEvent", "XpGainedEvent"]
+      "items": ["game_events::LevelUpEvent", "game_events::XpGainedEvent"]
     },
     {
       "domain": "Skills and experience",
@@ -449,7 +479,7 @@
       "capability": "read",
       "status": "covered",
       "module": "damage",
-      "items": ["HitEvent", "Load::on_damage"]
+      "items": ["game_events::HitEvent", "Load::on_damage"]
     },
     {
       "domain": "Combat and enemies",
@@ -470,7 +500,7 @@
       "capability": "events",
       "status": "covered",
       "module": "events",
-      "items": ["HitEvent", "EntityDiedEvent"]
+      "items": ["game_events::HitEvent", "game_events::EntityDiedEvent"]
     },
     {
       "domain": "Combat and enemies",
@@ -482,7 +512,7 @@
       "capability": "read",
       "status": "covered",
       "module": "knowledge",
-      "items": ["knowledge::get"]
+      "items": ["knowledge::Knowledge::get"]
     },
     {
       "domain": "Knowledge",
@@ -505,7 +535,7 @@
       "capability": "events",
       "status": "covered",
       "module": "knowledge",
-      "items": ["KnowledgeChanged", "Load::on_knowledge_input"]
+      "items": ["events::KnowledgeChanged", "Load::on_knowledge_input"]
     },
     {
       "domain": "Knowledge",
@@ -520,7 +550,7 @@
       "capability": "read",
       "status": "covered",
       "module": "knowledge",
-      "items": ["knowledge::quests", "completed"]
+      "items": ["knowledge::Knowledge::quests", "knowledge::Knowledge::completed"]
     },
     {
       "domain": "Quests",
@@ -542,7 +572,7 @@
       "capability": "events",
       "status": "covered",
       "module": "knowledge",
-      "items": ["QuestCompleted"]
+      "items": ["events::QuestCompleted"]
     },
     {
       "domain": "Quests",
@@ -564,7 +594,7 @@
       "capability": "change",
       "status": "covered",
       "module": "map",
-      "items": ["ui::map"],
+      "items": ["map::Map"],
       "note": "set markers and the waypoint"
     },
     {
@@ -572,21 +602,21 @@
       "capability": "create",
       "status": "covered",
       "module": "map",
-      "items": ["map_marker_types"]
+      "items": ["ui::Ui::map_marker_types"]
     },
     {
       "domain": "Map and fog",
       "capability": "events",
       "status": "covered",
       "module": "map",
-      "items": ["Load::on_waypoint", "on_ping"]
+      "items": ["Load::on_waypoint", "Load::on_ping"]
     },
     {
       "domain": "Map and fog",
       "capability": "ui",
       "status": "covered",
       "module": "map",
-      "items": ["ui::map"],
+      "items": ["map::Map"],
       "note": "markers"
     },
     {
@@ -594,14 +624,14 @@
       "capability": "read",
       "status": "covered",
       "module": "weather",
-      "items": ["weather::state", "daytime::now", "shroud_time"]
+      "items": ["weather::WeatherAt::state", "daytime::Clock::now", "world::World::shroud_time"]
     },
     {
       "domain": "Weather, time and shroud",
       "capability": "change",
       "status": "covered",
       "module": "weather",
-      "items": ["weather::set", "clock_speed", "change_shroud_time"],
+      "items": ["weather::Weather::set", "Load::clock_speed", "world::World::change_shroud_time"],
       "note": "set the hour of the day"
     },
     {
@@ -683,7 +713,7 @@
       "capability": "events",
       "status": "covered",
       "module": "ui",
-      "items": ["ui::on_frame"],
+      "items": ["Load::on_frame"],
       "note": "dialog answers"
     },
     {
@@ -698,7 +728,7 @@
       "capability": "read",
       "status": "covered",
       "module": "input",
-      "items": ["input", "Frame::open_screen", "Load::on_screen_changed"]
+      "items": ["input", "ui::Frame::open_screen", "Load::on_screen_changed"]
     },
     {
       "domain": "Input and interactions",
@@ -720,7 +750,7 @@
       "capability": "events",
       "status": "covered",
       "module": "interactions",
-      "items": ["interactions::on_interaction", "AcceptOfferedInteractionEvent"]
+      "items": ["Load::on_interaction", "game_events::AcceptOfferedInteractionEvent"]
     },
     {
       "domain": "Input and interactions",
@@ -755,7 +785,7 @@
       "capability": "events",
       "status": "covered",
       "module": "sound",
-      "items": ["Load::on_notify", "Effects::notify"],
+      "items": ["Load::on_notify", "effects::Effects::notify"],
       "note": "the server's notify events, which place sounds in the world, and notifiers a mod raises"
     },
     {
@@ -770,14 +800,14 @@
       "capability": "read",
       "status": "covered",
       "module": "state",
-      "items": ["state::WorldStore", "WorldLoaded", "WorldSaved"]
+      "items": ["state::WorldStore", "events::WorldLoaded", "events::WorldSaved"]
     },
     {
       "domain": "Saves and worlds",
       "capability": "change",
       "status": "covered",
       "module": "state",
-      "items": ["WorldSaving", "hold_saves", "Spawn::do_not_save"],
+      "items": ["events::WorldSaving", "world::World::hold_saves", "effects::Spawn::do_not_save"],
       "note": "the save's identity"
     },
     {
@@ -824,7 +854,7 @@
       "capability": "events",
       "status": "covered",
       "module": "net",
-      "items": ["JoinRefused"],
+      "items": ["events::JoinRefused"],
       "note": "a received message"
     },
     {

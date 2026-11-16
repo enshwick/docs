@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
 import coverageData from '../../data/coverage.json' with { type: 'json' };
+import { ApiSurface } from '../api-surface.ts';
 import { Coverage } from '../coverage.ts';
 
 const area = (domain: string, status = 'in-work'): Array<Record<string, unknown>> =>
@@ -78,6 +79,23 @@ describe('Coverage', () => {
     expect(stability('content', ['content::items::Foo'], unstable)).toBe('stable');
   });
 
+  it('publishes an item written from its cell’s module by its crate path, and marks it by that path', () => {
+    const rows = area('Interface');
+    const api = new ApiSurface(['ui'], ['ui', 'ui::HudScreenType', 'ui::HudScreenType::NpcDialog']);
+
+    rows[4] = {
+      domain: 'Interface',
+      capability: 'ui',
+      status: 'covered',
+      module: 'ui',
+      items: ['HudScreenType::NpcDialog'],
+    };
+    const cell = Coverage.from(file(rows), ['ui::HudScreenType'], api).domains[0]?.cells[4];
+
+    expect(cell?.items).toEqual(['ui::HudScreenType::NpcDialog']);
+    expect(cell?.stability).toBe('unstable');
+  });
+
   it('keeps a cell with one unstable item among stable ones stable, and names that item', () => {
     const rows = area('Knowledge');
 
@@ -106,9 +124,57 @@ describe('Coverage', () => {
       items: ['x'],
     };
 
-    expect(() => Coverage.from(file(rows), [], ['net', 'content'])).toThrow(
+    expect(() => Coverage.from(file(rows), [], new ApiSurface(['net', 'content']))).toThrow(
       'names module messages',
     );
+  });
+
+  it('refuses a covered cell naming an item the API crate lacks, and names the cell and item', () => {
+    const rows = area('Inventory');
+    const api = new ApiSurface(
+      ['inventory'],
+      [
+        'inventory',
+        'inventory::Inventories',
+        'inventory::Inventories::give',
+        'Load::container_rule',
+      ],
+    );
+
+    rows[2] = {
+      domain: 'Inventory',
+      capability: 'create',
+      status: 'covered',
+      module: 'inventory',
+      items: ['Inventories::give', 'Load::container_rule', 'Inventories::gve'],
+    };
+    expect(() => Coverage.from(file(rows), [], api)).toThrow(
+      'Inventory create names item Inventories::gve, which the API crate does not have',
+    );
+
+    rows[2] = { ...rows[2], items: ['container_rule'] };
+    expect(() => Coverage.from(file(rows), [], api)).toThrow('names item container_rule');
+
+    rows[2] = { ...rows[2], items: ['Inventories::give', 'Load::container_rule'] };
+    expect(Coverage.from(file(rows), [], api).domains[0]?.cells[2]?.status).toBe('covered');
+  });
+
+  it('leaves items unchecked without the crate’s paths, and skips cells that are not covered', () => {
+    const rows = area('Inventory');
+
+    rows[0] = {
+      domain: 'Inventory',
+      capability: 'read',
+      status: 'covered',
+      module: 'inventory',
+      items: ['x'],
+    };
+    rows[1] = { domain: 'Inventory', capability: 'change', status: 'in-work', items: ['unknown'] };
+
+    expect(() => Coverage.from(file(rows), [], new ApiSurface(['inventory']))).not.toThrow();
+    expect(() =>
+      Coverage.from(file(rows), [], new ApiSurface(['inventory'], ['inventory', 'x'])),
+    ).not.toThrow();
   });
 
   it('counts an area’s covered cells out of those that neither do not apply nor are unsupported', () => {

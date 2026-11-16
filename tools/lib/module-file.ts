@@ -9,6 +9,32 @@ export class ModuleFile {
   /** A crate's name in Rust paths uses `_` where its package name uses `-`. */
   private static readonly pathSeparator = '_';
   private static readonly packageSeparator = '-';
+  private static readonly workspaceKey = 'workspace';
+  private static readonly dependenciesKey = 'dependencies';
+  private static readonly pathKey = 'path';
+
+  /** A crate's name in Rust paths, `enshwick_base`, from its package name, `enshwick-base`. */
+  public static crateOf(packageName: string): string {
+    return packageName.replaceAll(ModuleFile.packageSeparator, ModuleFile.pathSeparator);
+  }
+
+  /** The `path` a manifest's `[dependencies]`, or its `[workspace.dependencies]` with `inWorkspace`, gives a package. */
+  public static dependencyPath(
+    manifest: Fields,
+    packageName: string,
+    inWorkspace = false,
+  ): string | undefined {
+    const table = inWorkspace ? manifest.at(ModuleFile.workspaceKey) : manifest;
+
+    return table.at(ModuleFile.dependenciesKey).at(packageName).at(ModuleFile.pathKey).text();
+  }
+
+  /** The package names a manifest's `[dependencies]` lists. */
+  public static dependencies(manifest: Fields): string[] {
+    const table: unknown = manifest.at(ModuleFile.dependenciesKey).value;
+
+    return typeof table === 'object' && table !== null ? Object.keys(table) : [];
+  }
 
   /**
    * The root file of module `name`, found through the crate root `lib` and the workspace `Cargo.toml`,
@@ -21,12 +47,11 @@ export class ModuleFile {
       return `${ModuleFile.apiSource}/${name}${ModuleFile.extension}`;
     }
 
-    const directory = new Fields(workspace === undefined ? undefined : Bun.TOML.parse(workspace))
-      .at('workspace')
-      .at('dependencies')
-      .at(crate.replaceAll(ModuleFile.pathSeparator, ModuleFile.packageSeparator))
-      .at('path')
-      .text();
+    const directory = ModuleFile.dependencyPath(
+      new Fields(workspace === undefined ? undefined : Bun.TOML.parse(workspace)),
+      crate.replaceAll(ModuleFile.pathSeparator, ModuleFile.packageSeparator),
+      true,
+    );
 
     return directory === undefined
       ? undefined

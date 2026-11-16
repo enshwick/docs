@@ -105,7 +105,7 @@ await Bun.write(
 );
 await Bun.write(
   `${generated}/compatibility.json`,
-  `${JSON.stringify({ platform: developerArea.releases.slice(0, 1).map(({ lib: _lib, errors: _errors, abi: _abi, ...release }) => Object.assign(release, { checked: releaseChecked })), mods: modReleases }, null, 2)}\n`,
+  `${JSON.stringify({ platform: developerArea.releases.slice(0, 1).map(({ lib: _lib, errors: _errors, abi: _abi, items: _items, ...release }) => Object.assign(release, { checked: releaseChecked })), mods: modReleases }, null, 2)}\n`,
 );
 await Bun.write(
   `${generated}/stability.json`,
@@ -122,6 +122,14 @@ await Bun.write(
     null,
     2,
   )}\n`,
+);
+await Bun.write(
+  `${generated}/api-items.json`,
+  `${JSON.stringify(developerArea.releases[0]?.items?.all ?? [], null, 2)}\n`,
+);
+await Bun.write(
+  `${generated}/api-unstable.json`,
+  `${JSON.stringify(developerArea.releases[0]?.items?.unstable ?? [], null, 2)}\n`,
 );
 await Promise.all(
   [...platformChecks.snippets()].flatMap(([name, code]) => [

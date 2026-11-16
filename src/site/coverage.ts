@@ -1,10 +1,16 @@
 import { AnyString, n } from '@horizon-republic/nominal-types';
 
 import coverageData from '../data/coverage.json' with { type: 'json' };
+// `tools/fetch.ts` writes it too: every public path of the API crate, read from its source.
+import itemsData from '../generated/api-items.json' with { type: 'json' };
 // `tools/fetch.ts` writes it too: the public modules of the API crate.
 import modulesData from '../generated/api-modules.json' with { type: 'json' };
+// `tools/fetch.ts` writes it too: the public paths only the API crate's `unstable` feature compiles.
+import gatedData from '../generated/api-unstable.json' with { type: 'json' };
 // `tools/fetch.ts` writes it before every build from the book's stability chapter.
 import unstableData from '../generated/unstable.json' with { type: 'json' };
+import { ApiSurface } from './api-surface.ts';
+import { UnstableNames } from './unstable-names.ts';
 
 /** What a mod can do in a game area: see it, change it, add to it, hear it, show it to a player. */
 const Capability = AnyString.subtype(
@@ -97,12 +103,15 @@ export class Coverage {
   private static readonly uncounted = ['not-supported', 'not-applicable'];
   private static readonly stable = 'stable';
   private static readonly unstable = 'unstable';
-  private static readonly pathSeparator = '::';
   private static readonly notAnchor = /[^a-z0-9]+/gu;
   private static readonly anchorEdge = /^-+|-+$/gu;
 
   /** The site's coverage, as `src/data/coverage.json` holds it. */
-  public static readonly site = Coverage.from(coverageData, unstableData, modulesData);
+  public static readonly site = Coverage.from(
+    coverageData,
+    [...unstableData, ...gatedData],
+    new ApiSurface(modulesData, itemsData),
+  );
 
   /** The areas for 1.0, in file order. */
   public readonly forOne: readonly CoverageDomain[];
@@ -125,27 +134,22 @@ export class Coverage {
    * when its module or every item it names is.
    *
    * @throws {TypeError} When the data does not parse, an area misses a capability or repeats one,
-   * or a covered cell names no module, a module not among `modules` where given, or nothing it
-   * covers.
+   * or a covered cell names no module, nothing it covers, or, where `api` is given, a module or an
+   * item the API crate lacks.
    */
-  public static from(
-    data: unknown,
-    unstable: readonly string[],
-    modules?: readonly string[],
-  ): Coverage {
+  public static from(data: unknown, unstable: readonly string[], api?: ApiSurface): Coverage {
     const parsed = CoverageFile.parse(data);
 
     if (!parsed.ok) {
       throw new TypeError(`src/data/coverage.json: ${JSON.stringify(parsed.issues)}`);
     }
 
-    const unstableNames = new Set(unstable);
-    const known = modules === undefined ? undefined : new Set(modules);
+    const unstableNames = new UnstableNames(unstable);
     const byDomain = new Map<string, Map<string, CoverageCell>>();
 
     for (const row of parsed.value.rows) {
       const domain = row.domain.toString();
-      const cell = Coverage.cell(row, unstableNames, known);
+      const cell = Coverage.cell(row, unstableNames, api);
       const cells = byDomain.get(domain) ?? new Map<string, CoverageCell>();
 
       if (cells.has(cell.capability)) {
@@ -236,50 +240,49 @@ export class Coverage {
     return of === 0 ? undefined : Math.round((covered * 100) / of);
   }
 
-  /** One row as its cell, a covered one stable or unstable by its module and items. */
+  /**
+   * One row as its cell, a covered one with each item as the crate path `api` reads it at, stable
+   * or unstable by its module and those paths.
+   */
   private static cell(
     row: CoverageRow,
-    unstable: ReadonlySet<string>,
-    modules: ReadonlySet<string> | undefined,
+    unstable: UnstableNames,
+    api: ApiSurface | undefined,
   ): CoverageCell {
     const capability = row.capability.toString();
     const status = row.status.toString();
-    const items = (row.items ?? []).map((item) => item.toString());
+    const written = (row.items ?? []).map((item) => item.toString());
     const note = row.note?.toString();
     const module = row.module?.toString();
     const where = `src/data/coverage.json: ${row.domain.toString()} ${capability}`;
 
     if (status !== Coverage.covered) {
-      return { capability, status, stability: undefined, items, unstableItems: [], note };
+      return { capability, status, stability: undefined, items: written, unstableItems: [], note };
     }
 
-    if (module === undefined || (items.length === 0 && note === undefined)) {
+    if (module === undefined || (written.length === 0 && note === undefined)) {
       throw new TypeError(`${where} is covered without a module and what covers it`);
     }
 
-    if (modules !== undefined && !modules.has(module)) {
+    if (api !== undefined && !api.hasModule(module)) {
       throw new TypeError(`${where} names module ${module}, which the API crate does not have`);
     }
 
-    const unstableItems = items.filter((item) => Coverage.isUnstable(item, unstable));
+    const items = written.map((item) => {
+      const path = api === undefined ? item : api.pathOf(module, item);
+
+      if (path === undefined) {
+        throw new TypeError(`${where} names item ${item}, which the API crate does not have`);
+      }
+
+      return path;
+    });
+    const unstableItems = items.filter((item) => unstable.has(item));
     const whole =
-      Coverage.isUnstable(module, unstable) ||
-      (items.length > 0 && unstableItems.length === items.length);
+      unstable.has(module) || (items.length > 0 && unstableItems.length === items.length);
 
     return whole
       ? { capability, status, stability: Coverage.unstable, items, unstableItems: [], note }
       : { capability, status, stability: Coverage.stable, items, unstableItems, note };
-  }
-
-  /**
-   * Whether a module or item is unstable: it is named so, or a prefix of its path is, such as its
-   * module in `world::props` or its type in `Damage::scale`; the book's stability rule matches the same.
-   */
-  private static isUnstable(name: string, unstable: ReadonlySet<string>): boolean {
-    const parts = name.split(Coverage.pathSeparator);
-
-    return parts.some((_, end) =>
-      unstable.has(parts.slice(0, end + 1).join(Coverage.pathSeparator)),
-    );
   }
 }
