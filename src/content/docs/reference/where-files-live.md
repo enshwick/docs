@@ -30,9 +30,10 @@ The game folder is the one that holds `enshrouded.exe` or
 | `logs/enshwick-crash_<date>_<time>.log`  | one crash, with the mod, Enshwick or the game it came from                       |
 | `logs/start.log`                         | why Enshwick did not start; it is there only when Enshwick did not start         |
 
-`mods/enshwick/` also holds `clones.toml`, the items and objects mods copied
-from the game's own and the ground materials mods added. Beside it lies
-`kept-stacks.toml`, the stack sizes a world was saved with. Keep both files.
+`mods/enshwick/clones.toml` keeps the items and objects that mods copied from
+the game's own, and the terrain materials that mods added.
+`mods/enshwick/kept-stacks.toml` keeps the stack sizes a world was saved with.
+Keep both files.
 
 ## Beside each save
 
@@ -49,7 +50,8 @@ beside each world's save, named after that file:
 
 [Back up your worlds](/guides/back-up-saves/) says where the game keeps its
 saves. Copy the save and its two folders together, and the world keeps
-everything its mods know.
+everything its mods know. Without its mods, the world also needs
+`mods/enshwick/clones.toml` to keep their items and terrain materials.
 
 Steam Cloud does not copy the two folders to your other computers. [Back up
 your worlds](/guides/back-up-saves/) says how to move them.
