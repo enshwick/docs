@@ -1,5 +1,6 @@
 import type { GitRef, RepositoryName } from '../../src/site/types.ts';
 import { ApiItems } from './api-items.ts';
+import type { ApiPaths } from './api-items.ts';
 import type { DeveloperPage } from './api-map.ts';
 import { type ChapterPage, ChapterConverter } from './chapter-converter.ts';
 import { type CheckedBuild, CheckedBuilds } from './checked-builds.ts';
@@ -36,8 +37,8 @@ export interface PlatformRelease {
   readonly abi: string | undefined;
   /** The loader's error codes, `errors.toml`, where the version has them. */
   readonly errors: ErrorsFile | undefined;
-  /** Every public path of the API crate, sorted, as {@link ApiItems} reads them. */
-  readonly items: readonly string[];
+  /** Every public path of the API crate, sorted, as {@link ApiItems} reads them; only the newest version's. */
+  readonly items: ApiPaths | undefined;
 }
 
 /** The developer area: every version of the platform's book, the newest at `/dev/`, older ones under `/dev/<version>/`. */
@@ -162,7 +163,7 @@ export class DeveloperArea {
     return {
       version,
       entries: sidebar,
-      release: await DeveloperArea.release(version, checkout),
+      release: await DeveloperArea.release(version, checkout, prefix === DeveloperArea.folder),
     };
   }
 
@@ -213,6 +214,7 @@ export class DeveloperArea {
   private static async release(
     version: DeveloperVersion,
     checkout: GitSource,
+    newest: boolean,
   ): Promise<PlatformRelease> {
     const manifest = await checkout.read(DeveloperArea.apiManifest);
     const api =
@@ -228,7 +230,7 @@ export class DeveloperArea {
       lib,
       abi: await DeveloperArea.abi(checkout, lib ?? '', workspace),
       errors: await ErrorPages.locate(checkout),
-      items: await ApiItems.read(checkout, workspace),
+      items: newest ? await ApiItems.read(checkout, workspace) : undefined,
     };
   }
 

@@ -6,6 +6,12 @@ import type { GitSource } from '../git-source.ts';
 const crate = (files: Record<string, string>): Map<string, string> =>
   new Map(Object.entries(files));
 
+/** Every public path of `root` among `crates`. */
+const pathsOf = async (
+  crates: ReadonlyMap<string, ReadonlyMap<string, string>>,
+  root?: string,
+): Promise<readonly string[]> => (await ApiItems.of(crates, root)).all;
+
 /** An API crate re-exporting an internal crate's module whole, as `enshwick` does. */
 const workspace = new Map([
   [
@@ -77,7 +83,7 @@ const workspace = new Map([
 
 describe('ApiItems', () => {
   it('lists every public path the API crate shows, through each re-export', async () => {
-    const items = await ApiItems.of(workspace);
+    const items = await pathsOf(workspace);
 
     expect(items).toEqual(
       expect.arrayContaining([
@@ -102,7 +108,7 @@ describe('ApiItems', () => {
   });
 
   it('leaves out private, crate-only, hidden and test-only items', async () => {
-    const items = await ApiItems.of(workspace);
+    const items = await pathsOf(workspace);
 
     for (const absent of [
       'inventory::containers',
@@ -120,9 +126,77 @@ describe('ApiItems', () => {
   });
 
   it('reads the items a local macro declares and the macros a crate exports', async () => {
-    const base = await ApiItems.of(workspace, 'enshwick_base');
+    const base = await pathsOf(workspace, 'enshwick_base');
 
     expect(base).toEqual(expect.arrayContaining(['WorldLoaded', 'AltarsChanged', 'debug']));
+  });
+
+  it('gives a type only the members of impl blocks for that type, not for one of the same name elsewhere', async () => {
+    const items = await pathsOf(
+      new Map([
+        [
+          'enshwick',
+          crate({
+            'lib.rs': `
+              pub mod items { pub struct Kind; impl Kind { pub fn can_refuse(&self) {} } }
+              pub mod events {
+                  pub struct Kind;
+                  mod imp { use super::Kind; impl Kind { pub fn of_word() {} } }
+              }
+            `,
+          }),
+        ],
+      ]),
+    );
+
+    expect(items).toEqual(
+      expect.arrayContaining(['items::Kind::can_refuse', 'events::Kind::of_word']),
+    );
+    expect(items).not.toContain('events::Kind::can_refuse');
+    expect(items).not.toContain('items::Kind::of_word');
+  });
+
+  it('reads a glob of an enum’s variants and a declaring macro called with parentheses', async () => {
+    const items = await pathsOf(
+      new Map([
+        [
+          'enshwick',
+          crate({
+            'lib.rs': `
+              macro_rules! decl { ($($name:ident;)*) => { $(pub struct $name;)* } }
+              pub enum Op { Give, Take }
+              pub use Op::*;
+              decl!(Alpha; Beta;);
+              decl! { Gamma; }
+            `,
+          }),
+        ],
+      ]),
+    );
+
+    expect(items).toEqual(
+      expect.arrayContaining(['Give', 'Take', 'Alpha', 'Beta', 'Gamma', 'Op::Give']),
+    );
+  });
+
+  it('resolves a use through a name a later use of the same module brings', async () => {
+    const items = await pathsOf(
+      new Map([
+        [
+          'enshwick',
+          crate({
+            'lib.rs': `
+              pub use inner::Thing;
+              use deep as inner;
+              mod deep { pub struct Thing; impl Thing { pub fn go(&self) {} } }
+              pub mod child { pub use super::Thing; }
+            `,
+          }),
+        ],
+      ]),
+    );
+
+    expect(items).toEqual(expect.arrayContaining(['Thing::go', 'child::Thing::go']));
   });
 
   it('refuses a crate list without the API crate', async () => {
@@ -165,7 +239,7 @@ describe('ApiItems', () => {
     const workspaceManifest =
       '[workspace.dependencies]\nenshwick-base = { path = "crates/internal/base" }\nenshwick-values = { path = "crates/internal/values" }\n';
 
-    expect(await ApiItems.read(checkout, workspaceManifest)).toEqual([
+    expect((await ApiItems.read(checkout, workspaceManifest)).all).toEqual([
       'Config',
       'inventory',
       'inventory::Count',

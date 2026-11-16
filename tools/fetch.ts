@@ -125,7 +125,11 @@ await Bun.write(
 );
 await Bun.write(
   `${generated}/api-items.json`,
-  `${JSON.stringify(developerArea.releases[0]?.items ?? [], null, 2)}\n`,
+  `${JSON.stringify(developerArea.releases[0]?.items?.all ?? [], null, 2)}\n`,
+);
+await Bun.write(
+  `${generated}/api-unstable.json`,
+  `${JSON.stringify(developerArea.releases[0]?.items?.unstable ?? [], null, 2)}\n`,
 );
 await Promise.all(
   [...platformChecks.snippets()].flatMap(([name, code]) => [

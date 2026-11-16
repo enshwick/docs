@@ -13,22 +13,22 @@ export class ApiSurface {
     this.paths = paths === undefined ? undefined : new Set(paths);
   }
 
-  /** Whether the crate has the public module `name`. */
+  /** Whether the crate has the public module `name`, by its paths where they were read. */
   public hasModule(name: string): boolean {
-    return this.modules.has(name);
+    return (this.paths ?? this.modules).has(name);
   }
 
   /**
-   * The first of `items` the crate lacks, each read as a path from the crate root or from
-   * `module`, or `undefined` when it has them all.
+   * The crate path `item` names, read from the crate root and else from `module`, or `undefined`
+   * when the crate has neither; `item` as it is when no paths were read.
    */
-  public missingItem(module: string, items: readonly string[]): string | undefined {
-    const paths = this.paths;
+  public pathOf(module: string, item: string): string | undefined {
+    const inModule = `${module}${ApiSurface.pathSeparator}${item}`;
 
-    return paths === undefined
-      ? undefined
-      : items.find(
-          (item) => !paths.has(item) && !paths.has(`${module}${ApiSurface.pathSeparator}${item}`),
-        );
+    if (this.paths === undefined || this.paths.has(item)) {
+      return item;
+    }
+
+    return this.paths.has(inModule) ? inModule : undefined;
   }
 }

@@ -1,5 +1,6 @@
 import { Fields } from './fields.ts';
 import type { GitSource } from './git-source.ts';
+import { ModuleFile } from './module-file.ts';
 
 /**
  * The Rust source of the `enshwick` crate and of every internal crate it depends on, directly or
@@ -12,11 +13,9 @@ export class ApiSources {
   private static readonly manifest = 'Cargo.toml';
   private static readonly source = 'src';
   private static readonly sourceGlob = 'src/**/*.rs';
-  /** A crate's name in Rust paths uses `_` where its package name uses `-`. */
-  private static readonly packageSeparator = '-';
-  private static readonly crateSeparator = '_';
   private static readonly parentFolder = '..';
   private static readonly thisFolder = '.';
+  private static readonly folderSeparator = '/';
 
   /**
    * Each crate's `src/` files by their path below `src/`, by crate name (`enshwick_base`), from
@@ -26,9 +25,7 @@ export class ApiSources {
     checkout: GitSource,
     workspace: string | undefined,
   ): Promise<Map<string, Map<string, string>>> {
-    const shared = new Fields(workspace === undefined ? undefined : Bun.TOML.parse(workspace))
-      .at('workspace')
-      .at('dependencies');
+    const shared = new Fields(workspace === undefined ? undefined : Bun.TOML.parse(workspace));
     const folders = await ApiSources.folders(
       checkout,
       shared,
@@ -71,14 +68,13 @@ export class ApiSources {
     const found: string[] = [];
 
     for (const { folder, text } of manifests) {
-      const dependencies = new Fields(text === undefined ? undefined : Bun.TOML.parse(text)).at(
-        'dependencies',
-      );
+      const manifest = new Fields(text === undefined ? undefined : Bun.TOML.parse(text));
 
-      for (const name of ApiSources.keys(dependencies.value)) {
-        const crate = name.replaceAll(ApiSources.packageSeparator, ApiSources.crateSeparator);
-        const own = dependencies.at(name).at('path').text();
-        const path = own === undefined ? shared.at(name).at('path').text() : `${folder}/${own}`;
+      for (const name of ModuleFile.dependencies(manifest)) {
+        const crate = ModuleFile.crateOf(name);
+        const own = ModuleFile.dependencyPath(manifest, name);
+        const path =
+          own === undefined ? ModuleFile.dependencyPath(shared, name, true) : `${folder}/${own}`;
 
         if (name.startsWith(ApiSources.crateName) && !known.has(crate) && path !== undefined) {
           known.set(crate, ApiSources.normal(path));
@@ -105,16 +101,11 @@ export class ApiSources {
     );
   }
 
-  /** The keys of a decoded TOML table, none for anything else. */
-  private static keys(value: unknown): string[] {
-    return typeof value === 'object' && value !== null ? Object.keys(value) : [];
-  }
-
   /** A `/`-separated path with its `..` and `.` folded, as a dependency's relative path needs. */
   private static normal(path: string): string {
     const parts: string[] = [];
 
-    for (const part of path.split('/')) {
+    for (const part of path.split(ApiSources.folderSeparator)) {
       if (part === ApiSources.parentFolder) {
         parts.pop();
       } else if (part !== ApiSources.thisFolder && part !== '') {
@@ -122,6 +113,6 @@ export class ApiSources {
       }
     }
 
-    return parts.join('/');
+    return parts.join(ApiSources.folderSeparator);
   }
 }

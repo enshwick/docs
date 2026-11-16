@@ -12,8 +12,9 @@ const stabilityPage = {
 | \`world\`: \`World\`, its players, chat | young |
 | \`map\`, \`Load::fog_of_war\` and the map markers of \`ui\` | young |
 | \`item_data\` and \`entity_data\`, \`Stats::set_item\` | stays aside |
-| Changes of \`Field::MaxStackSize\` from a mod | not yet seen |
+| Changes of \`Field::MaxStackSize\` and \`Field::Slots\` from a mod | not yet seen |
 | \`events::PlayerDied\` and the \`killer\` fields of \`EntityDiedEvent\` | not yet seen |
+| The edits of \`terrain\`: digs. \`terrain::Dig\` | not yet seen |
 
 The API reference marks each of these items "Unstable".
 `,
@@ -31,6 +32,7 @@ describe('Stability', () => {
       'item_data',
       'killer',
       'map',
+      'terrain',
       'ui',
       'world',
     ]);
@@ -39,6 +41,7 @@ describe('Stability', () => {
   it('reads every module and item the unstable table names, but not one named for context', () => {
     expect(Stability.unstableNames(stabilityPage.body)).toEqual([
       'Field::MaxStackSize',
+      'Field::Slots',
       'Load::fog_of_war',
       'Stats::set_item',
       'World',
@@ -47,6 +50,7 @@ describe('Stability', () => {
       'item_data',
       'killer',
       'map',
+      'terrain::Dig',
       'world',
     ]);
   });

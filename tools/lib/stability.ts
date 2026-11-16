@@ -13,9 +13,9 @@ export class Stability {
   private static readonly pageName = 'stability';
   private static readonly tableRow = /^\|(?<part>[^|\n]+)\|/gmu;
   private static readonly moduleName = /`(?<name>[a-z][a-z0-9_]*)`/gu;
-  /** A Rust path in backticks; `of ` before it marks a name given for context. */
+  /** A Rust path in backticks; `of ` before it marks a name given for context, a colon after it the parts that follow. */
   private static readonly itemName =
-    /(?<context>\bof )?`(?<name>[A-Za-z_][A-Za-z0-9_]*(?:::[A-Za-z_][A-Za-z0-9_]*)*)`/gu;
+    /(?<context>\bof )?`(?<name>[A-Za-z_][A-Za-z0-9_]*(?:::[A-Za-z_][A-Za-z0-9_]*)*)`(?<parts>:)?/gu;
 
   private constructor(
     public readonly badges: Readonly<Record<string, StabilityLevel>>,
@@ -63,9 +63,10 @@ export class Stability {
 
   /**
    * Every name in the first column of the chapter's tables, modules and items alike, such as
-   * `world` and `Knowledge::revoke`, without a name the row gives after "of" only for context once
+   * `world` and `Knowledge::revoke`, without a name the row gives after "of" only for context: once
    * it has named something, such as `ui` in "the map markers of `ui`" or `EntityDiedEvent` in "the
-   * `killer` fields of `EntityDiedEvent`".
+   * `killer` fields of `EntityDiedEvent`", or before a colon that says which of its parts, such as
+   * `world` in "the edits of `world`: props, …".
    */
   public static unstableNames(body: string): string[] {
     const names = new Set<string>();
@@ -74,7 +75,10 @@ export class Stability {
       let named = false;
 
       for (const match of (row.groups?.['part'] ?? '').matchAll(Stability.itemName)) {
-        if (match.groups?.['context'] === undefined || !named) {
+        const context =
+          match.groups?.['context'] !== undefined && (named || match.groups['parts'] !== undefined);
+
+        if (!context) {
           names.add(match.groups?.['name'] ?? '');
         }
 

@@ -5,9 +5,12 @@ import coverageData from '../data/coverage.json' with { type: 'json' };
 import itemsData from '../generated/api-items.json' with { type: 'json' };
 // `tools/fetch.ts` writes it too: the public modules of the API crate.
 import modulesData from '../generated/api-modules.json' with { type: 'json' };
+// `tools/fetch.ts` writes it too: the public paths only the API crate's `unstable` feature compiles.
+import gatedData from '../generated/api-unstable.json' with { type: 'json' };
 // `tools/fetch.ts` writes it before every build from the book's stability chapter.
 import unstableData from '../generated/unstable.json' with { type: 'json' };
 import { ApiSurface } from './api-surface.ts';
+import { UnstableNames } from './unstable-names.ts';
 
 /** What a mod can do in a game area: see it, change it, add to it, hear it, show it to a player. */
 const Capability = AnyString.subtype(
@@ -100,16 +103,13 @@ export class Coverage {
   private static readonly uncounted = ['not-supported', 'not-applicable'];
   private static readonly stable = 'stable';
   private static readonly unstable = 'unstable';
-  private static readonly pathSeparator = '::';
   private static readonly notAnchor = /[^a-z0-9]+/gu;
   private static readonly anchorEdge = /^-+|-+$/gu;
-  /** A path part that names a type, from which the book may name an item. */
-  private static readonly typeName = /^[A-Z]/u;
 
   /** The site's coverage, as `src/data/coverage.json` holds it. */
   public static readonly site = Coverage.from(
     coverageData,
-    unstableData,
+    [...unstableData, ...gatedData],
     new ApiSurface(modulesData, itemsData),
   );
 
@@ -144,7 +144,7 @@ export class Coverage {
       throw new TypeError(`src/data/coverage.json: ${JSON.stringify(parsed.issues)}`);
     }
 
-    const unstableNames = new Set(unstable);
+    const unstableNames = new UnstableNames(unstable);
     const byDomain = new Map<string, Map<string, CoverageCell>>();
 
     for (const row of parsed.value.rows) {
@@ -240,24 +240,27 @@ export class Coverage {
     return of === 0 ? undefined : Math.round((covered * 100) / of);
   }
 
-  /** One row as its cell, a covered one stable or unstable by its module and items, which `api` must have. */
+  /**
+   * One row as its cell, a covered one with each item as the crate path `api` reads it at, stable
+   * or unstable by its module and those paths.
+   */
   private static cell(
     row: CoverageRow,
-    unstable: ReadonlySet<string>,
+    unstable: UnstableNames,
     api: ApiSurface | undefined,
   ): CoverageCell {
     const capability = row.capability.toString();
     const status = row.status.toString();
-    const items = (row.items ?? []).map((item) => item.toString());
+    const written = (row.items ?? []).map((item) => item.toString());
     const note = row.note?.toString();
     const module = row.module?.toString();
     const where = `src/data/coverage.json: ${row.domain.toString()} ${capability}`;
 
     if (status !== Coverage.covered) {
-      return { capability, status, stability: undefined, items, unstableItems: [], note };
+      return { capability, status, stability: undefined, items: written, unstableItems: [], note };
     }
 
-    if (module === undefined || (items.length === 0 && note === undefined)) {
+    if (module === undefined || (written.length === 0 && note === undefined)) {
       throw new TypeError(`${where} is covered without a module and what covers it`);
     }
 
@@ -265,36 +268,21 @@ export class Coverage {
       throw new TypeError(`${where} names module ${module}, which the API crate does not have`);
     }
 
-    const missing = api?.missingItem(module, items);
+    const items = written.map((item) => {
+      const path = api === undefined ? item : api.pathOf(module, item);
 
-    if (missing !== undefined) {
-      throw new TypeError(`${where} names item ${missing}, which the API crate does not have`);
-    }
+      if (path === undefined) {
+        throw new TypeError(`${where} names item ${item}, which the API crate does not have`);
+      }
 
-    const unstableItems = items.filter((item) => Coverage.isUnstable(item, unstable));
+      return path;
+    });
+    const unstableItems = items.filter((item) => unstable.has(item));
     const whole =
-      Coverage.isUnstable(module, unstable) ||
-      (items.length > 0 && unstableItems.length === items.length);
+      unstable.has(module) || (items.length > 0 && unstableItems.length === items.length);
 
     return whole
       ? { capability, status, stability: Coverage.unstable, items, unstableItems: [], note }
       : { capability, status, stability: Coverage.stable, items, unstableItems, note };
-  }
-
-  /**
-   * Whether a module or item is unstable: it is named so, or a prefix of its path is, read from its
-   * start or from a type in it, as the book names them: its module in `world::props`, its type in
-   * `damage::Damage::scale`, or `Field::MaxStackSize` in `content::changes::Field::MaxStackSize`.
-   */
-  private static isUnstable(name: string, unstable: ReadonlySet<string>): boolean {
-    const parts = name.split(Coverage.pathSeparator);
-    const named = (start: number, end: number): boolean =>
-      unstable.has(parts.slice(start, end).join(Coverage.pathSeparator));
-
-    return parts.some(
-      (part, start) =>
-        (start === 0 || Coverage.typeName.test(part)) &&
-        parts.some((_, end) => end >= start && named(start, end + 1)),
-    );
   }
 }

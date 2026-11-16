@@ -79,16 +79,21 @@ describe('Coverage', () => {
     expect(stability('content', ['content::items::Foo'], unstable)).toBe('stable');
   });
 
-  it('marks a full path unstable by the name the book gives it from a type inside it', () => {
-    const unstable = ['Field::MaxStackSize', 'Damage', 'events::PlayerDied', 'items'];
+  it('publishes an item written from its cell’s module by its crate path, and marks it by that path', () => {
+    const rows = area('Interface');
+    const api = new ApiSurface(['ui'], ['ui', 'ui::HudScreenType', 'ui::HudScreenType::NpcDialog']);
 
-    expect(stability('content', ['content::changes::Field::MaxStackSize'], unstable)).toBe(
-      'unstable',
-    );
-    expect(stability('damage', ['damage::Damage::scale'], unstable)).toBe('unstable');
-    expect(stability('events', ['events::PlayerDied'], unstable)).toBe('unstable');
-    expect(stability('content', ['content::changes::Field::Slots'], unstable)).toBe('stable');
-    expect(stability('world', ['world::World::items'], unstable)).toBe('stable');
+    rows[4] = {
+      domain: 'Interface',
+      capability: 'ui',
+      status: 'covered',
+      module: 'ui',
+      items: ['HudScreenType::NpcDialog'],
+    };
+    const cell = Coverage.from(file(rows), ['ui::HudScreenType'], api).domains[0]?.cells[4];
+
+    expect(cell?.items).toEqual(['ui::HudScreenType::NpcDialog']);
+    expect(cell?.stability).toBe('unstable');
   });
 
   it('keeps a cell with one unstable item among stable ones stable, and names that item', () => {
@@ -167,7 +172,9 @@ describe('Coverage', () => {
     rows[1] = { domain: 'Inventory', capability: 'change', status: 'in-work', items: ['unknown'] };
 
     expect(() => Coverage.from(file(rows), [], new ApiSurface(['inventory']))).not.toThrow();
-    expect(() => Coverage.from(file(rows), [], new ApiSurface(['inventory'], ['x']))).not.toThrow();
+    expect(() =>
+      Coverage.from(file(rows), [], new ApiSurface(['inventory'], ['inventory', 'x'])),
+    ).not.toThrow();
   });
 
   it('counts an area’s covered cells out of those that neither do not apply nor are unsupported', () => {

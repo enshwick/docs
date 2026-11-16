@@ -8,10 +8,16 @@ export interface RustUse {
   readonly shown: boolean;
 }
 
+/** An impl block: the path of the type it is for, as written, and the members it adds. */
+export interface RustImpl {
+  readonly type: readonly string[];
+  readonly members: readonly string[];
+}
+
 /**
  * What the public paths of a crate need from tree-sitter's Rust syntax nodes: visibility, the
- * members a type or an impl block gives, flattened `use` trees and the names a local macro
- * declares. {@link RustCrate} reads a crate's files through it.
+ * members a type or an impl block gives, flattened `use` trees and the names
+ * a local macro declares. {@link RustCrate} reads a crate's files through it.
  */
 export class RustSyntax {
   private static readonly visibility = 'visibility_modifier';
@@ -23,7 +29,23 @@ export class RustSyntax {
   private static readonly identifier = 'identifier';
   private static readonly attributeMark = '#';
   private static readonly entryEnd = ';';
+
   private static readonly comments = ['line_comment', 'block_comment'];
+  private static readonly fieldDeclaration = 'field_declaration';
+  private static readonly useAs = 'use_as_clause';
+  private static readonly useWildcard = 'use_wildcard';
+  private static readonly scopedUseList = 'scoped_use_list';
+  private static readonly useList = 'use_list';
+  private static readonly typeIdentifier = 'type_identifier';
+  private static readonly genericType = 'generic_type';
+  private static readonly scopedType = 'scoped_type_identifier';
+  private static readonly nameField = 'name';
+  private static readonly bodyField = 'body';
+  private static readonly typeField = 'type';
+  private static readonly traitField = 'trait';
+  private static readonly pathField = 'path';
+  private static readonly aliasField = 'alias';
+  private static readonly listField = 'list';
   /** What a type or trait declares with itself that `Type::member` reaches, fields apart. */
   private static readonly declaredMembers = [
     'enum_variant',
@@ -47,18 +69,23 @@ export class RustSyntax {
     );
   }
 
+  /** Whether a node is a comment, doc comments included, which leaves the attributes before it in force. */
+  public static isComment(node: Node): boolean {
+    return RustSyntax.comments.includes(node.type);
+  }
+
   /** The members a type or trait declares with itself: public fields, every variant, a trait's items. */
   public static members(node: Node): string[] {
-    const body = node.childForFieldName('body');
+    const body = node.childForFieldName(RustSyntax.bodyField);
 
     return (body?.namedChildren ?? []).flatMap((child) => {
-      const name = child.childForFieldName('name')?.text;
+      const name = child.childForFieldName(RustSyntax.nameField)?.text;
 
       if (name === undefined) {
         return [];
       }
 
-      return (child.type === 'field_declaration' && RustSyntax.isPublic(child)) ||
+      return (child.type === RustSyntax.fieldDeclaration && RustSyntax.isPublic(child)) ||
         RustSyntax.declaredMembers.includes(child.type)
         ? [name]
         : [];
@@ -69,17 +96,17 @@ export class RustSyntax {
    * The type an impl block is for and the members it adds: every item of a trait impl, the `pub`
    * ones of an inherent one; `undefined` for an impl on a reference, tuple or the like.
    */
-  public static impl(node: Node): { type: string; members: string[] } | undefined {
-    const type = RustSyntax.typeName(node.childForFieldName('type'));
-    const body = node.childForFieldName('body');
+  public static impl(node: Node): RustImpl | undefined {
+    const type = RustSyntax.typePath(node.childForFieldName(RustSyntax.typeField));
+    const body = node.childForFieldName(RustSyntax.bodyField);
 
     if (type === undefined || body === null) {
       return undefined;
     }
 
-    const ofTrait = node.childForFieldName('trait') !== null;
+    const ofTrait = node.childForFieldName(RustSyntax.traitField) !== null;
     const members = body.namedChildren.flatMap((child) => {
-      const name = child.childForFieldName('name')?.text;
+      const name = child.childForFieldName(RustSyntax.nameField)?.text;
 
       return name !== undefined &&
         RustSyntax.implMembers.includes(child.type) &&
@@ -94,13 +121,22 @@ export class RustSyntax {
   /** A `use` tree flattened below the path `prefix`. */
   public static uses(node: Node, prefix: readonly string[], shown: boolean): RustUse[] {
     switch (node.type) {
-      case 'use_as_clause': {
-        const path = RustSyntax.under(prefix, RustSyntax.path(node.childForFieldName('path')));
+      case RustSyntax.useAs: {
+        const path = RustSyntax.under(
+          prefix,
+          RustSyntax.path(node.childForFieldName(RustSyntax.pathField)),
+        );
 
-        return [{ path, name: node.childForFieldName('alias')?.text ?? path.at(-1), shown }];
+        return [
+          {
+            path,
+            name: node.childForFieldName(RustSyntax.aliasField)?.text ?? path.at(-1),
+            shown,
+          },
+        ];
       }
 
-      case 'use_wildcard': {
+      case RustSyntax.useWildcard: {
         const inner = node.namedChildren[0];
         const path =
           inner === undefined ? [...prefix] : RustSyntax.under(prefix, RustSyntax.path(inner));
@@ -108,14 +144,17 @@ export class RustSyntax {
         return [{ path, name: undefined, shown }];
       }
 
-      case 'scoped_use_list': {
-        const path = RustSyntax.under(prefix, RustSyntax.path(node.childForFieldName('path')));
-        const list = node.childForFieldName('list');
+      case RustSyntax.scopedUseList: {
+        const path = RustSyntax.under(
+          prefix,
+          RustSyntax.path(node.childForFieldName(RustSyntax.pathField)),
+        );
+        const list = node.childForFieldName(RustSyntax.listField);
 
         return list === null ? [] : RustSyntax.uses(list, path, shown);
       }
 
-      case 'use_list':
+      case RustSyntax.useList:
         return node.namedChildren.flatMap((child) => RustSyntax.uses(child, prefix, shown));
 
       default: {
@@ -137,7 +176,7 @@ export class RustSyntax {
 
     for (const token of tokens?.children.slice(1, -1) ?? []) {
       const skipped =
-        RustSyntax.comments.includes(token.type) ||
+        RustSyntax.isComment(token) ||
         token.type === RustSyntax.attributeMark ||
         (token.type === RustSyntax.tokenTree && entryStart);
 
@@ -155,19 +194,19 @@ export class RustSyntax {
     return names;
   }
 
-  /** The last name of an impl's type, `Load` in `crate::Load<'a>`. */
-  private static typeName(node: Node | null): string | undefined {
+  /** The path of an impl's type as written, `crate::Load` in `crate::Load<'a>`. */
+  private static typePath(node: Node | null): readonly string[] | undefined {
     if (node === null) {
       return undefined;
     }
 
     switch (node.type) {
-      case 'type_identifier':
-        return node.text;
-      case 'generic_type':
-        return RustSyntax.typeName(node.childForFieldName('type'));
-      case 'scoped_type_identifier':
-        return node.childForFieldName('name')?.text;
+      case RustSyntax.typeIdentifier:
+        return [node.text];
+      case RustSyntax.genericType:
+        return RustSyntax.typePath(node.childForFieldName(RustSyntax.typeField));
+      case RustSyntax.scopedType:
+        return RustSyntax.path(node);
       default:
         return undefined;
     }
