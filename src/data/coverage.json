@@ -325,11 +325,7 @@
       "capability": "events",
       "status": "covered",
       "module": "events",
-      "items": [
-        "HandleEquipmentSlotChangedEvent",
-        "LootInteractionEvent",
-        "interactions::Interaction::moved"
-      ],
+      "items": ["HandleEquipmentSlotChangedEvent", "LootInteractionEvent", "Interaction::moved"],
       "note": "every inventory move reaches the interaction filters with its stack, amount, containers and slots"
     },
     {
