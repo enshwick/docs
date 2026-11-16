@@ -1,4 +1,5 @@
 import type { GitRef, RepositoryName } from '../../src/site/types.ts';
+import { ApiItems } from './api-items.ts';
 import type { DeveloperPage } from './api-map.ts';
 import { type ChapterPage, ChapterConverter } from './chapter-converter.ts';
 import { type CheckedBuild, CheckedBuilds } from './checked-builds.ts';
@@ -35,6 +36,8 @@ export interface PlatformRelease {
   readonly abi: string | undefined;
   /** The loader's error codes, `errors.toml`, where the version has them. */
   readonly errors: ErrorsFile | undefined;
+  /** Every public path of the API crate, sorted, as {@link ApiItems} reads them. */
+  readonly items: readonly string[];
 }
 
 /** The developer area: every version of the platform's book, the newest at `/dev/`, older ones under `/dev/<version>/`. */
@@ -215,6 +218,7 @@ export class DeveloperArea {
     const api =
       manifest === undefined ? undefined : /^version\s*=\s*"([^"]+)"/mu.exec(manifest)?.[1];
     const lib = await checkout.read(DeveloperArea.apiRoot);
+    const workspace = await checkout.read(DeveloperArea.workspaceManifest);
 
     return {
       name: version.name,
@@ -222,14 +226,18 @@ export class DeveloperArea {
       api,
       checked: await CheckedBuilds.of(checkout),
       lib,
-      abi: await DeveloperArea.abi(checkout, lib ?? ''),
+      abi: await DeveloperArea.abi(checkout, lib ?? '', workspace),
       errors: await ErrorPages.locate(checkout),
+      items: await ApiItems.read(checkout, workspace),
     };
   }
 
   /** The ABI module's text, wherever the version keeps it: in the API crate or the internal crate it re-exports. */
-  private static async abi(checkout: GitSource, lib: string): Promise<string | undefined> {
-    const workspace = await checkout.read(DeveloperArea.workspaceManifest);
+  private static async abi(
+    checkout: GitSource,
+    lib: string,
+    workspace: string | undefined,
+  ): Promise<string | undefined> {
     const path = ModuleFile.path(lib, workspace, DeveloperArea.abiModule);
 
     if (path === undefined) {
