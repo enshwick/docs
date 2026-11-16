@@ -140,19 +140,44 @@ describe('Coverage', () => {
       items: ['x'],
     }));
     const rows = [...loot, ...area('Fishing', 'planned')];
-    const coverage = Coverage.from({ ...file(rows), later: ['Fishing'] }, []);
+    const coverage = Coverage.from(file(rows), []);
 
-    expect(coverage.areas(false).map((domain) => domain.name)).toEqual(['Loot']);
-    expect(coverage.areas(true).map((domain) => domain.name)).toEqual(['Fishing']);
-    expect(Coverage.total(coverage.areas(false))).toEqual({ covered: 5, of: 5 });
+    expect(coverage.forOne.map((domain) => domain.name)).toEqual(['Loot']);
+    expect(coverage.afterOne.map((domain) => domain.name)).toEqual(['Fishing']);
+    expect(Coverage.total(coverage.forOne)).toEqual({ covered: 5, of: 5 });
     expect(Coverage.total(coverage.domains)).toEqual({ covered: 5, of: 10 });
     expect(coverage.json().domains.map((domain) => domain.later)).toEqual([undefined, true]);
   });
 
-  it('refuses an area planned after 1.0 that has no rows', () => {
-    expect(() => Coverage.from({ ...file(area('Items')), later: ['Fishing'] }, [])).toThrow(
-      'Fishing is planned after 1.0 but has no rows',
-    );
+  it('puts an area after 1.0 by one planned cell, though its other cells are covered', () => {
+    const rows = Coverage.capabilities.map((capability) => ({
+      domain: 'Camera',
+      capability,
+      status: 'covered',
+      module: 'input',
+      items: ['x'],
+    }));
+
+    rows[0] = {
+      domain: 'Camera',
+      capability: 'read',
+      status: 'planned',
+      module: 'input',
+      items: [],
+    };
+
+    expect(Coverage.from(file(rows), []).afterOne.map((domain) => domain.name)).toEqual(['Camera']);
+  });
+
+  it('anchors an area by its name without a hyphen at either end', () => {
+    const coverage = Coverage.from(file(area('(Game) systems (mod ECS programs)')), []);
+
+    expect(coverage.domains[0]?.id).toBe('game-systems-mod-ecs-programs');
+  });
+
+  it('gives a percentage rounded to a whole number, and none when nothing counts', () => {
+    expect(Coverage.percent({ covered: 111, of: 176 })).toBe(63);
+    expect(Coverage.percent({ covered: 0, of: 0 })).toBeUndefined();
   });
 
   it('dates the page by the later of its data and its own file', () => {

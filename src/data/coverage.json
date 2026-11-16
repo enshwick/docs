@@ -1,25 +1,5 @@
 {
   "updated": "2026-11-16",
-  "later": [
-    "Animals, pets and mounts",
-    "Farming and growth",
-    "Fishing",
-    "Survival conditions",
-    "Logic, puzzles, doors and traps",
-    "World queries",
-    "Water and power",
-    "Resource nodes",
-    "Instruments and songs",
-    "Production queues",
-    "Movement and traversal",
-    "Game systems (mod ECS programs)",
-    "Appearance",
-    "NPC dialogue",
-    "Creature behaviour",
-    "Abilities and spells",
-    "Visuals: models, textures, VFX, animation",
-    "Camera"
-  ],
   "rows": [
     {
       "domain": "Items",

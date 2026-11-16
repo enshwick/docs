@@ -17,7 +17,7 @@ const stability = `${base}/dev/stability/`;
 
 <div class="ew-faq ew-coverage">
   {
-    Coverage.site.areas(later).map((domain) => (
+    (later ? Coverage.site.afterOne : Coverage.site.forOne).map((domain) => (
       <details id={domain.id}>
         <summary>
           <span class="ew-coverage__name">{domain.name}</span>

@@ -6,13 +6,17 @@ import { Texts } from '../site/texts.ts';
 const language = Languages.site.of(Astro.currentLocale);
 const t = (key: string): string => Texts.site.get(key, language);
 const totals = [
-  { key: 'coverage.total.one', count: Coverage.total(Coverage.site.areas(false)) },
+  { key: 'coverage.total.one', count: Coverage.total(Coverage.site.forOne) },
   { key: 'coverage.total.all', count: Coverage.total(Coverage.site.domains) },
-].map(({ key, count }) => ({
-  label: t(key),
-  count: `${count.covered} / ${count.of}`,
-  rest: `${t('coverage.covered-count')} (${Math.round((count.covered * 100) / count.of)}%)`,
-}));
+].map(({ key, count }) => {
+  const percent = Coverage.percent(count);
+
+  return {
+    label: t(key),
+    count: `${count.covered} / ${count.of}`,
+    rest: `${t('coverage.covered-count')}${percent === undefined ? '' : ` (${percent}%)`}`,
+  };
+});
 ---
 
 <ul>

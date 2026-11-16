@@ -704,16 +704,16 @@
     "uk": "Заплановано після 1.0"
   },
   "coverage.total.one": {
-    "en": "Areas for version 1.0",
-    "uk": "Частини гри для версії 1.0"
+    "en": "Capabilities in the areas for version 1.0",
+    "uk": "Можливості в частинах гри для версії 1.0"
   },
   "coverage.total.all": {
-    "en": "All areas, with those planned after 1.0",
-    "uk": "Усі частини гри разом із запланованими після 1.0"
+    "en": "Capabilities in all areas, with those planned after 1.0",
+    "uk": "Можливості в усіх частинах гри разом із запланованими після 1.0"
   },
   "coverage.total.grows": {
-    "en": "This map covers every part of the game we have found so far. As we find more, the total grows, so the percentage can go down before it goes up.",
-    "uk": "Карта охоплює всі частини гри, які ми виявили досі. Коли знайдемо нові, загальна кількість зросте, тож відсоток може спершу впасти."
+    "en": "These totals count the game areas that matter to mods and that we have found so far. When we find more, the totals grow, so the percentage can drop before it rises.",
+    "uk": "Ці підсумки враховують частини гри, важливі для модів, які ми знайшли досі. Коли знайдемо нові, підсумки зростуть, тож відсоток може спершу впасти."
   },
   "foot.not-affiliated": {
     "en": "Not made by or affiliated with Keen Games. Enshrouded is their trademark.",
