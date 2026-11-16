@@ -315,19 +315,26 @@
     {
       "domain": "Inventory and containers",
       "capability": "create",
-      "status": "in-work"
+      "status": "covered",
+      "module": "inventory",
+      "items": ["Load::add_container", "Load::container_rule"],
+      "note": "containers of a mod in whole rows of 8, up to 128 slots, and rules over which stacks enter any container"
     },
     {
       "domain": "Inventory and containers",
       "capability": "events",
       "status": "covered",
       "module": "events",
-      "items": ["HandleEquipmentSlotChangedEvent", "LootInteractionEvent"]
+      "items": ["HandleEquipmentSlotChangedEvent", "LootInteractionEvent", "Interaction::moved"],
+      "note": "every inventory move reaches the interaction filters with its stack, amount, containers and slots"
     },
     {
       "domain": "Inventory and containers",
       "capability": "ui",
-      "status": "research"
+      "status": "covered",
+      "module": "inventory",
+      "items": ["interactions::Transfer", "Inventories::show_pickup", "Batch::hide_in_ui"],
+      "note": "the kind of move a player makes, such as Take All, and the game's pickup message with or without a give"
     },
     {
       "domain": "Players and accounts",
@@ -395,7 +402,10 @@
     {
       "domain": "Character stats and buffs",
       "capability": "ui",
-      "status": "in-work"
+      "status": "covered",
+      "module": "stats",
+      "items": ["stats::StatGroup", "StatDef::group", "StatDef::in_group"],
+      "note": "mod stats in rows on the Character screen and in item tooltips"
     },
     {
       "domain": "Skills and experience",
@@ -743,7 +753,10 @@
     {
       "domain": "Sound",
       "capability": "events",
-      "status": "in-work"
+      "status": "covered",
+      "module": "sound",
+      "items": ["Load::on_notify", "Effects::notify"],
+      "note": "the server's notify events, which place sounds in the world, and notifiers a mod raises"
     },
     {
       "domain": "Sound",
