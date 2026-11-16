@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-09",
+  "updated": "2026-11-16",
   "rows": [
     {
       "domain": "Items",
@@ -33,7 +33,15 @@
     {
       "domain": "Items",
       "capability": "ui",
-      "status": "research"
+      "status": "covered",
+      "module": "ui",
+      "items": [
+        "Load::extend_item_tooltip",
+        "Frame::item_slot",
+        "Frame::hovered_slot",
+        "ui::SlotInput"
+      ],
+      "note": "tooltip lines for items with an entity of their own, and item slots in mod windows; client only"
     },
     {
       "domain": "Recipes",
@@ -272,7 +280,10 @@
     {
       "domain": "Terrain and voxels",
       "capability": "create",
-      "status": "in-work"
+      "status": "covered",
+      "module": "terrain",
+      "items": ["Load::add_terrain_material"],
+      "note": "new terrain materials with a game material's look, from a mod of both sides; a world loaded without the mod keeps a game material in their place"
     },
     {
       "domain": "Terrain and voxels",
@@ -347,7 +358,10 @@
     {
       "domain": "Players and accounts",
       "capability": "ui",
-      "status": "in-work"
+      "status": "covered",
+      "module": "actions",
+      "items": ["actions::Window"],
+      "note": "windows of a server mod, such as a player list, for players who may run every action they name, also on clients that run only the loader"
     },
     {
       "domain": "Character stats and buffs",
@@ -679,7 +693,10 @@
     {
       "domain": "Input and interactions",
       "capability": "change",
-      "status": "in-work"
+      "status": "covered",
+      "module": "interactions",
+      "items": ["Load::prompt", "interactions::ObjectPrompt"],
+      "note": "on the prompt of objects placed from an item: a game verb, the mod's own text on clients with Enshwick, or the game's empty action in place of the object's own"
     },
     {
       "domain": "Input and interactions",
