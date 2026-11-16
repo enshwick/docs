@@ -315,7 +315,9 @@
     {
       "domain": "Inventory and containers",
       "capability": "create",
-      "status": "in-work"
+      "status": "covered",
+      "module": "inventory",
+      "items": ["add_container", "container_rule"]
     },
     {
       "domain": "Inventory and containers",
@@ -327,7 +329,9 @@
     {
       "domain": "Inventory and containers",
       "capability": "ui",
-      "status": "research"
+      "status": "covered",
+      "module": "inventory",
+      "items": ["interactions::Transfer", "show_pickup", "hide_in_ui"]
     },
     {
       "domain": "Players and accounts",
