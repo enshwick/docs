@@ -24,6 +24,9 @@ When you remove one mod and keep Enshwick:
   mod again, and the item comes back.
 - An object that the mod copied from the game's own, and that you placed, loads
   as the game's object it copies.
+- Ground of a material that the mod added loads as the game's material that
+  the mod chose for it. Install the mod again, and the ground is the mod's
+  material again.
 - Stacks of the game's own items keep the counts that the world was saved with.
 - With Better Altars, only the first 16 altar zones work as bases.
 - A hold that the mod set beside a world's save stops the game before that
@@ -37,6 +40,8 @@ When you remove Enshwick:
 - The world loses every item that mods added. The next save keeps the loss.
 - Each stack larger than the game allows shrinks to the game's own size. The
   next save keeps the smaller count.
+- Ground of a material that a mod added becomes air. The next save keeps the
+  loss.
 - No hold works, so a world that a mod holds opens anyway.
 - With Better Altars, only the first 16 altar zones work as bases.
 - Weather that a mod added can show as other weather until it ends.

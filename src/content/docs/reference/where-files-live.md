@@ -31,8 +31,8 @@ The game folder is the one that holds `enshrouded.exe` or
 | `logs/start.log`                         | why Enshwick did not start; it is there only when Enshwick did not start         |
 
 `mods/enshwick/` also holds `clones.toml`, the items and objects mods copied
-from the game's own, and `kept-stacks.toml`, the stack sizes a world was saved
-with. Keep both files.
+from the game's own and the ground materials mods added, and
+`kept-stacks.toml`, the stack sizes a world was saved with. Keep both files.
 
 ## Beside each save
 
