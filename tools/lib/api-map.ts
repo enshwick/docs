@@ -1,5 +1,3 @@
-import { Stability } from './stability.ts';
-
 /** A developer page as the API map reads it. */
 export interface DeveloperPage {
   readonly slug: string;
@@ -31,18 +29,11 @@ export class ApiMap {
     /^pub use enshwick_[a-z0-9_]+::[a-z0-9_]+::\{[^}]*\bself\b[^}]*\};/gmu;
   // Hidden modules, such as macro support, are no part of the documented API.
   private static readonly hidden = /#\[doc\(hidden\)\]/u;
-  // A module the crate compiles only with the `unstable` feature is unstable, listed or not.
-  private static readonly gate = /#\[cfg\(feature = "unstable"\)\]/u;
   private static readonly crateName = 'enshwick';
   /** The macro crate's lowercase items are macros, not modules. */
   private static readonly macroCrate = 'enshwick_macros';
 
-  private constructor(
-    public readonly modules: readonly ApiModule[],
-    private readonly pages: readonly DeveloperPage[],
-    /** The public modules behind the `unstable` feature. */
-    public readonly gated: readonly string[] = [],
-  ) {}
+  private constructor(public readonly modules: readonly ApiModule[]) {}
 
   /** The map of the crate root `lib`, against the newest version's developer pages. */
   public static of(lib: string, pages: readonly DeveloperPage[]): ApiMap {
@@ -55,8 +46,6 @@ export class ApiMap {
           .filter((page) => ApiMap.mentions(page.body, name))
           .map(({ slug, title }) => ({ slug, title })),
       })),
-      pages,
-      shown.filter(({ attributes }) => ApiMap.gate.test(attributes)).map(({ name }) => name),
     );
   }
 
@@ -89,15 +78,6 @@ export class ApiMap {
         name: match[2] ?? match[4] ?? '',
         crate: match[3],
       }));
-  }
-
-  /** The stability badge of each page that documents one module, from the stability chapter. */
-  public get stability(): Stability {
-    return Stability.of(
-      this.modules.map((module) => module.name),
-      this.pages,
-      this.gated,
-    );
   }
 
   /** The modules no developer page covers. */

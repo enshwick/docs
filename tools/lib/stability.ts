@@ -4,41 +4,40 @@ import type { DeveloperPage } from './api-map.ts';
 export type StabilityLevel = 'stable' | 'unstable';
 
 /**
- * The stability badge of each developer page that documents one public module of the API crate,
- * read from the table of the book's stability chapter: a module it names under `unstable` is
- * unstable, every other public module stable. A page documents a module when its last path part,
- * with hyphens as underscores, is the module's name.
+ * The stability badge of each developer page that documents one public module of the API crate: a
+ * module is unstable when the crate compiles it only with the `unstable` feature, as its public path
+ * list marks it, and stable otherwise. A page documents a module when its last path part, with
+ * hyphens as underscores, is the module's name.
  */
 export class Stability {
   private static readonly pageName = 'stability';
-  private static readonly tableRow = /^\|(?<part>[^|\n]+)\|/gmu;
-  private static readonly moduleName = /`(?<name>[a-z][a-z0-9_]*)`/gu;
+  private static readonly tableRow = /^\|[^|\n]+\|/mu;
 
   private constructor(public readonly badges: Readonly<Record<string, StabilityLevel>>) {}
 
   /**
-   * The badges of the pages among `pages` that document one of `modules`; a module in `gated`, which
-   * the crate compiles only with the `unstable` feature, is unstable whatever the chapter says.
+   * The badges of the pages among `pages` that document one of `modules`; `unstable` holds the
+   * crate's public paths only its `unstable` feature compiles. The book's stability chapter, which
+   * every badge links to, must be there, but only the list decides a badge: a chapter row that names
+   * a module for a few of its items leaves the module stable.
    *
-   * @throws {Error} When the book has no stability chapter or its table names nothing, since every
-   * covered API would then read as stable.
+   * @throws {Error} When the book has no stability chapter or the chapter has no table, since every
+   * badge would then link to nothing.
    */
   public static of(
     modules: readonly string[],
     pages: readonly DeveloperPage[],
-    gated: readonly string[] = [],
+    unstable: readonly string[],
   ): Stability {
     const chapter = pages.find((page) => page.slug.split('/').at(-1) === Stability.pageName);
-    const named =
-      chapter === undefined ? new Set<string>() : Stability.unstableModules(chapter.body);
 
-    if (chapter === undefined || named.size === 0) {
+    if (chapter === undefined || !Stability.tableRow.test(chapter.body)) {
       throw new Error(
-        `the book's stability chapter (a page whose slug ends in ${Stability.pageName}) is missing or its table names nothing`,
+        `the book's stability chapter (a page whose slug ends in ${Stability.pageName}) is missing or has no table`,
       );
     }
 
-    const unstable = new Set([...named, ...gated]);
+    const gated = new Set(unstable);
     const known = new Set(modules);
     const badges = Object.fromEntries(
       pages.flatMap((page): Array<[string, StabilityLevel]> => {
@@ -48,23 +47,10 @@ export class Stability {
           return [];
         }
 
-        return [[page.slug, unstable.has(name) ? 'unstable' : 'stable']];
+        return [[page.slug, gated.has(name) ? 'unstable' : 'stable']];
       }),
     );
 
     return new Stability(badges);
-  }
-
-  /** The bare module names in the first column of the chapter's tables: `world`, not `World`. */
-  public static unstableModules(body: string): ReadonlySet<string> {
-    const names = new Set<string>();
-
-    for (const row of body.matchAll(Stability.tableRow)) {
-      for (const match of (row.groups?.['part'] ?? '').matchAll(Stability.moduleName)) {
-        names.add(match.groups?.['name'] ?? '');
-      }
-    }
-
-    return names;
   }
 }

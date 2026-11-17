@@ -50,10 +50,6 @@ describe('ApiMap', () => {
     expect(names).not.toContain('fixtures');
   });
 
-  it('names the public modules the crate compiles only with the unstable feature', () => {
-    expect(ApiMap.of(lib, pages).gated).toEqual(['weather']);
-  });
-
   it('counts a module re-exported whole from an internal crate, but not a macro or a hidden one', () => {
     const recut = `#[doc(inline)]
 pub use enshwick_values::shape;
@@ -81,13 +77,13 @@ pub mod stats;
     },
   );
 
-  it('reads the gate and inline attributes above a module re-exported with {self as name}', () => {
+  it('reads a module re-exported with {self as name} under gate and inline attributes', () => {
     const recut = `#[cfg(feature = "unstable")]
 #[doc(inline)]
 pub use enshwick_core::script::{self as script};
 `;
 
-    expect(ApiMap.of(recut, pages).gated).toEqual(['script']);
+    expect(ApiMap.of(recut, pages).modules.map((module) => module.name)).toEqual(['script']);
   });
 
   it.each([
