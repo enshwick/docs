@@ -10,6 +10,12 @@ describe('the site texts', () => {
     }
   });
 
+  it('fills each named value into a text that counts something', () => {
+    expect(Texts.site.fill('stability.partial.title', { unstable: 157, items: 321 })).toContain(
+      '157 of 321',
+    );
+  });
+
   it('has exactly one root language', () => {
     expect(Languages.site.all.filter((language) => language.isDefault)).toHaveLength(1);
   });

@@ -343,6 +343,14 @@
     "en": "Needs the unstable feature of the enshwick crate",
     "uk": "Потребує функції unstable крейта enshwick"
   },
+  "stability.partial": {
+    "en": "Stable, some items unstable",
+    "uk": "Стабільне, частина елементів нестабільна"
+  },
+  "stability.partial.title": {
+    "en": "{unstable} of {items} items need the unstable feature of the enshwick crate",
+    "uk": "{unstable} з {items} елементів потребують функції unstable крейта enshwick"
+  },
   "error.code": {
     "en": "Error code",
     "uk": "Код помилки"

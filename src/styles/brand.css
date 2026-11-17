@@ -1070,6 +1070,11 @@ mobile-starlight-toc summary .toggle {
   color: var(--color-bone);
 }
 
+/* A stable module with unstable items: the flame on one edge only. */
+.ew-stability__badge--partial {
+  border-left-color: var(--color-flame);
+}
+
 /* The loading line: two pixels of flame that grow across the top while the next page loads. */
 :root.ew-loading::before {
   content: '';

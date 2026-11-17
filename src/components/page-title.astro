@@ -18,7 +18,14 @@ const t = (key: string): string => Texts.site.get(key, language);
 const { mod, error } = route.entry.data;
 const prefix = `${language}/`;
 const slug = route.id.startsWith(prefix) ? route.id.slice(prefix.length) : route.id;
-const level = Object.entries(stability).find(([page]) => page === slug)?.[1];
+const badge = Object.entries(stability).find(([page]) => page === slug)?.[1];
+const titles: Record<string, string | undefined> = {
+  unstable: t('stability.unstable.title'),
+  partial:
+    badge === undefined
+      ? undefined
+      : Texts.site.fill('stability.partial.title', { unstable: badge.unstable, items: badge.items }, language),
+};
 ---
 
 {
@@ -30,13 +37,13 @@ const level = Object.entries(stability).find(([page]) => page === slug)?.[1];
         </p>
       )}
       <Default />
-      {level !== undefined && (
+      {badge !== undefined && (
         <p class="ew-stability">
           <span
-            class:list={['ew-stability__badge', `ew-stability__badge--${level}`]}
-            title={level === 'unstable' ? t('stability.unstable.title') : undefined}
+            class:list={['ew-stability__badge', `ew-stability__badge--${badge.level}`]}
+            title={titles[badge.level]}
           >
-            {t(`stability.${level}`)}
+            {t(`stability.${badge.level}`)}
           </span>
         </p>
       )}

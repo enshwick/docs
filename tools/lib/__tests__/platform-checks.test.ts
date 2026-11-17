@@ -38,7 +38,9 @@ describe('PlatformChecks', () => {
       { slug: 'dev/map', title: 'Map', body: '' },
     ]);
 
-    expect(checks.stability(['map']).badges).toEqual({ 'dev/map': 'unstable' });
+    expect(checks.stability(['map']).badges).toEqual({
+      'dev/map': { level: 'unstable', unstable: 0, items: 0 },
+    });
   });
 
   it('fails the stability badges without the chapter at the slug the site links to, or its table', () => {

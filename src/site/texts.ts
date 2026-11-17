@@ -51,6 +51,21 @@ export class Texts {
     return text;
   }
 
+  /**
+   * The text in a language with each `{name}` in it replaced by `values[name]`, for a text that
+   * counts or names something.
+   */
+  public fill(
+    key: string,
+    values: Readonly<Record<string, number | string>>,
+    language: LanguageCode = this.siteLanguages.root,
+  ): string {
+    return Object.entries(values).reduce(
+      (text, [name, value]) => text.replaceAll(`{${name}}`, `${value}`),
+      this.get(key, language),
+    );
+  }
+
   /** Whether the key has its own text in that language. */
   public has(key: string, language: LanguageCode): boolean {
     return this.entries.get(key)?.has(language.toString()) === true;
