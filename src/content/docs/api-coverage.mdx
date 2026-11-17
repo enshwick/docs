@@ -51,8 +51,9 @@ them by group.
 | Not supported  | the API does not offer it                       |
 | Does not apply | the game has nothing of this kind in that area  |
 
-A covered row is Stable or Unstable, as [Stability](/dev/stability/) lists its
-items. A stable row marks each unstable item it names. An unstable item needs
-the `unstable` feature and may change in any release.
+A covered row is Unstable when the `enshwick` crate compiles its module, or every
+item it names, only with the `unstable` feature; otherwise it is Stable. A
+stable row marks each unstable item it names. An unstable item may change in
+any release, as [Stability](/dev/stability/) explains.
 
 [What comes next](/aims/) lists what Enshwick aims to add.

@@ -3,7 +3,8 @@
  * cell of the coverage table must name. Paths left out leave items unchecked.
  */
 export class ApiSurface {
-  private static readonly pathSeparator = '::';
+  /** What joins the parts of a crate path. */
+  public static readonly pathSeparator = '::';
 
   private readonly modules: ReadonlySet<string>;
   private readonly paths: ReadonlySet<string> | undefined;

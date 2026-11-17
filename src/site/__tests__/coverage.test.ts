@@ -63,20 +63,21 @@ describe('Coverage', () => {
     expect(() => Coverage.from(file(rows), [])).toThrow('covered without a module');
   });
 
-  it('marks a covered cell unstable by its module, or when every item or item’s module is', () => {
-    const unstable = ['world', 'Knowledge::revoke'];
+  it('marks a covered cell unstable by its module, or when every item it names is', () => {
+    const unstable = ['world', 'world::containers', 'Knowledge::revoke'];
 
     expect(stability('world', ['World'], unstable)).toBe('unstable');
     expect(stability('inventory', ['world::containers'], unstable)).toBe('unstable');
     expect(stability('content', ['content::items', 'Load::world'], unstable)).toBe('stable');
   });
 
-  it('marks an item unstable by any prefix of its path, its type included, but not an inner module alone', () => {
-    const unstable = ['Damage', 'interactions::Targets', 'items'];
+  it('marks an item unstable by its own path or the type or module it is in, not a same-named item', () => {
+    const unstable = ['damage::Damage', 'interactions::Targets', 'items'];
 
-    expect(stability('inventory', ['Damage::scale'], unstable)).toBe('unstable');
+    expect(stability('inventory', ['damage::Damage'], unstable)).toBe('unstable');
+    expect(stability('inventory', ['stats::StatGroup::Damage'], unstable)).toBe('stable');
     expect(stability('inventory', ['interactions::Targets::target'], unstable)).toBe('unstable');
-    expect(stability('content', ['content::items::Foo'], unstable)).toBe('stable');
+    expect(stability('content', ['content::items'], unstable)).toBe('stable');
   });
 
   it('publishes an item written from its cell’s module by its crate path, and marks it by that path', () => {
@@ -90,7 +91,8 @@ describe('Coverage', () => {
       module: 'ui',
       items: ['HudScreenType::NpcDialog'],
     };
-    const cell = Coverage.from(file(rows), ['ui::HudScreenType'], api).domains[0]?.cells[4];
+    const cell = Coverage.from(file(rows), ['ui::HudScreenType::NpcDialog'], api).domains[0]
+      ?.cells[4];
 
     expect(cell?.items).toEqual(['ui::HudScreenType::NpcDialog']);
     expect(cell?.stability).toBe('unstable');

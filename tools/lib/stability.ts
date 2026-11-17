@@ -13,15 +13,8 @@ export class Stability {
   private static readonly pageName = 'stability';
   private static readonly tableRow = /^\|(?<part>[^|\n]+)\|/gmu;
   private static readonly moduleName = /`(?<name>[a-z][a-z0-9_]*)`/gu;
-  /** A Rust path in backticks; `of ` before it marks a name given for context, a colon after it the parts that follow. */
-  private static readonly itemName =
-    /(?<context>\bof )?`(?<name>[A-Za-z_][A-Za-z0-9_]*(?:::[A-Za-z_][A-Za-z0-9_]*)*)`(?<parts>:)?/gu;
 
-  private constructor(
-    public readonly badges: Readonly<Record<string, StabilityLevel>>,
-    /** Every module and item the chapter's unstable table names, sorted. */
-    public readonly unstable: readonly string[] = [],
-  ) {}
+  private constructor(public readonly badges: Readonly<Record<string, StabilityLevel>>) {}
 
   /**
    * The badges of the pages among `pages` that document one of `modules`; a module in `gated`, which
@@ -36,15 +29,16 @@ export class Stability {
     gated: readonly string[] = [],
   ): Stability {
     const chapter = pages.find((page) => page.slug.split('/').at(-1) === Stability.pageName);
-    const named = chapter === undefined ? [] : Stability.unstableNames(chapter.body);
+    const named =
+      chapter === undefined ? new Set<string>() : Stability.unstableModules(chapter.body);
 
-    if (chapter === undefined || named.length === 0) {
+    if (chapter === undefined || named.size === 0) {
       throw new Error(
         `the book's stability chapter (a page whose slug ends in ${Stability.pageName}) is missing or its table names nothing`,
       );
     }
 
-    const unstable = new Set([...Stability.unstableModules(chapter.body), ...gated]);
+    const unstable = new Set([...named, ...gated]);
     const known = new Set(modules);
     const badges = Object.fromEntries(
       pages.flatMap((page): Array<[string, StabilityLevel]> => {
@@ -58,35 +52,7 @@ export class Stability {
       }),
     );
 
-    return new Stability(badges, [...new Set([...named, ...gated])].toSorted());
-  }
-
-  /**
-   * Every name in the first column of the chapter's tables, modules and items alike, such as
-   * `world` and `Knowledge::revoke`, without a name the row gives after "of" only for context: once
-   * it has named something, such as `ui` in "the map markers of `ui`" or `EntityDiedEvent` in "the
-   * `killer` fields of `EntityDiedEvent`", or before a colon that says which of its parts, such as
-   * `world` in "the edits of `world`: props, …".
-   */
-  public static unstableNames(body: string): string[] {
-    const names = new Set<string>();
-
-    for (const row of body.matchAll(Stability.tableRow)) {
-      let named = false;
-
-      for (const match of (row.groups?.['part'] ?? '').matchAll(Stability.itemName)) {
-        const context =
-          match.groups?.['context'] !== undefined && (named || match.groups['parts'] !== undefined);
-
-        if (!context) {
-          names.add(match.groups?.['name'] ?? '');
-        }
-
-        named = true;
-      }
-    }
-
-    return [...names].toSorted();
+    return new Stability(badges);
   }
 
   /** The bare module names in the first column of the chapter's tables: `world`, not `World`. */
