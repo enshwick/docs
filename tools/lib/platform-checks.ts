@@ -3,6 +3,7 @@ import type { DeveloperPage } from './api-map.ts';
 import { BookSnippet } from './book-snippet.ts';
 import type { PlatformRelease } from './developer-area.ts';
 import { IdRule } from './id-rule.ts';
+import { Stability } from './stability.ts';
 
 /** The checks that hold the site to the platform's newest version; the build fails when one does not pass. */
 export class PlatformChecks {
@@ -14,6 +15,10 @@ export class PlatformChecks {
     ['smallest-mod', 'dev/getting-started'],
     ['altar-count', 'dev/altars'],
   ]);
+  /** The stability chapter, which the coverage page and the page for AI assistants link to. */
+  private static readonly stabilitySlug = 'dev/stability';
+  /** A table row whose first cell holds something, header rows included. */
+  private static readonly tableRow = /^\|[^|\n]+\|/mu;
 
   public constructor(
     private readonly newest: PlatformRelease | undefined,
@@ -47,6 +52,29 @@ export class PlatformChecks {
     }
 
     return apiMap;
+  }
+
+  /**
+   * The stability badge of each page that documents one of the crate root's `modules`, from the
+   * newest release's public path list.
+   *
+   * @throws {Error} When the book has no stability chapter with a table at the slug the site links
+   * to, or the newest release has no public path list, since every module would then read as stable.
+   */
+  public stability(modules: readonly string[]): Stability {
+    const chapter = this.pages.find((page) => page.slug === PlatformChecks.stabilitySlug);
+
+    if (chapter === undefined || !PlatformChecks.tableRow.test(chapter.body)) {
+      throw new Error(
+        `the book's stability chapter (${PlatformChecks.stabilitySlug}) is missing or has no table`,
+      );
+    }
+
+    if (this.newest?.items === undefined) {
+      throw new Error('the newest platform release has no public path list to read stability from');
+    }
+
+    return Stability.of(modules, this.pages, this.newest.items);
   }
 
   /**

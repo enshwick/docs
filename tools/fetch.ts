@@ -78,6 +78,7 @@ const releaseChecked = await CheckedBuilds.at(platform.repository, loaderTag);
 
 const platformChecks = new PlatformChecks(developerArea.releases[0], developerArea.newestPages);
 const apiMap = platformChecks.run();
+const moduleNames = apiMap.modules.map((module) => module.name);
 
 const errors = developerArea.releases[0]?.errors;
 
@@ -109,16 +110,9 @@ await Bun.write(
 );
 await Bun.write(
   `${generated}/stability.json`,
-  `${JSON.stringify(apiMap.stability.badges, null, 2)}\n`,
+  `${JSON.stringify(platformChecks.stability(moduleNames).badges, null, 2)}\n`,
 );
-await Bun.write(
-  `${generated}/api-modules.json`,
-  `${JSON.stringify(
-    apiMap.modules.map((module) => module.name),
-    null,
-    2,
-  )}\n`,
-);
+await Bun.write(`${generated}/api-modules.json`, `${JSON.stringify(moduleNames, null, 2)}\n`);
 await Bun.write(
   `${generated}/api-items.json`,
   `${JSON.stringify(developerArea.releases[0]?.items?.all ?? [], null, 2)}\n`,

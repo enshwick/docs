@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
 import type { DeveloperPage } from '../api-map.ts';
+import type { PlatformRelease } from '../developer-area.ts';
 import { PlatformChecks } from '../platform-checks.ts';
 
 const page = (slug: string, name: string, code: string): DeveloperPage => ({
@@ -14,7 +15,50 @@ const pages = [
   page('dev/altars', 'altar-count', 'struct AltarCount;'),
 ];
 
+const release = (items?: PlatformRelease['items']): PlatformRelease => ({
+  name: 'main',
+  ref: 'main',
+  api: undefined,
+  checked: [],
+  lib: undefined,
+  abi: undefined,
+  errors: undefined,
+  items,
+});
+const stabilityChapter: DeveloperPage = {
+  slug: 'dev/stability',
+  title: 'Stability',
+  body: '| Part | Why |\n| --- | --- |\n| `map` | young |\n',
+};
+
 describe('PlatformChecks', () => {
+  it('badges the modules from the newest release list', () => {
+    const checks = new PlatformChecks(release({ all: ['map'], unstable: ['map'] }), [
+      stabilityChapter,
+      { slug: 'dev/map', title: 'Map', body: '' },
+    ]);
+
+    expect(checks.stability(['map']).badges).toEqual({ 'dev/map': 'unstable' });
+  });
+
+  it('fails the stability badges without the chapter at the slug the site links to, or its table', () => {
+    const items = { all: ['map'], unstable: [] };
+    const moved = { ...stabilityChapter, slug: 'dev/concepts/stability' };
+    const empty = { ...stabilityChapter, body: 'No table.' };
+
+    for (const chapter of [moved, empty]) {
+      expect(() => new PlatformChecks(release(items), [chapter]).stability(['map'])).toThrow(
+        /stability chapter \(dev\/stability\)/u,
+      );
+    }
+  });
+
+  it('fails the stability badges when the newest release has no public path list', () => {
+    expect(() => new PlatformChecks(release(), [stabilityChapter]).stability(['map'])).toThrow(
+      /no public path list/u,
+    );
+  });
+
   it('takes every marked example from the chapter that holds it', () => {
     expect(new PlatformChecks(undefined, pages).snippets()).toEqual(
       new Map([

@@ -1,70 +1,56 @@
 import type { DeveloperPage } from './api-map.ts';
+import type { ApiPaths } from './public-paths.ts';
 
 /** Whether a module of the API crate keeps the SemVer promise or needs the `unstable` feature. */
 export type StabilityLevel = 'stable' | 'unstable';
 
 /**
- * The stability badge of each developer page that documents one public module of the API crate,
- * read from the table of the book's stability chapter: a module it names under `unstable` is
- * unstable, every other public module stable. A page documents a module when its last path part,
- * with hyphens as underscores, is the module's name.
+ * The stability badge of each developer page that documents one public module of the API crate: a
+ * module is unstable when the crate compiles it only with the `unstable` feature, as its public path
+ * list marks it, and stable otherwise. A page documents a module when its slug after the area, with
+ * folders as `::` and hyphens as underscores, is the module's path in the list.
  */
 export class Stability {
-  private static readonly pageName = 'stability';
-  private static readonly tableRow = /^\|(?<part>[^|\n]+)\|/gmu;
-  private static readonly moduleName = /`(?<name>[a-z][a-z0-9_]*)`/gu;
+  private static readonly area = 'dev/';
 
   private constructor(public readonly badges: Readonly<Record<string, StabilityLevel>>) {}
 
   /**
-   * The badges of the pages among `pages` that document one of `modules`; a module in `gated`, which
-   * the crate compiles only with the `unstable` feature, is unstable whatever the chapter says.
-   *
-   * @throws {Error} When the book has no stability chapter or its table names nothing, since every
-   * covered API would then read as stable.
+   * The badges of the pages among `pages` that document a module the list `paths` holds; a page in
+   * the area's root documents a top-level module only when it is one of the crate root's `modules`.
    */
   public static of(
     modules: readonly string[],
     pages: readonly DeveloperPage[],
-    gated: readonly string[] = [],
+    paths: ApiPaths,
   ): Stability {
-    const chapter = pages.find((page) => page.slug.split('/').at(-1) === Stability.pageName);
-    const named =
-      chapter === undefined ? new Set<string>() : Stability.unstableModules(chapter.body);
-
-    if (chapter === undefined || named.size === 0) {
-      throw new Error(
-        `the book's stability chapter (a page whose slug ends in ${Stability.pageName}) is missing or its table names nothing`,
-      );
-    }
-
-    const unstable = new Set([...named, ...gated]);
-    const known = new Set(modules);
+    const listed = new Set(paths.all);
+    const gated = new Set(paths.unstable);
+    const topLevel = new Set(modules);
     const badges = Object.fromEntries(
       pages.flatMap((page): Array<[string, StabilityLevel]> => {
-        const name = (page.slug.split('/').at(-1) ?? '').replaceAll('-', '_');
+        const path = Stability.modulePath(page.slug);
 
-        if (!known.has(name)) {
+        if (path === undefined || !listed.has(path)) {
           return [];
         }
 
-        return [[page.slug, unstable.has(name) ? 'unstable' : 'stable']];
+        if (!path.includes('::') && !topLevel.has(path)) {
+          return [];
+        }
+
+        return [[page.slug, gated.has(path) ? 'unstable' : 'stable']];
       }),
     );
 
     return new Stability(badges);
   }
 
-  /** The bare module names in the first column of the chapter's tables: `world`, not `World`. */
-  public static unstableModules(body: string): ReadonlySet<string> {
-    const names = new Set<string>();
-
-    for (const row of body.matchAll(Stability.tableRow)) {
-      for (const match of (row.groups?.['part'] ?? '').matchAll(Stability.moduleName)) {
-        names.add(match.groups?.['name'] ?? '');
-      }
+  private static modulePath(slug: string): string | undefined {
+    if (!slug.startsWith(Stability.area)) {
+      return undefined;
     }
 
-    return names;
+    return slug.slice(Stability.area.length).replaceAll('/', '::').replaceAll('-', '_');
   }
 }
