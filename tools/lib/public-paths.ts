@@ -1,3 +1,5 @@
+import type { GitRef } from '../../src/site/types.ts';
+
 /** The public paths of the API crate, and those of them only its `unstable` feature compiles. */
 export interface ApiPaths {
   readonly all: readonly string[];
@@ -15,14 +17,22 @@ export class PublicPaths {
 
   private static readonly comment = '#';
   private static readonly unstableMark = ' unstable';
+  /** A Rust path of plain or raw (`r#type`) names. */
+  private static readonly path =
+    /^(?:r#)?[A-Za-z_][A-Za-z0-9_]*(?:::(?:r#)?[A-Za-z_][A-Za-z0-9_]*)*$/u;
 
   /**
-   * The paths of the list's text, sorted.
+   * The paths of the list `text` read at `ref`, sorted.
    *
-   * @throws {TypeError} When a line is not one path, with ` unstable` after it or not.
+   * @throws {Error} When `ref` has no list, so the coverage table is never checked against none.
+   * @throws {TypeError} When a line is not one path, with ` unstable` after it or not, or repeats one.
    */
-  public static parse(text: string): ApiPaths {
-    const all: string[] = [];
+  public static parse(text: string | undefined, ref: GitRef): ApiPaths {
+    if (text === undefined) {
+      throw new Error(`${ref} has no ${PublicPaths.file}`);
+    }
+
+    const all = new Set<string>();
     const unstable: string[] = [];
 
     for (const line of text.split(/\r?\n/u)) {
@@ -33,17 +43,21 @@ export class PublicPaths {
       const gated = line.endsWith(PublicPaths.unstableMark);
       const path = gated ? line.slice(0, -PublicPaths.unstableMark.length) : line;
 
-      if (/\s/u.test(path) || path === '') {
+      if (!PublicPaths.path.test(path)) {
         throw new TypeError(`${PublicPaths.file}: not a path: ${line}`);
       }
 
-      all.push(path);
+      if (all.has(path)) {
+        throw new TypeError(`${PublicPaths.file}: listed twice: ${path}`);
+      }
+
+      all.add(path);
 
       if (gated) {
         unstable.push(path);
       }
     }
 
-    return { all: all.toSorted(), unstable: unstable.toSorted() };
+    return { all: [...all].toSorted(), unstable: unstable.toSorted() };
   }
 }

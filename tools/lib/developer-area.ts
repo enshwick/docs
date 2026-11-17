@@ -230,23 +230,10 @@ export class DeveloperArea {
       lib,
       abi: await DeveloperArea.abi(checkout, lib ?? '', workspace),
       errors: await ErrorPages.locate(checkout),
-      items: newest ? await DeveloperArea.publicPaths(checkout) : undefined,
+      items: newest
+        ? PublicPaths.parse(await checkout.read(PublicPaths.file), checkout.ref)
+        : undefined,
     };
-  }
-
-  /**
-   * The API crate's public paths as the platform lists them at the version's ref.
-   *
-   * @throws {Error} When the ref has no list, so the coverage table is never checked against none.
-   */
-  private static async publicPaths(checkout: GitSource): Promise<ApiPaths> {
-    const text = await checkout.read(PublicPaths.file);
-
-    if (text === undefined) {
-      throw new Error(`${checkout.ref} has no ${PublicPaths.file}`);
-    }
-
-    return PublicPaths.parse(text);
   }
 
   /** The ABI module's text, wherever the version keeps it: in the API crate or the internal crate it re-exports. */

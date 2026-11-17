@@ -13,27 +13,14 @@ export class ModuleFile {
   private static readonly dependenciesKey = 'dependencies';
   private static readonly pathKey = 'path';
 
-  /** A crate's name in Rust paths, `enshwick_base`, from its package name, `enshwick-base`. */
-  public static crateOf(packageName: string): string {
-    return packageName.replaceAll(ModuleFile.packageSeparator, ModuleFile.pathSeparator);
-  }
-
-  /** The `path` a manifest's `[dependencies]`, or its `[workspace.dependencies]` with `inWorkspace`, gives a package. */
-  public static dependencyPath(
-    manifest: Fields,
-    packageName: string,
-    inWorkspace = false,
-  ): string | undefined {
-    const table = inWorkspace ? manifest.at(ModuleFile.workspaceKey) : manifest;
-
-    return table.at(ModuleFile.dependenciesKey).at(packageName).at(ModuleFile.pathKey).text();
-  }
-
-  /** The package names a manifest's `[dependencies]` lists. */
-  public static dependencies(manifest: Fields): string[] {
-    const table: unknown = manifest.at(ModuleFile.dependenciesKey).value;
-
-    return typeof table === 'object' && table !== null ? Object.keys(table) : [];
+  /** The `path` a workspace manifest's `[workspace.dependencies]` gives a package. */
+  public static dependencyPath(manifest: Fields, packageName: string): string | undefined {
+    return manifest
+      .at(ModuleFile.workspaceKey)
+      .at(ModuleFile.dependenciesKey)
+      .at(packageName)
+      .at(ModuleFile.pathKey)
+      .text();
   }
 
   /**
@@ -50,7 +37,6 @@ export class ModuleFile {
     const directory = ModuleFile.dependencyPath(
       new Fields(workspace === undefined ? undefined : Bun.TOML.parse(workspace)),
       crate.replaceAll(ModuleFile.pathSeparator, ModuleFile.packageSeparator),
-      true,
     );
 
     return directory === undefined

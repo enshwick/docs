@@ -71,12 +71,12 @@ describe('Coverage', () => {
     expect(stability('content', ['content::items', 'Load::world'], unstable)).toBe('stable');
   });
 
-  it('marks an item unstable only by its own path, not a same-named item or a prefix', () => {
+  it('marks an item unstable by its own path or the type or module it is in, not a same-named item', () => {
     const unstable = ['damage::Damage', 'interactions::Targets', 'items'];
 
     expect(stability('inventory', ['damage::Damage'], unstable)).toBe('unstable');
     expect(stability('inventory', ['stats::StatGroup::Damage'], unstable)).toBe('stable');
-    expect(stability('inventory', ['interactions::Targets::target'], unstable)).toBe('stable');
+    expect(stability('inventory', ['interactions::Targets::target'], unstable)).toBe('unstable');
     expect(stability('content', ['content::items'], unstable)).toBe('stable');
   });
 

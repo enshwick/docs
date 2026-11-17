@@ -274,7 +274,14 @@ export class Coverage {
 
       return path;
     });
-    const unstableItems = items.filter((item) => unstable.has(item));
+    // A member of a gated type or module is gated with it.
+    const unstableItems = items.filter((item) =>
+      item
+        .split(ApiSurface.pathSeparator)
+        .some((_, end, parts) =>
+          unstable.has(parts.slice(0, end + 1).join(ApiSurface.pathSeparator)),
+        ),
+    );
     const whole =
       unstable.has(module) || (items.length > 0 && unstableItems.length === items.length);
 
