@@ -9,6 +9,8 @@ export class Texts {
   /** Where the texts live, for messages that point a writer at them. */
   public static readonly file = 'src/data/texts.json';
   private static readonly schema = n.record(TextKey, n.record(LanguageCode, AnyString));
+  /** A `{name}` a text fills in, the name in its group. */
+  public static readonly placeholder = /\{(\w+)\}/gu;
 
   /** The site's texts, as `src/data/texts.json` holds them. */
   public static readonly site = new Texts(textsData, Languages.site);
@@ -49,6 +51,30 @@ export class Texts {
     }
 
     return text;
+  }
+
+  /**
+   * The text in a language with each `{name}` in it replaced, in one pass, by `values[name]`, a
+   * number written the language's way, for a text that counts or names something.
+   *
+   * @throws {TypeError} When the text has a `{name}` that `values` lacks.
+   */
+  public fill(
+    key: string,
+    values: Readonly<Record<string, number | string>>,
+    language: LanguageCode = this.siteLanguages.root,
+  ): string {
+    const numbers = new Intl.NumberFormat(language.toString());
+
+    return this.get(key, language).replace(Texts.placeholder, (_, name: string) => {
+      const value = values[name];
+
+      if (value === undefined) {
+        throw new TypeError(`${Texts.file}: "${key}" in ${language} has {${name}}, given no value`);
+      }
+
+      return typeof value === 'number' ? numbers.format(value) : value;
+    });
   }
 
   /** Whether the key has its own text in that language. */
