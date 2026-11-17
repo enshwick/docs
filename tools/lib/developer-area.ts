@@ -1,6 +1,4 @@
 import type { GitRef, RepositoryName } from '../../src/site/types.ts';
-import { ApiItems } from './api-items.ts';
-import type { ApiPaths } from './api-items.ts';
 import type { DeveloperPage } from './api-map.ts';
 import { type ChapterPage, ChapterConverter } from './chapter-converter.ts';
 import { type CheckedBuild, CheckedBuilds } from './checked-builds.ts';
@@ -9,6 +7,7 @@ import { GitSource } from './git-source.ts';
 import { MdxBody } from './mdx-body.ts';
 import { ModuleFile } from './module-file.ts';
 import { PageFile } from './page-file.ts';
+import { type ApiPaths, PublicPaths } from './public-paths.ts';
 import { type PageType, type SidebarEntry, Summary } from './summary.ts';
 
 /** One version of the developer area as `src/data/sources.json` lists it, newest first. */
@@ -37,7 +36,7 @@ export interface PlatformRelease {
   readonly abi: string | undefined;
   /** The loader's error codes, `errors.toml`, where the version has them. */
   readonly errors: ErrorsFile | undefined;
-  /** Every public path of the API crate, sorted, as {@link ApiItems} reads them; only the newest version's. */
+  /** Every public path of the API crate, sorted, as {@link PublicPaths} reads them; only the newest version's. */
   readonly items: ApiPaths | undefined;
 }
 
@@ -129,6 +128,7 @@ export class DeveloperArea {
       `/${DeveloperArea.apiRoot}`,
       `/${DeveloperArea.workspaceManifest}`,
       `/${ErrorPages.source}`,
+      `/${PublicPaths.file}`,
     ]);
     const summary = Summary.parse(await this.require(checkout, DeveloperArea.summary));
     const index = summary.chapters[0]?.chapter.path;
@@ -230,8 +230,23 @@ export class DeveloperArea {
       lib,
       abi: await DeveloperArea.abi(checkout, lib ?? '', workspace),
       errors: await ErrorPages.locate(checkout),
-      items: newest ? await ApiItems.read(checkout, workspace) : undefined,
+      items: newest ? await DeveloperArea.publicPaths(checkout) : undefined,
     };
+  }
+
+  /**
+   * The API crate's public paths as the platform lists them at the version's ref.
+   *
+   * @throws {Error} When the ref has no list, so the coverage table is never checked against none.
+   */
+  private static async publicPaths(checkout: GitSource): Promise<ApiPaths> {
+    const text = await checkout.read(PublicPaths.file);
+
+    if (text === undefined) {
+      throw new Error(`${checkout.ref} has no ${PublicPaths.file}`);
+    }
+
+    return PublicPaths.parse(text);
   }
 
   /** The ABI module's text, wherever the version keeps it: in the API crate or the internal crate it re-exports. */
