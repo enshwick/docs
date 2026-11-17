@@ -335,6 +335,10 @@
     "en": "Stable",
     "uk": "Стабільне"
   },
+  "stability.stable.title": {
+    "en": "Works without the unstable feature of the enshwick crate",
+    "uk": "Працює без функції unstable крейта enshwick"
+  },
   "stability.unstable": {
     "en": "Unstable",
     "uk": "Нестабільне"
@@ -348,8 +352,8 @@
     "uk": "Стабільне, частина елементів нестабільна"
   },
   "stability.partial.title": {
-    "en": "{unstable} of {items} items need the unstable feature of the enshwick crate",
-    "uk": "{unstable} з {items} елементів потребують функції unstable крейта enshwick"
+    "en": "Items on this page that need the unstable feature of the enshwick crate: {count}",
+    "uk": "Елементи на цій сторінці, яким потрібна функція unstable крейта enshwick: {count}"
   },
   "error.code": {
     "en": "Error code",

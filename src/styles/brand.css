@@ -1063,6 +1063,12 @@ mobile-starlight-toc summary .toggle {
   border: var(--rule-hair) solid var(--color-stone);
   font-size: var(--text-xs);
   color: var(--color-muted);
+  text-decoration: none;
+}
+
+.ew-stability__badge:hover,
+.ew-stability__badge:focus-visible {
+  color: var(--color-bone);
 }
 
 .ew-stability__badge--unstable {
@@ -1070,9 +1076,10 @@ mobile-starlight-toc summary .toggle {
   color: var(--color-bone);
 }
 
-/* A stable module with unstable items: the flame on one edge only. */
+/* A stable module with unstable items: a thick flame edge, so it reads apart from plain stable. */
 .ew-stability__badge--partial {
-  border-left-color: var(--color-flame);
+  border-inline-start: calc(var(--space-3xs) * 2) solid var(--color-flame);
+  color: var(--color-bone);
 }
 
 /* The loading line: two pixels of flame that grow across the top while the next page loads. */

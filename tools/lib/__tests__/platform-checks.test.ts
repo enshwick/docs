@@ -39,7 +39,7 @@ describe('PlatformChecks', () => {
     ]);
 
     expect(checks.stability(['map']).badges).toEqual({
-      'dev/map': { level: 'unstable', unstable: 0, items: 0 },
+      'dev/map': { level: 'unstable', unstable: [] },
     });
   });
 

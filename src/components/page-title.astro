@@ -1,15 +1,23 @@
 ---
 import Default from '@astrojs/starlight/components/PageTitle.astro';
 
-import stability from '../generated/stability.json';
+import raw from '../generated/stability.json';
 import { Languages } from '../site/languages.ts';
 import { PageId } from '../site/page-id.ts';
+import { StabilityBadges } from '../site/stability-badges.ts';
 import { Texts } from '../site/texts.ts';
 import { LanguageCode } from '../site/types.ts';
 import ModCard from './mod-card.astro';
 
+const stability = StabilityBadges.parse(raw);
+
+if (!stability.ok) {
+  throw new TypeError(`src/generated/stability.json: ${JSON.stringify(stability.issues)}`);
+}
+
 // The front page draws its own heading, so it gets no second h1. A mod's page opens with its
-// card, an error page with its code, and an API page with the stability of its module.
+// card, an error page with its code, and an API page with the stability of its module, linked to
+// the chapter that says what stability means.
 const route = Astro.locals.starlightRoute;
 const front = new PageId(route.id).isFront;
 const parsed = LanguageCode.parse(route.lang);
@@ -18,14 +26,10 @@ const t = (key: string): string => Texts.site.get(key, language);
 const { mod, error } = route.entry.data;
 const prefix = `${language}/`;
 const slug = route.id.startsWith(prefix) ? route.id.slice(prefix.length) : route.id;
-const badge = Object.entries(stability).find(([page]) => page === slug)?.[1];
-const titles: Record<string, string | undefined> = {
-  unstable: t('stability.unstable.title'),
-  partial:
-    badge === undefined
-      ? undefined
-      : Texts.site.fill('stability.partial.title', { unstable: badge.unstable, items: badge.items }, language),
-};
+const badge = Object.entries(stability.value).find(([page]) => page === slug)?.[1];
+const base = import.meta.env.BASE_URL.replace(/\/$/u, '');
+const area = language.equals(Languages.site.root) ? '' : `/${language}`;
+const chapter = `${base}${area}/dev/stability/`;
 ---
 
 {
@@ -39,12 +43,17 @@ const titles: Record<string, string | undefined> = {
       <Default />
       {badge !== undefined && (
         <p class="ew-stability">
-          <span
+          <a
             class:list={['ew-stability__badge', `ew-stability__badge--${badge.level}`]}
-            title={titles[badge.level]}
+            href={chapter}
+            title={Texts.site.fill(
+              `stability.${badge.level}.title`,
+              { count: badge.unstable.length },
+              language,
+            )}
           >
             {t(`stability.${badge.level}`)}
-          </span>
+          </a>
         </p>
       )}
       {mod !== undefined && <ModCard mod={mod} language={language} />}
