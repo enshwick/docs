@@ -31,8 +31,6 @@ When you remove one mod and keep Enshwick:
 - Enshwick keeps this for up to 11 such materials of all mods together. Past
   that, the terrain of the last ones becomes air, and the next save keeps the
   loss.
-- On a server, a player whose game never ran the mod may not see that
-  terrain.
 - Stacks of the game's own items keep the counts that the world was saved with.
 - With Better Altars, only the first 16 altar zones work as bases.
 - A hold that the mod set beside a world's save stops the game before that
