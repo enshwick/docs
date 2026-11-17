@@ -11,7 +11,6 @@ import { GitHubReleases } from './lib/github-releases.ts';
 import { ModPages } from './lib/mod-pages.ts';
 import { PageFile } from './lib/page-file.ts';
 import { PlatformChecks } from './lib/platform-checks.ts';
-import { Stability } from './lib/stability.ts';
 
 // Fills the generated part of the site from its sources before every build: the developer area
 // from the platform's book at each version's ref, the mod pages from each mod's release in the mods repository, and
@@ -79,6 +78,7 @@ const releaseChecked = await CheckedBuilds.at(platform.repository, loaderTag);
 
 const platformChecks = new PlatformChecks(developerArea.releases[0], developerArea.newestPages);
 const apiMap = platformChecks.run();
+const moduleNames = apiMap.modules.map((module) => module.name);
 
 const errors = developerArea.releases[0]?.errors;
 
@@ -110,24 +110,9 @@ await Bun.write(
 );
 await Bun.write(
   `${generated}/stability.json`,
-  `${JSON.stringify(
-    Stability.of(
-      apiMap.modules.map((module) => module.name),
-      developerArea.newestPages,
-      developerArea.releases[0]?.items?.unstable ?? [],
-    ).badges,
-    null,
-    2,
-  )}\n`,
+  `${JSON.stringify(platformChecks.stability(moduleNames).badges, null, 2)}\n`,
 );
-await Bun.write(
-  `${generated}/api-modules.json`,
-  `${JSON.stringify(
-    apiMap.modules.map((module) => module.name),
-    null,
-    2,
-  )}\n`,
-);
+await Bun.write(`${generated}/api-modules.json`, `${JSON.stringify(moduleNames, null, 2)}\n`);
 await Bun.write(
   `${generated}/api-items.json`,
   `${JSON.stringify(developerArea.releases[0]?.items?.all ?? [], null, 2)}\n`,
