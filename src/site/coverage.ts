@@ -1,16 +1,13 @@
 import { AnyString, n } from '@horizon-republic/nominal-types';
 
 import coverageData from '../data/coverage.json' with { type: 'json' };
-// `tools/fetch.ts` writes it too: every public path of the API crate, read from its source.
+// `tools/fetch.ts` writes it too: every public path of the API crate, as the platform lists them.
 import itemsData from '../generated/api-items.json' with { type: 'json' };
 // `tools/fetch.ts` writes it too: the public modules of the API crate.
 import modulesData from '../generated/api-modules.json' with { type: 'json' };
 // `tools/fetch.ts` writes it too: the public paths only the API crate's `unstable` feature compiles.
 import gatedData from '../generated/api-unstable.json' with { type: 'json' };
-// `tools/fetch.ts` writes it before every build from the book's stability chapter.
-import unstableData from '../generated/unstable.json' with { type: 'json' };
 import { ApiSurface } from './api-surface.ts';
-import { UnstableNames } from './unstable-names.ts';
 
 /** What a mod can do in a game area: see it, change it, add to it, hear it, show it to a player. */
 const Capability = AnyString.subtype(
@@ -57,7 +54,7 @@ export interface CoverageCell {
   /** One of the `CoverageStatus` values; the page's label key is `coverage.status.<status>`. */
   readonly status: string;
   /**
-   * Where covered, `stable` or `unstable`, as the book's stability chapter and the crate have it: a
+   * Where covered, `stable` or `unstable`, as the crate gates it: a
    * cell is unstable when its module or every item it names is.
    */
   readonly stability: string | undefined;
@@ -83,7 +80,7 @@ export interface CoverageDomain {
 /**
  * The API coverage page's table: which game areas the API reaches and how, from
  * `src/data/coverage.json`, every area with exactly one cell per capability, each covered cell
- * stable or unstable by the book's stability chapter.
+ * stable or unstable by the crate's `unstable` feature.
  */
 export class Coverage {
   /** The table's columns, in the order the page shows them. */
@@ -109,7 +106,7 @@ export class Coverage {
   /** The site's coverage, as `src/data/coverage.json` holds it. */
   public static readonly site = Coverage.from(
     coverageData,
-    [...unstableData, ...gatedData],
+    gatedData,
     new ApiSurface(modulesData, itemsData),
   );
 
@@ -130,8 +127,8 @@ export class Coverage {
 
   /**
    * Parses the rows, groups them by game area in file order, and marks each covered cell stable or
-   * unstable by `unstable`: an item is unstable when it or its module is named there, and a cell
-   * when its module or every item it names is.
+   * unstable by `unstable`, the crate paths only the `unstable` feature compiles: an item is unstable
+   * when its path is there, and a cell when its module or every item it names is.
    *
    * @throws {TypeError} When the data does not parse, an area misses a capability or repeats one,
    * or a covered cell names no module, nothing it covers, or, where `api` is given, a module or an
@@ -144,7 +141,7 @@ export class Coverage {
       throw new TypeError(`src/data/coverage.json: ${JSON.stringify(parsed.issues)}`);
     }
 
-    const unstableNames = new UnstableNames(unstable);
+    const unstableNames: ReadonlySet<string> = new Set(unstable);
     const byDomain = new Map<string, Map<string, CoverageCell>>();
 
     for (const row of parsed.value.rows) {
@@ -246,7 +243,7 @@ export class Coverage {
    */
   private static cell(
     row: CoverageRow,
-    unstable: UnstableNames,
+    unstable: ReadonlySet<string>,
     api: ApiSurface | undefined,
   ): CoverageCell {
     const capability = row.capability.toString();

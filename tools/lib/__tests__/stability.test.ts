@@ -38,23 +38,6 @@ describe('Stability', () => {
     ]);
   });
 
-  it('reads every module and item the unstable table names, but not one named for context', () => {
-    expect(Stability.unstableNames(stabilityPage.body)).toEqual([
-      'Field::MaxStackSize',
-      'Field::Slots',
-      'Load::fog_of_war',
-      'Stats::set_item',
-      'World',
-      'entity_data',
-      'events::PlayerDied',
-      'item_data',
-      'killer',
-      'map',
-      'terrain::Dig',
-      'world',
-    ]);
-  });
-
   it('marks a module the crate compiles only with the unstable feature, though the table misses it', () => {
     const stability = Stability.of(
       ['controls'],
@@ -63,7 +46,6 @@ describe('Stability', () => {
     );
 
     expect(stability.badges).toEqual({ 'dev/controls': 'unstable' });
-    expect(stability.unstable).toContain('controls');
   });
 
   it('marks the page of each public module stable or unstable, by the page name', () => {

@@ -5,13 +5,13 @@ export interface ApiPaths {
 }
 
 /**
- * The list of the API crate's public paths that the platform commits beside the crate's manifest,
+ * The list of the API crate's public paths that the platform commits in its tools folder,
  * written from the compiler's view of the crate. The coverage table names its items by these paths,
  * so the build refuses one the crate lacks.
  */
 export class PublicPaths {
   /** The list in the platform repository. */
-  public static readonly file = 'crates/enshwick/public-paths.txt';
+  public static readonly file = 'tools/public-paths.txt';
 
   private static readonly comment = '#';
   private static readonly unstableMark = ' unstable';

@@ -112,10 +112,6 @@ await Bun.write(
   `${JSON.stringify(apiMap.stability.badges, null, 2)}\n`,
 );
 await Bun.write(
-  `${generated}/unstable.json`,
-  `${JSON.stringify(apiMap.stability.unstable, null, 2)}\n`,
-);
-await Bun.write(
   `${generated}/api-modules.json`,
   `${JSON.stringify(
     apiMap.modules.map((module) => module.name),
