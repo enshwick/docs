@@ -87,8 +87,9 @@ this site. A pull request that changes the page checks, the page schema or the
 workflow runs it over every mod page on the mods repository's `main`, after the site's own checks.
 `tools/check-prose.ts` also holds every text in `src/data/texts.json`, the front page's among
 them, to the same sentence and paragraph limits in each site language that has its own text, and
-the English text to the same words. Git hooks run oxfmt, oxlint, markdownlint and typos on changed files, and [actionlint](https://github.com/rhysd/actionlint)
-and [zizmor](https://docs.zizmor.sh) when a workflow changed.
+the English text to the same words. Git hooks run oxfmt, oxlint, markdownlint and typos on changed files, and
+[actionlint](https://github.com/rhysd/actionlint), [zizmor](https://docs.zizmor.sh),
+[ShellCheck](https://www.shellcheck.net) and a dry run of the Jira script when a workflow changed.
 
 The maintainers check the prose of English and Ukrainian pages with
 [Vale](https://vale.sh) and their own tooling, kept outside this repository.
