@@ -18,7 +18,7 @@ pre-commit:
     # zizmor offline: its online audits need a GitHub token and the network.
     workflows:
       glob: '.github/**'
-      run: actionlint && zizmor --offline --quiet .
+      run: actionlint && zizmor --offline --quiet . && shellcheck .github/scripts/*.sh && bash .github/scripts/jira-test.sh
 
 # committed checks the header against committed.toml. Messages git writes
 # itself (merges, reverts, fixups) pass as they are. A subject starts in
@@ -43,7 +43,7 @@ pre-push:
       run: typos --force-exclude {push_files}
     workflows:
       glob: '.github/**'
-      run: actionlint && zizmor --offline --quiet .
+      run: actionlint && zizmor --offline --quiet . && shellcheck .github/scripts/*.sh && bash .github/scripts/jira-test.sh
     commits:
       run: >-
         ! git rev-parse -q --verify origin/main > /dev/null ||
