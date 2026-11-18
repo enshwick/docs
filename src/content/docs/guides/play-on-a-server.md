@@ -25,6 +25,9 @@ recipes. Each mod's page says whether it is one of those.
   and the version you have.
 - If you have such a mod and the server does not run it, the mod stays off while
   you play there. The game tells you so. The mod is back on in your next world.
+- If that mod adds terrain, a dedicated server may refuse you with error E3002
+  instead. Turn the mods the message lists off on the Mods screen, restart the
+  game and join again. In a game that a player hosts, you join and see a note.
 - A mod that runs only on the server is not checked. You do not need it.
 
 The list shows each mod by its id, such as `you.lanterns`. Find the mod by that
