@@ -49,6 +49,6 @@
     "oxlint-tsgolint": "7.0.2007",
     "typescript": "7.1.0-beta",
     "vitest": "5.1.0",
-    "wrangler": "4.164.0"
+    "wrangler": "4.165.0"
   }
 }
