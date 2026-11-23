@@ -7,10 +7,12 @@ sidebar:
 ---
 
 The Enshrouded dedicated server exists for Windows only. A Linux host runs it
-under Wine or Proton. Enshwick runs there with one environment variable.
+under Wine or Proton. Enshwick runs there with one environment variable, or
+with one setting in the Wine prefix.
 
 The install steps and the Pelican egg ran on game version 1287369, under Wine
-11.0 and GE-Proton 11-9.
+11.0 and GE-Proton 11-9. The override in the prefix ran on the same game version,
+under Wine 11.0 and GE-Proton 11-11.
 
 ## Install the server with Enshwick
 
@@ -42,6 +44,47 @@ sets it, add `powrprof=n,b` to the end of the list.
 
 For example, `version=n,b` becomes `version=n,b;powrprof=n,b`.
 
+## Add the override when you cannot set the variable
+
+If you can edit the server's files but not its environment or startup command,
+put the override into the prefix. The prefix is the folder where Wine or
+Proton keeps the server's Windows settings. They read the override at every
+start, without the variable.
+
+1. Start the server once, then stop it. Wine or Proton creates the prefix at
+   the first start.
+2. Wait until no `wineserver` process runs: `pgrep wineserver` prints nothing.
+   Wine writes the prefix when it exits, so an edit made earlier is lost.
+3. Open `user.reg` in the prefix:
+
+   | Setup                      | `user.reg`                                               |
+   | -------------------------- | -------------------------------------------------------- |
+   | Pelican or Pterodactyl egg | `.steam/steam/steamapps/compatdata/2278520/pfx/user.reg` |
+   | AMP template               | `.wine/user.reg`, beside the `2278520` folder            |
+   | Wine with `WINEPREFIX`     | `user.reg` in that folder                                |
+   | Wine without `WINEPREFIX`  | `~/.wine/user.reg`                                       |
+   | Proton outside Steam       | `pfx/user.reg` in `STEAM_COMPAT_DATA_PATH`               |
+
+4. Look for a line that starts with `[Software\\Wine\\DllOverrides]`. If the
+   file has one, add the `"powrprof"` line of the example below it. If not, add
+   both lines at the end of the file, after an empty line:
+
+   ```ini
+   [Software\\Wine\\DllOverrides]
+   "powrprof"="native,builtin"
+   ```
+
+5. Save the file and start the server.
+   [Check that Enshwick started](#check-that-enshwick-started).
+
+Wine keeps the override at later starts. It also keeps it when a newer
+GE-Proton or the update step of the AMP template updates the prefix. The
+override works when `WINEDLLOVERRIDES` names other libraries, such as the
+`dbghelp=n,b` of the AMP template.
+
+The AMP row follows the template and was not run in AMP. The override and the
+template's update step ran in the image the template uses, under Wine 11.0.
+
 ## Check that Enshwick started
 
 Open the `logs` folder beside `enshrouded_server.exe`. Enshwick writes a log
@@ -53,7 +96,7 @@ such as `ready: 1 of 1 mods running` follows.
 If Enshwick did not start,
 `logs/start.log` says why, as in
 [Where files live](/reference/where-files-live/). If neither log exists, the
-server did not get the variable.
+server got neither the variable nor the override.
 
 ## Use a hosting panel
 
@@ -66,20 +109,26 @@ server's folder with the panel's file manager or SFTP, then add the variable.
   the server's page in the admin area.
 - **AMP**: its
   [Enshrouded template](https://github.com/CubeCoders/AMPTemplates/blob/main/enshrouded.kvp)
-  sets `WINEDLLOVERRIDES` to `dbghelp=n,b` already. Add
-  `powrprof=n,b` to that list, as in
-  [Add the variable when your host already sets one](#add-the-variable-when-your-host-already-sets-one).
-  This step follows the template and was not run in AMP.
+  sets `WINEDLLOVERRIDES` to `dbghelp=n,b` in the template itself. Put the
+  override into the prefix instead, as in
+  [Add the override when you cannot set the variable](#add-the-override-when-you-cannot-set-the-variable).
+  The prefix is not part of the template.
 
-A rented server needs the same variable when it runs on Linux. If its host lets
-you set neither the variable nor the startup command, ask the host to set the
-variable. A rented server on Windows needs no variable.
+A rented server on Linux needs the same variable or override, and one on
+Windows needs none.
+If the host lets you set neither the variable nor the startup command, put the
+override into the prefix with a file manager or SFTP. If you cannot
+edit the server's files either, ask the host to set the variable.
 
 ## Use a kernel with ntsync
 
-Run Linux 6.14 or newer with the `ntsync` module loaded. Proton 11 and GE-Proton
-11 use it without extra settings. With it, the waits between game threads take
-much less time.
+Run Linux 6.14 or newer with the `ntsync` module loaded. Proton 11 and
+GE-Proton 11 use it without extra settings. With it, the waits between game
+threads take much less time.
+
+Of Wine 11.0, only the WineHQ package ran here. It used `/dev/ntsync` on Linux
+7.0 with the module loaded, and did not use it without the module. A Wine
+build from your distribution may differ.
 
 1. Load the module: `sudo modprobe ntsync`.
 2. Check that `/dev/ntsync` exists.
