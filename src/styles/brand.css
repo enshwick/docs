@@ -197,7 +197,7 @@ header.header {
   gap: var(--space-xs);
 }
 
-/* The alpha mark: quiet, beside the wordmark, in the body face. */
+/* The wordmark keeps its own line in the bar. */
 .ew-bar__title {
   display: flex;
   align-items: center;
@@ -207,15 +207,6 @@ header.header {
 /* Where the bar runs short of room, the wordmark shrinks first, so nothing beside it overlaps. */
 .ew-bar .site-title img {
   min-width: 0;
-}
-
-.ew-alpha {
-  padding: 0 var(--space-2xs);
-  border: var(--rule-hair) solid var(--color-stone);
-  font-size: var(--text-xs);
-  line-height: 1.5;
-  color: var(--color-muted);
-  white-space: nowrap;
 }
 
 /* The services' own marks: quiet in grey until pointed at. */

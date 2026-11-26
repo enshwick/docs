@@ -391,14 +391,6 @@
     "en": "go to question",
     "uk": "перейдіть до запитання"
   },
-  "alpha.mark": {
-    "en": "alpha",
-    "uk": "альфа"
-  },
-  "alpha.title": {
-    "en": "Enshwick is in alpha: version 1.0 is not out yet.",
-    "uk": "Enshwick в альфа-версії: версія 1.0 ще не вийшла."
-  },
   "front.nav.top": {
     "en": "Start",
     "uk": "Початок"
@@ -600,8 +592,8 @@
     "uk": "Тексти мода — один файл, будь-яка мова гри."
   },
   "front.makers.abi": {
-    "en": "Until 1.0, anything may change between alphas.",
-    "uk": "До версії 1.0 між альфа-версіями може змінитися будь-що."
+    "en": "A mod built for Enshwick 1.0 loads in every later 1.x release.",
+    "uk": "Мод, зібраний для Enshwick 1.0, завантажується в кожному наступному випуску 1.x."
   },
   "front.contribute.title": {
     "en": "Make it with us",
