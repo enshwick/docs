@@ -277,7 +277,7 @@
       "capability": "ui",
       "status": "covered",
       "module": "vetoes",
-      "items": ["vetoes::BuildVerdict"],
+      "items": ["vetoes::Verdict::refuse_because"],
       "note": "a refusal reason under the build cursor"
     },
     {
