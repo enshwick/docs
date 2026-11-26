@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-16",
+  "updated": "2026-11-26",
   "rows": [
     {
       "domain": "Items",
@@ -624,14 +624,18 @@
       "capability": "read",
       "status": "covered",
       "module": "weather",
-      "items": ["weather::WeatherAt::state", "daytime::Clock::now", "world::World::shroud_time"]
+      "items": ["weather::WeatherAt::state", "daytime::Clock::now", "world::World::fog_resistance"]
     },
     {
       "domain": "Weather, time and shroud",
       "capability": "change",
       "status": "covered",
       "module": "weather",
-      "items": ["weather::Weather::set", "Load::clock_speed", "world::World::change_shroud_time"],
+      "items": [
+        "weather::Weather::set",
+        "Load::clock_speed",
+        "world::World::change_fog_resistance"
+      ],
       "note": "set the hour of the day"
     },
     {
