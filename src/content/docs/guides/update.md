@@ -31,8 +31,12 @@ player whose mods differ from its own. It says which mod and version it needs.
 
 ## Why does a mod stop loading after an update?
 
-Enshwick is released first, and the mods built for it after it. When a new
-Enshwick needs a mod to be rebuilt, Enshwick does not load that mod and says
-so on the **Mods** screen. If a mod you use has no release for the new
-Enshwick yet, keep the Enshwick version you had until the mod's page offers
-one.
+A new Enshwick may need a mod to be rebuilt for it. Enshwick then does not
+load that mod. The **Mods** screen says so.
+
+Mods are released after Enshwick. Until a mod has a release for the new
+Enshwick, use the Enshwick you had. Download it again from the
+[list of Enshwick releases](https://github.com/enshwick/enshwick/releases)
+and extract it as in step 3.
+
+If you play on a server, use the Enshwick version the server needs.
