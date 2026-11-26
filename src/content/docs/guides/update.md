@@ -28,3 +28,11 @@ settings and mod ids. Before you update,
 
 If you play on a server, update when the server does. A server turns away a
 player whose mods differ from its own. It says which mod and version it needs.
+
+## Why does a mod stop loading after an update?
+
+Enshwick is released first, and the mods built for it after it. When a new
+Enshwick needs a mod to be rebuilt, Enshwick does not load that mod and says
+so on the **Mods** screen. If a mod you use has no release for the new
+Enshwick yet, keep the Enshwick version you had until the mod's page offers
+one.
