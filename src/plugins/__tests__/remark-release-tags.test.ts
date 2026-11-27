@@ -42,17 +42,16 @@ describe('ReleaseTags', () => {
     expect(tags.pin(lines)).toBe(lines);
   });
 
-  it('pins every install and dependency line of the AI assistants page', async () => {
+  it('takes every install and dependency line of the AI assistants page from crates.io', async () => {
     const page = await Bun.file(
       new URL('../../content/docs/ai-assistants.mdx', import.meta.url),
     ).text();
     const lines = page
       .split('\n')
       .filter((line) => /cargo install .*cargo-enshwick|enshwick = \{/u.test(line));
-    const other = new ReleaseTags({ 'enshwick/enshwick': 'v0.0.1' });
 
     expect(lines.length).toBeGreaterThan(0);
-    expect(lines.filter((line) => other.pin(line) === line)).toEqual([]);
+    expect(lines.filter((line) => line.includes('github.com/enshwick/enshwick'))).toEqual([]);
   });
 
   it('refuses data that is not a repository and its tag', () => {

@@ -13,8 +13,7 @@ The **Mods** screen tells you when a newer Enshwick exists. It shows the new
 version and the address of its page.
 
 :::caution
-Until 1.0, each update is a new alpha. An alpha may change file layouts,
-settings and mod ids. Before you update,
+Before you update,
 [back up your worlds](/guides/back-up-saves/).
 :::
 
